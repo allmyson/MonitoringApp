@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="qrcode_title_height">49dp</dimen>
+    <dimen name="qrcode_back_height">20dp</dimen>
+    <dimen name="qrcode_back_width">25dp</dimen>
+    <dimen name="qrcode_more_height">30dp</dimen>
+    <dimen name="qrcode_more_width">30dp</dimen>
+    <dimen name="qrcode_line_width">1dp</dimen>
+    <dimen name="qrcode_line_margin">10dp</dimen>
+    <dimen name="qrcode_title_size">20sp</dimen>
+    <dimen name="qrcode_title_padding">10dp</dimen>
+</resources>

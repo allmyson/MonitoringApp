@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#000000"
+              android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#2196F3"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:src="@drawable/qrcode_back_icon"
+            android:layout_centerVertical="true"
+            android:id="@+id/common_im_leftImage"
+            android:layout_width="18dp"
+            android:layout_height="18dp"/>
+        <TextView
+            android:text="扫描二维码"
+            android:id="@+id/common_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:maxLength="8"
+            android:textSize="18dp"/>
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/common_im_rightImage"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/qrcode_light_icon"/>
+    </RelativeLayout>
+
+    <TextView
+        android:singleLine="false"
+        android:maxEms="8"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/tv_typetx"
+        android:layout_marginTop="370dp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp">
+
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+
+        <com.upsoft.qrlibrary.view.ViewfinderView
+            android:id="@+id/viewfinder_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+
+
+        <TextView
+            android:id="@+id/tv_change"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:layout_margin="40dp"
+            android:background="@drawable/qrcode_button_border"
+            android:gravity="center"
+            android:text="二维码图片识别"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+
+
+    </FrameLayout>
+
+</FrameLayout>

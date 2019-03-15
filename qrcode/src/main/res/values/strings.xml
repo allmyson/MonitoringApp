@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">QRCodeLibrary</string>
+    <string name="qrcode_title">二维码</string>
+    <string name="str_ok">确定</string>
+    <string name="cancel"> 取消</string>
+</resources>

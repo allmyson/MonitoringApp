@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">弈尚游戏</string>
+    <string name="kefu">尊敬的会员您好：\n\t\t\t弈尚游戏欢迎您！如果您需要联系官方客服，请通过官方公布的以下途径。</string>
+
+    <string name="wait_dialog_title">正在请求，请稍后</string>
+
+
+    <!-- error -->
+    <string name="error_please_check_network">请检查网络。</string>
+    <string name="error_timeout">请求超时，网络不好或者服务器不稳定。</string>
+    <string name="error_not_found_server">未发现指定服务器，请切换网络后重试。</string>
+    <string name="error_url_error">URL错误。</string>
+    <string name="error_not_found_cache">没有找到缓存.</string>
+    <string name="error_unknow">未知错误。</string>
+    <string name="error_response_code">服务器响应码%1$d</string>
+    <string name="error_response_code_dex">服务器响应码%1$d，如果你们服务器在这种情况下也返回数据你可以处理。</string>
+
+
+    <!-- Download error -->
+    <string name="download_error">下载出错了：%1$s</string>
+    <string name="download_error_server">服务器数据错误！</string>
+    <string name="download_error_network">网络不可用，请检查网络！</string>
+    <string name="download_error_storage">存储卡错误，请检查存储卡！</string>
+    <string name="download_error_space">存储卡空间不足！</string>
+    <string name="download_error_timeout">下载超时！</string>
+    <string name="download_error_un_know_host">找不到服务器。</string>
+    <string name="download_error_url">URL地址错误。</string>
+    <string name="download_error_un">未知错误。</string>
+
+    <!-- Download status -->
+    <string name="download_progress">已下载：%1$d&#037;&#037;，速度：%2$skb&#047;s</string>
+    <string name="download_status_pause">暂停</string>
+    <string name="download_status_be_pause">下载被暂停</string>
+    <string name="download_status_re_download">重新下载</string>
+    <string name="download_status_again_download">再次尝试</string>
+    <string name="download_status_resume">继续下载</string>
+    <string name="download_status_finish">下载完成！</string>
+
+
+    <string name="folder_name">文件名</string>
+    <string name="image_num">图片数量</string>
+    <string name="all_folder">选择文件夹</string>
+    <string name="sheet">张/部</string>
+    <string name="shoot">拍摄</string>
+    <string name="picture">图片</string>
+    <string name="finish">确认</string>
+    <string name="temp_date">2015年12月2日</string>
+    <string name="msg_no_camera">没有系统相机</string>
+    <string name="msg_amount_limit">已经达到最高选择数量</string>
+
+    <string name="open_camera_fail">相册初始化失败!</string>
+    <string name="empty_sdcard">没有SD卡</string>
+
+
+    <string name="ssc">全天开奖120期：10点至22点，每10分钟开奖一期；22点至凌晨2点，5分钟一期</string>
+    <string name="ffc">全天开奖，1分钟开一期</string>
+    <string name="ssc_wxzx_fs">每位至少选择一个号码，竞猜开奖号码的全部五位，号码和位置都对应即中奖，奖金182000.00YB</string>
+    <string name="ssc_dwd_gw">至少选择1个号码，选号与开奖号码一致即中奖，奖金18.20YB</string>
+    <string name="ssc_wxhz_dxds">0到22为小，23到45为大;奇数为单，偶数为双。从大小单双中至少选择1个，选号与开奖结果一致即中奖，奖金3.64YB</string>
+    <string name="ssc_hexzx_fs">从0-9中选择2个数字组成一注，所选号码与开奖号码的后二位相同，顺序不限（不含对子），奖金91.00YB</string>
+    <string name="ssc_hexzx_dxds">从十位个位“大小单双”中至少各选择一个组成一注，选号与开奖结果一致即中奖，奖金7.28YB</string>
+    <string name="cz_wx_tip">请使用微信扫一扫，完成微信转账。若支付失败请联系客服手动转账，大额充值，请联系客服。</string>
+
+
+</resources>
