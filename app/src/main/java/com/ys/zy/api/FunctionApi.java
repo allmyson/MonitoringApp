@@ -8,7 +8,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import com.yongchun.library.view.ImageSelectorActivity;
-import com.ys.zy.sp.UserSP;
 import com.ys.zy.util.SystemUtil;
 import com.ys.zy.util.ToastUtil;
 
@@ -27,7 +26,8 @@ public class FunctionApi {
     }
 
     public static boolean isLogin(Context mContext) {
-        return UserSP.isLogin(mContext);
+//        return UserSP.isLogin(mContext);
+        return true;
     }
 
 

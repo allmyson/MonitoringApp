@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.ys.zy.R;
 import com.ys.zy.base.BaseFragment;
+import com.ys.zy.ui.NoNetView;
 
 /**
  * @author lh
@@ -13,10 +14,13 @@ import com.ys.zy.base.BaseFragment;
  * @description -------------------------------------------------------
  * @date 2018/10/23 17:09
  */
-public class OneFragment extends BaseFragment implements View.OnClickListener,SwipeRefreshLayout.OnRefreshListener {
+public class OneFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+    private NoNetView noNetView;
+
     public static OneFragment newInstance() {
         return new OneFragment();
     }
+
     @Override
     public void onRefresh() {
 
@@ -29,7 +33,13 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,Sw
 
     @Override
     protected void init() {
-
+        noNetView = getView(R.id.nnv_);
+        noNetView.setClickListener(new NoNetView.ClickListener() {
+            @Override
+            public void reload() {
+                show("重新加载");
+            }
+        });
     }
 
     @Override
