@@ -62,4 +62,6 @@
     <string name="cz_wx_tip">请使用微信扫一扫，完成微信转账。若支付失败请联系客服手动转账，大额充值，请联系客服。</string>
 
 
+    <string name="tag_key_translation_z">translation_z</string>
+
 </resources>

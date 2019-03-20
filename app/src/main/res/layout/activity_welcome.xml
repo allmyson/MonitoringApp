@@ -12,7 +12,7 @@
         android:id="@+id/tv_delay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:layout_alignParentRight="true"
         android:textColor="@android:color/white"
         android:padding="10dp"

@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ededed"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl_"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="第2个"/>
+        android:layout_marginBottom="10dp"
+        android:background="#f7f7f7"
+        app:tabIndicatorColor="#dd2230"
+        app:tabIndicatorHeight="2dp"
+        app:tabSelectedTextColor="#dd2230"
+        app:tabTextColor="#a5a5a5" />
+
+    <com.ys.zy.ui.LhViewPager
+        android:id="@+id/vp_"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>
