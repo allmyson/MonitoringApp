@@ -2,10 +2,16 @@ package com.ys.zy.fragment;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.GridView;
 
 import com.ys.zy.R;
+import com.ys.zy.adapter.GameAdapter;
 import com.ys.zy.base.BaseFragment;
+import com.ys.zy.bean.GameBean;
 import com.ys.zy.ui.NoNetView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lh
@@ -15,8 +21,9 @@ import com.ys.zy.ui.NoNetView;
  * @date 2018/10/23 17:09
  */
 public class OneFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
-    private NoNetView noNetView;
-
+    private GridView gv;
+    private GameAdapter gameAdapter;
+    private List<GameBean> list;
     public static OneFragment newInstance() {
         return new OneFragment();
     }
@@ -33,13 +40,11 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
 
     @Override
     protected void init() {
-        noNetView = getView(R.id.nnv_);
-        noNetView.setClickListener(new NoNetView.ClickListener() {
-            @Override
-            public void reload() {
-                show("重新加载");
-            }
-        });
+        gv = getView(R.id.gv_);
+        list = new ArrayList<>();
+        list.addAll(GameBean.getDefaultList());
+        gameAdapter = new GameAdapter(mContext,list,R.layout.item_game);
+        gv.setAdapter(gameAdapter);
     }
 
     @Override

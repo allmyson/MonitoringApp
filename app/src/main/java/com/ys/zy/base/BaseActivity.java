@@ -21,10 +21,10 @@ import com.ys.zy.R;
 import com.ys.zy.util.ActivityUtil;
 import com.ys.zy.util.Constant;
 import com.ys.zy.util.L;
+import com.ys.zy.util.NetWorkUtil;
 import com.ys.zy.util.PermissionUtil;
 
 import java.util.List;
-
 
 
 public abstract class BaseActivity extends FragmentActivity implements PermissionListener, View.OnClickListener {
@@ -35,13 +35,14 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
     private static final int REQUEST_CODE_SETTING = 300;
     private String[] permissions;
     protected RelativeLayout backRL;
+
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         mContext = this;
         mActivity = this;
         initImmersionBar();
-       ActivityUtil.addActivity(this);
+        ActivityUtil.addActivity(this);
         setContentView(getLayoutId());
         if (isShowPermission()) {
             checkPermission();
@@ -89,7 +90,7 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
         try {
             return (E) findViewById(id);
         } catch (ClassCastException ex) {
-           L.e(ex.toString());
+            L.e(ex.toString());
             throw ex;
         }
     }
@@ -169,7 +170,7 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
 
         @Override
         public void onReceive(Context context, Intent intent) {
-           L.e("收到登录成功的广播" + intent.getAction());
+            L.e("收到登录成功的广播" + intent.getAction());
             loginCallback(context, intent);
         }
     }
@@ -191,31 +192,6 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
         super.onDestroy();
         mImmersionBar.destroy();
 //        unRegistLogin();
-    }
-
-
-    /**
-     * 打开新Activity
-     *
-     * @param intent  intent
-     * @param animIn  新Activity进入的动画
-     * @param animOut 当前Activity退出的动画
-     */
-    public void startActivity(Intent intent, int animIn, int animOut) {
-        super.startActivity(intent);
-        overridePendingTransition(animIn, animOut);
-    }
-
-
-    /**
-     * 退出Activity
-     *
-     * @param animIn  老Activity进入的动画
-     * @param animOut 当前Activity退出的动画
-     */
-    public void finish(int animIn, int animOut) {
-        super.finish();
-        overridePendingTransition(animIn, animOut);
     }
 
 
