@@ -18,6 +18,7 @@ import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
 import com.ys.zy.R;
+import com.ys.zy.ui.TitleView;
 import com.ys.zy.util.ActivityUtil;
 import com.ys.zy.util.Constant;
 import com.ys.zy.util.L;
@@ -35,7 +36,7 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
     private static final int REQUEST_CODE_SETTING = 300;
     private String[] permissions;
     protected RelativeLayout backRL;
-
+    protected TitleView titleView;
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
@@ -48,6 +49,7 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
             checkPermission();
         }
 //        registLogin();
+        titleView = getView(R.id.title);
         initView();
         getData();
     }
