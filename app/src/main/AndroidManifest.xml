@@ -28,7 +28,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MsgDetailActivity"></activity>
+        <activity android:name=".activity.AddBankCardActivity"></activity>
+        <activity android:name=".activity.BankCardActivity" />
+        <activity android:name=".activity.BindPhoneActivity" />
+        <activity android:name=".activity.SetJyPsdActivity" />
+        <activity android:name=".activity.SetLoginPsdActivity" />
+        <activity android:name=".activity.SafeActivity" />
+        <activity android:name=".activity.SetNameActivity" />
+        <activity android:name=".activity.UserInfoActivity" />
+        <activity android:name=".activity.MsgDetailActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -40,7 +48,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".activity.MainActivity"></activity>
+        <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +56,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".activity.LoginActivity" />
     </application>
 
 </manifest>
