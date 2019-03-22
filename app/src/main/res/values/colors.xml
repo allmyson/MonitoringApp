@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="main_color">#dd2230</color>
     <color name="gray_color">#333333</color>
+    <color name="bar_color">#ededed</color>
 
     <color name="textcolor1">#333333</color>
     <color name="textcolor2">#999999</color>

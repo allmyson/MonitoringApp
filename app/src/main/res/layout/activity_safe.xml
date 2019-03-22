@@ -20,7 +20,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/ll_head"
+            android:id="@+id/ll_setLoginPsd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -34,17 +34,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="头像"
+                android:text="设置登录密码"
                 android:textColor="#1e1e1e"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/iv_head"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:scaleType="fitXY"
-                android:src="@mipmap/bg_default_head2" />
 
             <ImageView
                 android:layout_width="15dp"
@@ -59,7 +52,7 @@
             android:background="#ededed" />
 
         <LinearLayout
-            android:id="@+id/ll_nick"
+            android:id="@+id/ll_setJyPsd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -73,18 +66,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="昵称"
+                android:text="设置交易密码"
                 android:textColor="#1e1e1e"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_nick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="时间旅行者"
-                android:textColor="#a5a5a5"
-                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="15dp"
@@ -99,6 +84,7 @@
             android:background="#ededed" />
 
         <LinearLayout
+            android:id="@+id/ll_bindPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -112,20 +98,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="账号"
+                android:text="绑定手机"
                 android:textColor="#1e1e1e"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_isBind"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="esun007"
+                android:text="未绑定"
                 android:textColor="#a5a5a5"
                 android:textSize="16sp" />
 
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_more" />
         </LinearLayout>
+
 
         <View
             android:layout_width="match_parent"
@@ -133,6 +125,7 @@
             android:background="#ededed" />
 
         <LinearLayout
+            android:id="@+id/ll_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -146,53 +139,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="会员类型"
+                android:text="银行卡管理"
                 android:textColor="#1e1e1e"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="代理会员"
-                android:textColor="#a5a5a5"
-                android:textSize="16sp" />
-
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_more" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#ededed" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingTop="15dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="15dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="自身返点"
-                android:textColor="#1e1e1e"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="8.0"
-                android:textColor="#a5a5a5"
-                android:textSize="16sp" />
-
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
