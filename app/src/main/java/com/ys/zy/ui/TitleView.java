@@ -85,4 +85,19 @@ public class TitleView extends LinearLayout {
         }
         return this;
     }
+
+    public Button getBtn() {
+        return btn;
+    }
+
+    public TitleView setBtnClickable(boolean canClick){
+        if(canClick){
+            btn.setClickable(true);
+            btn.setAlpha(1f);
+        }else {
+            btn.setClickable(false);
+            btn.setAlpha(0.3f);
+        }
+        return this;
+    }
 }

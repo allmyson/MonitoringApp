@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ys.zy.R;
+import com.ys.zy.activity.SafeActivity;
 import com.ys.zy.activity.UserInfoActivity;
 import com.ys.zy.adapter.MyAdapter;
 import com.ys.zy.base.BaseFragment;
@@ -69,6 +70,7 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
                         startActivity(new Intent(mContext, UserInfoActivity.class));
                         break;
                     case 1:
+                        startActivity(new Intent(mContext, SafeActivity.class));
                         break;
                     case 2:
                         break;

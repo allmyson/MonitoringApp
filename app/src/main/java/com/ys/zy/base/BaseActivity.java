@@ -22,7 +22,6 @@ import com.ys.zy.ui.TitleView;
 import com.ys.zy.util.ActivityUtil;
 import com.ys.zy.util.Constant;
 import com.ys.zy.util.L;
-import com.ys.zy.util.NetWorkUtil;
 import com.ys.zy.util.PermissionUtil;
 
 import java.util.List;
