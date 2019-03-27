@@ -2,6 +2,7 @@ package com.ys.zy.util;
 
 import android.support.design.widget.TabLayout;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ public class TabUtil {
                         Field mTextViewField = tabView.getClass().getDeclaredField("mTextView");
                         mTextViewField.setAccessible(true);
                         TextView mTextView = (TextView) mTextViewField.get(tabView);
+//                        mTextView.setTextSize(DensityUtil.sp2px(tabLayout.getContext(),16));
                         tabView.setPadding(0, 0, 0, 0);
                         //因为我想要的效果是   字多宽线就多宽，所以测量mTextView的宽度
                         int width = 0;
@@ -45,4 +47,21 @@ public class TabUtil {
             }
         });
     }
+
+    public static void changeTabsTextSize(final TabLayout tabLayout,float textSize) {
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    ((TextView) tabViewChild).setTextSize(textSize);
+//                    ((TextView) tabViewChild).setText("折欲");
+                }
+            }
+        }
+    }
+
 }

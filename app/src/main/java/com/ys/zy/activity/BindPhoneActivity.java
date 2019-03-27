@@ -32,7 +32,7 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher {
             }
         });
         phoneET = getView(R.id.et_phone);
-        numET = getView(R.id.et_Num);
+        numET = getView(R.id.et_num);
         phoneET.addTextChangedListener(this);
         numET.addTextChangedListener(this);
         sendBtn = getView(R.id.btn_send);

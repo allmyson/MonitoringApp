@@ -49,12 +49,7 @@ public class TwoFragment extends BaseFragment implements View.OnClickListener {
         vp.setAdapter(mAdapter);
         vp.setOffscreenPageLimit(2);
         tabLayout.setupWithViewPager(vp);
-        TabUtil.setTabWidth(tabLayout, DensityUtil.dp2px(mContext, 60));
-//        LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
-//        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-//        linearLayout.setDividerDrawable(ContextCompat.getDrawable(this,
-//                R.drawable.layout_divider_vertical));
-//        linearLayout.setDividerPadding(DensityUtil.dp2px(mContext, 10));
+        TabUtil.setTabWidth(tabLayout, DensityUtil.dp2px(mContext, 48));
     }
 
     @Override
