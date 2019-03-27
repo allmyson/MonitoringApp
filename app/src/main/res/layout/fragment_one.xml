@@ -7,19 +7,20 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingRight="10dp">
+        android:layout_height="48dp"
+        android:background="@color/main_gray"
+        android:paddingRight="12dp">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
             android:src="@mipmap/topbar_home_logo_icon" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:scaleType="fitXY"
@@ -28,29 +29,27 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="144dp"
         android:background="#dd2230" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="8dp"
         android:background="#ededed" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         android:background="#ffffff"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingTop="7dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="7dp">
+      >
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginRight="5dp"
+            android:layout_marginLeft="12dp"
             android:scaleType="fitXY"
             android:src="@mipmap/home_notice_icon" />
 
@@ -65,15 +64,15 @@
             android:textColor="#000000"
             android:text="恭喜V1093玩家最后的胜利者中了千元大奖" />
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="5dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginRight="12dp"
             android:scaleType="fitXY"
             android:src="@mipmap/home_notice_icon_more" />
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="8dp"
         android:background="#ededed" />
     <GridView
         android:id="@+id/gv_"

@@ -11,12 +11,15 @@
         android:background="#ffffff"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingLeft="24dp"
+        android:paddingTop="16dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="16dp">
 
         <ImageView
             android:id="@+id/iv_"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginRight="10dp"
             android:scaleType="fitXY"
             android:src="@mipmap/mine_icon_personalinf" />
@@ -30,11 +33,14 @@
             android:maxLines="1"
             android:text="个人信息"
             android:textColor="#1e1e1e"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerInParent="true"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_more" />
     </LinearLayout>
@@ -42,7 +48,7 @@
     <View
         android:id="@+id/view_"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="40dp"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="58dp"
         android:background="#d1d1d1" />
 </LinearLayout>

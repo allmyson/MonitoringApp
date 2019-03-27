@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#ededed"
     android:orientation="vertical"
-    tools:context=".activity.UserInfoActivity">
+    >
 
     <com.ys.zy.ui.TitleView
         android:id="@+id/title"
@@ -20,7 +20,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/ll_setLoginPsd"
+            android:id="@+id/ll_dlsm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -34,43 +34,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="设置登录密码"
-                android:textColor="#1e1e1e"
-                android:textSize="16sp"
-               />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:scaleType="fitXY"
-                android:src="@mipmap/ic_more" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#ededed" />
-
-        <LinearLayout
-            android:id="@+id/ll_setJyPsd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:paddingTop="16dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="设置交易密码"
+                android:text="代理说明"
                 android:textColor="#1e1e1e"
                 android:textSize="16sp"
                 />
 
+
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
@@ -80,11 +49,11 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="8dp"
             android:background="#ededed" />
 
         <LinearLayout
-            android:id="@+id/ll_bindPhone"
+            android:id="@+id/ll_xjkh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -98,18 +67,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="绑定手机"
+                android:text="下级开户"
                 android:textColor="#1e1e1e"
                 android:textSize="16sp"
-              />
+                />
 
-            <TextView
-                android:id="@+id/tv_isBind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="未绑定"
-                android:textColor="#a5a5a5"
-                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="15dp"
@@ -118,14 +80,12 @@
                 android:src="@mipmap/ic_more" />
         </LinearLayout>
 
-
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="8dp"
             android:background="#ededed" />
-
         <LinearLayout
-            android:id="@+id/ll_card"
+            android:id="@+id/ll_tdbb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -139,10 +99,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="银行卡管理"
+                android:text="团队报表"
                 android:textColor="#1e1e1e"
                 android:textSize="16sp"
-               />
+                />
+
 
             <ImageView
                 android:layout_width="15dp"
@@ -151,5 +112,68 @@
                 android:src="@mipmap/ic_more" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#ededed" />
+        <LinearLayout
+            android:id="@+id/ll_xjgl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingTop="16dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="下级管理"
+                android:textColor="#1e1e1e"
+                android:textSize="16sp"
+                />
+
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_more" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#ededed" />
+        <LinearLayout
+            android:id="@+id/ll_xjjyjl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingTop="16dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="下级交易记录"
+                android:textColor="#1e1e1e"
+                android:textSize="16sp"
+                />
+
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_more" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

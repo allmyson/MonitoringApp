@@ -6,17 +6,17 @@
     android:layout_height="match_parent"
     android:background="#ededed"
     android:orientation="vertical"
-    tools:context=".activity.UserInfoActivity">
+    >
 
     <com.ys.zy.ui.TitleView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="48dp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="22dp"
         android:background="#d1d1d1" />
 
     <TextView
@@ -24,10 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="25dp"
         android:text="请设置登录密码，你可以用绑定的账号+密码登录。"
         android:textColor="#a5a5a5"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,8 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="原密码    "
+            android:textColor="#1e1e1e"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -59,6 +60,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:textSize="16sp"
                 android:hint="填写原密码"
                 android:inputType="textPassword"
                 android:padding="5dp"
@@ -66,7 +68,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:layout_marginLeft="5dp"
                 android:background="#d1d1d1" />
         </LinearLayout>
@@ -87,8 +89,9 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="新密码    "
+            android:textColor="#1e1e1e"
             android:textSize="16sp"
-            android:textStyle="bold" />
+             />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -101,6 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:textSize="16sp"
                 android:background="@null"
                 android:hint="填写新密码"
                 android:inputType="textPassword"
@@ -109,7 +113,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:layout_marginLeft="5dp"
                 android:background="#d1d1d1" />
         </LinearLayout>
@@ -130,8 +134,9 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="确认密码"
+            android:textColor="#1e1e1e"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -145,6 +150,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:textSize="16sp"
                 android:hint="再次填写确认"
                 android:inputType="textPassword"
                 android:padding="5dp"
@@ -152,7 +158,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:layout_marginLeft="5dp"
                 android:background="#d1d1d1" />
         </LinearLayout>
@@ -162,7 +168,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
         android:layout_marginRight="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -173,7 +179,7 @@
             android:layout_weight="1"
             android:text="（密码必须是8-16位数字，字母组合）"
             android:textColor="#a5a5a5"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <RelativeLayout
             android:id="@+id/rl_forgetPsd"
@@ -186,7 +192,7 @@
                 android:layout_centerInParent="true"
                 android:text="忘记密码"
                 android:textColor="@color/main_color"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

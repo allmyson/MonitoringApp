@@ -7,8 +7,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingRight="10dp">
+        android:layout_height="48dp"
+        android:paddingRight="8dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,8 +19,8 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:scaleType="fitXY"
@@ -52,9 +52,9 @@
                 android:id="@+id/lv_"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="20dp"
                 android:divider="#d8d8d8"
-                android:dividerHeight="1dp"
+                android:dividerHeight="0.5dp"
                 android:scrollbars="none"
                 android:visibility="gone" />
         </FrameLayout>
