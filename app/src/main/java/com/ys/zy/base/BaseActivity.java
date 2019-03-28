@@ -244,4 +244,14 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
 //                break;
 //        }
 //    }
+
+    protected void setBtnClickable(boolean canClick,View view){
+        if(canClick){
+            view.setClickable(true);
+            view.setAlpha(1f);
+        }else {
+            view.setClickable(false);
+            view.setAlpha(0.3f);
+        }
+    }
 }

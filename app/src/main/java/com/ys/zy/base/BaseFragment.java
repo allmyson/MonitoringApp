@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.ys.zy.ui.TitleView;
 import com.ys.zy.util.L;
 
 
@@ -74,5 +75,16 @@ public abstract class BaseFragment extends Fragment {
 
     protected void show(String str) {
         Toast.makeText(mContext, str, Toast.LENGTH_SHORT).show();
+    }
+
+
+    protected void setBtnClickable(boolean canClick,View view){
+        if(canClick){
+            view.setClickable(true);
+            view.setAlpha(1f);
+        }else {
+            view.setClickable(false);
+            view.setAlpha(0.3f);
+        }
     }
 }
