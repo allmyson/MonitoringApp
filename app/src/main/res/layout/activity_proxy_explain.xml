@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ededed"
+    android:background="#f7f7f7"
     android:orientation="vertical">
 
     <com.ys.zy.ui.TitleView
@@ -27,50 +27,105 @@
         android:scaleType="fitXY"
         android:src="@mipmap/proxy_img" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginRight="8dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/checkbox_icon_select" />
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="每位游戏的会员都是代理会员，可以不断发展下级，赚取返点佣金。"
-                android:textColor="#565656"
-                android:textSize="12sp" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="26dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rect_red_xu"
-                android:gravity="center"
-                android:text="返点佣金=（自身返点率-下级返点率）X 下级投注金额"
-                android:textColor="@color/main_color"
-                android:textSize="12sp" />
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="例如：自身返点率为8.0点，下级为7.0点，下级投注100元则自身活动返点佣金（8.0%-7.0%）x 100=1,即可以从下级投注中获得1元。"
-                android:textColor="#565656"
-                android:textSize="12sp" />
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginRight="8dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/checkbox_icon_select" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="每位游戏的会员都是代理会员，可以不断发展下级，赚取返点佣金。"
+                            android:textColor="#565656"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="26dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/rect_red_xu"
+                            android:gravity="center"
+                            android:layerType="software"
+                            android:text="返点佣金=（自身返点率-下级返点率）X 下级投注金额"
+                            android:textColor="@color/main_color"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="例如：自身返点率为8.0点，下级为7.0点，下级投注100元则自身活动返点佣金（8.0%-7.0%）x 100=1,即可以从下级投注中获得1元。"
+                            android:textColor="#565656"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginRight="8dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/checkbox_icon_select" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="返点越低赔率越低，建议为下级开户时不要设置过低的返点。"
+                            android:textColor="#565656"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+        <com.ys.zy.ui.ImaginaryLineView
+            android:id="@+id/ilv_"
+            android:layout_width="1dp"
+            android:layout_height="114dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="16dp" />
+    </FrameLayout>
 </LinearLayout>
