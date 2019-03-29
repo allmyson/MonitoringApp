@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ededed"
-    android:orientation="vertical"
-    tools:context=".activity.UserInfoActivity">
+    android:orientation="vertical">
 
     <com.ys.zy.ui.TitleView
         android:id="@+id/title"
@@ -36,8 +35,7 @@
                 android:layout_weight="1"
                 android:text="设置登录密码"
                 android:textColor="#1e1e1e"
-                android:textSize="16sp"
-               />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="15dp"
@@ -68,8 +66,7 @@
                 android:layout_weight="1"
                 android:text="设置交易密码"
                 android:textColor="#1e1e1e"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="15dp"
@@ -100,8 +97,7 @@
                 android:layout_weight="1"
                 android:text="绑定手机"
                 android:textColor="#1e1e1e"
-                android:textSize="16sp"
-              />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_isBind"
@@ -141,8 +137,7 @@
                 android:layout_weight="1"
                 android:text="银行卡管理"
                 android:textColor="#1e1e1e"
-                android:textSize="16sp"
-               />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="15dp"
