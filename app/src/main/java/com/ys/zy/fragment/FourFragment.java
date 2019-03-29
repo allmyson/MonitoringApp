@@ -11,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ys.zy.R;
+import com.ys.zy.activity.AboutActivity;
+import com.ys.zy.activity.MyFormActivity;
 import com.ys.zy.activity.ProxyCenterActivity;
 import com.ys.zy.activity.SafeActivity;
 import com.ys.zy.activity.UserInfoActivity;
@@ -77,8 +79,10 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
                         startActivity(new Intent(mContext, ProxyCenterActivity.class));
                         break;
                     case 3:
+                        startActivity(new Intent(mContext, MyFormActivity.class));
                         break;
                     case 4:
+                        startActivity(new Intent(mContext, AboutActivity.class));
                         break;
                 }
             }
