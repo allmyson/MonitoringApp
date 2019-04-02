@@ -28,7 +28,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.AddBankCardActivity"></activity>
+        <activity android:name=".activity.SubDealHistoryActivity"></activity>
+        <activity android:name=".activity.SubOpenAccountActivity" />
+        <activity android:name=".activity.SubManageActivity" />
+        <activity android:name=".activity.TeamReportActivity" />
+        <activity android:name=".activity.ProxyExplainActivity" />
+        <activity android:name=".activity.ProxyCenterActivity" />
+        <activity android:name=".activity.AddBankCardActivity" />
         <activity android:name=".activity.BankCardActivity" />
         <activity android:name=".activity.BindPhoneActivity" />
         <activity android:name=".activity.SetJyPsdActivity" />
