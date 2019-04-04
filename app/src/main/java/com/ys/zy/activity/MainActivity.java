@@ -59,6 +59,11 @@ public class MainActivity extends BaseActivity {
                         .selectTextColor);
                 ((ImageView) tab.getCustomView().findViewById(R.id.iv)).setImageResource(list.get(tab.getPosition())
                         .selectIconId);
+                if(tab.getPosition()==3){
+                    setBarColor("#ffffff");
+                }else {
+                    setBarColor("#f7f7f7");
+                }
             }
 
             @Override

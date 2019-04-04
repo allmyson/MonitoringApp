@@ -29,6 +29,7 @@ public class MyFormActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("个人报表");
         tabLayout = getView(R.id.tl_);
         vp = getView(R.id.vp_);

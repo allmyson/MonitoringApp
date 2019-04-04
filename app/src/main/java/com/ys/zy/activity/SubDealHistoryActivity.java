@@ -22,6 +22,7 @@ public class SubDealHistoryActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("下级交易记录");
         lv = getView(R.id.lv_);
         list = new ArrayList<>();

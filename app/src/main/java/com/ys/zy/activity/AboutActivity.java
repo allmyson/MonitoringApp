@@ -24,6 +24,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("关于");
         shareLL = getView(R.id.ll_shareApp);
         updateLL = getView(R.id.ll_update);

@@ -21,6 +21,7 @@ public class SetJyPsdActivity extends BaseActivity implements TextWatcher {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         psdET = getView(R.id.et_psd);
         rePsdET = getView(R.id.et_rePsd);
         psdET.addTextChangedListener(this);

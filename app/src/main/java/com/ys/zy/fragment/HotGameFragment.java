@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.ys.zy.R;
@@ -12,6 +13,7 @@ import com.ys.zy.base.BaseFragment;
 import com.ys.zy.bean.GameBean;
 import com.ys.zy.ui.NoNetView;
 import com.ys.zy.util.NetWorkUtil;
+import com.ys.zy.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,12 @@ public class HotGameFragment extends BaseFragment implements SwipeRefreshLayout.
                     /*不是listView的顶部时，下拉刷新组件不可见*/
                     swipeRefreshLayout.setEnabled(false);
                 }
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ToastUtil.show(mContext, "ssa" + position);
             }
         });
     }

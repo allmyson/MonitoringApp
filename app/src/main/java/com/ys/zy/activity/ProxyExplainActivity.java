@@ -20,6 +20,7 @@ public class ProxyExplainActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("代理说明");
         ilv = getView(R.id.ilv_);
         ilv.setLineAttribute(Color.parseColor("#d1d1d1"), 5, new float[]{10,5});

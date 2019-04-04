@@ -19,6 +19,7 @@ public class ProxyCenterActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("代理中心");
         dlsmLL = getView(R.id.ll_dlsm);
         xjkhLL = getView(R.id.ll_xjkh);

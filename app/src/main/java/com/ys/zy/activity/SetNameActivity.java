@@ -22,6 +22,7 @@ public class SetNameActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         et = getView(R.id.et_);
         String name = getIntent().getStringExtra("name");
         et.setText(StringUtil.valueOf(name));

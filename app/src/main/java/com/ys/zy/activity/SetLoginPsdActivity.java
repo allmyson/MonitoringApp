@@ -23,6 +23,7 @@ public class SetLoginPsdActivity extends BaseActivity implements TextWatcher {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("设置登录密码").showBtn(true).setBtnText("保存").setBtnClickable(false).setDoListener(new TitleView.DoListener() {
             @Override
             public void finish() {
