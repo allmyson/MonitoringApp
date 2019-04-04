@@ -32,6 +32,7 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:text="个人信息"
+            android:typeface="sans"
             android:textColor="#1e1e1e"
             android:textSize="16sp"
             android:textStyle="bold" />
