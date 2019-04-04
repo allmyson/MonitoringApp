@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 调用摄像头的权限 -->
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 文件系统权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" /> <!-- SD卡写权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- 调用系统发送短信 -->
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -28,7 +27,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SubDealHistoryActivity"></activity>
+        <activity android:name=".activity.Fast3Activity"></activity>
+        <activity android:name=".activity.SubDealHistoryActivity" />
         <activity android:name=".activity.SubOpenAccountActivity" />
         <activity android:name=".activity.SubManageActivity" />
         <activity android:name=".activity.TeamReportActivity" />
@@ -43,9 +43,9 @@
         <activity android:name=".activity.SetNameActivity" />
         <activity android:name=".activity.UserInfoActivity" />
         <activity android:name=".activity.MsgDetailActivity" />
-        <activity android:name=".activity.UpdateInfoActivity"/>
-        <activity android:name=".activity.MyFormActivity"/>
-        <activity android:name=".activity.AboutActivity"/>
+        <activity android:name=".activity.UpdateInfoActivity" />
+        <activity android:name=".activity.MyFormActivity" />
+        <activity android:name=".activity.AboutActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
