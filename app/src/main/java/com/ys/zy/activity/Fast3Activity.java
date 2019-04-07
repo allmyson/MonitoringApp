@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.ys.zy.fragment.HotGameFragment;
 import com.ys.zy.fragment.WinnerListFragment;
 import com.ys.zy.ui.LhViewPager;
 import com.ys.zy.util.DensityUtil;
+import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.TabUtil;
 
 import java.util.ArrayList;
@@ -44,7 +46,10 @@ public class Fast3Activity extends BaseActivity {
     public static final int TYPE_JL = 101;
     private int currentType = TYPE_TZ;
     private Fragment tzFragment, jlFragment;
-
+    private TextView moneyTV;
+    private ImageView showOrHideIV;
+    private boolean isShow = true;
+    private String money;
     @Override
     public int getLayoutId() {
         return R.layout.activity_fast3;
@@ -52,9 +57,13 @@ public class Fast3Activity extends BaseActivity {
 
     @Override
     public void initView() {
-        initFragment();
+        moneyTV = getView(R.id.tv_money);
+        money = moneyTV.getText().toString();
+        showOrHideIV = getView(R.id.iv_showOrHide);
+        showOrHideIV.setOnClickListener(this);
         manager = getSupportFragmentManager();
         type = getIntent().getIntExtra("type", TYPE_JSK3);
+        initFragment();
         backRL = getView(R.id.rl_back);
         backRL.setOnClickListener(this);
         gameLL = getView(R.id.ll_game);
@@ -115,6 +124,18 @@ public class Fast3Activity extends BaseActivity {
                     showFragment(jlFragment);
                 }
                 break;
+
+            case R.id.iv_showOrHide:
+                if(isShow){
+                    isShow = false;
+                    showOrHideIV.setImageResource(R.mipmap.btn_hide);
+                    moneyTV.setText(StringUtil.changeToX(money));
+                }else {
+                    isShow = true;
+                    showOrHideIV.setImageResource(R.mipmap.btn_show);
+                    moneyTV.setText(money);
+                }
+                break;
         }
     }
 
@@ -122,13 +143,6 @@ public class Fast3Activity extends BaseActivity {
         Intent intent = new Intent(context, Fast3Activity.class);
         intent.putExtra("type", type);
         context.startActivity(intent);
-    }
-
-    private List<TabBean> getList() {
-        List<TabBean> list = new ArrayList<>();
-        list.add(new TabBean("我要投注", HotGameFragment.newInstance()));
-        list.add(new TabBean("投注记录", WinnerListFragment.newInstance()));
-        return list;
     }
 
     private Fragment currentFragment;
@@ -154,7 +168,7 @@ public class Fast3Activity extends BaseActivity {
     }
 
     private void initFragment() {
-        tzFragment = Fast3TZFragment.newInstance();
-        jlFragment = Fast3JLFragment.newInstance();
+        tzFragment = Fast3TZFragment.newInstance(type);
+        jlFragment = Fast3JLFragment.newInstance(type);
     }
 }

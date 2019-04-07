@@ -13,11 +13,17 @@ import com.ys.zy.adapter.Fast3SumAdapter;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.bean.Fast3Bean;
 import com.ys.zy.dialog.DialogUtil;
+import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.dialog.TipFragment;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ys.zy.activity.Fast3Activity.TYPE_1FK3;
+import static com.ys.zy.activity.Fast3Activity.TYPE_5FK3;
+import static com.ys.zy.activity.Fast3Activity.TYPE_JSK3;
 
 public class Fast3TZFragment extends BaseFragment implements View.OnClickListener {
     private GridView gv;
@@ -28,13 +34,37 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     private LinearLayout priceLL;
     private TextView zhuAndPriceTV;
     private TextView tzTV;
+    private int type;
+    private String gameName;
+    private String gameNo = "0214983";
 
-    public static Fast3TZFragment newInstance() {
-        return new Fast3TZFragment();
+    public static Fast3TZFragment newInstance(int type) {
+        Fast3TZFragment fast3TZFragment = new Fast3TZFragment();
+        fast3TZFragment.setType(type);
+        return fast3TZFragment;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override
     protected void init() {
+        switch (type) {
+            case TYPE_JSK3:
+                gameName = "江苏快3";
+                break;
+            case TYPE_1FK3:
+                gameName = "1分快3";
+                break;
+            case TYPE_5FK3:
+                gameName = "5分快3";
+                break;
+        }
         zhuAndPriceTV = getView(R.id.tv_zhuAndPrice);
         tzTV = getView(R.id.tv_tz);
         tzTV.setOnClickListener(this);
@@ -70,7 +100,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                zhuAndPriceTV.setText("共" + fast3SumAdapter.getTZList().size() + "注," + StringUtil.StringToDoubleStr(fast3SumAdapter.getTZList().size() * StringUtil.StringToDoubleTwo(priceET.getText().toString())) + "元");
+                zhuAndPriceTV.setText("共" + fast3SumAdapter.getTZList().size() + "注," + StringUtil.StringToDoubleStr(fast3SumAdapter.getTZList().size() * StringUtil.StringToDoubleTwo(priceET.getText().toString())) + YS.UNIT);
             }
         });
         clearTV = getView(R.id.tv_clear);
@@ -109,8 +139,14 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                             DialogUtil.removeDialog(mContext);
                         }
                     });
-                }else{
-
+                } else {
+                    DialogUtil.showTZTip(mContext, gameName, gameNo, StringUtil.StringToDoubleStr(fast3SumAdapter.getTZList().size() * StringUtil.StringToDoubleTwo(priceET.getText().toString())), fast3SumAdapter.getTZResult(), new TZTipFragment.ClickListener() {
+                        @Override
+                        public void sure() {
+                            DialogUtil.removeDialog(mContext);
+                            show("投注成功");
+                        }
+                    });
                 }
                 break;
         }

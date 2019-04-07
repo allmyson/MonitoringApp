@@ -63,6 +63,19 @@ public class Fast3SumAdapter extends CommonAdapter<Fast3Bean> {
         return list;
     }
 
+    public String getTZResult() {
+        List<Fast3Bean> list = getTZList();
+        String result = "";
+        for (int i = 0; i < list.size(); i++) {
+            if (i != list.size() - 1) {
+                result += list.get(i).value + ",";
+            } else {
+                result += list.get(i).value;
+            }
+        }
+        return result;
+    }
+
     @Override
     public void refresh(List<Fast3Bean> mDatas) {
         booleanList = new ArrayList<>();
@@ -82,7 +95,7 @@ public class Fast3SumAdapter extends CommonAdapter<Fast3Bean> {
         this.chooseListener = chooseListener;
     }
 
-    public void clear(){
+    public void clear() {
         booleanList = new ArrayList<>();
         for (Fast3Bean fast3Bean : mDatas) {
             booleanList.add(false);
