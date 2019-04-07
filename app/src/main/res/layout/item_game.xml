@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ys.zy.ui.BamRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_centerInParent="true"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
     android:background="@drawable/bg_gv"
-    >
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp">
 
     <ImageView
         android:id="@+id/iv_"
@@ -35,9 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_name"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dip"
+        android:layout_marginTop="5dip"
         android:maxLines="1"
         android:text="全天41期"
         android:textColor="#d1d1d1"
         android:textSize="12sp" />
-</com.ys.zy.ui.BamRelativeLayout>
+</RelativeLayout>

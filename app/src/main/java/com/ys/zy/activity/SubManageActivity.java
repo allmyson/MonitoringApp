@@ -22,6 +22,7 @@ public class SubManageActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("下级管理");
         lv = getView(R.id.lv_);
         list = new ArrayList<>();

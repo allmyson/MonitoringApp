@@ -31,6 +31,7 @@ public class SubOpenAccountActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("下级开户");
         tabLayout = getView(R.id.tl_);
         vp = getView(R.id.vp_);

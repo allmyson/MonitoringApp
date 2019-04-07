@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -199,7 +201,8 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
     protected void initImmersionBar() {
         mImmersionBar = ImmersionBar.with(this);
         mImmersionBar
-                .statusBarColor(R.color.main_color)   //状态栏颜色，不写默认透明色
+//                .statusBarColor(R.color.main_color)   //状态栏颜色，不写默认透明色
+                .statusBarColor(R.color.main_gray)   //状态栏颜色，不写默认透明色
                 .fitsSystemWindows(true)//解决状态栏和布局重叠问题，任选其一，默认为false，当为true时一定要指定statusBarColor()，不然状态栏为透明色
                 .init();   //所有子类都将继承这些相同的属性
     }
@@ -253,5 +256,23 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
             view.setClickable(false);
             view.setAlpha(0.3f);
         }
+    }
+
+    protected void setBarColor(String color) {
+        mImmersionBar
+                .statusBarColor(color)     //状态栏颜色，不写默认透明色
+                .fitsSystemWindows(true)//解决状态栏和布局重叠问题，任选其一，默认为false，当为true时一定要指定statusBarColor()，不然状态栏为透明色
+                .init();   //所有子类都将继承这些相同的属性
+    }
+    /**
+     * 设置 app 不随着系统字体的调整而变化
+     */
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config,res.getDisplayMetrics() );
+        return res;
     }
 }

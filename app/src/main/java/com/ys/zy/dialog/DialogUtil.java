@@ -112,11 +112,12 @@ public class DialogUtil {
 
     /**
      * 弹出确认框
+     *
      * @param context
      * @param clickListener
      * @return
      */
-    public static ShareFragment showShare(Context context, ShareFragment.ClickListener clickListener){
+    public static ShareFragment showShare(Context context, ShareFragment.ClickListener clickListener) {
         FragmentActivity activity = (FragmentActivity) context;
         removeDialog(activity);
         ShareFragment newFragment = ShareFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
@@ -131,4 +132,26 @@ public class DialogUtil {
         return newFragment;
     }
 
+    /**
+     * 弹出确认框
+     *
+     * @param context
+     * @param clickListener
+     * @return
+     */
+    public static TipFragment showTip(Context context, String content, TipFragment.ClickListener clickListener) {
+        FragmentActivity activity = (FragmentActivity) context;
+        removeDialog(activity);
+        TipFragment newFragment = TipFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
+                .Theme_Holo_Light_Dialog);
+        newFragment.setClickListener(clickListener);
+        newFragment.setContent(content);
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        // 指定一个过渡动画
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        newFragment.show(ft, mDialogTag);//Can not perform this action after onSaveInstanceState
+        ft.add(newFragment, mDialogTag);
+        ft.commitAllowingStateLoss();
+        return newFragment;
+    }
 }

@@ -29,6 +29,7 @@ public class UserInfoActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("个人信息");
         nickTV = getView(R.id.tv_nick);
         headIV = getView(R.id.iv_head);

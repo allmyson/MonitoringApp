@@ -23,6 +23,7 @@ public class SafeActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("安全中心");
         setLoginPsdLL = getView(R.id.ll_setLoginPsd);
         setJyPsdLL = getView(R.id.ll_setJyPsd);

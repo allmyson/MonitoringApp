@@ -25,6 +25,7 @@ public class BankCardActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("银行卡管理");
         lv = getView(R.id.lv_);
         list = new ArrayList<>();

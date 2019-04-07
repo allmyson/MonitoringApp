@@ -22,6 +22,7 @@ public class TeamReportActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("团队报表");
         lv = getView(R.id.lv_);
         list = new ArrayList<>();

@@ -15,6 +15,7 @@ public class AddBankCardActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("添加银行卡");
     }
 

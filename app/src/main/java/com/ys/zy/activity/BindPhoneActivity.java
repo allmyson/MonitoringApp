@@ -22,6 +22,7 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("绑定手机").showBtn(true).setBtnText("完成").setBtnClickable(false).setDoListener(new TitleView.DoListener() {
             @Override
             public void finish() {

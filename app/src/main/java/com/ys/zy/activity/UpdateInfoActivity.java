@@ -14,6 +14,7 @@ public class UpdateInfoActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor("#ededed");
         titleView.setText("更新版本");
     }
 
