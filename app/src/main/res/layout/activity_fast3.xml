@@ -72,6 +72,7 @@
                 android:textSize="16sp" />
 
             <ImageView
+                android:id="@+id/iv_gameMore"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
@@ -131,9 +132,9 @@
                 android:id="@+id/view_tzjl"
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:visibility="gone"
                 android:layout_alignParentBottom="true"
-                android:background="@color/main_color" />
+                android:background="@color/main_color"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <View

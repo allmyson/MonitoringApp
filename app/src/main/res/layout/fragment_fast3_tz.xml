@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginBottom="36dp"
         android:background="#d1d1d1"
         android:orientation="horizontal">
 
@@ -57,6 +56,7 @@
                     android:src="@mipmap/k3_s1_icon" />
 
                 <ImageView
+                    android:id="@+id/iv_showHistory"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:scaleType="fitXY"
@@ -94,36 +94,127 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="28dp"
-        android:layout_marginBottom="15dp"
-        android:text="猜3个开奖号相加的和，3-10为小，11-18为大。"
-        android:textColor="#a5a5a5"
-        android:textSize="12sp" />
-
-    <GridView
-        android:id="@+id/gv_"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginRight="34dp"
-        android:layout_weight="1"
-        android:horizontalSpacing="14dp"
-        android:numColumns="4"
-        android:scrollbars="none"
-        android:verticalSpacing="8dp" />
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/ll_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="36dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="28dp"
+                android:layout_marginBottom="15dp"
+                android:text="猜3个开奖号相加的和，3-10为小，11-18为大。"
+                android:textColor="#a5a5a5"
+                android:textSize="12sp" />
+
+            <GridView
+                android:id="@+id/gv_"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="28dp"
+                android:layout_marginRight="34dp"
+                android:horizontalSpacing="14dp"
+                android:numColumns="4"
+                android:scrollbars="none"
+                android:verticalSpacing="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ededed"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="期号"
+                    android:textColor="#a5a5a5"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="开奖号码"
+                    android:textColor="#a5a5a5"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="和值"
+                    android:textColor="#a5a5a5"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="大小"
+                    android:textColor="#a5a5a5"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="单双"
+                    android:textColor="#a5a5a5"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#e4e4e4" />
+
+            <ListView
+                android:id="@+id/lv_"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:scrollbars="none" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:background="@drawable/rect_gradient" />
+        </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/ll_price"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="#f7f7f7"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="25dp">
+        android:paddingLeft="25dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="40dp"

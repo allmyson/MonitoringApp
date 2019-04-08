@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f7f7"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="147dp"
+        android:layout_height="0.5dp"
+        android:background="#e4e4e4" />
+
+    <LinearLayout
+        android:layout_width="147dp"
+        android:layout_height="32dp"
+        android:background="#f7f7f7"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv0"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="轮盘"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#e4e4e4" />
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="1分快3"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="147dp"
+        android:layout_height="0.5dp"
+        android:background="#e4e4e4" />
+
+    <LinearLayout
+        android:layout_width="147dp"
+        android:layout_height="32dp"
+        android:background="#f7f7f7"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="推筒子"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#e4e4e4" />
+
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="5分快3"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="147dp"
+        android:layout_height="0.5dp"
+        android:background="#e4e4e4" />
+
+    <LinearLayout
+        android:layout_width="147dp"
+        android:layout_height="32dp"
+        android:background="#f7f7f7"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="最后胜利者"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#e4e4e4" />
+
+        <TextView
+            android:id="@+id/tv5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="江苏快3"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="147dp"
+        android:layout_height="0.5dp"
+        android:background="#e4e4e4" />
+
+    <LinearLayout
+        android:layout_width="147dp"
+        android:layout_height="32dp"
+        android:background="#f7f7f7"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="分分彩"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#e4e4e4" />
+
+        <TextView
+            android:id="@+id/tv7"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="北京赛车"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="147dp"
+        android:layout_height="0.5dp"
+        android:background="#e4e4e4" />
+
+    <LinearLayout
+        android:layout_width="147dp"
+        android:layout_height="32dp"
+        android:background="#f7f7f7"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv8"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="重庆时时彩"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#e4e4e4" />
+
+        <TextView
+            android:id="@+id/tv9"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="1分赛车"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="147dp"
+        android:layout_height="0.5dp"
+        android:background="#e4e4e4" />
+
+    <LinearLayout
+        android:layout_width="147dp"
+        android:layout_height="32dp"
+        android:background="#f7f7f7"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv10"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="更多"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#e4e4e4" />
+
+        <TextView
+            android:id="@+id/tv11"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="5分赛车"
+            android:textColor="#a5a5a5"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>
