@@ -14,7 +14,9 @@ import com.ys.zy.R;
 import com.ys.zy.activity.AboutActivity;
 import com.ys.zy.activity.MyFormActivity;
 import com.ys.zy.activity.ProxyCenterActivity;
+import com.ys.zy.activity.RechargeActivity;
 import com.ys.zy.activity.SafeActivity;
+import com.ys.zy.activity.TXActivity;
 import com.ys.zy.activity.UserInfoActivity;
 import com.ys.zy.adapter.MyAdapter;
 import com.ys.zy.base.BaseFragment;
@@ -38,6 +40,7 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
     private MyAdapter myAdapter;
     private ImageView headIV;
     private SwipeRefreshLayout srl;
+    private RelativeLayout rechargeRL, txRL;
 
     public static FourFragment newInstance() {
         return new FourFragment();
@@ -55,7 +58,14 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.rl_recharge:
+                startActivity(new Intent(mContext, RechargeActivity.class));
+                break;
+            case R.id.rl_tx:
+                startActivity(new Intent(mContext, TXActivity.class));
+                break;
+        }
     }
 
     @Override
@@ -90,6 +100,10 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
         srl = (SwipeRefreshLayout) mView.findViewById(R.id.srl);
         srl.setOnRefreshListener(this);
         srl.setColorSchemeColors(getResources().getColor(R.color.main_color));
+        rechargeRL = getView(R.id.rl_recharge);
+        txRL = getView(R.id.rl_tx);
+        rechargeRL.setOnClickListener(this);
+        txRL.setOnClickListener(this);
     }
 
     @Override
@@ -101,4 +115,5 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
     protected int getLayoutResource() {
         return R.layout.fragment_four;
     }
+
 }

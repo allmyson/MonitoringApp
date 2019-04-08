@@ -1,6 +1,7 @@
 package com.ys.zy.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.TabLayout;
@@ -17,6 +18,8 @@ import com.ys.zy.R;
 import com.ys.zy.adapter.CommonFragmentAdapter;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.bean.TabBean;
+import com.ys.zy.dialog.DialogUtil;
+import com.ys.zy.dialog.GameFragment;
 import com.ys.zy.fragment.Fast3JLFragment;
 import com.ys.zy.fragment.Fast3TZFragment;
 import com.ys.zy.fragment.HotGameFragment;
@@ -50,6 +53,9 @@ public class Fast3Activity extends BaseActivity {
     private ImageView showOrHideIV;
     private boolean isShow = true;
     private String money;
+    private ImageView gameMoreIV;
+    private boolean isShowMoreGame = false;//是否显示其他游戏
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_fast3;
@@ -67,7 +73,9 @@ public class Fast3Activity extends BaseActivity {
         backRL = getView(R.id.rl_back);
         backRL.setOnClickListener(this);
         gameLL = getView(R.id.ll_game);
+        gameLL.setOnClickListener(this);
         gameTV = getView(R.id.tv_gameName);
+        gameMoreIV = getView(R.id.iv_gameMore);
         switch (type) {
             case TYPE_JSK3:
                 gameTV.setText("江苏快3");
@@ -126,15 +134,78 @@ public class Fast3Activity extends BaseActivity {
                 break;
 
             case R.id.iv_showOrHide:
-                if(isShow){
+                if (isShow) {
                     isShow = false;
                     showOrHideIV.setImageResource(R.mipmap.btn_hide);
                     moneyTV.setText(StringUtil.changeToX(money));
-                }else {
+                } else {
                     isShow = true;
                     showOrHideIV.setImageResource(R.mipmap.btn_show);
                     moneyTV.setText(money);
                 }
+                break;
+            case R.id.ll_game:
+                gameMoreIV.setImageResource(R.mipmap.bottom_btn_more);
+                DialogUtil.showGameFragment(mContext, new GameFragment.ClickListener() {
+                    @Override
+                    public void click(int position) {
+                        gameMoreIV.setImageResource(R.mipmap.top_btn_more);
+                        DialogUtil.removeDialog(mContext);
+                        switch (position) {
+                            case 0:
+                                //轮盘
+                                break;
+                            case 1:
+                                //1分快3
+                                if (type != TYPE_1FK3) {
+                                    Fast3Activity.intentToFast3(mContext, TYPE_1FK3);
+                                }
+                                break;
+                            case 2:
+                                //推筒子
+                                break;
+                            case 3:
+                                //5分快3
+                                if (type != TYPE_5FK3) {
+                                    Fast3Activity.intentToFast3(mContext, TYPE_5FK3);
+                                }
+                                break;
+                            case 4:
+                                //最后胜利者
+                                break;
+                            case 5:
+                                //江苏快3
+                                if (type != TYPE_JSK3) {
+                                    Fast3Activity.intentToFast3(mContext, TYPE_JSK3);
+                                }
+                                break;
+                            case 6:
+                                //分分彩
+                                break;
+                            case 7:
+                                //北京赛车
+                                break;
+                            case 8:
+                                //重庆时时彩
+                                break;
+                            case 9:
+                                //1分赛车
+                                break;
+                            case 10:
+                                //更多
+                                break;
+                            case 11:
+                                //5分赛车
+                                break;
+
+                        }
+                    }
+                }, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        gameMoreIV.setImageResource(R.mipmap.top_btn_more);
+                    }
+                });
                 break;
         }
     }
@@ -170,5 +241,9 @@ public class Fast3Activity extends BaseActivity {
     private void initFragment() {
         tzFragment = Fast3TZFragment.newInstance(type);
         jlFragment = Fast3JLFragment.newInstance(type);
+    }
+
+    public double getMoney(){
+        return StringUtil.StringToDoubleTwo(money);
     }
 }

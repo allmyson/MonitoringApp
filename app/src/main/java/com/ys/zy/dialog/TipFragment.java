@@ -19,7 +19,9 @@ public class TipFragment extends LhDialogFragment {
     private ClickListener clickListener;
     private TextView cancelTV, sureTV, contentTV;
     private String content;
-
+    private String title = "投注确认";
+    private String sureText = "确定";
+    private TextView titleTV;
     public static TipFragment newInstance(int style, int theme) {
         TipFragment pFragment = new TipFragment();
         Bundle args = new Bundle();
@@ -42,7 +44,10 @@ public class TipFragment extends LhDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContentView = inflater.inflate(R.layout.fragment_tip, null, false);
         cancelTV = (TextView) mContentView.findViewById(R.id.tv_cancel);
+        titleTV = (TextView) mContentView.findViewById(R.id.tv_title);
         sureTV = (TextView) mContentView.findViewById(R.id.tv_sure);
+        titleTV.setText(StringUtil.valueOf(title));
+        sureTV.setText(StringUtil.valueOf(sureText));
         contentTV = (TextView) mContentView.findViewById(R.id.tv_content);
         contentTV.setText(StringUtil.valueOf(content));
         cancelTV.setOnClickListener(new View.OnClickListener() {
@@ -81,5 +86,13 @@ public class TipFragment extends LhDialogFragment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSureText(String sureText) {
+        this.sureText = sureText;
     }
 }

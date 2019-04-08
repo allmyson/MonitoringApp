@@ -1,14 +1,20 @@
 package com.ys.zy.fragment;
 
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ys.zy.R;
+import com.ys.zy.activity.Fast3Activity;
+import com.ys.zy.activity.RechargeActivity;
+import com.ys.zy.adapter.Fast3HistoryAdapter;
 import com.ys.zy.adapter.Fast3SumAdapter;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.bean.Fast3Bean;
@@ -37,6 +43,13 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     private int type;
     private String gameName;
     private String gameNo = "0214983";
+    private Fast3HistoryAdapter fast3HistoryAdapter;
+    private List<Object> historyList;
+    private ListView historyLV;
+    private ImageView showHistoryIV;
+    private boolean isShowHistory = false;
+    private LinearLayout historyLL;
+    private LinearLayout dataLL;
 
     public static Fast3TZFragment newInstance(int type) {
         Fast3TZFragment fast3TZFragment = new Fast3TZFragment();
@@ -106,6 +119,24 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         clearTV = getView(R.id.tv_clear);
         clearTV.setOnClickListener(this);
         priceLL = getView(R.id.ll_price);
+        historyList = new ArrayList<>();
+        historyList.add(null);
+        historyList.add(null);
+        historyList.add(null);
+        historyList.add(null);
+        historyList.add(null);
+        historyList.add(null);
+        historyList.add(null);
+        historyList.add(null);
+        historyList.add(null);
+        historyList.add(null);
+        fast3HistoryAdapter = new Fast3HistoryAdapter(mContext, historyList, R.layout.item_fast3_history);
+        historyLV = getView(R.id.lv_);
+        historyLV.setAdapter(fast3HistoryAdapter);
+        showHistoryIV = getView(R.id.iv_showHistory);
+        showHistoryIV.setOnClickListener(this);
+        historyLL = getView(R.id.ll_history);
+        dataLL = getView(R.id.ll_data);
     }
 
     @Override
@@ -139,6 +170,14 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                             DialogUtil.removeDialog(mContext);
                         }
                     });
+                } else if (!isMoneyEnough()) {
+                    DialogUtil.showTip(mContext,"温馨提示","您的余额不足！","去充值", new TipFragment.ClickListener() {
+                        @Override
+                        public void sure() {
+                            DialogUtil.removeDialog(mContext);
+                            startActivity(new Intent(mContext, RechargeActivity.class));
+                        }
+                    });
                 } else {
                     DialogUtil.showTZTip(mContext, gameName, gameNo, StringUtil.StringToDoubleStr(fast3SumAdapter.getTZList().size() * StringUtil.StringToDoubleTwo(priceET.getText().toString())), fast3SumAdapter.getTZResult(), new TZTipFragment.ClickListener() {
                         @Override
@@ -149,7 +188,29 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                     });
                 }
                 break;
+            case R.id.iv_showHistory:
+                if (isShowHistory) {
+                    isShowHistory = false;
+                    showHistoryIV.setImageResource(R.mipmap.top_btn_more);
+                    historyLL.setVisibility(View.GONE);
+                    dataLL.setVisibility(View.VISIBLE);
+                } else {
+                    isShowHistory = true;
+                    showHistoryIV.setImageResource(R.mipmap.bottom_btn_more);
+                    historyLL.setVisibility(View.VISIBLE);
+                    dataLL.setVisibility(View.GONE);
+                }
+                break;
         }
     }
 
+    //是否余额不足
+    private boolean isMoneyEnough() {
+        double tzMoney = fast3SumAdapter.getTZList().size() * StringUtil.StringToDoubleTwo(priceET.getText().toString());
+        double totalMoney = ((Fast3Activity) getActivity()).getMoney();
+        if (tzMoney <= totalMoney) {
+            return true;
+        }
+        return false;
+    }
 }

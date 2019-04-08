@@ -1,8 +1,10 @@
 package com.ys.zy.dialog;
 
 import android.app.DatePickerDialog;
+import android.app.SearchManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -155,6 +157,24 @@ public class DialogUtil {
         return newFragment;
     }
 
+    public static TipFragment showTip(Context context, String title,String content,String sureText, TipFragment.ClickListener clickListener) {
+        FragmentActivity activity = (FragmentActivity) context;
+        removeDialog(activity);
+        TipFragment newFragment = TipFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
+                .Theme_Holo_Light_Dialog);
+        newFragment.setClickListener(clickListener);
+        newFragment.setTitle(title);
+        newFragment.setSureText(sureText);
+        newFragment.setContent(content);
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        // 指定一个过渡动画
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        newFragment.show(ft, mDialogTag);//Can not perform this action after onSaveInstanceState
+        ft.add(newFragment, mDialogTag);
+        ft.commitAllowingStateLoss();
+        return newFragment;
+    }
+
     /**
      * 弹出确认框
      *
@@ -172,6 +192,51 @@ public class DialogUtil {
         newFragment.setGameNo(gameNo);
         newFragment.setMoney(money);
         newFragment.setContent(content);
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        // 指定一个过渡动画
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        newFragment.show(ft, mDialogTag);//Can not perform this action after onSaveInstanceState
+        ft.add(newFragment, mDialogTag);
+        ft.commitAllowingStateLoss();
+        return newFragment;
+    }
+
+    /**
+     * 弹出游戏框
+     *
+     * @param context
+     * @param clickListener
+     * @return
+     */
+    public static GameFragment showGameFragment(Context context, GameFragment.ClickListener clickListener, DialogInterface.OnCancelListener onCancelListener) {
+        FragmentActivity activity = (FragmentActivity) context;
+        removeDialog(activity);
+        GameFragment newFragment = GameFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
+                .Theme_Holo_Light_Dialog);
+        newFragment.setClickListener(clickListener);
+        newFragment.setOnCancelListener(onCancelListener);
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        // 指定一个过渡动画
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        newFragment.show(ft, mDialogTag);//Can not perform this action after onSaveInstanceState
+        ft.add(newFragment, mDialogTag);
+        ft.commitAllowingStateLoss();
+        return newFragment;
+    }
+
+    /**
+     * 选择银行卡提现列表
+     * @param context
+     * @param clickListener
+     * @return
+     */
+    public static BankFragment showBankDialog(Context context,BankFragment.ClickListener clickListener) {
+        FragmentActivity activity = (FragmentActivity) context;
+        removeDialog(activity);
+//        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        BankFragment newFragment = BankFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
+                .Theme_Holo_Light_Dialog);
+        newFragment.setClickListener(clickListener);
         FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
         // 指定一个过渡动画
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
