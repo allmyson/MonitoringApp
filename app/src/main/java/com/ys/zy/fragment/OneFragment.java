@@ -1,5 +1,6 @@
 package com.ys.zy.fragment;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,6 +11,7 @@ import com.ys.zy.activity.Fast3Activity;
 import com.ys.zy.adapter.GameAdapter;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.bean.GameBean;
+import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.ui.NoNetView;
 import com.ys.zy.util.ToastUtil;
 
@@ -61,6 +63,9 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
                         break;
                     case 2:
                         Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_5FK3);
+                        break;
+                    case 3:
+                        startActivity(new Intent(mContext, RouletteActivity.class));
                         break;
                 }
             }

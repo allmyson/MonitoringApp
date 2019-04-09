@@ -1,6 +1,8 @@
 package com.ys.zy.fragment;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -50,6 +52,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     private boolean isShowHistory = false;
     private LinearLayout historyLL;
     private LinearLayout dataLL;
+    private ImageView iv01, iv02, iv03;
 
     public static Fast3TZFragment newInstance(int type) {
         Fast3TZFragment fast3TZFragment = new Fast3TZFragment();
@@ -78,6 +81,9 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                 gameName = "5分快3";
                 break;
         }
+        iv01 = getView(R.id.iv01);
+        iv02 = getView(R.id.iv02);
+        iv03 = getView(R.id.iv03);
         zhuAndPriceTV = getView(R.id.tv_zhuAndPrice);
         tzTV = getView(R.id.tv_tz);
         tzTV.setOnClickListener(this);
@@ -141,7 +147,13 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     protected void getData() {
+        startRandomText();
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        closeRandomText();
     }
 
     @Override
@@ -171,7 +183,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                         }
                     });
                 } else if (!isMoneyEnough()) {
-                    DialogUtil.showTip(mContext,"温馨提示","您的余额不足！","去充值", new TipFragment.ClickListener() {
+                    DialogUtil.showTip(mContext, "温馨提示", "您的余额不足！", "去充值", new TipFragment.ClickListener() {
                         @Override
                         public void sure() {
                             DialogUtil.removeDialog(mContext);
@@ -213,4 +225,70 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         }
         return false;
     }
+
+    private RandomThraed randomThraed;
+    private int[] drawables = new int[]{R.mipmap.k3_s1_icon, R.mipmap.k3_s2_icon, R.mipmap.k3_s3_icon, R.mipmap.k3_s4_icon, R.mipmap.k3_s5_icon, R.mipmap.k3_s6_icon};
+
+    private void startRandomText() {
+        if (randomThraed != null) {
+            randomThraed.interrupt();
+            randomThraed = null;
+        }
+        randomThraed = new RandomThraed();
+        randomThraed.start();
+    }
+
+    private void closeRandomText() {
+        if (randomThraed != null) {
+            randomThraed.setOver(true);
+            randomThraed.interrupt();
+            randomThraed = null;
+        }
+    }
+
+    class RandomThraed extends Thread {
+        private boolean isOver = false;
+
+        public boolean isOver() {
+            return isOver;
+        }
+
+        public void setOver(boolean over) {
+            isOver = over;
+        }
+
+        @Override
+        public void run() {
+            while (!isOver) {
+                try {
+                    Thread.sleep(100);
+                    handler.sendEmptyMessage(0);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private int i = 0;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                iv01.setImageResource(drawables[i]);
+                iv02.setImageResource(drawables[i]);
+                iv03.setImageResource(drawables[i]);
+                i++;
+                if (i > 5) {
+                    i = 0;
+                }
+            } else if (msg.what == 1) {
+//                String[] ss = (String[]) msg.obj;
+//                if (ss != null && ss.length == 3) {
+//                    iv01.setImageResource(drawables[0]);
+//                }
+            }
+        }
+    };
 }
