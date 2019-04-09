@@ -35,6 +35,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/iv01"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginRight="4dp"
@@ -42,6 +43,7 @@
                     android:src="@mipmap/k3_s1_icon" />
 
                 <ImageView
+                    android:id="@+id/iv02"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginRight="4dp"
@@ -49,6 +51,7 @@
                     android:src="@mipmap/k3_s1_icon" />
 
                 <ImageView
+                    android:id="@+id/iv03"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginRight="4dp"

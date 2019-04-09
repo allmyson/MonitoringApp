@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="136dp"
+        android:background="@drawable/rect_cornor_white6"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="玩法："
+            android:textColor="#1e1e1e"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="投注时间里从12个生肖里选一个下注，开奖结果与所选生肖相同即中奖；红色数字代表赔率，蓝色是自己投注的金额，白色是所有玩家投注总额"
+            android:textColor="#1e1e1e"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>
