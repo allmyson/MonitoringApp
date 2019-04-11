@@ -67,7 +67,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -77,6 +79,11 @@
                 android:text="11.71"
                 android:textColor="@color/main_color"
                 android:textSize="16sp" />
+
+            <com.ys.zy.roulette.ui.LPView
+                android:id="@+id/lpv_"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
@@ -153,12 +160,12 @@
 
         <com.ys.zy.ui.HorizontalListView
             android:id="@+id/hlv_"
-            android:orientation="horizontal"
-            android:dividerHeight="4dp"
-            android:divider="@null"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:divider="@null"
+            android:dividerHeight="4dp"
+            android:orientation="horizontal"
             android:scrollbars="none" />
 
 
