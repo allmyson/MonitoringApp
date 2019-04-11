@@ -14,6 +14,8 @@ import com.ys.zy.base.BaseFragment;
 import com.ys.zy.roulette.adapter.ChipAdapter;
 import com.ys.zy.roulette.adapter.LpHistoryAdapter;
 import com.ys.zy.roulette.bean.ChipBean;
+import com.ys.zy.roulette.bean.LPBean;
+import com.ys.zy.roulette.ui.LPView;
 import com.ys.zy.ui.HorizontalListView;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     private List<ChipBean> chipBeanList;
     private ChipAdapter chipAdapter;
     private Button clearBtn, sureBtn;
+    private LPView lpView;
+    private List<LPBean> lpBeanList;
 
     public static RouletteTZFragment newInstance() {
         RouletteTZFragment rouletteTZFragment = new RouletteTZFragment();
@@ -73,7 +77,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 chipAdapter.setSelectItem(position);
-                setBtnClickable(true, sureBtn);
+//                setBtnClickable(true, sureBtn);
             }
         });
 
@@ -82,6 +86,20 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
         clearBtn.setOnClickListener(this);
         sureBtn.setOnClickListener(this);
         setBtnClickable(false, sureBtn);
+        lpView = getView(R.id.lpv_);
+        lpBeanList = new ArrayList<>();
+        lpBeanList.addAll(LPBean.getList());
+        lpView.setData(lpBeanList);
+        lpView.setClickListener(new LPView.ClickListener() {
+            @Override
+            public void click(int position, LPBean lpBean) {
+                if (chipAdapter.getChooseData() != null) {
+                    lpBeanList.get(position).myValue = chipAdapter.getChooseData().money;
+                    lpView.setData(lpBeanList);
+                    setBtnClickable(true, sureBtn);
+                }
+            }
+        });
     }
 
     @Override
@@ -109,7 +127,11 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                 }
                 break;
             case R.id.btn_clear:
-                chipAdapter.clear();
+//                chipAdapter.clear();
+                for (int i = 0; i < lpBeanList.size(); i++) {
+                    lpBeanList.get(i).myValue = 0;
+                }
+                lpView.setData(lpBeanList);
                 setBtnClickable(false, sureBtn);
                 break;
             case R.id.btn_sure:

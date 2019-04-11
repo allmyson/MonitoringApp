@@ -231,6 +231,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
     private void startRandomText() {
         if (randomThraed != null) {
+            randomThraed.setOver(true);
             randomThraed.interrupt();
             randomThraed = null;
         }
@@ -247,7 +248,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     }
 
     class RandomThraed extends Thread {
-        private boolean isOver = false;
+        private volatile boolean isOver = false;
 
         public boolean isOver() {
             return isOver;
