@@ -142,18 +142,20 @@
         android:layout_height="52dp"
         android:background="#1e1e1e"
         android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingTop="8dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="8dp">
+        android:paddingLeft="16dp"
+        android:paddingTop="5dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="5dp">
 
         <Button
             android:id="@+id/btn_clear"
-            android:layout_width="50dp"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="17.5dp"
+            android:layout_marginRight="14dp"
             android:background="@drawable/rect_cornor_red"
             android:gravity="center"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:text="清空"
             android:textColor="#f7f7f7"
             android:textSize="16sp" />
@@ -171,9 +173,11 @@
 
         <Button
             android:id="@+id/btn_sure"
-            android:layout_width="50dp"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="17.5dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:background="@drawable/rect_cornor_red"
             android:gravity="center"
             android:text="确定"
