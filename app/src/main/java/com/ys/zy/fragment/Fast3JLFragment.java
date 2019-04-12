@@ -3,6 +3,7 @@ package com.ys.zy.fragment;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -40,6 +41,24 @@ public class Fast3JLFragment extends BaseFragment implements SwipeRefreshLayout.
         adapter = new Fast3TZJLAdapter(mContext, list, R.layout.item_fast3_tzjl);
         lv.setAdapter(adapter);
         checkList();
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                View firstView = view.getChildAt(firstVisibleItem);
+                if (firstVisibleItem == 0 && (firstView == null || firstView.getTop() == 0)) {
+                    /*上滑到listView的顶部时，下拉刷新组件可见*/
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    /*不是listView的顶部时，下拉刷新组件不可见*/
+                    swipeRefreshLayout.setEnabled(false);
+                }
+            }
+        });
     }
 
     @Override

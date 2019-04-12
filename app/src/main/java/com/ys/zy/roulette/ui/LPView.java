@@ -22,6 +22,7 @@ import com.ys.zy.util.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class LPView extends View {
     private Context context;
@@ -206,8 +207,26 @@ public class LPView extends View {
     //设置数据
     public void setData(List<LPBean> shanXinViewDatas) {
         this.list = shanXinViewDatas;
+        currentResult = "";
         initData();     //设置数据的百分度和角度
         invalidate();   //刷新UI
+    }
+
+    /**
+     * 恢复默认
+     */
+    public void clearColorAndResult() {
+        currentResult = "";
+        for (int i = 0; i < list.size(); i++) {
+            if (i % 2 == 0) {
+                list.get(i).color = "#ffa958";
+            } else {
+                list.get(i).color = "#ff854b";
+            }
+            list.get(i).myValue = 0;
+            list.get(i).totalValue = 0;
+        }
+        invalidate();
     }
 
     private RandomThraed randomThraed;
@@ -220,6 +239,15 @@ public class LPView extends View {
         }
         randomThraed = new RandomThraed();
         randomThraed.start();
+    }
+
+    /**
+     * 线程是否正在进行
+     *
+     * @return
+     */
+    public boolean isRamdomRunning() {
+        return randomThraed != null && !randomThraed.isOver();
     }
 
     public void closeRandomColor() {
@@ -297,6 +325,14 @@ public class LPView extends View {
         invalidate();
     }
 
+    public static final String[] sx = new String[]{"兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪", "鼠", "牛", "虎"};
+
+    public void setRandomResult() {
+        Random random = new Random();
+        String result = sx[random.nextInt(12)];
+        setResult(result);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -338,7 +374,7 @@ public class LPView extends View {
 //            Toast.makeText(context, "x=" + eventX + "--y=" + eventY + "---bgCircleRadius=" + bgCircleRadius + "---alfa=" + alfa + "--which=" + which, 1).show();
             if (clickListener != null) {
                 int position = (int) (alfa / 30);
-                clickListener.click(position,list.get(position));
+                clickListener.click(position, list.get(position));
             }
         }
     }
@@ -384,5 +420,15 @@ public class LPView extends View {
         } else {
             return "";
         }
+    }
+
+    public List<LPBean> getTZList() {
+        List<LPBean> tzList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).myValue != 0) {
+                tzList.add(list.get(i));
+            }
+        }
+        return tzList;
     }
 }
