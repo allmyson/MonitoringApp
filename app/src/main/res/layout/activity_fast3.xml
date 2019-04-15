@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#f7f7f7"
     android:orientation="vertical"
-    tools:context=".activity.Fast3Activity">
+    tools:context=".fast3.activity.Fast3Activity">
 
     <RelativeLayout
         android:layout_width="match_parent"

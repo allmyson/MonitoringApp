@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1e1e1e"
+    android:background="#f7f7f7"
     android:orientation="vertical"
-    tools:context=".fast3.activity.Fast3Activity">
+    tools:context=".racing.activity.RacingActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,7 +21,6 @@
             android:paddingLeft="20dp">
 
             <ImageView
-                android:id="@+id/iv_back"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
@@ -31,29 +30,32 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/ll_sm"
-            android:layout_width="72dp"
+            android:id="@+id/ll_play"
+            android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/rect_cornor_white5"
+            android:background="@drawable/rect_cornor_black2"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
             <TextView
+                android:id="@+id/tv_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:text="说明"
-                android:textColor="#f7f7f7"
+                android:text="定位胆"
+                android:textColor="#000000"
                 android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/iv_sm"
+                android:id="@+id/iv_play"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
-                android:src="@mipmap/top_btn_more" />
+                android:src="@mipmap/top_btn_red_more_" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,8 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:text="轮盘"
-                android:textColor="#949494"
+                android:text="北京赛车"
+                android:textColor="#000000"
                 android:textSize="16sp" />
 
             <ImageView
