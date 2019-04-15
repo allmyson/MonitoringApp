@@ -15,7 +15,7 @@ import com.ys.zy.sp.CookieSP;
  */
 public class YS {
     public static final String ACTION_TZ_SUCCESS = "action_tz_success";
-    public static final String UNIT = "YB";
+    public static final String UNIT = "元";
     public static final int LENGTH = 1000;
     public static final int TYPE_CQSSC = 1000;//重庆时时彩
     public static final int TYPE_TXFFC = 1001;//腾讯分分彩

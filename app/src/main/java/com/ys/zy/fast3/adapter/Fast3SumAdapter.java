@@ -1,4 +1,4 @@
-package com.ys.zy.adapter;
+package com.ys.zy.fast3.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.ys.zy.R;
-import com.ys.zy.bean.Fast3Bean;
+import com.ys.zy.adapter.CommonAdapter;
+import com.ys.zy.adapter.ViewHolder;
+import com.ys.zy.fast3.bean.Fast3Bean;
 import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;

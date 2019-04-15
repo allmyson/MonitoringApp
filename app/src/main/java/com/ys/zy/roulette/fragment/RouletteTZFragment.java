@@ -20,6 +20,7 @@ import com.ys.zy.roulette.bean.ChipBean;
 import com.ys.zy.roulette.bean.LPBean;
 import com.ys.zy.roulette.ui.LPView;
 import com.ys.zy.ui.HorizontalListView;
+import com.ys.zy.util.GameUtil;
 import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
 
@@ -54,6 +55,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
         timeTV = getView(R.id.tv_time);
         statusTV = getView(R.id.tv_status);
         qsTV = getView(R.id.tv_qs);
+        setCurrentGameNo();
         moreIV = getView(R.id.iv_more);
         moreIV.setColorFilter(Color.parseColor("#a5a5a5"));
         moreLL = getView(R.id.ll_more);
@@ -80,14 +82,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
         chipAdapter = new ChipAdapter(mContext, chipBeanList, R.layout.item_iv);
         horizontalListView.setAdapter(chipAdapter);
         chipAdapter.setHorizontalListView(horizontalListView);
-        horizontalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                chipAdapter.setSelectItem(position);
-//                setBtnClickable(true, sureBtn);
-            }
-        });
-
+        chipAdapter.setSelectItem(0);
         clearBtn = getView(R.id.btn_clear);
         sureBtn = getView(R.id.btn_sure);
         clearBtn.setOnClickListener(this);
@@ -101,13 +96,12 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
             @Override
             public void click(int position, LPBean lpBean) {
                 if (chipAdapter.getChooseData() != null && currentStatus == TYPE_TZ) {
-                    lpBeanList.get(position).myValue = chipAdapter.getChooseData().money;
+                    lpBeanList.get(position).myValue += chipAdapter.getChooseData().money;
                     lpView.setData(lpBeanList);
                     setBtnClickable(true, sureBtn);
                 }
             }
         });
-
     }
 
     private void setStatus() {
@@ -122,6 +116,9 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                 }
                 timeTV.setText(getTimeStr(45 - second));
                 statusTV.setText("投注中...");
+                if(second == 0){
+                    setCurrentGameNo();
+                }
                 break;
             case TYPE_STOP_TZ:
                 timeTV.setText(getTimeStr(50 - second));
@@ -184,6 +181,10 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                 setBtnClickable(false, sureBtn);
                 break;
             case R.id.btn_sure:
+                if (currentStatus != TYPE_TZ) {
+                    show("当前时间段不能投注！");
+                    return;
+                }
                 List<LPBean> result = lpView.getTZList();
                 if (result != null && result.size() > 0) {
                     double sum = 0;
@@ -291,5 +292,10 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
         } else {
             return "0" + num;
         }
+    }
+
+    private void setCurrentGameNo() {
+        gameNo = GameUtil.getCurrentLpPeriods();
+        qsTV.setText(gameNo + "期");
     }
 }

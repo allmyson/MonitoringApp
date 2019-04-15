@@ -1,4 +1,4 @@
-package com.ys.zy.fragment;
+package com.ys.zy.fast3.fragment;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -14,12 +14,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ys.zy.R;
-import com.ys.zy.activity.Fast3Activity;
+import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.activity.RechargeActivity;
-import com.ys.zy.adapter.Fast3HistoryAdapter;
-import com.ys.zy.adapter.Fast3SumAdapter;
+import com.ys.zy.fast3.adapter.Fast3HistoryAdapter;
+import com.ys.zy.fast3.adapter.Fast3SumAdapter;
 import com.ys.zy.base.BaseFragment;
-import com.ys.zy.bean.Fast3Bean;
+import com.ys.zy.fast3.bean.Fast3Bean;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.dialog.TipFragment;
@@ -29,9 +29,9 @@ import com.ys.zy.util.YS;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ys.zy.activity.Fast3Activity.TYPE_1FK3;
-import static com.ys.zy.activity.Fast3Activity.TYPE_5FK3;
-import static com.ys.zy.activity.Fast3Activity.TYPE_JSK3;
+import static com.ys.zy.fast3.activity.Fast3Activity.TYPE_1FK3;
+import static com.ys.zy.fast3.activity.Fast3Activity.TYPE_5FK3;
+import static com.ys.zy.fast3.activity.Fast3Activity.TYPE_JSK3;
 
 public class Fast3TZFragment extends BaseFragment implements View.OnClickListener {
     private GridView gv;

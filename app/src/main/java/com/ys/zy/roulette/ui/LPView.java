@@ -353,9 +353,9 @@ public class LPView extends View {
         float eventY = event.getY();
         double alfa = 0;
         //点击的位置到圆心距离的平方
-        double distance = Math.pow(eventX - outCircleRadius, 2) + Math.pow(eventY - outCircleRadius, 2);
+        double distance = Math.pow(eventX - bgCircleRadius, 2) + Math.pow(eventY - bgCircleRadius, 2);
         //判断点击的坐标是否在环内
-        if (distance < Math.pow(outCircleRadius, 2) && distance > Math.pow(inCircleRadius, 2)) {
+        if (distance < Math.pow(bgCircleRadius, 2) && distance > Math.pow(inCircleRadius, 2)) {
             int which = touchOnWhichPart(event);
             switch (which) {
                 case PART_ONE:

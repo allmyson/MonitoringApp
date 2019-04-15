@@ -1,4 +1,4 @@
-package com.ys.zy.bean;
+package com.ys.zy.fast3.bean;
 
 import java.util.ArrayList;
 import java.util.List;

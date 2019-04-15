@@ -1,6 +1,8 @@
-package com.ys.zy.roulette.activity;
+package com.ys.zy.fast3.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,68 +14,72 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ys.zy.R;
-import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
-import com.ys.zy.racing.activity.RacingActivity;
-import com.ys.zy.roulette.fragment.RouletteJLFragment;
-import com.ys.zy.roulette.fragment.RouletteTZFragment;
+import com.ys.zy.fast3.fragment.Fast3JLFragment;
+import com.ys.zy.fast3.fragment.Fast3TZFragment;
+import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.util.StringUtil;
 
-//轮盘
-public class RouletteActivity extends BaseActivity {
+//快3
+public class Fast3Activity extends BaseActivity {
+    public static final int TYPE_JSK3 = 1000;
+    public static final int TYPE_1FK3 = 1001;
+    public static final int TYPE_5FK3 = 1002;
+    private int type = TYPE_JSK3;
     private RelativeLayout backRL;
-    private ImageView backIV, smIV, gameMoreIV;
-    private TextView gameNameTV;
+    private LinearLayout gameLL;
+    private TextView gameTV;
+
     private RelativeLayout tzRL, tzjlRL;
     private TextView tzTV, tzjlTV;
     private View tzView, tzjlView;
-    private Fragment tzFragment, jlFragment;
     public static final int TYPE_TZ = 100;
     public static final int TYPE_JL = 101;
     private int currentType = TYPE_TZ;
-
+    private Fragment tzFragment, jlFragment;
     private TextView moneyTV;
     private ImageView showOrHideIV;
     private boolean isShow = true;
     private String money;
+    private ImageView gameMoreIV;
     private boolean isShowMoreGame = false;//是否显示其他游戏
-
-    private LinearLayout gameLL;
-    private LinearLayout smLL;
-
-    public static final String content = "投注时间里从12个生肖里选一个下注，开奖结果与所选生肖相同即中奖；红色数字代表赔率，蓝色是自己投注的金额，白色是所有玩家投注总额";
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_roulette;
+        return R.layout.activity_fast3;
     }
 
     @Override
     public void initView() {
-        setBarColor("#1e1e1e", false);
-        backRL = getView(R.id.rl_back);
-        backRL.setOnClickListener(this);
-        backIV = getView(R.id.iv_back);
-        smIV = getView(R.id.iv_sm);
-        gameMoreIV = getView(R.id.iv_gameMore);
-        backIV.setColorFilter(Color.parseColor("#a5a5a5"));
-        smIV.setColorFilter(Color.parseColor("#f7f7f7"));
-        gameMoreIV.setColorFilter(Color.parseColor("#a5a5a5"));
-        gameNameTV = getView(R.id.tv_gameName);
-
         moneyTV = getView(R.id.tv_money);
         money = moneyTV.getText().toString();
         showOrHideIV = getView(R.id.iv_showOrHide);
         showOrHideIV.setOnClickListener(this);
-
+        manager = getSupportFragmentManager();
+        type = getIntent().getIntExtra("type", TYPE_JSK3);
+        initFragment();
+        backRL = getView(R.id.rl_back);
+        backRL.setOnClickListener(this);
         gameLL = getView(R.id.ll_game);
         gameLL.setOnClickListener(this);
-
-        smLL = getView(R.id.ll_sm);
-        smLL.setOnClickListener(this);
-
+        gameTV = getView(R.id.tv_gameName);
+        gameMoreIV = getView(R.id.iv_gameMore);
+        switch (type) {
+            case TYPE_JSK3:
+                gameTV.setText("江苏快3");
+                break;
+            case TYPE_1FK3:
+                gameTV.setText("1分快3");
+                break;
+            case TYPE_5FK3:
+                gameTV.setText("5分快3");
+                break;
+            default:
+                gameTV.setText("江苏快3");
+                break;
+        }
         tzRL = getView(R.id.rl_wytz);
         tzjlRL = getView(R.id.rl_tzjl);
         tzTV = getView(R.id.tv_wytz);
@@ -82,8 +88,6 @@ public class RouletteActivity extends BaseActivity {
         tzjlView = getView(R.id.view_tzjl);
         tzRL.setOnClickListener(this);
         tzjlRL.setOnClickListener(this);
-        manager = getSupportFragmentManager();
-        initFragment();
         showFragment(tzFragment);
     }
 
@@ -118,6 +122,7 @@ public class RouletteActivity extends BaseActivity {
                     showFragment(jlFragment);
                 }
                 break;
+
             case R.id.iv_showOrHide:
                 if (isShow) {
                     isShow = false;
@@ -139,45 +144,49 @@ public class RouletteActivity extends BaseActivity {
                         switch (position) {
                             case 0:
                                 //轮盘
+                                startActivity(new Intent(mContext, RouletteActivity.class));
                                 break;
                             case 1:
                                 //1分快3
-                                Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_1FK3);
+                                if (type != TYPE_1FK3) {
+                                    Fast3Activity.intentToFast3(mContext, TYPE_1FK3);
+                                }
                                 break;
                             case 2:
                                 //推筒子
                                 break;
                             case 3:
                                 //5分快3
-                                Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_5FK3);
+                                if (type != TYPE_5FK3) {
+                                    Fast3Activity.intentToFast3(mContext, TYPE_5FK3);
+                                }
                                 break;
                             case 4:
                                 //最后胜利者
                                 break;
                             case 5:
                                 //江苏快3
-                                Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_JSK3);
+                                if (type != TYPE_JSK3) {
+                                    Fast3Activity.intentToFast3(mContext, TYPE_JSK3);
+                                }
                                 break;
                             case 6:
                                 //分分彩
                                 break;
                             case 7:
                                 //北京赛车
-                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_BJSC);
                                 break;
                             case 8:
                                 //重庆时时彩
                                 break;
                             case 9:
                                 //1分赛车
-                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_1FSC);
                                 break;
                             case 10:
                                 //更多
                                 break;
                             case 11:
                                 //5分赛车
-                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_5FSC);
                                 break;
 
                         }
@@ -189,10 +198,13 @@ public class RouletteActivity extends BaseActivity {
                     }
                 });
                 break;
-            case R.id.ll_sm:
-                DialogUtil.showSmDialog(mContext, content);
-                break;
         }
+    }
+
+    public static void intentToFast3(Context context, int type) {
+        Intent intent = new Intent(context, Fast3Activity.class);
+        intent.putExtra("type", type);
+        context.startActivity(intent);
     }
 
     private Fragment currentFragment;
@@ -218,7 +230,11 @@ public class RouletteActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        tzFragment = RouletteTZFragment.newInstance();
-        jlFragment = RouletteJLFragment.newInstance();
+        tzFragment = Fast3TZFragment.newInstance(type);
+        jlFragment = Fast3JLFragment.newInstance(type);
+    }
+
+    public double getMoney() {
+        return StringUtil.StringToDoubleTwo(money);
     }
 }

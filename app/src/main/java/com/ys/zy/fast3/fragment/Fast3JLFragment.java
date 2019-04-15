@@ -1,4 +1,4 @@
-package com.ys.zy.fragment;
+package com.ys.zy.fast3.fragment;
 
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.ys.zy.R;
-import com.ys.zy.adapter.Fast3TZJLAdapter;
+import com.ys.zy.fast3.adapter.Fast3TZJLAdapter;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.ui.BlankView;
 
@@ -35,7 +35,7 @@ public class Fast3JLFragment extends BaseFragment implements SwipeRefreshLayout.
         swipeRefreshLayout.setOnRefreshListener(this);
         dataLL = getView(R.id.ll_data);
         blankView = getView(R.id.bv_);
-        blankView.setImage(R.mipmap.blank_inf_img).setText("暂无记录");
+        blankView.setImage(R.mipmap.blank_inf_img2).setText("暂无记录");
         lv = getView(R.id.lv_);
         list = new ArrayList<>();
         adapter = new Fast3TZJLAdapter(mContext, list, R.layout.item_fast3_tzjl);

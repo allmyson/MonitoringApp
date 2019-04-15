@@ -1,6 +1,9 @@
-package com.ys.zy.adapter;
+package com.ys.zy.fast3.adapter;
 
 import android.content.Context;
+
+import com.ys.zy.adapter.CommonAdapter;
+import com.ys.zy.adapter.ViewHolder;
 
 import java.util.List;
 

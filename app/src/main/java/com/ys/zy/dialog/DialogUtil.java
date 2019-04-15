@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class DialogUtil {
     /**
@@ -260,6 +261,31 @@ public class DialogUtil {
         SmFragment newFragment = SmFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
                 .Theme_Holo_Light_Dialog);
         newFragment.setContent(content);
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        // 指定一个过渡动画
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        newFragment.show(ft, mDialogTag);//Can not perform this action after onSaveInstanceState
+        ft.add(newFragment, mDialogTag);
+        ft.commitAllowingStateLoss();
+        return newFragment;
+    }
+
+
+    /**
+     * 玩法
+     * @param context
+     * @param
+     * @return
+     */
+    public static PlayFragment showPlayDialog(Context context, List<String> list, PlayFragment.ClickListener clickListener,DialogInterface.OnCancelListener onCancelListener) {
+        FragmentActivity activity = (FragmentActivity) context;
+        removeDialog(activity);
+//        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        PlayFragment newFragment = PlayFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
+                .Theme_Holo_Light_Dialog);
+        newFragment.setList(list);
+        newFragment.setClickListener(clickListener);
+        newFragment.setOnCancelListener(onCancelListener);
         FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
         // 指定一个过渡动画
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

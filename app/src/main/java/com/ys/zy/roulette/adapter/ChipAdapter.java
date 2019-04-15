@@ -3,6 +3,7 @@ package com.ys.zy.roulette.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.view.View;
 
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
@@ -16,13 +17,20 @@ import java.util.List;
 public class ChipAdapter extends CommonAdapter<ChipBean> {
     private int selectItem = -1;
     private HorizontalListView horizontalListView;
+
     public ChipAdapter(Context context, List<ChipBean> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
     }
 
     @Override
-    public void convert(ViewHolder helper, ChipBean item, int position) {
+    public void convert(ViewHolder helper, ChipBean item, final int position) {
         helper.setImageResource(R.id.iv_, item.drawableId);
+        helper.getView(R.id.iv_).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setSelectItem(position);
+            }
+        });
         if (selectItem == position) {
             helper.setImageResource(R.id.iv_, item.selectDrawableId);
         } else {

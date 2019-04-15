@@ -7,13 +7,12 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.ys.zy.R;
-import com.ys.zy.activity.Fast3Activity;
+import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.adapter.GameAdapter;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.bean.GameBean;
+import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.activity.RouletteActivity;
-import com.ys.zy.ui.NoNetView;
-import com.ys.zy.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +65,19 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
                         break;
                     case 3:
                         startActivity(new Intent(mContext, RouletteActivity.class));
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_BJSC);
+                        break;
+                    case 7:
+                        RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_1FSC);
+                        break;
+                    case 8:
+                        RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_5FSC);
                         break;
                 }
             }

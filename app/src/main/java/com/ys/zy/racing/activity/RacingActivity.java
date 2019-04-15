@@ -1,10 +1,9 @@
-package com.ys.zy.activity;
+package com.ys.zy.racing.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,30 +14,32 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ys.zy.R;
-import com.ys.zy.adapter.CommonFragmentAdapter;
 import com.ys.zy.base.BaseActivity;
-import com.ys.zy.bean.TabBean;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
-import com.ys.zy.fragment.Fast3JLFragment;
-import com.ys.zy.fragment.Fast3TZFragment;
-import com.ys.zy.fragment.HotGameFragment;
-import com.ys.zy.fragment.WinnerListFragment;
+import com.ys.zy.dialog.PlayFragment;
+import com.ys.zy.fast3.activity.Fast3Activity;
+import com.ys.zy.fast3.fragment.Fast3JLFragment;
+import com.ys.zy.fast3.fragment.Fast3TZFragment;
+import com.ys.zy.racing.fragment.RacingTZFragment;
+import com.ys.zy.racing.fragment.RacingTZJLFragment;
 import com.ys.zy.roulette.activity.RouletteActivity;
-import com.ys.zy.ui.LhViewPager;
-import com.ys.zy.util.DensityUtil;
 import com.ys.zy.util.StringUtil;
-import com.ys.zy.util.TabUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//快3
-public class Fast3Activity extends BaseActivity {
-    public static final int TYPE_JSK3 = 1000;
-    public static final int TYPE_1FK3 = 1001;
-    public static final int TYPE_5FK3 = 1002;
-    private int type = TYPE_JSK3;
+//赛车
+public class RacingActivity extends BaseActivity {
+
+    public static final int TYPE_BJSC = 1000;//北京赛车
+    public static final int TYPE_1FSC = 1001;//1分赛车
+    public static final int TYPE_5FSC = 1002;//5分赛车
+    private int type = TYPE_BJSC;
+    public static final int PLAY_DWD = 50;//定位胆
+    public static final int PLAY_DXDS = 51;//大小单双
+    public static final int PLAY_LHD = 52;//龙虎斗
+    private int play = PLAY_DWD;
     private RelativeLayout backRL;
     private LinearLayout gameLL;
     private TextView gameTV;
@@ -56,10 +57,12 @@ public class Fast3Activity extends BaseActivity {
     private String money;
     private ImageView gameMoreIV;
     private boolean isShowMoreGame = false;//是否显示其他游戏
-
+    private LinearLayout playLL;
+    private TextView playTV;
+    private ImageView playIV;
     @Override
     public int getLayoutId() {
-        return R.layout.activity_fast3;
+        return R.layout.activity_racing;
     }
 
     @Override
@@ -69,7 +72,7 @@ public class Fast3Activity extends BaseActivity {
         showOrHideIV = getView(R.id.iv_showOrHide);
         showOrHideIV.setOnClickListener(this);
         manager = getSupportFragmentManager();
-        type = getIntent().getIntExtra("type", TYPE_JSK3);
+        type = getIntent().getIntExtra("type", TYPE_BJSC);
         initFragment();
         backRL = getView(R.id.rl_back);
         backRL.setOnClickListener(this);
@@ -78,14 +81,14 @@ public class Fast3Activity extends BaseActivity {
         gameTV = getView(R.id.tv_gameName);
         gameMoreIV = getView(R.id.iv_gameMore);
         switch (type) {
-            case TYPE_JSK3:
-                gameTV.setText("江苏快3");
+            case TYPE_BJSC:
+                gameTV.setText("北京赛车");
                 break;
-            case TYPE_1FK3:
-                gameTV.setText("1分快3");
+            case TYPE_1FSC:
+                gameTV.setText("1分赛车");
                 break;
-            case TYPE_5FK3:
-                gameTV.setText("5分快3");
+            case TYPE_5FSC:
+                gameTV.setText("5分赛车");
                 break;
             default:
                 gameTV.setText("江苏快3");
@@ -100,6 +103,11 @@ public class Fast3Activity extends BaseActivity {
         tzRL.setOnClickListener(this);
         tzjlRL.setOnClickListener(this);
         showFragment(tzFragment);
+        playLL = getView(R.id.ll_play);
+        playTV = getView(R.id.tv_play);
+        playLL.setOnClickListener(this);
+        playIV = getView(R.id.iv_play);
+        playIV.setColorFilter(Color.parseColor("#dd2230"));
     }
 
     @Override
@@ -159,47 +167,49 @@ public class Fast3Activity extends BaseActivity {
                                 break;
                             case 1:
                                 //1分快3
-                                if (type != TYPE_1FK3) {
-                                    Fast3Activity.intentToFast3(mContext, TYPE_1FK3);
-                                }
+                                Fast3Activity.intentToFast3(mContext, TYPE_1FSC);
                                 break;
                             case 2:
                                 //推筒子
                                 break;
                             case 3:
                                 //5分快3
-                                if (type != TYPE_5FK3) {
-                                    Fast3Activity.intentToFast3(mContext, TYPE_5FK3);
-                                }
+                                Fast3Activity.intentToFast3(mContext, TYPE_5FSC);
                                 break;
                             case 4:
                                 //最后胜利者
                                 break;
                             case 5:
                                 //江苏快3
-                                if (type != TYPE_JSK3) {
-                                    Fast3Activity.intentToFast3(mContext, TYPE_JSK3);
-                                }
+                                Fast3Activity.intentToFast3(mContext, TYPE_BJSC);
                                 break;
                             case 6:
                                 //分分彩
                                 break;
                             case 7:
                                 //北京赛车
+                                if (type != TYPE_BJSC) {
+                                    RacingActivity.intentToRacing(mContext, TYPE_BJSC);
+                                }
                                 break;
                             case 8:
                                 //重庆时时彩
                                 break;
                             case 9:
                                 //1分赛车
+                                if (type != TYPE_1FSC) {
+                                    RacingActivity.intentToRacing(mContext, TYPE_1FSC);
+                                }
                                 break;
                             case 10:
                                 //更多
                                 break;
                             case 11:
                                 //5分赛车
+                                if (type != TYPE_5FSC) {
+                                    RacingActivity.intentToRacing(mContext, TYPE_5FSC);
+                                }
                                 break;
-
                         }
                     }
                 }, new DialogInterface.OnCancelListener() {
@@ -209,11 +219,34 @@ public class Fast3Activity extends BaseActivity {
                     }
                 });
                 break;
+            case R.id.ll_play:
+                playIV.setImageResource(R.mipmap.bottom_btn_more);
+                DialogUtil.showPlayDialog(mContext, getPlayList(), new PlayFragment.ClickListener() {
+                    @Override
+                    public void click(String name) {
+                        playTV.setText(name);
+                        if ("定位胆".equals(name)) {
+                            play = PLAY_DWD;
+                        } else if ("大小单双".equals(name)) {
+                            play = PLAY_DXDS;
+                        } else if ("龙虎斗".equals(name)) {
+                            play = PLAY_LHD;
+                        }
+                        playIV.setImageResource(R.mipmap.top_btn_red_more_);
+                        DialogUtil.removeDialog(mContext);
+                    }
+                }, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        playIV.setImageResource(R.mipmap.top_btn_red_more_);
+                    }
+                });
+                break;
         }
     }
 
-    public static void intentToFast3(Context context, int type) {
-        Intent intent = new Intent(context, Fast3Activity.class);
+    public static void intentToRacing(Context context, int type) {
+        Intent intent = new Intent(context, RacingActivity.class);
         intent.putExtra("type", type);
         context.startActivity(intent);
     }
@@ -241,11 +274,19 @@ public class Fast3Activity extends BaseActivity {
     }
 
     private void initFragment() {
-        tzFragment = Fast3TZFragment.newInstance(type);
-        jlFragment = Fast3JLFragment.newInstance(type);
+        tzFragment = RacingTZFragment.newInstance(type, play);
+        jlFragment = RacingTZJLFragment.newInstance(type, play);
     }
 
     public double getMoney() {
         return StringUtil.StringToDoubleTwo(money);
+    }
+
+    private List<String> getPlayList() {
+        List<String> list = new ArrayList<>();
+        list.add("定位胆");
+        list.add("大小单双");
+        list.add("龙虎斗");
+        return list;
     }
 }
