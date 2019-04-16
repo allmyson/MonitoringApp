@@ -234,6 +234,7 @@ public class RacingActivity extends BaseActivity {
                         }
                         playIV.setImageResource(R.mipmap.top_btn_red_more_);
                         DialogUtil.removeDialog(mContext);
+                        ((RacingTZFragment) tzFragment).showFragment(name);
                     }
                 }, new DialogInterface.OnCancelListener() {
                     @Override
