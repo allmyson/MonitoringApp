@@ -21,6 +21,7 @@ import com.ys.zy.dialog.PlayFragment;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.fast3.fragment.Fast3JLFragment;
 import com.ys.zy.fast3.fragment.Fast3TZFragment;
+import com.ys.zy.racing.RacingUtil;
 import com.ys.zy.racing.fragment.RacingTZFragment;
 import com.ys.zy.racing.fragment.RacingTZJLFragment;
 import com.ys.zy.roulette.activity.RouletteActivity;
@@ -54,12 +55,14 @@ public class RacingActivity extends BaseActivity {
     private TextView moneyTV;
     private ImageView showOrHideIV;
     private boolean isShow = true;
-    private String money;
+    private String money = "19992.23";
     private ImageView gameMoreIV;
     private boolean isShowMoreGame = false;//是否显示其他游戏
     private LinearLayout playLL;
     private TextView playTV;
     private ImageView playIV;
+    private String gameNo;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_racing;
@@ -68,7 +71,7 @@ public class RacingActivity extends BaseActivity {
     @Override
     public void initView() {
         moneyTV = getView(R.id.tv_money);
-        money = moneyTV.getText().toString();
+        moneyTV.setText(money);
         showOrHideIV = getView(R.id.iv_showOrHide);
         showOrHideIV.setOnClickListener(this);
         manager = getSupportFragmentManager();
@@ -91,7 +94,7 @@ public class RacingActivity extends BaseActivity {
                 gameTV.setText("5分赛车");
                 break;
             default:
-                gameTV.setText("江苏快3");
+                gameTV.setText("北京赛车");
                 break;
         }
         tzRL = getView(R.id.rl_wytz);
@@ -112,7 +115,7 @@ public class RacingActivity extends BaseActivity {
 
     @Override
     public void getData() {
-
+        gameNo = RacingUtil.getCurrentBJSCPeriods();
     }
 
     @Override
@@ -235,6 +238,7 @@ public class RacingActivity extends BaseActivity {
                         playIV.setImageResource(R.mipmap.top_btn_red_more_);
                         DialogUtil.removeDialog(mContext);
                         ((RacingTZFragment) tzFragment).showFragment(name);
+                        ((RacingTZFragment) tzFragment).clearData();
                     }
                 }, new DialogInterface.OnCancelListener() {
                     @Override
@@ -289,5 +293,43 @@ public class RacingActivity extends BaseActivity {
         list.add("大小单双");
         list.add("龙虎斗");
         return list;
+    }
+
+    public String getGameName() {
+        String gameName = "北京赛车";
+        switch (type) {
+            case TYPE_BJSC:
+                gameName = "北京赛车";
+                break;
+            case TYPE_1FSC:
+                gameName = "1分赛车";
+                break;
+            case TYPE_5FSC:
+                gameName = "5分赛车";
+                break;
+            default:
+                gameName = "北京赛车";
+                break;
+        }
+        return gameName;
+    }
+
+    public String getGameNo() {
+        String gameNo = "";
+        switch (type) {
+            case TYPE_BJSC:
+                gameNo = RacingUtil.getCurrentBJSCPeriods();
+                break;
+            case TYPE_1FSC:
+                gameNo = RacingUtil.getCurrent1FSCPeriods();
+                break;
+            case TYPE_5FSC:
+                gameNo = RacingUtil.getCurrent5FSCPeriods();
+                break;
+            default:
+                gameNo = "";
+                break;
+        }
+        return gameNo;
     }
 }

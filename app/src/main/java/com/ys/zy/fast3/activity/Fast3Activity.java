@@ -42,7 +42,7 @@ public class Fast3Activity extends BaseActivity {
     private TextView moneyTV;
     private ImageView showOrHideIV;
     private boolean isShow = true;
-    private String money;
+    private String money = "1000.25";
     private ImageView gameMoreIV;
     private boolean isShowMoreGame = false;//是否显示其他游戏
 
@@ -54,7 +54,7 @@ public class Fast3Activity extends BaseActivity {
     @Override
     public void initView() {
         moneyTV = getView(R.id.tv_money);
-        money = moneyTV.getText().toString();
+        moneyTV.setText(money);
         showOrHideIV = getView(R.id.iv_showOrHide);
         showOrHideIV.setOnClickListener(this);
         manager = getSupportFragmentManager();

@@ -2,6 +2,9 @@ package com.ys.zy.racing.fragment;
 
 import com.ys.zy.R;
 
+import java.util.List;
+import java.util.Map;
+
 public class RacingDXDSFragment extends RacingFragment {
     public static RacingDXDSFragment newInstance() {
         return new RacingDXDSFragment();
@@ -21,4 +24,15 @@ public class RacingDXDSFragment extends RacingFragment {
     protected int getLayoutResource() {
         return R.layout.fragment_racing_dxds;
     }
+
+    @Override
+    public void clearData() {
+
+    }
+
+    @Override
+    public String getTZResult() {
+        return null;
+    }
+
 }

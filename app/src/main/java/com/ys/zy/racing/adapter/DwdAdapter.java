@@ -8,10 +8,14 @@ import android.widget.GridView;
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
+import com.ys.zy.racing.RacingUtil;
 import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DwdAdapter extends CommonAdapter<String> {
     private List<List<Boolean>> list;
@@ -37,6 +41,11 @@ public class DwdAdapter extends CommonAdapter<String> {
         initData();
     }
 
+    public void clear() {
+        initData();
+        notifyDataSetChanged();
+    }
+
     @Override
     public void convert(ViewHolder helper, String item, final int position) {
         helper.setText(R.id.tv_, StringUtil.valueOf(item));
@@ -60,10 +69,10 @@ public class DwdAdapter extends CommonAdapter<String> {
         });
     }
 
-    private List<String> getNumberList() {
-        List<String> numberList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            numberList.add(String.valueOf(i));
+    private List<Integer> getNumberList() {
+        List<Integer> numberList = new ArrayList<>();
+        for (int i = 1; i < 11; i++) {
+            numberList.add(i);
         }
         return numberList;
     }
@@ -82,18 +91,27 @@ public class DwdAdapter extends CommonAdapter<String> {
 
     public void callback() {
         if (changeListener != null) {
-            List<String> resultList = getResult();
-            changeListener.getData(resultList.size(), getShowResult());
+            changeListener.getData(getTZNum(), getShowResult());
         }
     }
 
 
     //是否可以投注
     public boolean canTZ() {
-        List<String> resultList = getResult();
-        return resultList.size() > 0;
+        return getTZNum() > 0;
     }
 
+    public int getTZNum() {
+        int num = 0;
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < list.get(i).size(); j++) {
+                if (list.get(i).get(j)) {
+                    num++;
+                }
+            }
+        }
+        return num;
+    }
 
     /**
      * 投注内容显示结果
@@ -103,19 +121,29 @@ public class DwdAdapter extends CommonAdapter<String> {
         String result = "";
         for (int i = 0; i < list.size(); i++) {
             String x = "";
+            List<String> data = new ArrayList<>();
             for (int j = 0; j < list.get(i).size(); j++) {
                 if (list.get(i).get(j)) {
-                    if (j == list.get(i).size() - 1) {
-                        x += getNumber(j + 1);
+                    data.add(RacingUtil.getNumber(j + 1));
+                }
+            }
+            if (data.size() == 0) {
+                x = "-";
+            } else if (data.size() == 1) {
+                x = data.get(0);
+            } else {
+                for (int j = 0; j < data.size(); j++) {
+                    if (j == data.size() - 1) {
+                        x += data.get(j);
                     } else {
-                        x += getNumber(j + 1) + "\t";
+                        x += (data.get(j) + " ");
                     }
                 }
             }
             if (i == list.size() - 1) {
-                result += (StringUtil.isBlank(x) ? "-" : x);
+                result += x;
             } else {
-                result += (StringUtil.isBlank(x) ? "-" : x) + ",";
+                result += x + ",";
             }
         }
         return result;
@@ -126,27 +154,31 @@ public class DwdAdapter extends CommonAdapter<String> {
      *
      * @return
      */
-    public List<String> getResult() {
+    public Map<String, List<String>> getResult() {
+        Map<String, List<String>> map = new LinkedHashMap<>();
         List<String> resultList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
+            List<String> data = new ArrayList<>();
             for (int j = 0; j < list.get(i).size(); j++) {
-                String templete = "-,-,-,-,-,-,-,-,-,-";
-                String x;
+                String x = "";
                 if (list.get(i).get(j)) {
-                    x = templete.replace(templete.charAt(2 * j), '*');
-                    x = x.replace("*", getNumber(j + 1));
-                    resultList.add(x);
+                    for (int k = 0; k < list.get(i).size(); k++) {
+                        if (k != j) {
+                            x += "-,";
+                        } else {
+                            x += RacingUtil.getNumber(j + 1) + ",";
+                        }
+                    }
+                    x = x.substring(0, x.length() - 1);
+                    data.add(x);
                 }
             }
+            if (data.size() > 0) {
+                map.put(RacingUtil.getNameByPosition(i), data);
+            }
         }
-        return resultList;
+        return map;
     }
 
-    public String getNumber(int i) {
-        if (i < 10) {
-            return "0" + i;
-        } else {
-            return "" + i;
-        }
-    }
+
 }

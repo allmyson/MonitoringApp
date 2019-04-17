@@ -43,7 +43,9 @@ public class RacingDWDFragment extends RacingFragment {
         dwdAdapter.setChangeListener(new DwdAdapter.ChangeListener() {
             @Override
             public void getData(int tzNum, String showResult) {
-                show("共" + tzNum + "注" + "\n" + showResult);
+                if (getParentFragment() instanceof RacingTZFragment) {
+                    ((RacingTZFragment) getParentFragment()).change(tzNum, showResult);
+                }
             }
         });
     }
@@ -66,4 +68,15 @@ public class RacingDWDFragment extends RacingFragment {
             smTV.setText(Html.fromHtml(sm));
         }
     }
+
+    @Override
+    public void clearData() {
+        dwdAdapter.clear();
+    }
+
+    @Override
+    public String getTZResult() {
+        return dwdAdapter.getShowResult();
+    }
+
 }

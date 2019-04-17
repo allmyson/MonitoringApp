@@ -19,10 +19,10 @@ import java.util.List;
  * @description -------------------------------------------------------
  * @date 2018/11/8 18:50
  */
-public class NumberAdapter extends CommonAdapter<String> {
+public class NumberAdapter extends CommonAdapter<Integer> {
     private List<Boolean> list;
 
-    public NumberAdapter(Context context, List<String> mDatas, int itemLayoutId) {
+    public NumberAdapter(Context context, List<Integer> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
         list = new ArrayList<>();
         for (int i = 0; i < mDatas.size(); i++) {
@@ -31,8 +31,8 @@ public class NumberAdapter extends CommonAdapter<String> {
     }
 
     @Override
-    public void convert(ViewHolder helper, String item, int position) {
-        helper.setText(R.id.tv_number, StringUtil.valueOf(item));
+    public void convert(ViewHolder helper, Integer item, int position) {
+        helper.setText(R.id.tv_number, getNumber(item));
         TextView tv = helper.getView(R.id.tv_number);
         if (list.get(position)) {
             tv.setBackgroundResource(R.drawable.circle8);
@@ -46,6 +46,7 @@ public class NumberAdapter extends CommonAdapter<String> {
     public void setList(List<Boolean> list) {
         this.list = list;
     }
+
     public void cancelChooseOne(int position) {
         for (int i = 0; i < list.size(); i++) {
             if (i == position) {
@@ -55,6 +56,7 @@ public class NumberAdapter extends CommonAdapter<String> {
         }
         notifyDataSetInvalidated();
     }
+
     public void chooseOne(int position) {
         for (int i = 0; i < list.size(); i++) {
             if (i == position) {
@@ -121,5 +123,37 @@ public class NumberAdapter extends CommonAdapter<String> {
             list.set(i, false);
         }
         notifyDataSetInvalidated();
+    }
+
+    public String getNumber(int i) {
+        if (i < 10) {
+            return "0" + i;
+        } else {
+            return "" + i;
+        }
+    }
+
+    public String getShowChooseResult() {
+        String result = "";
+        List<String> data = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i)) {
+                data.add(getNumber(getItem(i)));
+            }
+        }
+        if (data.size() == 0) {
+            result = "-";
+        } else if (data.size() == 1) {
+            result = data.get(0);
+        } else {
+            for (int j = 0; j < data.size(); j++) {
+                if (j == data.size() - 1) {
+                    result += data.get(j);
+                } else {
+                    result += (data.get(j) + "\t");
+                }
+            }
+        }
+        return result;
     }
 }

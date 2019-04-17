@@ -185,7 +185,6 @@ public class StringUtil {
         double f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         return f1;
     }
-
     public static double StringToDouble(String data) {
         return StringToDoubleTwo(data);
     }
