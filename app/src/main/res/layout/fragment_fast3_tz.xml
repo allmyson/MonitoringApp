@@ -20,6 +20,7 @@
             android:paddingTop="6dp">
 
             <TextView
+                android:id="@+id/tv_newResult"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -81,6 +82,7 @@
             android:paddingTop="6dp">
 
             <TextView
+                android:id="@+id/tv_tzTip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0214984期投注截止"
@@ -88,6 +90,7 @@
                 android:textSize="12sp" />
 
             <TextView
+                android:id="@+id/tv_djs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
