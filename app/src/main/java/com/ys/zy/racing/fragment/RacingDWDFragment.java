@@ -71,12 +71,17 @@ public class RacingDWDFragment extends RacingFragment {
 
     @Override
     public void clearData() {
-        dwdAdapter.clear();
+        if (dwdAdapter != null) {
+            dwdAdapter.clear();
+        }
     }
 
     @Override
     public String getTZResult() {
-        return dwdAdapter.getShowResult();
+        if (dwdAdapter != null) {
+            return dwdAdapter.getShowResult();
+        }
+        return "";
     }
 
 }

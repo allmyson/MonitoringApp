@@ -2,6 +2,7 @@ package com.ys.zy.racing.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -28,13 +29,16 @@ import com.ys.zy.racing.adapter.RacingResultAdapter;
 import com.ys.zy.racing.adapter.ScHistoryAdapter;
 import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.TimeUtil;
 import com.ys.zy.util.YS;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class RacingTZFragment extends BaseFragment implements View.OnClickListener, TextWatcher {
+public class RacingTZFragment extends BaseFragment implements View.OnClickListener {
     private int type;
     private int play;
     private GridView resultGV;
@@ -54,6 +58,9 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
     private EditText beiET, qiET;
     private int tzNum = 0;
     private TextView tzTV, clearTV;
+    private TextView newResultTV, tzTipTV, djsTV;
+    private int jgTime = 1;
+    private List<String> resultList;
 
     public static RacingTZFragment newInstance(int type, int play) {
         RacingTZFragment racingTZFragment = new RacingTZFragment();
@@ -64,6 +71,11 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected void init() {
+        resultList = new ArrayList<>();
+        resultList.addAll(getResultList());
+        newResultTV = getView(R.id.tv_newResult);
+        tzTipTV = getView(R.id.tv_tzTip);
+        djsTV = getView(R.id.tv_djs);
         zhuAndPriceTV = getView(R.id.tv_zhuAndPrice);
         tzResultTV = getView(R.id.tv_tzResult);
         tzTV = getView(R.id.tv_tz);
@@ -72,11 +84,11 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
         clearTV.setOnClickListener(this);
         beiET = getView(R.id.et_bei);
         qiET = getView(R.id.et_qi);
-        beiET.addTextChangedListener(this);
-        qiET.addTextChangedListener(this);
+        beiET.addTextChangedListener(new TextWatcher1());
+        qiET.addTextChangedListener(new TextWatcher2());
         manager = getChildFragmentManager();
         resultGV = getView(R.id.gv_result);
-        racingResultAdapter = new RacingResultAdapter(mContext, getResultList(), R.layout.item_text);
+        racingResultAdapter = new RacingResultAdapter(mContext, resultList, R.layout.item_text);
         resultGV.setAdapter(racingResultAdapter);
         showHistoryIV = getView(R.id.iv_showHistory);
         showHistoryIV.setColorFilter(Color.parseColor("#a5a5a5"));
@@ -107,7 +119,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected void getData() {
-
+        start();
     }
 
     @Override
@@ -117,6 +129,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
 
     public void setType(int type) {
         this.type = type;
+        jgTime = RacingUtil.getJGTime(type);
     }
 
     public void setPlay(int play) {
@@ -172,7 +185,18 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
                     int bei = StringUtil.StringToInt(beiET.getText().toString());
                     int qi = StringUtil.StringToInt(qiET.getText().toString());
                     String tzMoney = StringUtil.StringToDoubleStr("" + tzNum * bei * qi * YS.SINGLE_PRICE);
-                    DialogUtil.showTZTip(mContext, ((RacingActivity) getActivity()).getGameName(), ((RacingActivity) getActivity()).getGameNo(), tzMoney, currentFragment.getTZResult(), new TZTipFragment.ClickListener() {
+                    String gameName = ((RacingActivity) getActivity()).getGameName();
+                    String gameNo = ((RacingActivity) getActivity()).getGameNo();
+                    int qi2 = qi;
+                    if (qi > 1) {
+                        qi2 = StringUtil.StringToInt(RacingUtil.getSCPeriods(type, qi).substring(4)) - StringUtil.StringToInt(gameNo.substring(4)) + 1;
+                        gameNo = "第" + gameNo + "期至第" + RacingUtil.getSCPeriods(type, qi) + "期，共" + qi2;
+                        tzMoney = StringUtil.StringToDoubleStr("" + tzNum * bei * qi2 * YS.SINGLE_PRICE);
+                    }
+                    zhuAndPriceTV.setText("共" + tzNum + "注" + bei + "倍" + qi2 + "期" + tzMoney + YS.UNIT);
+                    qiET.setText("" + qi2);
+                    qiET.setSelection(qiET.getText().length());
+                    DialogUtil.showTZTip(mContext, gameName, gameNo, tzMoney, currentFragment.getTZResult(), new TZTipFragment.ClickListener() {
                         @Override
                         public void sure() {
                             DialogUtil.removeDialog(mContext);
@@ -242,24 +266,6 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
         isCanTZ();
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        int bei = StringUtil.StringToInt(beiET.getText().toString());
-        int qi = StringUtil.StringToInt(qiET.getText().toString());
-        zhuAndPriceTV.setText("共" + tzNum + "注" + bei + "倍" + qi + "期" + StringUtil.StringToDoubleStr(tzNum * bei * qi * YS.SINGLE_PRICE) + YS.UNIT);
-        isCanTZ();
-    }
-
     public void clearData() {
         currentFragment.clearData();
         this.tzNum = 0;
@@ -294,4 +300,126 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
         }
         return false;
     }
+
+    public class TextWatcher1 implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            int bei = StringUtil.StringToInt(beiET.getText().toString());
+            int qi = StringUtil.StringToInt(qiET.getText().toString());
+            zhuAndPriceTV.setText("共" + tzNum + "注" + bei + "倍" + qi + "期" + StringUtil.StringToDoubleStr(tzNum * bei * qi * YS.SINGLE_PRICE) + YS.UNIT);
+            isCanTZ();
+        }
+    }
+
+    public class TextWatcher2 implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            int bei = StringUtil.StringToInt(beiET.getText().toString());
+            int qi = StringUtil.StringToInt(qiET.getText().toString());
+            zhuAndPriceTV.setText("共" + tzNum + "注" + bei + "倍" + qi + "期" + StringUtil.StringToDoubleStr(tzNum * bei * qi * YS.SINGLE_PRICE) + YS.UNIT);
+            isCanTZ();
+        }
+    }
+
+
+    private CountDownTimer countDownTimer;
+
+    private void initTimer() {
+        countDownTimer = new CountDownTimer(24 * 60 * 60 * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                setStatus();
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
+    }
+
+    /**
+     * 开启倒计时
+     */
+    public void start() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        initTimer();
+        countDownTimer.start();
+    }
+
+
+    /**
+     * destroy
+     */
+    public void cancel() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        cancel();
+        racingResultAdapter.closeRandom();
+    }
+
+    private void setStatus() {
+        if (RacingUtil.isScRunning(type)) {
+            String currentNo = RacingUtil.getSCPeriods(type, 1);//当前期
+            String lastNo = RacingUtil.getSCPeriods(type, 0);//上一期
+            String nextNo = RacingUtil.getSCPeriods(type, 2);//下一期
+            tzTipTV.setText(currentNo + "期投注截止");
+            newResultTV.setText(lastNo + "期开奖号码");
+            int totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1;
+            if (type == RacingActivity.TYPE_BJSC) {
+                totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1 + (9 * 60 + 10) * 60;
+            }
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());
+            int hour = now.get(Calendar.HOUR_OF_DAY);
+            int minute = now.get(Calendar.MINUTE);
+            int second = now.get(Calendar.SECOND);
+            int differenceSecond = totalSecond - ((hour * 60 + minute) * 60 + second);
+            L.e("differenceSecond=" + differenceSecond);
+            djsTV.setText(TimeUtil.getTime(differenceSecond));
+            if (differenceSecond == 59) {
+                //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                racingResultAdapter.startRandom();
+                L.e("59当前期：" + currentNo);
+                L.e("59上一期：" + lastNo);
+            }
+        } else {
+            //赛车游戏不在游戏时间段内
+        }
+    }
+
 }

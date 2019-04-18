@@ -1,6 +1,6 @@
-package com.ys.zy.racing;
+package com.ys.zy.fast3;
 
-import com.ys.zy.racing.activity.RacingActivity;
+import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.util.GameUtil;
 import com.ys.zy.util.L;
 
@@ -12,22 +12,7 @@ import java.util.List;
 
 import static com.ys.zy.util.GameUtil.toThreeDigit;
 
-public class RacingUtil {
-    private static List<String> nameList = new ArrayList<>();
-
-    static {
-        nameList.add("冠军");
-        nameList.add("亚军");
-        nameList.add("季军");
-        nameList.add("第四");
-        nameList.add("第五");
-        nameList.add("第六");
-        nameList.add("第七");
-        nameList.add("第八");
-        nameList.add("第九");
-        nameList.add("第十");
-    }
-
+public class Fast3Util {
     public static String getNumber(int i) {
         if (i < 10) {
             return "0" + i;
@@ -36,45 +21,41 @@ public class RacingUtil {
         }
     }
 
-    public static String getNameByPosition(int position) {
-        return nameList.get(position);
-    }
-
     /**
-     * 获取北京赛车当前期数  每 20 分钟 1 期，每天 9：10-23：50，共计 44 期，
+     * 获取江苏快3当前期数  每 10 分钟 1 期，每天 8：30-15：20，共计 41 期，
      *
      * @return
      */
-    public static String getCurrentBJSCPeriods() {
-        if (isBJSCRunning()) {
+    public static String getCurrentJSK3Periods() {
+        if (isJSK3Running()) {
             Calendar now = Calendar.getInstance();
             now.setTime(new Date());
             int month = now.get(Calendar.MONTH) + 1;
             int day = now.get(Calendar.DAY_OF_MONTH);
             int hour = now.get(Calendar.HOUR_OF_DAY);
             int minute = now.get(Calendar.MINUTE);
-            return getNumber(month) + getNumber(day) + getNumber((hour * 60 + minute - 9 * 60 - 10) / 20 + 1);
+            return getNumber(month) + getNumber(day) + getNumber((hour * 60 + minute - 8 * 60 - 30) / 10 + 1);
         }
         return "";
     }
 
     /**
-     * 获取北京赛车追qi后的期数
+     * 获取江苏快3追qi后的期数
      *
      * @param qi
      * @return
      */
-    public static String getBJSCPeriods(int qi) {
-        if (isBJSCRunning()) {
+    public static String getJSK3Periods(int qi) {
+        if (isJSK3Running()) {
             Calendar now = Calendar.getInstance();
             now.setTime(new Date());
             int month = now.get(Calendar.MONTH) + 1;
             int day = now.get(Calendar.DAY_OF_MONTH);
             int hour = now.get(Calendar.HOUR_OF_DAY);
             int minute = now.get(Calendar.MINUTE);
-            int qishu = (hour * 60 + minute - 9 * 60 - 10) / 20 + 1 + qi - 1;
-            if (qishu > 44) {
-                qishu = 44;
+            int qishu = (hour * 60 + minute - 8 * 60 - 30) / 10 + 1 + qi - 1;
+            if (qishu > 41) {
+                qishu = 41;
             }
             return getNumber(month) + getNumber(day) + getNumber(qishu);
         }
@@ -82,11 +63,11 @@ public class RacingUtil {
     }
 
     /**
-     * 北京赛车是否正在进行
+     * 江苏快3是否正在进行
      *
      * @return
      */
-    public static boolean isBJSCRunning() {
+    public static boolean isJSK3Running() {
         boolean runFlag = false;
         String format = "HH:mm:ss";
         SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
@@ -94,14 +75,14 @@ public class RacingUtil {
         Date nowTime;
         try {
             nowTime = new SimpleDateFormat(format).parse(now);
-            Date startTime = new SimpleDateFormat(format).parse("09:10:00");
-            Date endTime = new SimpleDateFormat(format).parse("23:50:00");
+            Date startTime = new SimpleDateFormat(format).parse("08:30:00");
+            Date endTime = new SimpleDateFormat(format).parse("15:20:00");
             if (GameUtil.isEffectiveDate(nowTime, startTime, endTime)) {
                 runFlag = true;
-                L.e("系统时间在早上9点10到下午23点50之间.");
+                L.e("系统时间在早上8点30到下午15点20之间.");
             } else {
                 runFlag = false;
-                L.e("系统时间不在早上9点10到下午23点50之间.");
+                L.e("系统时间不在早上8点30到下午15点20之间.");
             }
         } catch (java.text.ParseException e) {
             e.printStackTrace();
@@ -110,20 +91,20 @@ public class RacingUtil {
     }
 
 
-    public static boolean isScRunning(int type) {
-        if (type == RacingActivity.TYPE_BJSC) {
-            return isBJSCRunning();
+    public static boolean isK3Running(int type) {
+        if (type == Fast3Activity.TYPE_JSK3) {
+            return isJSK3Running();
         } else {
             return true;
         }
     }
 
     /**
-     * 获取1分赛车当前期数  1分钟1 期，每天1440 期，
+     * 获取1分快3当前期数  1分钟1 期，每天1440 期，
      *
      * @return
      */
-    public static String getCurrent1FSCPeriods() {
+    public static String getCurrent1FK3Periods() {
         Calendar now = Calendar.getInstance();
         now.setTime(new Date());
         int month = now.get(Calendar.MONTH) + 1;
@@ -134,12 +115,12 @@ public class RacingUtil {
     }
 
     /**
-     * 获取一分赛车加qi后的期数
+     * 获取一分快3加qi后的期数
      *
      * @param qi
      * @return
      */
-    public static String get1FSCPeriods(int qi) {
+    public static String get1FK3Periods(int qi) {
         Calendar now = Calendar.getInstance();
         now.setTime(new Date());
         int month = now.get(Calendar.MONTH) + 1;
@@ -154,11 +135,11 @@ public class RacingUtil {
     }
 
     /**
-     * 获取5分赛车当前期数  5分钟1 期，每天288期，
+     * 获取5分快3当前期数  5分钟1 期，每天288期，
      *
      * @return
      */
-    public static String getCurrent5FSCPeriods() {
+    public static String getCurrent5FK3Periods() {
         Calendar now = Calendar.getInstance();
         now.setTime(new Date());
         int month = now.get(Calendar.MONTH) + 1;
@@ -169,11 +150,11 @@ public class RacingUtil {
     }
 
     /**
-     * 获取5分赛车加qi期后的期数
+     * 获取5分快3加qi期后的期数
      *
      * @return
      */
-    public static String get5FSCPeriods(int qi) {
+    public static String get5FK3Periods(int qi) {
         Calendar now = Calendar.getInstance();
         now.setTime(new Date());
         int month = now.get(Calendar.MONTH) + 1;
@@ -187,17 +168,17 @@ public class RacingUtil {
         return getNumber(month) + getNumber(day) + toThreeDigit(qishu);
     }
 
-    public static String getSCPeriods(int type, int qi) {
+    public static String getK3Periods(int type, int qi) {
         String result = "";
         switch (type) {
-            case RacingActivity.TYPE_BJSC:
-                result = getBJSCPeriods(qi);
+            case Fast3Activity.TYPE_JSK3:
+                result = getJSK3Periods(qi);
                 break;
-            case RacingActivity.TYPE_1FSC:
-                result = get1FSCPeriods(qi);
+            case Fast3Activity.TYPE_1FK3:
+                result = get1FK3Periods(qi);
                 break;
-            case RacingActivity.TYPE_5FSC:
-                result = get5FSCPeriods(qi);
+            case Fast3Activity.TYPE_5FK3:
+                result = get5FK3Periods(qi);
                 break;
         }
         return result;
@@ -206,13 +187,13 @@ public class RacingUtil {
     public static int getJGTime(int type) {
         int jgTime = 1;
         switch (type) {
-            case RacingActivity.TYPE_BJSC:
-                jgTime = 20;
+            case Fast3Activity.TYPE_JSK3:
+                jgTime = 10;
                 break;
-            case RacingActivity.TYPE_1FSC:
+            case Fast3Activity.TYPE_1FK3:
                 jgTime = 1;
                 break;
-            case RacingActivity.TYPE_5FSC:
+            case Fast3Activity.TYPE_5FK3:
                 jgTime = 5;
                 break;
         }

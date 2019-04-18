@@ -1,6 +1,8 @@
 package com.ys.zy.fast3.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -14,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ys.zy.R;
+import com.ys.zy.fast3.Fast3Util;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.activity.RechargeActivity;
 import com.ys.zy.fast3.adapter.Fast3HistoryAdapter;
@@ -23,10 +26,16 @@ import com.ys.zy.fast3.bean.Fast3Bean;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.dialog.TipFragment;
+import com.ys.zy.racing.RacingUtil;
+import com.ys.zy.racing.activity.RacingActivity;
+import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.TimeUtil;
 import com.ys.zy.util.YS;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.ys.zy.fast3.activity.Fast3Activity.TYPE_1FK3;
@@ -53,6 +62,8 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     private LinearLayout historyLL;
     private LinearLayout dataLL;
     private ImageView iv01, iv02, iv03;
+    private TextView newResultTV, tzTipTV, djsTV;
+    private int jgTime = 1;
 
     public static Fast3TZFragment newInstance(int type) {
         Fast3TZFragment fast3TZFragment = new Fast3TZFragment();
@@ -66,6 +77,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
     public void setType(int type) {
         this.type = type;
+        jgTime = RacingUtil.getJGTime(type);
     }
 
     @Override
@@ -84,6 +96,9 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         iv01 = getView(R.id.iv01);
         iv02 = getView(R.id.iv02);
         iv03 = getView(R.id.iv03);
+        newResultTV = getView(R.id.tv_newResult);
+        tzTipTV = getView(R.id.tv_tzTip);
+        djsTV = getView(R.id.tv_djs);
         zhuAndPriceTV = getView(R.id.tv_zhuAndPrice);
         tzTV = getView(R.id.tv_tz);
         tzTV.setOnClickListener(this);
@@ -101,6 +116,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                 } else {
                     priceLL.setVisibility(View.GONE);
                 }
+                isCanTZ();
             }
         });
         priceET = getView(R.id.et_price);
@@ -120,6 +136,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void afterTextChanged(Editable s) {
                 zhuAndPriceTV.setText("共" + fast3SumAdapter.getTZList().size() + "注," + StringUtil.StringToDoubleStr(fast3SumAdapter.getTZList().size() * StringUtil.StringToDoubleTwo(priceET.getText().toString())) + YS.UNIT);
+                isCanTZ();
             }
         });
         clearTV = getView(R.id.tv_clear);
@@ -147,13 +164,14 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     protected void getData() {
-        startRandomText();
+        start();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         closeRandomText();
+        cancel();
     }
 
     @Override
@@ -285,11 +303,97 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                     i = 0;
                 }
             } else if (msg.what == 1) {
-//                String[] ss = (String[]) msg.obj;
-//                if (ss != null && ss.length == 3) {
-//                    iv01.setImageResource(drawables[0]);
-//                }
+
             }
         }
     };
+
+
+    private CountDownTimer countDownTimer;
+
+    private void initTimer() {
+        countDownTimer = new CountDownTimer(24 * 60 * 60 * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                setStatus();
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
+    }
+
+    /**
+     * 开启倒计时
+     */
+    public void start() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        initTimer();
+        countDownTimer.start();
+    }
+
+
+    /**
+     * destroy
+     */
+    public void cancel() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void setStatus() {
+        if (Fast3Util.isK3Running(type)) {
+            String currentNo = Fast3Util.getK3Periods(type, 1);//当前期
+            String lastNo = Fast3Util.getK3Periods(type, 0);//上一期
+            String nextNo = Fast3Util.getK3Periods(type, 2);//下一期
+            tzTipTV.setText(currentNo + "期投注截止");
+            newResultTV.setText(lastNo + "期开奖号码");
+            int totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1;
+            if (type == Fast3Activity.TYPE_JSK3) {
+                totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1 + (8 * 60 + 30) * 60;
+            }
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());
+            int hour = now.get(Calendar.HOUR_OF_DAY);
+            int minute = now.get(Calendar.MINUTE);
+            int second = now.get(Calendar.SECOND);
+            int differenceSecond = totalSecond - ((hour * 60 + minute) * 60 + second);
+            L.e("differenceSecond=" + differenceSecond);
+            djsTV.setText(TimeUtil.getTime(differenceSecond));
+            if (differenceSecond == 59) {
+                //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                startRandomText();
+                L.e("59当前期：" + currentNo);
+                L.e("59上一期：" + lastNo);
+            }
+        } else {
+            //快3游戏不在游戏时间段内
+            L.e("快3游戏不在游戏时间段内");
+        }
+    }
+
+
+    private void isCanTZ() {
+        int tzNum = fast3SumAdapter.getTZList().size();
+        double price = StringUtil.StringToDouble(priceET.getText().toString());
+        if (tzNum == 0 || price == 0) {
+            tzTV.setTextColor(Color.parseColor("#a5a5a5"));
+            tzTV.setBackgroundResource(R.drawable.rect_cornor_gray5);
+//            tzTV.setClickable(false);
+        } else {
+            tzTV.setTextColor(Color.parseColor("#dd2230"));
+            tzTV.setBackgroundResource(R.drawable.rect_cornor_red4);
+//            tzTV.setClickable(true);
+        }
+    }
 }

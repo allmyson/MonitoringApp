@@ -19,6 +19,7 @@ import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
 import com.ys.zy.fast3.fragment.Fast3JLFragment;
 import com.ys.zy.fast3.fragment.Fast3TZFragment;
+import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.util.StringUtil;
 
@@ -175,18 +176,21 @@ public class Fast3Activity extends BaseActivity {
                                 break;
                             case 7:
                                 //北京赛车
+                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_BJSC);
                                 break;
                             case 8:
                                 //重庆时时彩
                                 break;
                             case 9:
                                 //1分赛车
+                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_1FSC);
                                 break;
                             case 10:
                                 //更多
                                 break;
                             case 11:
                                 //5分赛车
+                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_5FSC);
                                 break;
 
                         }
