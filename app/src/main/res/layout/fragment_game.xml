@@ -170,7 +170,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="重庆时时彩"
+            android:text="时时彩"
             android:textColor="#a5a5a5"
             android:textSize="12sp" />
 
