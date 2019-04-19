@@ -77,7 +77,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
     public void setType(int type) {
         this.type = type;
-        jgTime = RacingUtil.getJGTime(type);
+        jgTime = Fast3Util.getJGTime(type);
     }
 
     @Override

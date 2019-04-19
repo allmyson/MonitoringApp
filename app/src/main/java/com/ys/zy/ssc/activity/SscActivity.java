@@ -1,4 +1,4 @@
-package com.ys.zy.racing.activity;
+package com.ys.zy.ssc.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,27 +19,25 @@ import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
 import com.ys.zy.dialog.PlayFragment;
 import com.ys.zy.fast3.activity.Fast3Activity;
-import com.ys.zy.fast3.fragment.Fast3JLFragment;
-import com.ys.zy.fast3.fragment.Fast3TZFragment;
-import com.ys.zy.racing.RacingUtil;
+import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.racing.fragment.RacingTZFragment;
-import com.ys.zy.racing.fragment.RacingTZJLFragment;
 import com.ys.zy.roulette.activity.RouletteActivity;
+import com.ys.zy.ssc.fragment.SscTZFragment;
+import com.ys.zy.ssc.fragment.SscTZJLFragment;
 import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//赛车
-public class RacingActivity extends BaseActivity {
-
-    public static final int TYPE_BJSC = 1000;//北京赛车
-    public static final int TYPE_1FSC = 1001;//1分赛车
-    public static final int TYPE_5FSC = 1002;//5分赛车
-    private int type = TYPE_BJSC;
+//时时彩-1分彩
+public class SscActivity extends BaseActivity {
+    public static final int TYPE_SSC = 1000;//时时彩
+    public static final int TYPE_1FC = 1001;//1分彩
+    private int type = TYPE_SSC;
     public static final int PLAY_DWD = 50;//定位胆
     public static final int PLAY_DXDS = 51;//大小单双
-    public static final int PLAY_LHD = 52;//龙虎斗
+    public static final int PLAY_H2X = 52;//后二星
+    public static final int PLAY_WX = 53;//五星直选
     private int play = PLAY_DWD;
     private RelativeLayout backRL;
     private LinearLayout gameLL;
@@ -65,7 +63,7 @@ public class RacingActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_racing;
+        return R.layout.activity_ssc;
     }
 
     @Override
@@ -75,7 +73,7 @@ public class RacingActivity extends BaseActivity {
         showOrHideIV = getView(R.id.iv_showOrHide);
         showOrHideIV.setOnClickListener(this);
         manager = getSupportFragmentManager();
-        type = getIntent().getIntExtra("type", TYPE_BJSC);
+        type = getIntent().getIntExtra("type", TYPE_SSC);
         initFragment();
         backRL = getView(R.id.rl_back);
         backRL.setOnClickListener(this);
@@ -84,17 +82,11 @@ public class RacingActivity extends BaseActivity {
         gameTV = getView(R.id.tv_gameName);
         gameMoreIV = getView(R.id.iv_gameMore);
         switch (type) {
-            case TYPE_BJSC:
-                gameTV.setText("北京赛车");
+            case TYPE_SSC:
+                gameTV.setText("时时彩");
                 break;
-            case TYPE_1FSC:
-                gameTV.setText("1分赛车");
-                break;
-            case TYPE_5FSC:
-                gameTV.setText("5分赛车");
-                break;
-            default:
-                gameTV.setText("北京赛车");
+            case TYPE_1FC:
+                gameTV.setText("1分彩");
                 break;
         }
         tzRL = getView(R.id.rl_wytz);
@@ -115,7 +107,6 @@ public class RacingActivity extends BaseActivity {
 
     @Override
     public void getData() {
-
     }
 
     @Override
@@ -188,30 +179,30 @@ public class RacingActivity extends BaseActivity {
                                 break;
                             case 6:
                                 //分分彩
+                                if (type != TYPE_1FC) {
+                                    SscActivity.intentToSSC(mContext, TYPE_1FC);
+                                }
                                 break;
                             case 7:
                                 //北京赛车
-                                if (type != TYPE_BJSC) {
-                                    RacingActivity.intentToRacing(mContext, TYPE_BJSC);
-                                }
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_BJSC);
                                 break;
                             case 8:
                                 //重庆时时彩
+                                if (type != TYPE_SSC) {
+                                    SscActivity.intentToSSC(mContext, TYPE_SSC);
+                                }
                                 break;
                             case 9:
                                 //1分赛车
-                                if (type != TYPE_1FSC) {
-                                    RacingActivity.intentToRacing(mContext, TYPE_1FSC);
-                                }
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_1FSC);
                                 break;
                             case 10:
                                 //更多
                                 break;
                             case 11:
                                 //5分赛车
-                                if (type != TYPE_5FSC) {
-                                    RacingActivity.intentToRacing(mContext, TYPE_5FSC);
-                                }
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_5FSC);
                                 break;
                         }
                     }
@@ -232,13 +223,15 @@ public class RacingActivity extends BaseActivity {
                             play = PLAY_DWD;
                         } else if ("大小单双".equals(name)) {
                             play = PLAY_DXDS;
-                        } else if ("龙虎斗".equals(name)) {
-                            play = PLAY_LHD;
+                        } else if ("后二星组选".equals(name)) {
+                            play = PLAY_H2X;
+                        } else if ("五星直选".equals(name)) {
+                            play = PLAY_WX;
                         }
                         playIV.setImageResource(R.mipmap.top_btn_red_more_);
                         DialogUtil.removeDialog(mContext);
-                        ((RacingTZFragment) tzFragment).showFragment(name);
-                        ((RacingTZFragment) tzFragment).clearData();
+                        ((SscTZFragment) tzFragment).showFragment(name);
+                        ((SscTZFragment) tzFragment).clearData();
                     }
                 }, new DialogInterface.OnCancelListener() {
                     @Override
@@ -250,8 +243,8 @@ public class RacingActivity extends BaseActivity {
         }
     }
 
-    public static void intentToRacing(Context context, int type) {
-        Intent intent = new Intent(context, RacingActivity.class);
+    public static void intentToSSC(Context context, int type) {
+        Intent intent = new Intent(context, SscActivity.class);
         intent.putExtra("type", type);
         context.startActivity(intent);
     }
@@ -279,8 +272,8 @@ public class RacingActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        tzFragment = RacingTZFragment.newInstance(type, play);
-        jlFragment = RacingTZJLFragment.newInstance(type, play);
+        tzFragment = SscTZFragment.newInstance(type, play);
+        jlFragment = SscTZJLFragment.newInstance(type, play);
     }
 
     public double getMoney() {
@@ -291,24 +284,19 @@ public class RacingActivity extends BaseActivity {
         List<String> list = new ArrayList<>();
         list.add("定位胆");
         list.add("大小单双");
-        list.add("龙虎斗");
+        list.add("后二星组选");
+        list.add("五星直选");
         return list;
     }
 
     public String getGameName() {
-        String gameName = "北京赛车";
+        String gameName = "时时彩";
         switch (type) {
-            case TYPE_BJSC:
-                gameName = "北京赛车";
+            case TYPE_SSC:
+                gameName = "时时彩";
                 break;
-            case TYPE_1FSC:
-                gameName = "1分赛车";
-                break;
-            case TYPE_5FSC:
-                gameName = "5分赛车";
-                break;
-            default:
-                gameName = "北京赛车";
+            case TYPE_1FC:
+                gameName = "1分彩";
                 break;
         }
         return gameName;
@@ -317,14 +305,11 @@ public class RacingActivity extends BaseActivity {
     public String getGameNo() {
         String gameNo = "";
         switch (type) {
-            case TYPE_BJSC:
-                gameNo = RacingUtil.getCurrentBJSCPeriods();
+            case TYPE_SSC:
+//                gameNo = RacingUtil.getCurrentBJSCPeriods();
                 break;
-            case TYPE_1FSC:
-                gameNo = RacingUtil.getCurrent1FSCPeriods();
-                break;
-            case TYPE_5FSC:
-                gameNo = RacingUtil.getCurrent5FSCPeriods();
+            case TYPE_1FC:
+//                gameNo = RacingUtil.getCurrent1FSCPeriods();
                 break;
             default:
                 gameNo = "";

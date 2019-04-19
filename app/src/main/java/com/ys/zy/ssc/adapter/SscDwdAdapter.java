@@ -1,4 +1,4 @@
-package com.ys.zy.racing.adapter;
+package com.ys.zy.ssc.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -9,15 +9,15 @@ import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
 import com.ys.zy.racing.RacingUtil;
+import com.ys.zy.racing.adapter.NumberAdapter;
 import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DwdAdapter extends CommonAdapter<String> {
+public class SscDwdAdapter extends CommonAdapter<String> {
     private List<List<Boolean>> list;
     private int numberSize = 10;
     private ChangeListener changeListener;
@@ -36,7 +36,7 @@ public class DwdAdapter extends CommonAdapter<String> {
     }
 
 
-    public DwdAdapter(Context context, List<String> mDatas, int itemLayoutId) {
+    public SscDwdAdapter(Context context, List<String> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
         initData();
     }
@@ -50,7 +50,7 @@ public class DwdAdapter extends CommonAdapter<String> {
     public void convert(ViewHolder helper, String item, final int position) {
         helper.setText(R.id.tv_, StringUtil.valueOf(item));
         GridView gv = helper.getView(R.id.gv_);
-        final NumberAdapter numberAdapter = new NumberAdapter(mContext, getNumberList(), R.layout
+        final SscNumberAdapter numberAdapter = new SscNumberAdapter(mContext, getNumberList(), R.layout
                 .item_number);
         numberAdapter.setList(list.get(position));
         gv.setAdapter(numberAdapter);

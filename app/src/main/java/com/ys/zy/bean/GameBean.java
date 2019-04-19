@@ -38,7 +38,7 @@ public class GameBean {
         list.add(new GameBean(R.mipmap.game_pk_icon, "1分赛车", "1分钟1期"));
         list.add(new GameBean(R.mipmap.game_pk_icon, "5分赛车", "5分钟1期"));
         list.add(new GameBean(R.mipmap.game_ssc_icon, "1分彩", "1分钟1期"));
-        list.add(new GameBean(R.mipmap.game_ssc_icon, "重庆时时彩", "全天59期"));
+        list.add(new GameBean(R.mipmap.game_ssc_icon, "时时彩", "10分钟一期"));
         list.add(new GameBean(R.mipmap.home_game_icon_more, "更多", ""));
         return list;
     }
