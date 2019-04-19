@@ -22,6 +22,7 @@ import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.racing.fragment.RacingTZFragment;
 import com.ys.zy.roulette.activity.RouletteActivity;
+import com.ys.zy.ssc.SscUtil;
 import com.ys.zy.ssc.fragment.SscTZFragment;
 import com.ys.zy.ssc.fragment.SscTZJLFragment;
 import com.ys.zy.util.StringUtil;
@@ -306,10 +307,10 @@ public class SscActivity extends BaseActivity {
         String gameNo = "";
         switch (type) {
             case TYPE_SSC:
-//                gameNo = RacingUtil.getCurrentBJSCPeriods();
+                gameNo = SscUtil.getCurrentSscPeriods();
                 break;
             case TYPE_1FC:
-//                gameNo = RacingUtil.getCurrent1FSCPeriods();
+                gameNo = SscUtil.getCurrent1FCPeriods();
                 break;
             default:
                 gameNo = "";

@@ -5,8 +5,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ys.zy.R;
-import com.ys.zy.racing.adapter.DwdAdapter;
-import com.ys.zy.racing.fragment.RacingFragment;
 import com.ys.zy.racing.fragment.RacingTZFragment;
 import com.ys.zy.ssc.adapter.SscDwdAdapter;
 import com.ys.zy.util.StringUtil;
@@ -37,7 +35,7 @@ public class SscDWDFragment extends SscFragment {
         dwdAdapter.setChangeListener(new SscDwdAdapter.ChangeListener() {
             @Override
             public void getData(int tzNum, String showResult) {
-                if (getParentFragment() instanceof RacingTZFragment) {
+                if (getParentFragment() instanceof SscTZFragment) {
                     ((SscTZFragment) getParentFragment()).change(tzNum, showResult);
                 }
             }

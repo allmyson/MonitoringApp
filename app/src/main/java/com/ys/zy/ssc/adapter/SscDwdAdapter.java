@@ -9,7 +9,6 @@ import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
 import com.ys.zy.racing.RacingUtil;
-import com.ys.zy.racing.adapter.NumberAdapter;
 import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class SscDwdAdapter extends CommonAdapter<String> {
 
     private List<Integer> getNumberList() {
         List<Integer> numberList = new ArrayList<>();
-        for (int i = 1; i < 11; i++) {
+        for (int i = 0; i < 10; i++) {
             numberList.add(i);
         }
         return numberList;
@@ -121,16 +120,16 @@ public class SscDwdAdapter extends CommonAdapter<String> {
         String result = "";
         for (int i = 0; i < list.size(); i++) {
             String x = "";
-            List<String> data = new ArrayList<>();
+            List<Integer> data = new ArrayList<>();
             for (int j = 0; j < list.get(i).size(); j++) {
                 if (list.get(i).get(j)) {
-                    data.add(RacingUtil.getNumber(j + 1));
+                    data.add(j);
                 }
             }
             if (data.size() == 0) {
                 x = "-";
             } else if (data.size() == 1) {
-                x = data.get(0);
+                x = "" + data.get(0);
             } else {
                 for (int j = 0; j < data.size(); j++) {
                     if (j == data.size() - 1) {

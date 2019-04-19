@@ -29,6 +29,8 @@ import com.ys.zy.racing.fragment.RacingDWDFragment;
 import com.ys.zy.racing.fragment.RacingDXDSFragment;
 import com.ys.zy.racing.fragment.RacingFragment;
 import com.ys.zy.racing.fragment.RacingLHDFragment;
+import com.ys.zy.ssc.SscUtil;
+import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ssc.adapter.SscResultAdapter;
 import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
@@ -53,8 +55,8 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
     private ListView historyLV;
     private ScHistoryAdapter scHistoryAdapter;
     private LinearLayout dataLL;
-    private RacingFragment currentFragment;
-    private RacingFragment dwdFragment, dxdsFragment, lhdFragment;
+    private SscFragment currentFragment;
+    private SscFragment dwdFragment, dxdsFragment, h2xFragment, wxFragment;
     private FragmentManager manager;
     private TextView zhuAndPriceTV, tzResultTV;
     private EditText beiET, qiET;
@@ -131,7 +133,7 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
 
     public void setType(int type) {
         this.type = type;
-        jgTime = RacingUtil.getJGTime(type);
+        jgTime = SscUtil.getJGTime(type);
     }
 
     public void setPlay(int play) {
@@ -182,12 +184,12 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
                     int bei = StringUtil.StringToInt(beiET.getText().toString());
                     int qi = StringUtil.StringToInt(qiET.getText().toString());
                     String tzMoney = StringUtil.StringToDoubleStr("" + tzNum * bei * qi * YS.SINGLE_PRICE);
-                    String gameName = ((RacingActivity) getActivity()).getGameName();
-                    String gameNo = ((RacingActivity) getActivity()).getGameNo();
+                    String gameName = ((SscActivity) getActivity()).getGameName();
+                    String gameNo = ((SscActivity) getActivity()).getGameNo();
                     int qi2 = qi;
                     if (qi > 1) {
-                        qi2 = StringUtil.StringToInt(RacingUtil.getSCPeriods(type, qi).substring(4)) - StringUtil.StringToInt(gameNo.substring(4)) + 1;
-                        gameNo = "第" + gameNo + "期至第" + RacingUtil.getSCPeriods(type, qi) + "期，共" + qi2;
+                        qi2 = StringUtil.StringToInt(SscUtil.getSscPeriods(type, qi).substring(4)) - StringUtil.StringToInt(gameNo.substring(4)) + 1;
+                        gameNo = "第" + gameNo + "期至第" + SscUtil.getSscPeriods(type, qi) + "期，共" + qi2;
                         tzMoney = StringUtil.StringToDoubleStr("" + tzNum * bei * qi2 * YS.SINGLE_PRICE);
                     }
                     zhuAndPriceTV.setText("共" + tzNum + "注" + bei + "倍" + qi2 + "期" + tzMoney + YS.UNIT);
@@ -209,15 +211,16 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
      * 初始化Fragment
      */
     private void initFragment() {
-        dwdFragment = RacingDWDFragment.newInstance();
-        dxdsFragment = RacingDXDSFragment.newInstance();
-        lhdFragment = RacingLHDFragment.newInstance();
+        dwdFragment = SscDWDFragment.newInstance();
+        dxdsFragment = SscDWDFragment.newInstance();
+        h2xFragment = SscDWDFragment.newInstance();
+        wxFragment = SscDWDFragment.newInstance();
     }
 
     /**
      * @param fragment
      */
-    public void showFragment(RacingFragment fragment) {
+    public void showFragment(SscFragment fragment) {
         try {
             if (currentFragment != fragment) {
                 FragmentTransaction transaction = manager.beginTransaction();
@@ -245,9 +248,9 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
         } else if ("大小单双".equals(type)) {
             showFragment(dxdsFragment);
         } else if ("后二星组选".equals(type)) {
-            showFragment(lhdFragment);
-        }else if("五星直选".equals(type)){
-
+            showFragment(h2xFragment);
+        } else if ("五星直选".equals(type)) {
+            showFragment(wxFragment);
         }
     }
 
@@ -293,7 +296,7 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
         int bei = StringUtil.StringToInt(beiET.getText().toString());
         int qi = StringUtil.StringToInt(qiET.getText().toString());
         double tzMoney = StringUtil.StringToDouble("" + tzNum * bei * qi * YS.SINGLE_PRICE);
-        double totalMoney = ((RacingActivity) getActivity()).getMoney();
+        double totalMoney = ((SscActivity) getActivity()).getMoney();
         if (tzMoney <= totalMoney) {
             return true;
         }
@@ -392,32 +395,25 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void setStatus() {
-        if (RacingUtil.isScRunning(type)) {
-            String currentNo = RacingUtil.getSCPeriods(type, 1);//当前期
-            String lastNo = RacingUtil.getSCPeriods(type, 0);//上一期
-            String nextNo = RacingUtil.getSCPeriods(type, 2);//下一期
-            tzTipTV.setText(currentNo + "期投注截止");
-            newResultTV.setText(lastNo + "期开奖号码");
-            int totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1;
-            if (type == RacingActivity.TYPE_BJSC) {
-                totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1 + (9 * 60 + 10) * 60;
-            }
-            Calendar now = Calendar.getInstance();
-            now.setTime(new Date());
-            int hour = now.get(Calendar.HOUR_OF_DAY);
-            int minute = now.get(Calendar.MINUTE);
-            int second = now.get(Calendar.SECOND);
-            int differenceSecond = totalSecond - ((hour * 60 + minute) * 60 + second);
-            L.e("differenceSecond=" + differenceSecond);
-            djsTV.setText(TimeUtil.getTime(differenceSecond));
-            if (differenceSecond == 59) {
-                //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
-                sscResultAdapter.startRandom();
-                L.e("59当前期：" + currentNo);
-                L.e("59上一期：" + lastNo);
-            }
-        } else {
-            //赛车游戏不在游戏时间段内
+        String currentNo = SscUtil.getSscPeriods(type, 1);//当前期
+        String lastNo = SscUtil.getSscPeriods(type, 0);//上一期
+        String nextNo = SscUtil.getSscPeriods(type, 2);//下一期
+        tzTipTV.setText(currentNo + "期投注截止");
+        newResultTV.setText(lastNo + "期开奖号码");
+        int totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1;
+        Calendar now = Calendar.getInstance();
+        now.setTime(new Date());
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+        int second = now.get(Calendar.SECOND);
+        int differenceSecond = totalSecond - ((hour * 60 + minute) * 60 + second);
+        L.e("differenceSecond=" + differenceSecond);
+        djsTV.setText(TimeUtil.getTime(differenceSecond));
+        if (differenceSecond == 59) {
+            //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+            sscResultAdapter.startRandom();
+            L.e("59当前期：" + currentNo);
+            L.e("59上一期：" + lastNo);
         }
     }
 

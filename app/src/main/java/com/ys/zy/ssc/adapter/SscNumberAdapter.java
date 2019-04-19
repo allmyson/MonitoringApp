@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
+import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class SscNumberAdapter extends CommonAdapter<Integer> {
 
     @Override
     public void convert(ViewHolder helper, Integer item, int position) {
-        helper.setText(R.id.tv_number, getNumber(item));
+        helper.setText(R.id.tv_number, StringUtil.valueOf(item));
         TextView tv = helper.getView(R.id.tv_number);
         if (list.get(position)) {
             tv.setBackgroundResource(R.drawable.circle8);

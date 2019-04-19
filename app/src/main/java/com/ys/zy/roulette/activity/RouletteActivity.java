@@ -19,6 +19,7 @@ import com.ys.zy.dialog.GameFragment;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.fragment.RouletteJLFragment;
 import com.ys.zy.roulette.fragment.RouletteTZFragment;
+import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.util.StringUtil;
 
 //轮盘
@@ -159,14 +160,16 @@ public class RouletteActivity extends BaseActivity {
                                 Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_JSK3);
                                 break;
                             case 6:
-                                //分分彩
+                                //1分彩
+                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_1FC);
                                 break;
                             case 7:
                                 //北京赛车
                                 RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_BJSC);
                                 break;
                             case 8:
-                                //重庆时时彩
+                                //时时彩
+                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_SSC);
                                 break;
                             case 9:
                                 //1分赛车

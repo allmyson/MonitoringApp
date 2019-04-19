@@ -1,11 +1,7 @@
 package com.ys.zy.ssc;
 
-import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.util.GameUtil;
-import com.ys.zy.util.L;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,7 +24,7 @@ public class SscUtil {
      *
      * @return
      */
-    public static String getCurrent1FSPeriods() {
+    public static String getCurrent1FCPeriods() {
         Calendar now = Calendar.getInstance();
         now.setTime(new Date());
         int month = now.get(Calendar.MONTH) + 1;
