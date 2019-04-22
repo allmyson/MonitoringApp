@@ -212,9 +212,9 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
      */
     private void initFragment() {
         dwdFragment = SscDWDFragment.newInstance();
-        dxdsFragment = SscDWDFragment.newInstance();
-        h2xFragment = SscDWDFragment.newInstance();
-        wxFragment = SscDWDFragment.newInstance();
+        dxdsFragment = SscDXDSFragment.newInstance();
+        h2xFragment = SscH2XFragment.newInstance();
+        wxFragment = SscWXFragment.newInstance();
     }
 
     /**

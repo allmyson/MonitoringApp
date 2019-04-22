@@ -193,7 +193,13 @@ public class RouletteActivity extends BaseActivity {
                 });
                 break;
             case R.id.ll_sm:
-                DialogUtil.showSmDialog(mContext, content);
+                smIV.setImageResource(R.mipmap.bottom_btn_more);
+                DialogUtil.showSmDialog(mContext, content,new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        smIV.setImageResource(R.mipmap.top_btn_more);
+                    }
+                });
                 break;
         }
     }

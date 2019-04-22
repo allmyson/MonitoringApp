@@ -254,13 +254,14 @@ public class DialogUtil {
      * @param
      * @return
      */
-    public static SmFragment showSmDialog(Context context,String content) {
+    public static SmFragment showSmDialog(Context context,String content,DialogInterface.OnCancelListener onCancelListener) {
         FragmentActivity activity = (FragmentActivity) context;
         removeDialog(activity);
 //        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         SmFragment newFragment = SmFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
                 .Theme_Holo_Light_Dialog);
         newFragment.setContent(content);
+        newFragment.setOnCancelListener(onCancelListener);
         FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
         // 指定一个过渡动画
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

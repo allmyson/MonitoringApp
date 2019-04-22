@@ -300,6 +300,20 @@ public class SscActivity extends BaseActivity {
                 gameName = "1分彩";
                 break;
         }
+        switch (play){
+            case PLAY_DWD:
+                gameName+="(定位胆)";
+                break;
+            case PLAY_DXDS:
+                gameName+="(大小单双)";
+                break;
+            case PLAY_H2X:
+                gameName+="(后二星组选)";
+                break;
+            case PLAY_WX:
+                gameName+="(五星直选)";
+                break;
+        }
         return gameName;
     }
 

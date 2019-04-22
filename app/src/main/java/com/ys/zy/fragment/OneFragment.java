@@ -14,6 +14,7 @@ import com.ys.zy.bean.GameBean;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.ssc.activity.SscActivity;
+import com.ys.zy.winner.activity.WinnerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
                     case 4:
                         break;
                     case 5:
+                        WinnerActivity.intentToWinner(mContext);
                         break;
                     case 6:
                         RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_BJSC);
