@@ -25,7 +25,9 @@ import com.ys.zy.racing.RacingUtil;
 import com.ys.zy.racing.fragment.RacingTZFragment;
 import com.ys.zy.racing.fragment.RacingTZJLFragment;
 import com.ys.zy.roulette.activity.RouletteActivity;
+import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.winner.activity.WinnerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,6 +183,7 @@ public class RacingActivity extends BaseActivity {
                                 break;
                             case 4:
                                 //最后胜利者
+                                WinnerActivity.intentToWinner(mContext);
                                 break;
                             case 5:
                                 //江苏快3
@@ -188,6 +191,7 @@ public class RacingActivity extends BaseActivity {
                                 break;
                             case 6:
                                 //分分彩
+                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_1FC);
                                 break;
                             case 7:
                                 //北京赛车
@@ -196,7 +200,8 @@ public class RacingActivity extends BaseActivity {
                                 }
                                 break;
                             case 8:
-                                //重庆时时彩
+                                //时时彩
+                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_SSC);
                                 break;
                             case 9:
                                 //1分赛车

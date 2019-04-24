@@ -23,6 +23,7 @@ import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.winner.activity.WinnerActivity;
 
 //快3
 public class Fast3Activity extends BaseActivity {
@@ -165,6 +166,7 @@ public class Fast3Activity extends BaseActivity {
                                 break;
                             case 4:
                                 //最后胜利者
+                                WinnerActivity.intentToWinner(mContext);
                                 break;
                             case 5:
                                 //江苏快3
@@ -174,26 +176,26 @@ public class Fast3Activity extends BaseActivity {
                                 break;
                             case 6:
                                 //1分彩
-                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_1FC);
+                                SscActivity.intentToSSC(mContext, SscActivity.TYPE_1FC);
                                 break;
                             case 7:
                                 //北京赛车
-                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_BJSC);
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_BJSC);
                                 break;
                             case 8:
                                 //时时彩
-                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_SSC);
+                                SscActivity.intentToSSC(mContext, SscActivity.TYPE_SSC);
                                 break;
                             case 9:
                                 //1分赛车
-                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_1FSC);
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_1FSC);
                                 break;
                             case 10:
                                 //更多
                                 break;
                             case 11:
                                 //5分赛车
-                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_5FSC);
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_5FSC);
                                 break;
 
                         }

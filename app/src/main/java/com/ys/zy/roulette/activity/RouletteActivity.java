@@ -21,6 +21,7 @@ import com.ys.zy.roulette.fragment.RouletteJLFragment;
 import com.ys.zy.roulette.fragment.RouletteTZFragment;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.winner.activity.WinnerActivity;
 
 //轮盘
 public class RouletteActivity extends BaseActivity {
@@ -154,6 +155,7 @@ public class RouletteActivity extends BaseActivity {
                                 break;
                             case 4:
                                 //最后胜利者
+                                WinnerActivity.intentToWinner(mContext);
                                 break;
                             case 5:
                                 //江苏快3

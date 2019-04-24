@@ -48,6 +48,9 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
     private RelativeLayout waitKjRL;
     private LinearLayout finishKjLL;
     private CircleProgressBar waitKjCPB;
+    private TextView tzTV;
+    private int snNum = 0;
+    private TextView currentQ0, currentQ1, currentQ2, currentQ3;
 
     public static WinnerTZFragment newInstance() {
         WinnerTZFragment winnerTZFragment = new WinnerTZFragment();
@@ -56,6 +59,13 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected void init() {
+        currentQ0 = getView(R.id.tv_currentQ0);
+        currentQ1 = getView(R.id.tv_currentQ1);
+        currentQ2 = getView(R.id.tv_currentQ2);
+        currentQ3 = getView(R.id.tv_currentQ3);
+        tzTV = getView(R.id.tv_tz);
+        setBtnClickable(false, tzTV);
+        tzTV.setOnClickListener(this);
         tzLL = getView(R.id.ll_tz);
         waitKjRL = getView(R.id.rl_wait_kj);
         finishKjLL = getView(R.id.ll_finish_kj);
@@ -74,7 +84,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         nextQsTV = getView(R.id.tv_nextQs);
         djsTV = getView(R.id.tv_djs);
         currentQsTV = getView(R.id.tv_currentQS);
-        currentQsTV.setText(currentQs);
+        setCurrentQ(currentQs);
         nextQsTV.setText(StringUtil.StringToInt(currentQs) + 1 + "期投注倒计时");
         buySnIV = getView(R.id.iv_buySn);
         buySnIV.setColorFilter(Color.parseColor("#ffffff"));
@@ -162,6 +172,10 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                     buySnIV.setImageResource(R.mipmap.slz_notice_btn_more_up);
                 }
                 break;
+            case R.id.tv_tz:
+                snNum++;
+                show("投注成功");
+                break;
         }
     }
 
@@ -214,10 +228,10 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void setStatus() {
-        int type = WinnerUtil.getType(startTime, 0);
-        currentQsTV.setText(currentQs);
+        int type = WinnerUtil.getType(startTime, snNum);
+        setCurrentQ(currentQs);
         nextQsTV.setText(StringUtil.StringToInt(currentQs) + 1 + "期投注倒计时");
-        long endTime = WinnerUtil.getEndTime(type, startTime, 0);
+        long endTime = WinnerUtil.getEndTime(type, startTime, snNum);
         djsTV.setText(formatter.format(endTime - System.currentTimeMillis()));
         switch (type) {
             case WinnerUtil.TYPE_TZ:
@@ -226,6 +240,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                 waitKjRL.setVisibility(View.GONE);
                 finishKjLL.setVisibility(View.GONE);
                 nextQsTV.setVisibility(View.GONE);
+                setBtnClickable(true, tzTV);
                 break;
             case WinnerUtil.TYPE_WAIT_KJ:
                 //系统结算中
@@ -236,6 +251,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                 finishKjLL.setVisibility(View.GONE);
                 waitKjCPB.setDescription(currentQs + "期");
                 waitKjCPB.setProgress(100 - (int) ((endTime - System.currentTimeMillis()) * 100 / (60 * 1000)));
+                setBtnClickable(false, tzTV);
                 break;
             case WinnerUtil.TYPE_FINISH_KJ:
                 //已开奖
@@ -244,17 +260,47 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                 djsTV.setVisibility(View.VISIBLE);
                 waitKjRL.setVisibility(View.GONE);
                 finishKjLL.setVisibility(View.VISIBLE);
+                setBtnClickable(false, tzTV);
                 break;
             case WinnerUtil.TYPE_END:
                 //本期游戏结束，期号加1，下期游戏开始
                 startTime = System.currentTimeMillis() - 119 * 60 * 1000 - 40 * 1000;
                 currentQs = StringUtil.StringToInt(currentQs) + 1 + "";
+                snNum = 0;//snNum清0
                 tzLL.setVisibility(View.VISIBLE);
                 djsTV.setVisibility(View.VISIBLE);
                 waitKjRL.setVisibility(View.GONE);
                 finishKjLL.setVisibility(View.GONE);
                 nextQsTV.setVisibility(View.GONE);
+                setBtnClickable(false, tzTV);
                 break;
         }
+    }
+
+    @Override
+    protected void setBtnClickable(boolean canClick, View view) {
+        TextView tv;
+        if (view instanceof TextView) {
+            tv = (TextView) view;
+            if (canClick) {
+                tv.setClickable(true);
+                tv.setTextColor(Color.parseColor("#f86e00"));
+                tv.setBackgroundResource(R.drawable.rect_cornor_yellow1);
+//                tv.setAlpha(1f);
+            } else {
+                tv.setClickable(false);
+                tv.setTextColor(Color.parseColor("#a5a5a5"));
+                tv.setBackgroundResource(R.drawable.rect_cornor_gray7);
+//                tv.setAlpha(0.3f);
+            }
+        }
+    }
+
+    private void setCurrentQ(String currentQ) {
+        currentQsTV.setText(currentQ + "期");
+        currentQ0.setText(currentQ + "期");
+        currentQ1.setText(currentQ + "期");
+        currentQ2.setText(currentQ + "期");
+        currentQ3.setText(currentQ + "期");
     }
 }

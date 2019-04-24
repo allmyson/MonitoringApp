@@ -26,6 +26,7 @@ import com.ys.zy.ssc.SscUtil;
 import com.ys.zy.ssc.fragment.SscTZFragment;
 import com.ys.zy.ssc.fragment.SscTZJLFragment;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.winner.activity.WinnerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,6 +174,7 @@ public class SscActivity extends BaseActivity {
                                 break;
                             case 4:
                                 //最后胜利者
+                                WinnerActivity.intentToWinner(mContext);
                                 break;
                             case 5:
                                 //江苏快3

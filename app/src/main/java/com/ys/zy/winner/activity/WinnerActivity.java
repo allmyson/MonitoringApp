@@ -20,6 +20,7 @@ import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.racing.activity.RacingActivity;
+import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.roulette.fragment.RouletteJLFragment;
 import com.ys.zy.roulette.fragment.RouletteTZFragment;
 import com.ys.zy.ssc.activity.SscActivity;
@@ -32,7 +33,7 @@ import com.ys.zy.winner.fragment.WinnerTZJLFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-//轮盘
+//胜利者
 public class WinnerActivity extends BaseActivity {
     private RelativeLayout backRL;
     private ImageView backIV, smIV, gameMoreIV;
@@ -162,6 +163,7 @@ public class WinnerActivity extends BaseActivity {
                         switch (position) {
                             case 0:
                                 //轮盘
+                                startActivity(new Intent(mContext, RouletteActivity.class));
                                 break;
                             case 1:
                                 //1分快3
