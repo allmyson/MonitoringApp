@@ -5,6 +5,28 @@ import java.util.Date;
 
 public class GameUtil {
     /**
+     * 获取推筒子当前期数  1天1440期，每分钟一期
+     *
+     * @return
+     */
+    public static String getCurrentTtzPeriods() {
+        return getCurrentLpPeriods(System.currentTimeMillis());
+    }
+
+    public static String getCurrentTtzPeriods(long time) {
+        Calendar now = Calendar.getInstance();
+        now.setTime(new Date(time));
+        int month = now.get(Calendar.MONTH) + 1;
+        int day = now.get(Calendar.DAY_OF_MONTH);
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+        return toDoubleDigit(month) + toDoubleDigit(day) + toFourDigit(hour * 60 + minute);
+    }
+
+
+
+
+    /**
      * 获取轮盘当前期数  1天1440期，每分钟一期
      *
      * @return

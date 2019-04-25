@@ -1,6 +1,5 @@
-package com.ys.zy.racing.activity;
+package com.ys.zy.ttz.activity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,89 +17,83 @@ import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
-import com.ys.zy.dialog.PlayFragment;
 import com.ys.zy.fast3.activity.Fast3Activity;
-import com.ys.zy.fast3.fragment.Fast3JLFragment;
-import com.ys.zy.fast3.fragment.Fast3TZFragment;
-import com.ys.zy.racing.RacingUtil;
-import com.ys.zy.racing.fragment.RacingTZFragment;
-import com.ys.zy.racing.fragment.RacingTZJLFragment;
+import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.activity.RouletteActivity;
+import com.ys.zy.roulette.fragment.RouletteJLFragment;
+import com.ys.zy.roulette.fragment.RouletteTZFragment;
 import com.ys.zy.ssc.activity.SscActivity;
-import com.ys.zy.ttz.activity.TtzActivity;
+import com.ys.zy.ttz.fragment.TtzJLFragment;
+import com.ys.zy.ttz.fragment.TtzTZFragment;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.winner.activity.WinnerActivity;
+import com.ys.zy.winner.adapter.SmAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//赛车
-public class RacingActivity extends BaseActivity {
-
-    public static final int TYPE_BJSC = 1000;//北京赛车
-    public static final int TYPE_1FSC = 1001;//1分赛车
-    public static final int TYPE_5FSC = 1002;//5分赛车
-    private int type = TYPE_BJSC;
-    public static final int PLAY_DWD = 50;//定位胆
-    public static final int PLAY_DXDS = 51;//大小单双
-    public static final int PLAY_LHD = 52;//龙虎斗
-    private int play = PLAY_DWD;
+//推筒子
+public class TtzActivity extends BaseActivity {
     private RelativeLayout backRL;
-    private LinearLayout gameLL;
-    private TextView gameTV;
-
+    private ImageView backIV, smIV, gameMoreIV;
+    private TextView gameNameTV;
     private RelativeLayout tzRL, tzjlRL;
     private TextView tzTV, tzjlTV;
     private View tzView, tzjlView;
+    private Fragment tzFragment, jlFragment;
     public static final int TYPE_TZ = 100;
     public static final int TYPE_JL = 101;
     private int currentType = TYPE_TZ;
-    private Fragment tzFragment, jlFragment;
+
     private TextView moneyTV;
     private ImageView showOrHideIV;
     private boolean isShow = true;
-    private String money = "19992.23";
-    private ImageView gameMoreIV;
+    private String money;
     private boolean isShowMoreGame = false;//是否显示其他游戏
-    private LinearLayout playLL;
-    private TextView playTV;
-    private ImageView playIV;
-    private String gameNo;
+
+    private LinearLayout gameLL;
+    private LinearLayout smLL, smContentLL;
+    private ListView smLV;
+    private SmAdapter smAdapter;
+    private List<String> smList;
+    public static String content;
+
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_racing;
+        return R.layout.activity_ttz;
     }
 
     @Override
     public void initView() {
-        moneyTV = getView(R.id.tv_money);
-        moneyTV.setText(money);
-        showOrHideIV = getView(R.id.iv_showOrHide);
-        showOrHideIV.setOnClickListener(this);
-        manager = getSupportFragmentManager();
-        type = getIntent().getIntExtra("type", TYPE_BJSC);
-        initFragment();
+        smContentLL = getView(R.id.ll_smContent);
+        smLV = getView(R.id.lv_sm);
+        smList = new ArrayList<>();
+        smList.addAll(getSMList());
+        smAdapter = new SmAdapter(mContext, smList, R.layout.item_text3);
+        smLV.setAdapter(smAdapter);
+        setBarColor("#1e1e1e", false);
         backRL = getView(R.id.rl_back);
         backRL.setOnClickListener(this);
+        backIV = getView(R.id.iv_back);
+        smIV = getView(R.id.iv_sm);
+        gameMoreIV = getView(R.id.iv_gameMore);
+        backIV.setColorFilter(Color.parseColor("#a5a5a5"));
+        smIV.setColorFilter(Color.parseColor("#f7f7f7"));
+        gameMoreIV.setColorFilter(Color.parseColor("#a5a5a5"));
+        gameNameTV = getView(R.id.tv_gameName);
+
+        moneyTV = getView(R.id.tv_money);
+        money = moneyTV.getText().toString();
+        showOrHideIV = getView(R.id.iv_showOrHide);
+        showOrHideIV.setOnClickListener(this);
+
         gameLL = getView(R.id.ll_game);
         gameLL.setOnClickListener(this);
-        gameTV = getView(R.id.tv_gameName);
-        gameMoreIV = getView(R.id.iv_gameMore);
-        switch (type) {
-            case TYPE_BJSC:
-                gameTV.setText("北京赛车");
-                break;
-            case TYPE_1FSC:
-                gameTV.setText("1分赛车");
-                break;
-            case TYPE_5FSC:
-                gameTV.setText("5分赛车");
-                break;
-            default:
-                gameTV.setText("北京赛车");
-                break;
-        }
+
+        smLL = getView(R.id.ll_sm);
+        smLL.setOnClickListener(this);
+
         tzRL = getView(R.id.rl_wytz);
         tzjlRL = getView(R.id.rl_tzjl);
         tzTV = getView(R.id.tv_wytz);
@@ -108,12 +102,9 @@ public class RacingActivity extends BaseActivity {
         tzjlView = getView(R.id.view_tzjl);
         tzRL.setOnClickListener(this);
         tzjlRL.setOnClickListener(this);
+        manager = getSupportFragmentManager();
+        initFragment();
         showFragment(tzFragment);
-        playLL = getView(R.id.ll_play);
-        playTV = getView(R.id.tv_play);
-        playLL.setOnClickListener(this);
-        playIV = getView(R.id.iv_play);
-        playIV.setColorFilter(Color.parseColor("#dd2230"));
     }
 
     @Override
@@ -147,7 +138,6 @@ public class RacingActivity extends BaseActivity {
                     showFragment(jlFragment);
                 }
                 break;
-
             case R.id.iv_showOrHide:
                 if (isShow) {
                     isShow = false;
@@ -177,7 +167,6 @@ public class RacingActivity extends BaseActivity {
                                 break;
                             case 2:
                                 //推筒子
-                                startActivity(new Intent(mContext, TtzActivity.class));
                                 break;
                             case 3:
                                 //5分快3
@@ -192,34 +181,29 @@ public class RacingActivity extends BaseActivity {
                                 Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_JSK3);
                                 break;
                             case 6:
-                                //分分彩
-                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_1FC);
+                                //1分彩
+                                SscActivity.intentToSSC(mContext, SscActivity.TYPE_1FC);
                                 break;
                             case 7:
                                 //北京赛车
-                                if (type != TYPE_BJSC) {
-                                    RacingActivity.intentToRacing(mContext, TYPE_BJSC);
-                                }
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_BJSC);
                                 break;
                             case 8:
                                 //时时彩
-                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_SSC);
+                                SscActivity.intentToSSC(mContext, SscActivity.TYPE_SSC);
                                 break;
                             case 9:
                                 //1分赛车
-                                if (type != TYPE_1FSC) {
-                                    RacingActivity.intentToRacing(mContext, TYPE_1FSC);
-                                }
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_1FSC);
                                 break;
                             case 10:
                                 //更多
                                 break;
                             case 11:
                                 //5分赛车
-                                if (type != TYPE_5FSC) {
-                                    RacingActivity.intentToRacing(mContext, TYPE_5FSC);
-                                }
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_5FSC);
                                 break;
+
                         }
                     }
                 }, new DialogInterface.OnCancelListener() {
@@ -229,38 +213,16 @@ public class RacingActivity extends BaseActivity {
                     }
                 });
                 break;
-            case R.id.ll_play:
-                playIV.setImageResource(R.mipmap.bottom_btn_more);
-                DialogUtil.showPlayDialog(mContext, getPlayList(), new PlayFragment.ClickListener() {
-                    @Override
-                    public void click(String name) {
-                        playTV.setText(name);
-                        if ("定位胆".equals(name)) {
-                            play = PLAY_DWD;
-                        } else if ("大小单双".equals(name)) {
-                            play = PLAY_DXDS;
-                        } else if ("龙虎斗".equals(name)) {
-                            play = PLAY_LHD;
-                        }
-                        playIV.setImageResource(R.mipmap.top_btn_red_more_);
-                        DialogUtil.removeDialog(mContext);
-                        ((RacingTZFragment) tzFragment).showFragment(name);
-                        ((RacingTZFragment) tzFragment).clearData();
-                    }
-                }, new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        playIV.setImageResource(R.mipmap.top_btn_red_more_);
-                    }
-                });
+            case R.id.ll_sm:
+                if (smContentLL.getVisibility() == View.VISIBLE) {
+                    smContentLL.setVisibility(View.GONE);
+                    smIV.setImageResource(R.mipmap.top_btn_more);
+                } else {
+                    smContentLL.setVisibility(View.VISIBLE);
+                    smIV.setImageResource(R.mipmap.bottom_btn_more);
+                }
                 break;
         }
-    }
-
-    public static void intentToRacing(Context context, int type) {
-        Intent intent = new Intent(context, RacingActivity.class);
-        intent.putExtra("type", type);
-        context.startActivity(intent);
     }
 
     private Fragment currentFragment;
@@ -286,68 +248,14 @@ public class RacingActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        tzFragment = RacingTZFragment.newInstance(type, play);
-        jlFragment = RacingTZJLFragment.newInstance(type, play);
+        tzFragment = TtzTZFragment.newInstance();
+        jlFragment = TtzJLFragment.newInstance();
     }
 
-    public double getMoney() {
-        return StringUtil.StringToDoubleTwo(money);
-    }
-
-    private List<String> getPlayList() {
+    private List<String> getSMList() {
         List<String> list = new ArrayList<>();
-        list.add("定位胆");
-        list.add("大小单双");
-        list.add("龙虎斗");
+        list.add("一筒到九筒共36张牌,每次给庄和闲多发两张,玩家对庄和闲的输赢情况进行下注。");
+        list.add("两张筒子相加取个位,对子大于单点,点数相同比较单牌,单排大赢,牌型完全一样为平;对9>对8>...>对1>9点>8点>...>0点。");
         return list;
-    }
-
-    public String getGameName() {
-        String gameName = "北京赛车";
-        switch (type) {
-            case TYPE_BJSC:
-                gameName = "北京赛车";
-                break;
-            case TYPE_1FSC:
-                gameName = "1分赛车";
-                break;
-            case TYPE_5FSC:
-                gameName = "5分赛车";
-                break;
-            default:
-                gameName = "北京赛车";
-                break;
-        }
-        switch (play){
-            case PLAY_DWD:
-                gameName+="(定位胆)";
-                break;
-            case PLAY_DXDS:
-                gameName+="(大小单双)";
-                break;
-            case PLAY_LHD:
-                gameName+="(龙虎斗)";
-                break;
-        }
-        return gameName;
-    }
-
-    public String getGameNo() {
-        String gameNo = "";
-        switch (type) {
-            case TYPE_BJSC:
-                gameNo = RacingUtil.getCurrentBJSCPeriods();
-                break;
-            case TYPE_1FSC:
-                gameNo = RacingUtil.getCurrent1FSCPeriods();
-                break;
-            case TYPE_5FSC:
-                gameNo = RacingUtil.getCurrent5FSCPeriods();
-                break;
-            default:
-                gameNo = "";
-                break;
-        }
-        return gameNo;
     }
 }

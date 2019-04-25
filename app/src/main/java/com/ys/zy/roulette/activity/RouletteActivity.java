@@ -1,6 +1,7 @@
 package com.ys.zy.roulette.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,7 @@ import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.fragment.RouletteJLFragment;
 import com.ys.zy.roulette.fragment.RouletteTZFragment;
 import com.ys.zy.ssc.activity.SscActivity;
+import com.ys.zy.ttz.activity.TtzActivity;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.winner.activity.WinnerActivity;
 
@@ -148,6 +150,7 @@ public class RouletteActivity extends BaseActivity {
                                 break;
                             case 2:
                                 //推筒子
+                                startActivity(new Intent(mContext, TtzActivity.class));
                                 break;
                             case 3:
                                 //5分快3

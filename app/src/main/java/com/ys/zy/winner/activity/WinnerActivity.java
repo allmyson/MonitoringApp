@@ -24,6 +24,7 @@ import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.roulette.fragment.RouletteJLFragment;
 import com.ys.zy.roulette.fragment.RouletteTZFragment;
 import com.ys.zy.ssc.activity.SscActivity;
+import com.ys.zy.ttz.activity.TtzActivity;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 import com.ys.zy.winner.adapter.SmAdapter;
@@ -171,6 +172,7 @@ public class WinnerActivity extends BaseActivity {
                                 break;
                             case 2:
                                 //推筒子
+                                startActivity(new Intent(mContext, TtzActivity.class));
                                 break;
                             case 3:
                                 //5分快3
