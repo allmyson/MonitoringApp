@@ -68,4 +68,8 @@ public class ChipAdapter extends CommonAdapter<ChipBean> {
     public void setHorizontalListView(HorizontalListView horizontalListView) {
         this.horizontalListView = horizontalListView;
     }
+
+    public int getSelectItem() {
+        return selectItem;
+    }
 }

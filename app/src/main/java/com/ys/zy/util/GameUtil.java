@@ -20,10 +20,8 @@ public class GameUtil {
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
         int minute = now.get(Calendar.MINUTE);
-        return toDoubleDigit(month) + toDoubleDigit(day) + toFourDigit(hour * 60 + minute);
+        return toDoubleDigit(month) + toDoubleDigit(day) + toFourDigit(hour * 60 + minute + 1);
     }
-
-
 
 
     /**
@@ -42,7 +40,7 @@ public class GameUtil {
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
         int minute = now.get(Calendar.MINUTE);
-        return toDoubleDigit(month) + toDoubleDigit(day) + toFourDigit(hour * 60 + minute);
+        return toDoubleDigit(month) + toDoubleDigit(day) + toFourDigit(hour * 60 + minute + 1);
     }
 
     public static String toDoubleDigit(int num) {

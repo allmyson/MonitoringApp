@@ -1,11 +1,16 @@
 package com.ys.zy.ttz.fragment;
 
+import android.animation.Animator;
 import android.graphics.Color;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,21 +18,38 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.yongchun.library.utils.ScreenUtils;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.roulette.adapter.ChipAdapter;
 import com.ys.zy.roulette.adapter.LpHistoryAdapter;
 import com.ys.zy.roulette.bean.ChipBean;
 import com.ys.zy.ttz.adapter.PaiAdapter;
+import com.ys.zy.ttz.bean.MoneyBean;
+import com.ys.zy.ttz.ui.ParticleView;
 import com.ys.zy.ui.HorizontalListView;
 import com.ys.zy.util.DensityUtil;
 import com.ys.zy.util.GameUtil;
+import com.ys.zy.util.L;
+import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TtzTZFragment extends BaseFragment implements View.OnClickListener, View.OnTouchListener {
+    public final static int TYPE_Z1 = 100;
+    public final static int TYPE_P1 = 101;
+    public final static int TYPE_X1 = 102;
+    public final static int TYPE_Z2 = 200;
+    public final static int TYPE_P2 = 201;
+    public final static int TYPE_X2 = 202;
+    public final static int TYPE_Z3 = 300;
+    public final static int TYPE_P3 = 301;
+    public final static int TYPE_X3 = 302;
+    public final static int TYPE_NULL = 502;
     private TextView timeTV, statusTV, qsTV;
     private ImageView moreIV;
     private LinearLayout moreLL;
@@ -48,7 +70,28 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private PaiAdapter paiAdater;
     private TextView total_z_1TV, total_p_1TV, total_x_1TV;
     private TextView my_z_1TV, my_p_1TV, my_x_1TV;
-    private RelativeLayout z1RL, p1RL, x1Rl;
+    private TextView total_z_2TV, total_p_2TV, total_x_2TV;
+    private TextView my_z_2TV, my_p_2TV, my_x_2TV;
+    private TextView total_z_3TV, total_p_3TV, total_x_3TV;
+    private TextView my_z_3TV, my_p_3TV, my_x_3TV;
+    private RelativeLayout z1RL, p1RL, x1RL;
+    private RelativeLayout z2RL, p2RL, x2RL;
+    private RelativeLayout z3RL, p3RL, x3RL;
+    private int[] locationZ1;
+    private int[] locationP1;
+    private int[] locationX1;
+    private int[] locationZ2;
+    private int[] locationP2;
+    private int[] locationX2;
+    private int[] locationZ3;
+    private int[] locationP3;
+    private int[] locationX3;
+    private List<MoneyBean> moneyBeanList;
+    private LinearLayout bottomLL;
+    private int[] bottom;
+    private Map<Integer, TextView> myTVMap;
+    private ParticleView particleAnimator;
+    private List<ImageView> imageViewList;
 
     public static TtzTZFragment newInstance() {
         TtzTZFragment ttzTZFragment = new TtzTZFragment();
@@ -57,17 +100,48 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     protected void init() {
+        imageViewList = new ArrayList<>();
+        bottomLL = getView(R.id.ll_bottom);
+        moneyBeanList = new ArrayList<>();
+        moneyBeanList.addAll(MoneyBean.getList());
         total_z_1TV = getView(R.id.tv_1_total_z);
+        total_z_2TV = getView(R.id.tv_2_total_z);
+        total_z_3TV = getView(R.id.tv_3_total_z);
         total_p_1TV = getView(R.id.tv_1_total_p);
+        total_p_2TV = getView(R.id.tv_2_total_p);
+        total_p_3TV = getView(R.id.tv_3_total_p);
         total_x_1TV = getView(R.id.tv_1_total_x);
+        total_x_2TV = getView(R.id.tv_2_total_x);
+        total_x_3TV = getView(R.id.tv_3_total_x);
         my_z_1TV = getView(R.id.tv_1_my_z);
+        my_z_2TV = getView(R.id.tv_2_my_z);
+        my_z_3TV = getView(R.id.tv_3_my_z);
         my_p_1TV = getView(R.id.tv_1_my_p);
+        my_p_2TV = getView(R.id.tv_2_my_p);
+        my_p_3TV = getView(R.id.tv_3_my_p);
         my_x_1TV = getView(R.id.tv_1_my_x);
+        my_x_2TV = getView(R.id.tv_2_my_x);
+        my_x_3TV = getView(R.id.tv_3_my_x);
+        myTVMap = new HashMap<>();
+        myTVMap.put(TYPE_Z1, my_z_1TV);
+        myTVMap.put(TYPE_Z2, my_z_2TV);
+        myTVMap.put(TYPE_Z3, my_z_3TV);
+        myTVMap.put(TYPE_P1, my_p_1TV);
+        myTVMap.put(TYPE_P2, my_p_2TV);
+        myTVMap.put(TYPE_P3, my_p_3TV);
+        myTVMap.put(TYPE_X1, my_x_1TV);
+        myTVMap.put(TYPE_X2, my_x_2TV);
+        myTVMap.put(TYPE_X3, my_x_3TV);
         z1RL = getView(R.id.rl_1_z);
         p1RL = getView(R.id.rl_1_p);
-        x1Rl = getView(R.id.rl_1_x);
-        z1RL.setOnTouchListener(this);
-
+        x1RL = getView(R.id.rl_1_x);
+        z2RL = getView(R.id.rl_2_z);
+        p2RL = getView(R.id.rl_2_p);
+        x2RL = getView(R.id.rl_2_x);
+        z3RL = getView(R.id.rl_3_z);
+        p3RL = getView(R.id.rl_3_p);
+        x3RL = getView(R.id.rl_3_x);
+        ((ViewGroup) getActivity().getWindow().getDecorView().findViewById(android.R.id.content)).getChildAt(0).setOnTouchListener(this);
         paiGV = getView(R.id.gv_);
         paiList = new ArrayList<>();
         paiList.add(null);
@@ -126,6 +200,29 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 //                }
 //            }
 //        });
+    }
+
+    private void initLocation() {
+        locationZ1 = new int[2];
+        z1RL.getLocationOnScreen(locationZ1);
+        locationP1 = new int[2];
+        p1RL.getLocationOnScreen(locationP1);
+        locationX1 = new int[2];
+        x1RL.getLocationOnScreen(locationX1);
+        locationZ2 = new int[2];
+        z2RL.getLocationOnScreen(locationZ2);
+        locationP2 = new int[2];
+        p2RL.getLocationOnScreen(locationP2);
+        locationX2 = new int[2];
+        x2RL.getLocationOnScreen(locationX2);
+        locationZ3 = new int[2];
+        z3RL.getLocationOnScreen(locationZ3);
+        locationP3 = new int[2];
+        p3RL.getLocationOnScreen(locationP3);
+        locationX3 = new int[2];
+        x3RL.getLocationOnScreen(locationX3);
+        bottom = new int[2];
+        bottomLL.getLocationOnScreen(bottom);
     }
 
     private void setStatus() {
@@ -205,6 +302,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 //                    lpBeanList.get(i).myValue = 0;
 //                }
 //                lpView.setData(lpBeanList);
+                startClearAnima();
                 setBtnClickable(false, sureBtn);
                 break;
             case R.id.btn_sure:
@@ -333,20 +431,40 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
              * 点击的开始位置
              */
             case MotionEvent.ACTION_DOWN:
-//                tv.setText("起始位置：(" + event.getX() + "," + event.getY());
+//                statusTV.setText("起始位置：(" + event.getRawX() + "," + event.getRawY());
                 break;
             /**
              * 触屏实时位置
              */
             case MotionEvent.ACTION_MOVE:
-//                tv.setText("实时位置：(" + event.getX() + "," + event.getY());
+//                statusTV.setText("实时位置：(" + event.getRawX() + "," + event.getRawY());
+//                statusTV.setText("实时位置：" + getTouchType((int) event.getRawX(), (int) event.getRawY()));
                 break;
             /**
              * 离开屏幕的位置
              */
             case MotionEvent.ACTION_UP:
-//                tv.setText("结束位置：(" + event.getX() + "," + event.getY());
-                addView(event.getX(), event.getY());
+//                statusTV.setText("结束位置：(" + event.getRawX() + "," + event.getRawY());
+                int type = getTouchType((int) event.getRawX(), (int) event.getRawY());
+                if (type != TYPE_NULL) {
+                    ChipBean chipBean = chipAdapter.getChooseData();
+                    if (chipBean != null) {
+                        int selectItem = chipAdapter.getSelectItem();
+                        L.e("selectItem=" + selectItem);
+                        if (selectItem != -1) {
+//                            int[] point = getLocation(horizontalListView.getChildAt(chipAdapter.getSelectItem() - horizontalListView.getFirstVisiblePosition()));
+//                            addView(point[0] - event.getRawX(), point[1] - event.getRawY(), event.getX(), event.getY(), chipBean.selectDrawableId);
+                            addView(ScreenUtils.getScreenWidth(mContext) / 2 - event.getRawX(), bottom[1] - event.getRawY(), event.getX(), event.getY(), chipBean.selectDrawableId);
+                            for (MoneyBean moneyBean : moneyBeanList) {
+                                if (moneyBean.type == type) {
+                                    moneyBean.chipBeanList.add(chipBean);
+                                    myTVMap.get(type).setText(getMoney(moneyBean.chipBeanList));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
             default:
                 break;
@@ -360,17 +478,103 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     }
 
 
-    private void addView(float x, float y) {
+    private void addView(float fromX, float fromY, float x, float y, int drawableId) {
         ImageView imageView = new ImageView(mContext);
-        imageView.setImageResource(R.mipmap.lp_icon_long);
+        imageView.setImageResource(drawableId);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DensityUtil.dp2px(mContext, 30), DensityUtil.dp2px(mContext, 30));
-        layoutParams.leftMargin = (int) (x - DensityUtil.dp2px(mContext, 15));
-        layoutParams.topMargin = (int) (y - DensityUtil.dp2px(mContext, 15));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DensityUtil.dp2px(mContext, 20), DensityUtil.dp2px(mContext, 20));
+        layoutParams.leftMargin = (int) (x - DensityUtil.dp2px(mContext, 10));
+        layoutParams.topMargin = (int) (y - DensityUtil.dp2px(mContext, 10));
         getActivity().addContentView(imageView, layoutParams);
-        TranslateAnimation animation = new TranslateAnimation(DensityUtil.dp2px(mContext, 15)-x, -x + x - DensityUtil.dp2px(mContext, 15), DensityUtil.dp2px(mContext, 15)-y, -y + y - DensityUtil.dp2px(mContext, 15));
+        imageViewList.add(imageView);
+//        TranslateAnimation animation = new TranslateAnimation(-x - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10), -y - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10));
+        TranslateAnimation animation = new TranslateAnimation(fromX - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10), fromY - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10));
         animation.setDuration(2000);
         animation.setFillAfter(true);
         imageView.startAnimation(animation);
+    }
+
+    private int getTouchType(int rawX, int rawY) {
+        if (locationZ1 == null) {
+            initLocation();
+        }
+        if (isInRect(rawX, rawY, locationZ1[0], locationZ1[1], z1RL.getWidth(), z1RL.getHeight())) {
+            return TYPE_Z1;
+        } else if (isInRect(rawX, rawY, locationP1[0], locationP1[1], p1RL.getWidth(), p1RL.getHeight())) {
+            return TYPE_P1;
+        } else if (isInRect(rawX, rawY, locationX1[0], locationX1[1], x1RL.getWidth(), x1RL.getHeight())) {
+            return TYPE_X1;
+        } else if (isInRect(rawX, rawY, locationZ2[0], locationZ2[1], z2RL.getWidth(), z2RL.getHeight())) {
+            return TYPE_Z2;
+        } else if (isInRect(rawX, rawY, locationP2[0], locationP2[1], p2RL.getWidth(), p2RL.getHeight())) {
+            return TYPE_P2;
+        } else if (isInRect(rawX, rawY, locationX2[0], locationX2[1], x2RL.getWidth(), x2RL.getHeight())) {
+            return TYPE_X2;
+        } else if (isInRect(rawX, rawY, locationZ3[0], locationZ3[1], z3RL.getWidth(), z3RL.getHeight())) {
+            return TYPE_Z3;
+        } else if (isInRect(rawX, rawY, locationP3[0], locationP3[1], p3RL.getWidth(), p3RL.getHeight())) {
+            return TYPE_P3;
+        } else if (isInRect(rawX, rawY, locationX3[0], locationX3[1], x3RL.getWidth(), x3RL.getHeight())) {
+            return TYPE_X3;
+        } else {
+            return TYPE_NULL;
+        }
+    }
+
+    private boolean isInRect(int rawX, int rawY, int left, int top, int width, int height) {
+        if (rawX >= left && rawX <= left + width && rawY >= top && rawY <= top + height) {
+            return true;
+        }
+        return false;
+    }
+
+    private int[] getLocation(View view) {
+        int[] points = new int[2];
+        view.getLocationOnScreen(points);
+        return points;
+    }
+
+    private String getMoney(List<ChipBean> list) {
+        double money = 0;
+        for (ChipBean chipBean : list) {
+            money += chipBean.money;
+        }
+        return StringUtil.StringToDoubleStr(money);
+    }
+
+    private void startClearAnima() {
+        if (imageViewList.size() > 0) {
+            for (ImageView imageView : imageViewList) {
+                particleAnimator = new ParticleView(mContext, 3000);//3000为动画持续时间
+                particleAnimator.setOnAnimationListener(new ParticleView.OnAnimationListener() {
+                    @Override
+                    public void onAnimationStart(View v, Animator animation) {
+                        v.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(View v, Animator animation) {
+
+                    }
+                });
+                particleAnimator.boom(imageView);
+            }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    FrameLayout group = (FrameLayout) getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+                    for (ImageView imageView : imageViewList) {
+                        group.removeView(imageView);
+                    }
+                    imageViewList.clear();
+                    for (TextView value : myTVMap.values()) {
+                        value.setText("0");
+                    }
+                    for (MoneyBean moneyBean : moneyBeanList) {
+                        moneyBean.chipBeanList.clear();
+                    }
+                }
+            }, 1000);
+        }
     }
 }
