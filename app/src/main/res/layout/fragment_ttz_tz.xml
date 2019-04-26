@@ -323,6 +323,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_2_total_z"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
@@ -331,6 +332,7 @@
                         android:textSize="12sp" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_2_z"
                         android:layout_width="match_parent"
                         android:layout_height="60dp">
 
@@ -352,6 +354,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tv_2_my_z"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -368,6 +371,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_2_total_p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
@@ -376,6 +380,7 @@
                         android:textSize="12sp" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_2_p"
                         android:layout_width="match_parent"
                         android:layout_height="60dp">
 
@@ -397,6 +402,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tv_2_my_p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -413,6 +419,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_2_total_x"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
@@ -421,6 +428,7 @@
                         android:textSize="12sp" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_2_x"
                         android:layout_width="match_parent"
                         android:layout_height="60dp">
 
@@ -442,6 +450,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tv_2_my_x"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -484,6 +493,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_3_total_z"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
@@ -492,6 +502,7 @@
                         android:textSize="12sp" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_3_z"
                         android:layout_width="match_parent"
                         android:layout_height="60dp">
 
@@ -513,6 +524,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tv_3_my_z"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -529,6 +541,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_3_total_p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
@@ -537,6 +550,7 @@
                         android:textSize="12sp" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_3_p"
                         android:layout_width="match_parent"
                         android:layout_height="60dp">
 
@@ -558,6 +572,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tv_3_my_p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -574,6 +589,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_3_total_x"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
@@ -582,6 +598,7 @@
                         android:textSize="12sp" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_3_x"
                         android:layout_width="match_parent"
                         android:layout_height="60dp">
 
@@ -603,6 +620,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tv_3_my_x"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -665,6 +683,7 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:background="#1e1e1e"
