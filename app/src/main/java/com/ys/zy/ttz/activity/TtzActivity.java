@@ -228,6 +228,14 @@ public class TtzActivity extends BaseActivity {
     private Fragment currentFragment;
     private FragmentManager manager;
 
+    public Fragment getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public void setCurrentFragment(Fragment currentFragment) {
+        this.currentFragment = currentFragment;
+    }
+
     private void showFragment(Fragment fragment) {
         try {
             if (currentFragment != fragment) {

@@ -24,8 +24,12 @@ import com.ys.zy.base.BaseFragment;
 import com.ys.zy.roulette.adapter.ChipAdapter;
 import com.ys.zy.roulette.adapter.LpHistoryAdapter;
 import com.ys.zy.roulette.bean.ChipBean;
+import com.ys.zy.ttz.TtzUtil;
+import com.ys.zy.ttz.activity.TtzActivity;
 import com.ys.zy.ttz.adapter.PaiAdapter;
+import com.ys.zy.ttz.adapter.TtzHistoryAdapter;
 import com.ys.zy.ttz.bean.MoneyBean;
+import com.ys.zy.ttz.bean.PaiBean;
 import com.ys.zy.ttz.ui.ParticleView;
 import com.ys.zy.ui.HorizontalListView;
 import com.ys.zy.util.DensityUtil;
@@ -38,9 +42,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class TtzTZFragment extends BaseFragment implements View.OnClickListener, View.OnTouchListener {
-    public final static int TYPE_Z1 = 100;
+    public final static int TYPE_Z1 = 100;//点击区域
     public final static int TYPE_P1 = 101;
     public final static int TYPE_X1 = 102;
     public final static int TYPE_Z2 = 200;
@@ -57,16 +62,14 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private boolean isShowHistory = false;
     private ListView historyLV;
     private List<Object> historyList;
-    private LpHistoryAdapter historyAdapter;
+    private TtzHistoryAdapter historyAdapter;
     private HorizontalListView horizontalListView;
     private List<ChipBean> chipBeanList;
     private ChipAdapter chipAdapter;
     private Button clearBtn, sureBtn;
-    //    private LPView lpView;
-//    private List<LPBean> lpBeanList;
     private String gameNo = "0215096";
     private GridView paiGV;
-    private List<Object> paiList;
+    private List<PaiBean> paiList;
     private PaiAdapter paiAdater;
     private TextView total_z_1TV, total_p_1TV, total_x_1TV;
     private TextView my_z_1TV, my_p_1TV, my_x_1TV;
@@ -92,6 +95,15 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private Map<Integer, TextView> myTVMap;
     private ParticleView particleAnimator;
     private List<ImageView> imageViewList;
+    private TextView z1ResultTV, z2ResultTV, z3ResultTV;
+    private TextView p1ResultTV, p2ResultTV, p3ResultTV;
+    private TextView x1ResultTV, x2ResultTV, x3ResultTV;
+    private List<TextView> result1TVList;
+    private List<TextView> result2TVList;
+    private List<TextView> result3TVList;
+    private RelativeLayout z1CircleRL, z2CircleRL, z3CircleRL;
+    private RelativeLayout p1CircleRL, p2CircleRL, p3CircleRL;
+    private RelativeLayout x1CircleRL, x2CircleRL, x3CircleRL;
 
     public static TtzTZFragment newInstance() {
         TtzTZFragment ttzTZFragment = new TtzTZFragment();
@@ -100,6 +112,36 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     protected void init() {
+        z1CircleRL = getView(R.id.rl_1_z_circle);
+        z2CircleRL = getView(R.id.rl_2_z_circle);
+        z3CircleRL = getView(R.id.rl_3_z_circle);
+        p1CircleRL = getView(R.id.rl_1_p_circle);
+        p2CircleRL = getView(R.id.rl_2_p_circle);
+        p3CircleRL = getView(R.id.rl_3_p_circle);
+        x1CircleRL = getView(R.id.rl_1_x_circle);
+        x2CircleRL = getView(R.id.rl_2_x_circle);
+        x3CircleRL = getView(R.id.rl_3_x_circle);
+        result1TVList = new ArrayList<>();
+        result2TVList = new ArrayList<>();
+        result3TVList = new ArrayList<>();
+        z1ResultTV = getView(R.id.tv_1_result_z);
+        z2ResultTV = getView(R.id.tv_2_result_z);
+        z3ResultTV = getView(R.id.tv_3_result_z);
+        p1ResultTV = getView(R.id.tv_1_result_p);
+        p2ResultTV = getView(R.id.tv_2_result_p);
+        p3ResultTV = getView(R.id.tv_3_result_p);
+        x1ResultTV = getView(R.id.tv_1_result_x);
+        x2ResultTV = getView(R.id.tv_2_result_x);
+        x3ResultTV = getView(R.id.tv_3_result_x);
+        result1TVList.add(z1ResultTV);
+        result1TVList.add(p1ResultTV);
+        result1TVList.add(x1ResultTV);
+        result2TVList.add(z2ResultTV);
+        result2TVList.add(p2ResultTV);
+        result2TVList.add(x2ResultTV);
+        result3TVList.add(z3ResultTV);
+        result3TVList.add(p3ResultTV);
+        result3TVList.add(x3ResultTV);
         imageViewList = new ArrayList<>();
         bottomLL = getView(R.id.ll_bottom);
         moneyBeanList = new ArrayList<>();
@@ -144,10 +186,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         ((ViewGroup) getActivity().getWindow().getDecorView().findViewById(android.R.id.content)).getChildAt(0).setOnTouchListener(this);
         paiGV = getView(R.id.gv_);
         paiList = new ArrayList<>();
-        paiList.add(null);
-        paiList.add(null);
-        paiList.add(null);
-        paiList.add(null);
+        paiList.addAll(TtzUtil.getDefaultList());
         paiAdater = new PaiAdapter(mContext, paiList, R.layout.item_ttz_pai);
         paiGV.setAdapter(paiAdater);
         timeTV = getView(R.id.tv_time);
@@ -171,7 +210,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         historyList.add(null);
         historyList.add(null);
         historyList.add(null);
-        historyAdapter = new LpHistoryAdapter(mContext, historyList, R.layout.item_lp_history);
+        historyAdapter = new TtzHistoryAdapter(mContext, historyList, R.layout.item_ttz_history);
         historyLV.setAdapter(historyAdapter);
 
         horizontalListView = getView(R.id.hlv_);
@@ -186,20 +225,6 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         clearBtn.setOnClickListener(this);
         sureBtn.setOnClickListener(this);
         setBtnClickable(false, sureBtn);
-//        lpView = getView(R.id.lpv_);
-//        lpBeanList = new ArrayList<>();
-//        lpBeanList.addAll(LPBean.getList());
-//        lpView.setData(lpBeanList);
-//        lpView.setClickListener(new LPView.ClickListener() {
-//            @Override
-//            public void click(int position, LPBean lpBean) {
-//                if (chipAdapter.getChooseData() != null && currentStatus == TYPE_TZ) {
-//                    lpBeanList.get(position).myValue += chipAdapter.getChooseData().money;
-//                    lpView.setData(lpBeanList);
-//                    setBtnClickable(true, sureBtn);
-//                }
-//            }
-//        });
     }
 
     private void initLocation() {
@@ -228,10 +253,10 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private void setStatus() {
         currentStatus = getGameStatus();
         int second = getCurrentSecond();
+//        isShowChip();
         switch (currentStatus) {
             case TYPE_TZ:
-//                if (chipAdapter.getChooseData() != null && lpView.getTZList().size() > 0) {
-                if (chipAdapter.getChooseData() != null) {
+                if (chipAdapter.getChooseData() != null && getCurrentTzMoney() != 0) {
                     setBtnClickable(true, sureBtn);
                 } else {
                     setBtnClickable(false, sureBtn);
@@ -254,9 +279,14 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 //                        L.e("lpView.startRandomColor()执行次数");
 //                        lpView.startRandomColor();
 //                    }
+                    if (!paiAdater.isRamdomRunning()) {
+                        paiAdater.startRandom();
+                    }
                 } else {
 //                    L.e("lpView.setRandomResult()执行次数");
 //                    lpView.setRandomResult();
+                    paiAdater.setRandomResult();
+                    setRandomResultColor();
                 }
                 break;
             case TYPE_PJ:
@@ -266,6 +296,12 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                     //恢复初始状态
 //                    L.e("lpView.clearColorAndResult()执行次数");
 //                    lpView.clearColorAndResult();
+                    startClearAnima();
+                    setBtnClickable(false, sureBtn);
+                    paiList.clear();
+                    paiList.addAll(TtzUtil.getDefaultList());
+                    paiAdater.refresh(paiList);
+                    setDefaultResultColor();
                 }
                 break;
         }
@@ -445,21 +481,25 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
              */
             case MotionEvent.ACTION_UP:
 //                statusTV.setText("结束位置：(" + event.getRawX() + "," + event.getRawY());
-                int type = getTouchType((int) event.getRawX(), (int) event.getRawY());
-                if (type != TYPE_NULL) {
-                    ChipBean chipBean = chipAdapter.getChooseData();
-                    if (chipBean != null) {
-                        int selectItem = chipAdapter.getSelectItem();
-                        L.e("selectItem=" + selectItem);
-                        if (selectItem != -1) {
+                if (currentStatus != TYPE_TZ) {
+                    show("当前时间段不能投注！");
+                } else {
+                    int type = getTouchType((int) event.getRawX(), (int) event.getRawY());
+                    if (type != TYPE_NULL) {
+                        ChipBean chipBean = chipAdapter.getChooseData();
+                        if (chipBean != null) {
+                            int selectItem = chipAdapter.getSelectItem();
+                            L.e("selectItem=" + selectItem);
+                            if (selectItem != -1) {
 //                            int[] point = getLocation(horizontalListView.getChildAt(chipAdapter.getSelectItem() - horizontalListView.getFirstVisiblePosition()));
 //                            addView(point[0] - event.getRawX(), point[1] - event.getRawY(), event.getX(), event.getY(), chipBean.selectDrawableId);
-                            addView(ScreenUtils.getScreenWidth(mContext) / 2 - event.getRawX(), bottom[1] - event.getRawY(), event.getX(), event.getY(), chipBean.selectDrawableId);
-                            for (MoneyBean moneyBean : moneyBeanList) {
-                                if (moneyBean.type == type) {
-                                    moneyBean.chipBeanList.add(chipBean);
-                                    myTVMap.get(type).setText(getMoney(moneyBean.chipBeanList));
-                                    break;
+                                addView(ScreenUtils.getScreenWidth(mContext) / 2 - event.getRawX(), bottom[1] - event.getRawY(), event.getX(), event.getY(), chipBean.selectDrawableId);
+                                for (MoneyBean moneyBean : moneyBeanList) {
+                                    if (moneyBean.type == type) {
+                                        moneyBean.chipBeanList.add(chipBean);
+                                        myTVMap.get(type).setText(getMoney(moneyBean.chipBeanList));
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -489,7 +529,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         imageViewList.add(imageView);
 //        TranslateAnimation animation = new TranslateAnimation(-x - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10), -y - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10));
         TranslateAnimation animation = new TranslateAnimation(fromX - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10), fromY - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10));
-        animation.setDuration(2000);
+        animation.setDuration(1000);
         animation.setFillAfter(true);
         imageView.startAnimation(animation);
     }
@@ -575,6 +615,145 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                     }
                 }
             }, 1000);
+        }
+    }
+
+    /**
+     * 获取本次投注的钱
+     *
+     * @return
+     */
+    private double getCurrentTzMoney() {
+        double money = 0;
+        if (moneyBeanList != null && moneyBeanList.size() > 0) {
+            for (MoneyBean moneyBean : moneyBeanList) {
+                double childMoney = 0;
+                if (moneyBean.chipBeanList != null && moneyBean.chipBeanList.size() > 0) {
+                    for (ChipBean chipBean : moneyBean.chipBeanList) {
+                        childMoney += chipBean.money;
+                    }
+                }
+                money += childMoney;
+            }
+        }
+        return money;
+    }
+
+    private void setRandomResultColor() {
+        Random random = new Random();
+        int r1 = random.nextInt(3);
+        int r2 = random.nextInt(3);
+        int r3 = random.nextInt(3);
+        if (r1 == 0) {
+            z1ResultTV.setTextColor(Color.parseColor("#dd2230"));
+            p1ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x1ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z1CircleRL.setBackgroundResource(R.drawable.circle11);
+            p1CircleRL.setBackgroundResource(R.drawable.circle10);
+            x1CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else if (r1 == 1) {
+            z1ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p1ResultTV.setTextColor(Color.parseColor("#a5a5a5"));
+            x1ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z1CircleRL.setBackgroundResource(R.drawable.circle10);
+            p1CircleRL.setBackgroundResource(R.drawable.circle11);
+            x1CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else {
+            z1ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p1ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x1ResultTV.setTextColor(Color.parseColor("#29abe2"));
+            z1CircleRL.setBackgroundResource(R.drawable.circle10);
+            p1CircleRL.setBackgroundResource(R.drawable.circle10);
+            x1CircleRL.setBackgroundResource(R.drawable.circle11);
+        }
+
+
+        if (r2 == 0) {
+            z2ResultTV.setTextColor(Color.parseColor("#dd2230"));
+            p2ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x2ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z2CircleRL.setBackgroundResource(R.drawable.circle11);
+            p2CircleRL.setBackgroundResource(R.drawable.circle10);
+            x2CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else if (r2 == 1) {
+            z2ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p2ResultTV.setTextColor(Color.parseColor("#a5a5a5"));
+            x2ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z2CircleRL.setBackgroundResource(R.drawable.circle10);
+            p2CircleRL.setBackgroundResource(R.drawable.circle11);
+            x2CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else {
+            z2ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p2ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x2ResultTV.setTextColor(Color.parseColor("#29abe2"));
+            z2CircleRL.setBackgroundResource(R.drawable.circle10);
+            p2CircleRL.setBackgroundResource(R.drawable.circle10);
+            x2CircleRL.setBackgroundResource(R.drawable.circle11);
+        }
+
+        if (r3 == 0) {
+            z3ResultTV.setTextColor(Color.parseColor("#dd2230"));
+            p3ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x3ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z3CircleRL.setBackgroundResource(R.drawable.circle11);
+            p3CircleRL.setBackgroundResource(R.drawable.circle10);
+            x3CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else if (r3 == 1) {
+            z3ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p3ResultTV.setTextColor(Color.parseColor("#a5a5a5"));
+            x3ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z3CircleRL.setBackgroundResource(R.drawable.circle10);
+            p3CircleRL.setBackgroundResource(R.drawable.circle11);
+            x3CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else {
+            z3ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p3ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x3ResultTV.setTextColor(Color.parseColor("#29abe2"));
+            z3CircleRL.setBackgroundResource(R.drawable.circle10);
+            p3CircleRL.setBackgroundResource(R.drawable.circle10);
+            x3CircleRL.setBackgroundResource(R.drawable.circle11);
+        }
+    }
+
+
+    private void setDefaultResultColor() {
+        z1ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+        p1ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+        x1ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+        z2ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+        p2ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+        x2ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+        z3ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+        p3ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+        x3ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+        z1CircleRL.setBackgroundResource(R.drawable.circle10);
+        z2CircleRL.setBackgroundResource(R.drawable.circle10);
+        z3CircleRL.setBackgroundResource(R.drawable.circle10);
+        p1CircleRL.setBackgroundResource(R.drawable.circle10);
+        p2CircleRL.setBackgroundResource(R.drawable.circle10);
+        p3CircleRL.setBackgroundResource(R.drawable.circle10);
+        x1CircleRL.setBackgroundResource(R.drawable.circle10);
+        x2CircleRL.setBackgroundResource(R.drawable.circle10);
+        x3CircleRL.setBackgroundResource(R.drawable.circle10);
+    }
+
+    private void isShowChip() {
+        if (imageViewList != null && imageViewList.size() > 0) {
+            if (this == ((TtzActivity) getActivity()).getCurrentFragment()) {
+                if (historyLL.getVisibility() == View.VISIBLE) {
+                    for (ImageView iv : imageViewList) {
+                        iv.setVisibility(View.GONE);
+                    }
+                } else {
+                    for (ImageView iv : imageViewList) {
+                        iv.setVisibility(View.VISIBLE);
+                    }
+                }
+            } else {
+                for (ImageView iv : imageViewList) {
+                    iv.setVisibility(View.GONE);
+                }
+            }
         }
     }
 }
