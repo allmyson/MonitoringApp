@@ -166,12 +166,14 @@
                         android:layout_height="60dp">
 
                         <RelativeLayout
+                            android:id="@+id/rl_1_z_circle"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_centerInParent="true"
                             android:background="@drawable/circle10">
 
                             <TextView
+                                android:id="@+id/tv_1_result_z"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -214,12 +216,14 @@
                         android:layout_height="60dp">
 
                         <RelativeLayout
+                            android:id="@+id/rl_1_p_circle"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_centerInParent="true"
                             android:background="@drawable/circle10">
 
                             <TextView
+                                android:id="@+id/tv_1_result_p"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -262,12 +266,14 @@
                         android:layout_height="60dp">
 
                         <RelativeLayout
+                            android:id="@+id/rl_1_x_circle"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_centerInParent="true"
                             android:background="@drawable/circle10">
 
                             <TextView
+                                android:id="@+id/tv_1_result_x"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -337,12 +343,14 @@
                         android:layout_height="60dp">
 
                         <RelativeLayout
+                            android:id="@+id/rl_2_z_circle"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_centerInParent="true"
                             android:background="@drawable/circle10">
 
                             <TextView
+                                android:id="@+id/tv_2_result_z"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -385,12 +393,14 @@
                         android:layout_height="60dp">
 
                         <RelativeLayout
+                            android:id="@+id/rl_2_p_circle"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_centerInParent="true"
                             android:background="@drawable/circle10">
 
                             <TextView
+                                android:id="@+id/tv_2_result_p"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -433,12 +443,14 @@
                         android:layout_height="60dp">
 
                         <RelativeLayout
+                            android:id="@+id/rl_2_x_circle"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_centerInParent="true"
                             android:background="@drawable/circle10">
 
                             <TextView
+                                android:id="@+id/tv_2_result_x"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -507,12 +519,14 @@
                         android:layout_height="60dp">
 
                         <RelativeLayout
+                            android:id="@+id/rl_3_z_circle"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_centerInParent="true"
                             android:background="@drawable/circle10">
 
                             <TextView
+                                android:id="@+id/tv_3_result_z"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -555,12 +569,14 @@
                         android:layout_height="60dp">
 
                         <RelativeLayout
+                            android:id="@+id/rl_3_p_circle"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_centerInParent="true"
                             android:background="@drawable/circle10">
 
                             <TextView
+                                android:id="@+id/tv_3_result_p"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -603,12 +619,14 @@
                         android:layout_height="60dp">
 
                         <RelativeLayout
+                            android:id="@+id/rl_3_x_circle"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_centerInParent="true"
                             android:background="@drawable/circle10">
 
                             <TextView
+                                android:id="@+id/tv_3_result_x"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -635,7 +653,7 @@
             android:id="@+id/ll_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#560b11"
+            android:background="@drawable/rect_cornor_white7"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -644,41 +662,51 @@
                 android:layout_height="32dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="44dp"
-                android:paddingRight="78dp">
+                android:paddingLeft="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="游戏期号"
-                    android:textColor="#ffffff"
+                    android:textColor="#a5a5a5"
                     android:textSize="12sp" />
 
-                <View
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="开奖结果"
+                    android:textColor="#a5a5a5"
+                    android:textSize="12sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="84dp"
                     android:layout_height="wrap_content"
-                    android:text="生肖"
-                    android:textColor="#ffffff"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center"
+                    android:text="输赢状态"
+                    android:textColor="#a5a5a5"
                     android:textSize="12sp" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#c9c5c5" />
+                android:background="#6899a2" />
 
             <ListView
                 android:id="@+id/lv_history"
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginBottom="1dp"
                 android:divider="@null"
                 android:dividerHeight="0dp"
                 android:scrollbars="none" />
+
         </LinearLayout>
     </FrameLayout>
 
