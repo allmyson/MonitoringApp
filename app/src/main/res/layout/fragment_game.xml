@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f7f7f7"
-    android:orientation="vertical">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rect_cornor_white8"
+    android:orientation="vertical"
+    android:paddingLeft="2dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp">
 
-    <View
-        android:layout_width="147dp"
-        android:layout_height="0.5dp"
-        android:background="#e4e4e4" />
 
     <LinearLayout
-        android:layout_width="147dp"
-        android:layout_height="32dp"
-        android:background="#f7f7f7"
+        android:layout_width="217dp"
+        android:layout_height="40dp"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <TextView
@@ -21,36 +20,38 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="轮盘"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="#e4e4e4" />
+            android:background="#d1d1d1" />
 
         <TextView
             android:id="@+id/tv1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="1分快3"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <View
-        android:layout_width="147dp"
+        android:layout_width="217dp"
         android:layout_height="0.5dp"
-        android:background="#e4e4e4" />
+        android:background="#d1d1d1" />
 
     <LinearLayout
-        android:layout_width="147dp"
-        android:layout_height="32dp"
-        android:background="#f7f7f7"
+        android:layout_width="217dp"
+        android:layout_height="40dp"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <TextView
@@ -58,36 +59,38 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="推筒子"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="#e4e4e4" />
+            android:background="#d1d1d1" />
 
         <TextView
             android:id="@+id/tv3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="5分快3"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <View
-        android:layout_width="147dp"
+        android:layout_width="217dp"
         android:layout_height="0.5dp"
-        android:background="#e4e4e4" />
+        android:background="#d1d1d1" />
 
     <LinearLayout
-        android:layout_width="147dp"
-        android:layout_height="32dp"
-        android:background="#f7f7f7"
+        android:layout_width="217dp"
+        android:layout_height="40dp"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <TextView
@@ -95,36 +98,38 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="最后胜利者"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="#e4e4e4" />
+            android:background="#d1d1d1" />
 
         <TextView
             android:id="@+id/tv5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="江苏快3"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <View
-        android:layout_width="147dp"
+        android:layout_width="217dp"
         android:layout_height="0.5dp"
-        android:background="#e4e4e4" />
+        android:background="#d1d1d1" />
 
     <LinearLayout
-        android:layout_width="147dp"
-        android:layout_height="32dp"
-        android:background="#f7f7f7"
+        android:layout_width="217dp"
+        android:layout_height="40dp"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <TextView
@@ -132,36 +137,38 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="1分彩"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="#e4e4e4" />
+            android:background="#d1d1d1" />
 
         <TextView
             android:id="@+id/tv7"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="北京赛车"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <View
-        android:layout_width="147dp"
+        android:layout_width="217dp"
         android:layout_height="0.5dp"
-        android:background="#e4e4e4" />
+        android:background="#d1d1d1" />
 
     <LinearLayout
-        android:layout_width="147dp"
-        android:layout_height="32dp"
-        android:background="#f7f7f7"
+        android:layout_width="217dp"
+        android:layout_height="40dp"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <TextView
@@ -169,36 +176,38 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="时时彩"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="#e4e4e4" />
+            android:background="#d1d1d1" />
 
         <TextView
             android:id="@+id/tv9"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="1分赛车"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <View
-        android:layout_width="147dp"
+        android:layout_width="217dp"
         android:layout_height="0.5dp"
-        android:background="#e4e4e4" />
+        android:background="#d1d1d1" />
 
     <LinearLayout
-        android:layout_width="147dp"
-        android:layout_height="32dp"
-        android:background="#f7f7f7"
+        android:layout_width="217dp"
+        android:layout_height="40dp"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <TextView
@@ -206,24 +215,26 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="更多"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="#e4e4e4" />
+            android:background="#d1d1d1" />
 
         <TextView
             android:id="@+id/tv11"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/selector_btn_01"
             android:gravity="center"
             android:text="5分赛车"
-            android:textColor="#a5a5a5"
-            android:textSize="12sp" />
+            android:textColor="#000000"
+            android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>
