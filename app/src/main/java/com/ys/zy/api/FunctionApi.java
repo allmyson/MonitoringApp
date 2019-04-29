@@ -27,7 +27,7 @@ public class FunctionApi {
 
     public static boolean isLogin(Context mContext) {
 //        return UserSP.isLogin(mContext);
-        return true;
+        return false;
     }
 
 
