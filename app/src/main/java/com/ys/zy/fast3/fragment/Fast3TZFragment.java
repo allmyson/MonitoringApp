@@ -157,7 +157,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         historyLV = getView(R.id.lv_);
         historyLV.setAdapter(fast3HistoryAdapter);
         showHistoryIV = getView(R.id.iv_showHistory);
-        showHistoryIV.setOnClickListener(this);
+        getView(R.id.ll_left).setOnClickListener(this);
         historyLL = getView(R.id.ll_history);
         dataLL = getView(R.id.ll_data);
     }
@@ -218,7 +218,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                     });
                 }
                 break;
-            case R.id.iv_showHistory:
+            case R.id.ll_left:
                 if (isShowHistory) {
                     isShowHistory = false;
                     showHistoryIV.setImageResource(R.mipmap.top_btn_more);

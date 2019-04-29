@@ -64,6 +64,11 @@ public class PaiAdapter extends CommonAdapter<PaiBean> {
         }
     }
 
+    public void toDefault() {
+        randomResult = 1;
+//        closeRandom();
+    }
+
     class RandomThraed extends Thread {
         private volatile boolean isOver = false;
 
@@ -79,7 +84,7 @@ public class PaiAdapter extends CommonAdapter<PaiBean> {
         public void run() {
             while (!isOver) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(300);
                     handler.sendEmptyMessage(0);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -95,7 +100,7 @@ public class PaiAdapter extends CommonAdapter<PaiBean> {
             if (msg.what == 0) {
                 randomRssult();
             } else if (msg.what == 1) {
-
+//                closeRandom();
             }
         }
     };
@@ -106,15 +111,32 @@ public class PaiAdapter extends CommonAdapter<PaiBean> {
         mDatas.addAll(TtzUtil.getRandomList(randomResult));
         refresh(mDatas);
         randomResult++;
-        if (randomResult > 9) {
-            randomResult = 1;
+        if (randomResult > 4) {
+            randomResult = 4;
         }
     }
 
     public void setRandomResult() {
         closeRandom();
         mDatas.clear();
-        mDatas.addAll(TtzUtil.getRandomResult());
+        mDatas.addAll(TtzUtil.getRandomList(4));
         refresh(mDatas);
+    }
+
+    public void faPai() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDatas.clear();
+                mDatas.addAll(TtzUtil.getRandomList(randomResult));
+                refresh(mDatas);
+                randomResult++;
+                if (randomResult < 5) {
+                    faPai();
+                } else {
+                    randomResult = 1;
+                }
+            }
+        }, 500);
     }
 }

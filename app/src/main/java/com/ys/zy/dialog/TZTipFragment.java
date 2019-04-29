@@ -13,6 +13,7 @@ import com.ys.zy.util.DensityUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 
+
 public class TZTipFragment extends LhDialogFragment {
     private int mTheme;
     private int mStyle;
@@ -83,7 +84,7 @@ public class TZTipFragment extends LhDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(DensityUtil.dp2px(getContext(), 264), DensityUtil.dp2px(getContext(), 200));
+        getDialog().getWindow().setLayout(DensityUtil.dp2px(getContext(), 264), ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     public void setContent(String content) {

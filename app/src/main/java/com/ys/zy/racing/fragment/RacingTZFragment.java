@@ -2,12 +2,14 @@ package com.ys.zy.racing.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.yongchun.library.adapter.ImageFolderAdapter;
 import com.ys.zy.R;
 import com.ys.zy.activity.RechargeActivity;
 import com.ys.zy.base.BaseFragment;
@@ -38,7 +41,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class RacingTZFragment extends BaseFragment implements View.OnClickListener {
+public class RacingTZFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
     private int type;
     private int play;
     private GridView resultGV;
@@ -90,6 +93,8 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
         resultGV = getView(R.id.gv_result);
         racingResultAdapter = new RacingResultAdapter(mContext, resultList, R.layout.item_text);
         resultGV.setAdapter(racingResultAdapter);
+        resultGV.setSelector(new ColorDrawable(Color.TRANSPARENT));// 去掉默认点击背景
+        resultGV.setOnItemClickListener(this);
         showHistoryIV = getView(R.id.iv_showHistory);
         showHistoryIV.setColorFilter(Color.parseColor("#a5a5a5"));
         leftLL = getView(R.id.ll_left);
@@ -299,6 +304,21 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (isShowHistory) {
+            isShowHistory = false;
+            showHistoryIV.setImageResource(R.mipmap.top_btn_more);
+            historyLL.setVisibility(View.GONE);
+            dataLL.setVisibility(View.VISIBLE);
+        } else {
+            isShowHistory = true;
+            showHistoryIV.setImageResource(R.mipmap.bottom_btn_more);
+            historyLL.setVisibility(View.VISIBLE);
+            dataLL.setVisibility(View.GONE);
+        }
     }
 
     public class TextWatcher1 implements TextWatcher {

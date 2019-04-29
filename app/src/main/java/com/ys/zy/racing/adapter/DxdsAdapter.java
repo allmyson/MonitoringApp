@@ -2,6 +2,7 @@ package com.ys.zy.racing.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -51,6 +52,7 @@ public class DxdsAdapter extends CommonAdapter<String> {
     public void convert(ViewHolder helper, String item, final int position) {
         helper.setText(R.id.tv_, StringUtil.valueOf(item));
         GridView gv = helper.getView(R.id.gv_);
+        gv.setSelector(new ColorDrawable(Color.TRANSPARENT));// 去掉默认点击背景
         final NumberAdapter numberAdapter = new NumberAdapter(mContext, getNumberList(), R.layout
                 .item_number);
         numberAdapter.setList(list.get(position));

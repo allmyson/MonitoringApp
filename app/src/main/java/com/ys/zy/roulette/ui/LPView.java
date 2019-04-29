@@ -308,21 +308,30 @@ public class LPView extends View {
         }
     };
 
-    public void setResult(String result) {
-        closeRandomColor();
-        currentResult = result;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).name.equals(result)) {
-                list.get(i).color = "#f7f7f7";
-            } else {
-                if (i % 2 == 0) {
-                    list.get(i).color = "#ffa958";
+    public void setResult(final String result) {
+        if (currentResult == result) {
+            closeRandomColor();
+            currentResult = result;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).name.equals(result)) {
+                    list.get(i).color = "#f7f7f7";
                 } else {
-                    list.get(i).color = "#ff854b";
+                    if (i % 2 == 0) {
+                        list.get(i).color = "#ffa958";
+                    } else {
+                        list.get(i).color = "#ff854b";
+                    }
                 }
             }
+            invalidate();
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setResult(result);
+                }
+            }, 100);
         }
-        invalidate();
     }
 
     public static final String[] sx = new String[]{"兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪", "鼠", "牛", "虎"};

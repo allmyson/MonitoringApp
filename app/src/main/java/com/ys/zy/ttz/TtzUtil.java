@@ -16,13 +16,37 @@ public class TtzUtil {
         return list;
     }
 
+    public static int[] result = new int[]{6, 8, 2, 5, 3, 4, 1, 9};
 
+    /**
+     * 6 8  2 5  3 4  19
+     *
+     * @param num
+     * @return
+     */
     public static List<PaiBean> getRandomList(int num) {
         List<PaiBean> list = new ArrayList<>();
-        list.add(new PaiBean("庄", num, num));
-        list.add(new PaiBean("闲1", num, num));
-        list.add(new PaiBean("闲2", num, num));
-        list.add(new PaiBean("闲3", num, num));
+        if (num == 1) {
+            list.add(new PaiBean("庄", result[0], result[1]));
+            list.add(new PaiBean("闲1", 0, 0));
+            list.add(new PaiBean("闲2", 0, 0));
+            list.add(new PaiBean("闲3", 0, 0));
+        } else if (num == 2) {
+            list.add(new PaiBean("庄", result[0], result[1]));
+            list.add(new PaiBean("闲1", result[2], result[3]));
+            list.add(new PaiBean("闲2", 0, 0));
+            list.add(new PaiBean("闲3", 0, 0));
+        } else if (num == 3) {
+            list.add(new PaiBean("庄", result[0], result[1]));
+            list.add(new PaiBean("闲1", result[2], result[3]));
+            list.add(new PaiBean("闲2", result[4], result[5]));
+            list.add(new PaiBean("闲3", 0, 0));
+        } else if (num == 4) {
+            list.add(new PaiBean("庄", result[0], result[1]));
+            list.add(new PaiBean("闲1", result[2], result[3]));
+            list.add(new PaiBean("闲2", result[4], result[5]));
+            list.add(new PaiBean("闲3", result[6], result[7]));
+        }
         return list;
     }
 

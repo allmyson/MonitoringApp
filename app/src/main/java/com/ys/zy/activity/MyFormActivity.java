@@ -12,6 +12,7 @@ import com.ys.zy.bean.TabBean;
 import com.ys.zy.fragment.InvitationCodeFragment;
 import com.ys.zy.fragment.OddsTableFragment;
 import com.ys.zy.fragment.SubReturnRateFragment;
+import com.ys.zy.fragment.TodayYKFragment;
 import com.ys.zy.ui.LhViewPager;
 import com.ys.zy.util.TabUtil;
 
@@ -58,6 +59,7 @@ public class MyFormActivity extends BaseActivity {
         list.add(new TabBean("交易报表", InvitationCodeFragment.newInstance()));
         list.add(new TabBean("消费报表", InvitationCodeFragment.newInstance()));
         list.add(new TabBean("活动奖金", InvitationCodeFragment.newInstance()));
+        list.add(new TabBean("今日盈亏", TodayYKFragment.newInstance()));
         return list;
     }
 }

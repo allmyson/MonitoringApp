@@ -274,19 +274,16 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
             case TYPE_FP:
                 timeTV.setText(getTimeStr(55 - second));
                 statusTV.setText("发牌中...");
-                if (second != 54) {
-//                    if (!lpView.isRamdomRunning()) {
-//                        L.e("lpView.startRandomColor()执行次数");
-//                        lpView.startRandomColor();
+//                if (second != 54) {
+//                    if (!paiAdater.isRamdomRunning()) {
+//                        paiAdater.startRandom();
 //                    }
-                    if (!paiAdater.isRamdomRunning()) {
-                        paiAdater.startRandom();
-                    }
-                } else {
-//                    L.e("lpView.setRandomResult()执行次数");
-//                    lpView.setRandomResult();
-                    paiAdater.setRandomResult();
-                    setRandomResultColor();
+//                } else {
+//                    paiAdater.toDefault();
+//                    setRandomResultColor();
+//                }
+                if (second == 51) {
+                    paiAdater.faPai();
                 }
                 break;
             case TYPE_PJ:
@@ -294,8 +291,6 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                 statusTV.setText("派奖中...");
                 if (second == 59) {
                     //恢复初始状态
-//                    L.e("lpView.clearColorAndResult()执行次数");
-//                    lpView.clearColorAndResult();
                     startClearAnima();
                     setBtnClickable(false, sureBtn);
                     paiList.clear();
@@ -444,7 +439,6 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     public void onDestroy() {
         super.onDestroy();
         cancel();
-//        lpView.closeRandomColor();
     }
 
     private String getTimeStr(int num) {
