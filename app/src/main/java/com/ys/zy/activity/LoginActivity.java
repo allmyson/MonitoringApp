@@ -132,10 +132,10 @@ public class LoginActivity extends BaseActivity {
         } else if (StringUtil.isBlank(psd)) {
             show("密码不能为空");
             return false;
-        } else if (user.length() < 4 || user.length() > 16) {
-            show("用户名由4-16个字母或数字组成");
+        } else if (user.length() < 8 || user.length() > 16 || !StringUtil.isLetterDigit(user)) {
+            show("用户名由8-16个字母或数字组成");
             return false;
-        } else if (psd.length() < 4 || psd.length() > 16) {
+        } else if (psd.length() < 8 || psd.length() > 16 || !StringUtil.isLetterDigit(psd)) {
             show("密码由8-16个字母或数字组成");
             return false;
         }
