@@ -71,7 +71,7 @@
             android:paddingLeft="8dp"
             android:paddingTop="8dp"
             android:paddingRight="8dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="6dp">
 
             <GridView
                 android:id="@+id/gv_"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="14dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="4dp"
                 android:numColumns="4"
                 android:scrollbars="none" />
 
@@ -120,9 +120,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="100dp"
                 android:layout_marginBottom="16dp"
-                android:layout_weight="1"
                 android:background="@drawable/rect_cornor_gray8"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -297,9 +296,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="100dp"
                 android:layout_marginBottom="16dp"
-                android:layout_weight="1"
                 android:background="@drawable/rect_cornor_gray8"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -474,8 +472,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="100dp"
                 android:background="@drawable/rect_cornor_gray8"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
