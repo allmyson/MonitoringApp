@@ -11,7 +11,9 @@ import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.ShareFragment;
+import com.ys.zy.util.ActivityUtil;
 import com.ys.zy.util.AppUtil;
+import com.ys.zy.util.SPUtil;
 
 public class AboutActivity extends BaseActivity {
     private LinearLayout shareLL, updateLL, exitLL;
@@ -45,7 +47,7 @@ public class AboutActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_shareApp:
-                DialogUtil.showShare(mContext,new ShareFragment.ClickListener(){
+                DialogUtil.showShare(mContext, new ShareFragment.ClickListener() {
                     @Override
                     public void shareToWX() {
 
@@ -58,9 +60,12 @@ public class AboutActivity extends BaseActivity {
                 });
                 break;
             case R.id.ll_update:
-                startActivity(new Intent(mContext,UpdateInfoActivity.class));
+                startActivity(new Intent(mContext, UpdateInfoActivity.class));
                 break;
             case R.id.ll_exit:
+                SPUtil.clear(mContext);
+                ActivityUtil.finish();
+                startActivity(new Intent(mContext, LoginActivity.class));
                 break;
         }
     }

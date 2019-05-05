@@ -1,5 +1,6 @@
 package com.ys.zy.activity;
 
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -53,7 +54,8 @@ public class SetLoginPsdActivity extends BaseActivity implements TextWatcher {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_forgetPsd:
-                show("忘记密码");
+//                show("忘记密码");
+                startActivity(new Intent(mContext, FindPsdActivity.class));
                 break;
         }
     }

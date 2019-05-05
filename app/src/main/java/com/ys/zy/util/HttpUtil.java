@@ -1,6 +1,7 @@
 package com.ys.zy.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.ys.zy.http.BaseHttp;
 import com.ys.zy.http.HttpListener;
@@ -19,9 +20,28 @@ import java.util.Map;
  * @date 2018/12/3 11:00
  */
 public class HttpUtil {
+
+    //获取图片验证码
+    public static void getYzmImage(Context context, HttpListener<Bitmap> httpListener) {
+        String url = YS.IMAGE_YZM;
+        BaseHttp.getInstance().loadImag(context, url, httpListener);
+    }
+
+    //注册
+    public static void regist(Context context, String username, String psd, String yqm, String yzm, HttpListener<String> httpListener) {
+        String url = YS.REGIST + "?loginName=" + username + "&pwd=" + Md5Util.getMD5String(psd) + "&regCode=" + yqm + "&capText=" + yzm + "&consumerName=" + StringUtil.getUUID();
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
     //登录
     public static void login(Context context, String username, String pwd, HttpListener<String> httpListener) {
-        String url =YS.LOGIN + "?userName=" + username + "&pwd=" + pwd;
+        String url = YS.LOGIN + "?userName=" + username + "&pwd=" + Md5Util.getMD5String(pwd);
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //获取游戏列表
+    public static void getGameList(Context context, HttpListener<String> httpListener) {
+        String url = YS.GAME_LIST;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -183,7 +203,7 @@ public class HttpUtil {
      * @param pwd
      * @param httpListener
      */
-    public static void tx(Context context, String userId, String money, String pwd,HttpListener<String> httpListener) {
+    public static void tx(Context context, String userId, String money, String pwd, HttpListener<String> httpListener) {
         String url = YS.TX + "?userId=" + userId + "&applyTypeCode=1000&applyMoney=" + money + "&pwd=" + pwd;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
@@ -204,7 +224,7 @@ public class HttpUtil {
      */
     public static void getTeamJL(Context context, String userId, String type, HttpListener<String> httpListener) {
         String url = YS.TEAM_JL + "?userId=" + userId + "&recordTypeCode=" + type + "&start=1&length=" + YS.LENGTH;
-       BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
     /**
@@ -309,11 +329,12 @@ public class HttpUtil {
 
     /**
      * 获取APP最新版本数据
+     *
      * @param context
      * @param httpListener
      */
-    public static void getAppVersion(Context context, HttpListener<String> httpListener){
+    public static void getAppVersion(Context context, HttpListener<String> httpListener) {
         String url = YS.APP_VERSION;
-        BaseHttp.getInstance().postSimpleJson(context,url,"",httpListener);
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 }

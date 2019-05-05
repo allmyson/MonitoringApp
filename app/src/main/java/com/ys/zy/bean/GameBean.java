@@ -14,6 +14,8 @@ import java.util.List;
  */
 public class GameBean {
     public int drawableId;
+    public String status;
+    public String code;
     public String name;
     public String des;
 
@@ -41,5 +43,125 @@ public class GameBean {
         list.add(new GameBean(R.mipmap.game_ssc_icon, "时时彩", "10分钟一期"));
         list.add(new GameBean(R.mipmap.home_game_icon_more, "更多", ""));
         return list;
+    }
+
+    public static String getNameByCode(String game_code) {
+        String name = "";
+        switch (game_code) {
+            case "1000":
+                name = "时时彩";
+                break;
+            case "1001":
+                name = "1分彩";
+                break;
+            case "1002":
+                name = "最后的胜利者";
+                break;
+            case "1003":
+                name = "轮盘";
+                break;
+            case "1004":
+                name = "推筒子";
+                break;
+            case "1005":
+                name = "江苏快3";
+                break;
+            case "1006":
+                name = "1分快3";
+                break;
+            case "1007":
+                name = "5分快3";
+                break;
+            case "1008":
+                name = "北京赛车";
+                break;
+            case "1009":
+                name = "1分赛车";
+                break;
+            case "1010":
+                name = "5分赛车";
+                break;
+        }
+        return name;
+    }
+
+    public static String getDesByCode(String game_code) {
+        String dec = "";
+        switch (game_code) {
+            case "1000":
+                dec = "10分钟1期";
+                break;
+            case "1001":
+                dec = "1分钟1期";
+                break;
+            case "1002":
+                dec = "";
+                break;
+            case "1003":
+                dec = "1分钟1期";
+                break;
+            case "1004":
+                dec = "1分钟1期";
+                break;
+            case "1005":
+                dec = "全天41期";
+                break;
+            case "1006":
+                dec = "1分钟1期";
+                break;
+            case "1007":
+                dec = "5分钟1期";
+                break;
+            case "1008":
+                dec = "全天44期";
+                break;
+            case "1009":
+                dec = "1分钟1期";
+                break;
+            case "1010":
+                dec = "5分钟1期";
+                break;
+        }
+        return dec;
+    }
+
+    public static int getImageByCode (String game_code){
+        int drawableId = R.mipmap.game_ssc_icon;
+        switch (game_code) {
+            case "1000":
+                drawableId = R.mipmap.game_ssc_icon;
+                break;
+            case "1001":
+                drawableId = R.mipmap.game_ssc_icon;
+                break;
+            case "1002":
+                drawableId = R.mipmap.game_lwin_icon;
+                break;
+            case "1003":
+                drawableId = R.mipmap.game_lp_icon;
+                break;
+            case "1004":
+                drawableId = R.mipmap.game_ttz_icon;
+                break;
+            case "1005":
+                drawableId = R.mipmap.game_k3_icon;
+                break;
+            case "1006":
+                drawableId = R.mipmap.game_k3_icon;
+                break;
+            case "1007":
+                drawableId = R.mipmap.game_k3_icon;
+                break;
+            case "1008":
+                drawableId = R.mipmap.game_pk_icon;
+                break;
+            case "1009":
+                drawableId = R.mipmap.game_pk_icon;
+                break;
+            case "1010":
+                drawableId = R.mipmap.game_pk_icon;
+                break;
+        }
+        return drawableId;
     }
 }

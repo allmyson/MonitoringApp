@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import com.yongchun.library.view.ImageSelectorActivity;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.util.SystemUtil;
 import com.ys.zy.util.ToastUtil;
 
@@ -26,8 +27,7 @@ public class FunctionApi {
     }
 
     public static boolean isLogin(Context mContext) {
-//        return UserSP.isLogin(mContext);
-        return false;
+        return UserSP.isLogin(mContext);
     }
 
 
@@ -78,7 +78,12 @@ public class FunctionApi {
         ImageSelectorActivity.start(mContext, max, mode, showCamera, enablePreview, enableCrop);
     }
 
-    public static String getAuthority(Context context){
+    public static String getAuthority(Context context) {
         return SystemUtil.PackgeName(context) + FunctionApi.AUTHORITY;
+    }
+
+    //联系客服
+    public static void contactKF(Context context) {
+        ToastUtil.show(context, "联系客服");
     }
 }

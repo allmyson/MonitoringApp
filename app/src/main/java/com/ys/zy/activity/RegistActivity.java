@@ -1,5 +1,6 @@
 package com.ys.zy.activity;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,9 +10,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.bean.BaseBean;
+import com.ys.zy.http.HttpListener;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 
 public class RegistActivity extends BaseActivity implements View.OnFocusChangeListener {
     private EditText userET, psdET, rePsdET, yzmET, yqmET;
@@ -47,6 +54,7 @@ public class RegistActivity extends BaseActivity implements View.OnFocusChangeLi
         yzmIV.setOnClickListener(this);
         registBtn = getView(R.id.btn_regist);
         registBtn.setOnClickListener(this);
+        setCanClick(false);
         userET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -151,7 +159,7 @@ public class RegistActivity extends BaseActivity implements View.OnFocusChangeLi
 
     @Override
     public void getData() {
-
+        getYzm();
     }
 
     @Override
@@ -181,10 +189,37 @@ public class RegistActivity extends BaseActivity implements View.OnFocusChangeLi
                 }
                 break;
             case R.id.iv_yzm:
+                getYzm();
                 break;
             case R.id.btn_regist:
                 if (isCanRegist()) {
+                    String user = userET.getText().toString().trim();
+                    String psd = psdET.getText().toString().trim();
+                    String yzm = yzmET.getText().toString().trim();
+                    String yqm = yqmET.getText().toString().trim();
+                    HttpUtil.regist(mContext, user, psd, yqm, yzm, new HttpListener<String>() {
+                        @Override
+                        public void onSucceed(int what, Response<String> response) {
+                            BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                            if (baseBean != null) {
+                                if (YS.SUCCESE.equals(baseBean.code)) {
+                                    finish();
+                                } else {
+                                    //注册失败刷新验证码
+                                    getYzm();
+                                }
+                                show(baseBean.msg);
+                            } else {
+                                show(YS.HTTP_TIP);
+                            }
 
+                        }
+
+                        @Override
+                        public void onFailed(int what, Response<String> response) {
+
+                        }
+                    });
                 }
                 break;
         }
@@ -208,14 +243,6 @@ public class RegistActivity extends BaseActivity implements View.OnFocusChangeLi
             case R.id.et_yqm:
                 setFocusChange(hasFocus, getView(R.id.view_yqm));
                 break;
-        }
-    }
-
-    private void setFocusChange(boolean hasFocus, View view) {
-        if (hasFocus) {
-            view.setBackgroundColor(Color.parseColor("#dd2230"));
-        } else {
-            view.setBackgroundColor(Color.parseColor("#d1d1d1"));
         }
     }
 
@@ -264,5 +291,22 @@ public class RegistActivity extends BaseActivity implements View.OnFocusChangeLi
             registBtn.setClickable(false);
             registBtn.setAlpha(0.1f);
         }
+    }
+
+    private void getYzm() {
+        HttpUtil.getYzmImage(mContext, new HttpListener<Bitmap>() {
+            @Override
+            public void onSucceed(int what, Response<Bitmap> response) {
+                Bitmap bitmap = response.get();
+                if (bitmap != null) {
+                    yzmIV.setImageBitmap(bitmap);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<Bitmap> response) {
+
+            }
+        });
     }
 }

@@ -11,11 +11,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.api.FunctionApi;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.bean.BaseBean;
+import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.UserSP;
+import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.KeyBoardUtils;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements View.OnFocusChangeListener {
     private EditText userET, psdET;
     private Button loginBtn;
     private ImageView showOrHideIV;
@@ -35,6 +44,8 @@ public class LoginActivity extends BaseActivity {
         showOrHideIV.setOnClickListener(this);
         userET = getView(R.id.et_user);
         psdET = getView(R.id.et_psd);
+        userET.setOnFocusChangeListener(this);
+        psdET.setOnFocusChangeListener(this);
         forgetTV = getView(R.id.tv_forget);
         kfTV = getView(R.id.tv_kf);
         registLL = getView(R.id.ll_regist);
@@ -106,18 +117,45 @@ public class LoginActivity extends BaseActivity {
                 }
                 break;
             case R.id.tv_forget:
-//                startActivity(new Intent(mContext,));
+                startActivity(new Intent(mContext, FindPsdActivity.class));
                 break;
             case R.id.tv_kf:
+                FunctionApi.contactKF(mContext);
                 break;
             case R.id.ll_regist:
                 startActivity(new Intent(mContext, RegistActivity.class));
                 break;
             case R.id.btn_login:
+                KeyBoardUtils.closeKeybord(userET, mContext);
+                KeyBoardUtils.closeKeybord(psdET, mContext);
                 if (isCanLogin()) {
-                    show("登录成功");
-                    startActivity(new Intent(mContext, MainActivity.class));
-                    finish();
+                    String user = userET.getText().toString().trim();
+                    String psd = psdET.getText().toString().trim();
+                    HttpUtil.login(mContext, user, psd, new HttpListener<String>() {
+                        @Override
+                        public void onSucceed(int what, Response<String> response) {
+                            BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                            if (baseBean != null) {
+                                if (YS.SUCCESE.equals(baseBean.code)) {
+                                    //登录成功
+                                    UserSP.saveInfo(mContext, response.get());
+                                    startActivity(new Intent(mContext, MainActivity.class));
+                                    finish();
+                                }
+                                show(baseBean.msg);
+                            } else {
+                                show(YS.HTTP_TIP);
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(int what, Response<String> response) {
+
+                        }
+                    });
+//                    show("登录成功");
+//                    startActivity(new Intent(mContext, MainActivity.class));
+//                    finish();
                 }
                 break;
         }
@@ -149,6 +187,18 @@ public class LoginActivity extends BaseActivity {
         } else {
             loginBtn.setClickable(false);
             loginBtn.setAlpha(0.1f);
+        }
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        switch (v.getId()) {
+            case R.id.et_user:
+                setFocusChange(hasFocus, getView(R.id.view_user));
+                break;
+            case R.id.et_psd:
+                setFocusChange(hasFocus, getView(R.id.view_psd));
+                break;
         }
     }
 }

@@ -35,9 +35,15 @@ public class YS {
 
 
     //        public static final String IP = "http://148.163.169.41:8090";
-    public static final String IP = "http://103.65.180.104:8090";
+    public static final String IP = "http://47.244.135.12:8090";
+    //图片验证码
+    public static final String IMAGE_YZM = IP + "/KaptchaImage?52";
+    //注册
+    public static final String REGIST = IP + "/appService/addConsumer";
     //登录
     public static final String LOGIN = IP + "/appService/loginForApp";
+    //获取游戏列表
+    public static final String GAME_LIST = IP + "/ysyx/gamecontrol/list";
     //系统公告
     public static final String MSG = IP + "/appService/appNews";
     //投注
@@ -78,9 +84,12 @@ public class YS {
     //修改资金密码
     public static final String UPDATE_ZJMM = IP + "/appService/editMoneypwdForApp";
     //修改登录密码
-    public static final String UPDATE_PSD= IP + "/appService/editPwdForApp";
+    public static final String UPDATE_PSD = IP + "/appService/editPwdForApp";
     //APP在线更新
-    public static final String APP_VERSION= IP + "/appService/getNewApk?type=1000";
+    public static final String APP_VERSION = IP + "/appService/getNewApk?type=1000";
+
+    //basebean == null 的时候的提示语
+    public static final String HTTP_TIP = "服务器错误！";
 
 
     public static GlideUrl getGlideUrl(Context context, String url) {

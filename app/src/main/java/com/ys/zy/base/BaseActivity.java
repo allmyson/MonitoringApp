@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -257,7 +258,7 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
             view.setAlpha(1f);
         } else {
             view.setClickable(false);
-            view.setAlpha(0.3f);
+            view.setAlpha(0.1f);
         }
     }
 
@@ -283,5 +284,13 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
         config.setToDefaults();
         res.updateConfiguration(config, res.getDisplayMetrics());
         return res;
+    }
+
+    protected void setFocusChange(boolean hasFocus, View view) {
+        if (hasFocus) {
+            view.setBackgroundColor(Color.parseColor("#dd2230"));
+        } else {
+            view.setBackgroundColor(Color.parseColor("#d1d1d1"));
+        }
     }
 }

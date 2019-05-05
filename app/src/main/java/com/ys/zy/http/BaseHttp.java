@@ -66,8 +66,7 @@ public class BaseHttp {
      * @param <T>       想请求到的数据类型。
      */
     public <T> void request(Activity activity, int what, Request<T> request, HttpListener<T> callback, boolean
-            canCancel, boolean
-                                    isLoading) {
+            canCancel, boolean isLoading) {
         request.setCancelSign(object);
 //        request.addHeader("Cookie", "PHPSESSID=" + UserSP.getCookie(mContext));
         mQueue.add(what, request, new HttpResponseListener<>(activity, request, callback, canCancel, isLoading));

@@ -9,14 +9,12 @@ package com.ys.zy.bean;
  */
 public class LoginBean {
 
+
     /**
      * code : SUCCESS
      * msg : 登陆成功。
-     * data : {"consumerId":"be6cca47335946b9827ca5e09bea5f7c","backNum":"0.1","balance":0,"consumerImg":"",
-     * "consumerName":"曹勇","createId":null,"createTime":"2018-12-03T02:44:01.000+0000",
-     * "onlineTime":"2018-12-03T02:44:20.996+0000","levelCode":"1000","levelName":"普通用户","loginName":"cy",
-     * "parentConsumerId":null,"pwd":"e10adc3949ba59abbe56e057f20f883e","remark":null,"status":"1001"}
-     * systemDate : 1543805061021
+     * data : {"consumerId":"dc258de6f71848c6b3278350d609537e","backNum":"0.09","balance":0,"consumerImg":"","consumerName":"88b629eefc954a8fa461865a73824506","createId":null,"createTime":"2019-05-05T08:09:00.000+0000","levelCode":"1001","levelName":"代理会员","loginName":"longhui0","moneyPwd":null,"onlineTime":"2019-05-05T08:09:26.981+0000","parentConsumerId":"be6cca47335946b9827ca5e09bea5f7c","parentConsumerName":null,"payUrl":null,"pwd":"dd4b21e9ef71e1291183a46b913ae6f2","qqNum":null,"remark":null,"status":"1001","weixinNum":null,"tel":null,"regCode":null,"delFlag":"0"}
+     * systemDate : 1557043766995
      */
 
     public String code;
@@ -26,21 +24,29 @@ public class LoginBean {
 
     public static class DataBean {
         /**
-         * consumerId : be6cca47335946b9827ca5e09bea5f7c
-         * backNum : 0.1
-         * balance : 0
+         * consumerId : dc258de6f71848c6b3278350d609537e
+         * backNum : 0.09
+         * balance : 0.0
          * consumerImg :
-         * consumerName : 曹勇
+         * consumerName : 88b629eefc954a8fa461865a73824506
          * createId : null
-         * createTime : 2018-12-03T02:44:01.000+0000
-         * onlineTime : 2018-12-03T02:44:20.996+0000
-         * levelCode : 1000
-         * levelName : 普通用户
-         * loginName : cy
-         * parentConsumerId : null
-         * pwd : e10adc3949ba59abbe56e057f20f883e
+         * createTime : 2019-05-05T08:09:00.000+0000
+         * levelCode : 1001
+         * levelName : 代理会员
+         * loginName : longhui0
+         * moneyPwd : null
+         * onlineTime : 2019-05-05T08:09:26.981+0000
+         * parentConsumerId : be6cca47335946b9827ca5e09bea5f7c
+         * parentConsumerName : null
+         * payUrl : null
+         * pwd : dd4b21e9ef71e1291183a46b913ae6f2
+         * qqNum : null
          * remark : null
          * status : 1001
+         * weixinNum : null
+         * tel : null
+         * regCode : null
+         * delFlag : 0
          */
 
         public String consumerId;
@@ -50,13 +56,21 @@ public class LoginBean {
         public String consumerName;
         public String createId;
         public String createTime;
-        public String onlineTime;
         public String levelCode;
         public String levelName;
         public String loginName;
+        public String moneyPwd;
+        public String onlineTime;
         public String parentConsumerId;
+        public String parentConsumerName;
+        public String payUrl;
         public String pwd;
+        public String qqNum;
         public String remark;
         public String status;
+        public String weixinNum;
+        public String tel;
+        public String regCode;
+        public String delFlag;
     }
 }
