@@ -1,85 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/srl_"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f7f7f7"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/main_gray"
-        android:paddingRight="12dp">
-
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_centerInParent="true"
-            android:scaleType="fitXY"
-            android:src="@mipmap/topbar_home_logo_icon" />
-
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:scaleType="fitXY"
-            android:src="@mipmap/topbar_icon_online" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="144dp"
-        android:background="#dd2230" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="#ededed" />
+    android:background="#ededed"
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:background="#ffffff"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-      >
+        android:layout_height="match_parent"
+        android:background="#f7f7f7"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="12dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/home_notice_icon" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/main_gray"
+            android:paddingRight="12dp">
 
-        <TextView
-            android:id="@+id/tv_msg"
-            android:layout_width="0dp"
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                android:src="@mipmap/topbar_home_logo_icon" />
+
+            <ImageView
+                android:id="@+id/iv_kf"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:src="@mipmap/topbar_icon_online" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="144dp"
+            android:background="#dd2230" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="#ededed" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:id="@+id/ll_msg"
+            android:background="#ffffff"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="5dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/home_notice_icon" />
+
+            <TextView
+                android:id="@+id/tv_msg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="12dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/home_notice_icon_more" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="#ededed" />
+
+        <GridView
+            android:id="@+id/gv_"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="12sp"
-            android:layout_marginRight="5dp"
-            android:maxLines="1"
-            android:textColor="#000000"
-            android:text="恭喜V1093玩家最后的胜利者中了千元大奖" />
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginRight="12dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/home_notice_icon_more" />
+            android:horizontalSpacing="0dp"
+            android:numColumns="3"
+            android:scrollbars="none"
+            android:verticalSpacing="0dp" />
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="#ededed" />
-    <GridView
-        android:id="@+id/gv_"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:horizontalSpacing="0dp"
-        android:numColumns="3"
-        android:scrollbars="none"
-        android:verticalSpacing="0dp"/>
-</LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

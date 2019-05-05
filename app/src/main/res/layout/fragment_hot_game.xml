@@ -13,9 +13,16 @@
 
         <com.ys.zy.ui.NoNetView
             android:id="@+id/nnv_"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <com.ys.zy.ui.BlankView
+            android:id="@+id/bv_"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
         <ListView
             android:id="@+id/lv_"
             android:layout_width="match_parent"
