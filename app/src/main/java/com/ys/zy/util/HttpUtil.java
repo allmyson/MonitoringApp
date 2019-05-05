@@ -46,12 +46,29 @@ public class HttpUtil {
     }
 
     //查询消息
-    public static void selectMsg(Context context, int start, int length, HttpListener<String>
+    public static void selectMsg(Context context, HttpListener<String>
             httpListener) {
-        String url = YS.MSG + "?start=" + start + "&length=" + length;
+        String url = YS.MSG;
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
+    //获取广告
+    public static void getAD(Context context, HttpListener<String> httpListener) {
+        String url = YS.AD;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
+
+    //获取最热游戏排名
+    public static void getHotGameList(Context context, HttpListener<String> httpListener) {
+        String url = YS.HOT_GAME;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
+
+    //获取昨日中奖榜用户排名
+    public static void getWinnerUserList(Context context, HttpListener<String> httpListener) {
+        String url = YS.WINNER_USER_LIST;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
     //投注
     public static void tz(Context context, String json, HttpListener<String> httpListener) {
         String url = YS.TZ;

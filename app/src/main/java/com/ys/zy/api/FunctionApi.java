@@ -11,6 +11,7 @@ import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.zy.sp.UserSP;
 import com.ys.zy.util.SystemUtil;
 import com.ys.zy.util.ToastUtil;
+import com.ys.zy.util.YS;
 
 /**
  * @author lh
@@ -85,5 +86,10 @@ public class FunctionApi {
     //联系客服
     public static void contactKF(Context context) {
         ToastUtil.show(context, "联系客服");
+    }
+
+    //获取完整图片路径
+    public static String getImagePath(String url) {
+        return YS.IP + url;
     }
 }

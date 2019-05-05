@@ -5,11 +5,16 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.activity.MsgDetailActivity;
+import com.ys.zy.api.FunctionApi;
+import com.ys.zy.bean.ADBean;
 import com.ys.zy.bean.GameJson;
+import com.ys.zy.bean.MsgBean;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.adapter.GameAdapter;
 import com.ys.zy.base.BaseFragment;
@@ -20,6 +25,7 @@ import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ttz.activity.TtzActivity;
 import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 import com.ys.zy.winner.activity.WinnerActivity;
 
@@ -37,6 +43,10 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
     private GridView gv;
     private GameAdapter gameAdapter;
     private List<GameBean> list;
+    private TextView msgTV;
+    private List<ADBean.DataBean> adList;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private MsgBean.DataBean dataBean;
 
     public static OneFragment newInstance() {
         return new OneFragment();
@@ -44,19 +54,35 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
 
     @Override
     public void onRefresh() {
-
+        getData();
     }
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.ll_msg:
+                if (dataBean != null) {
+                    MsgDetailActivity.intentToMsgDetail(mContext, dataBean);
+                }
+                break;
+            case R.id.iv_kf:
+                FunctionApi.contactKF(mContext);
+                break;
+        }
     }
 
     @Override
     protected void init() {
+        getView(R.id.ll_msg).setOnClickListener(this);
+        getView(R.id.iv_kf).setOnClickListener(this);
+        swipeRefreshLayout = getView(R.id.srl_);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_color));
+        adList = new ArrayList<>();
+        msgTV = getView(R.id.tv_msg);
         gv = getView(R.id.gv_);
         list = new ArrayList<>();
-        list.addAll(GameBean.getDefaultList());
+//        list.addAll(GameBean.getDefaultList());
         gameAdapter = new GameAdapter(mContext, list, R.layout.item_game);
         gv.setAdapter(gameAdapter);
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -119,6 +145,44 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
 
     @Override
     protected void getData() {
+        HttpUtil.getAD(mContext, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                adList.clear();
+                ADBean adBean = new Gson().fromJson(response.get(), ADBean.class);
+                if (adBean != null && adBean.data != null && adBean.data.size() > 0) {
+                    for (ADBean.DataBean dataBean : adBean.data) {
+                        if ("1001".equals(dataBean.activity_status)) {
+                            //只取进行中的活动
+                            adList.add(dataBean);
+                        }
+                    }
+                }
+                //刷新广告
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        HttpUtil.selectMsg(mContext, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                MsgBean msgBean = new Gson().fromJson(response.get(), MsgBean.class);
+                if (msgBean != null && msgBean.data != null && msgBean.data.size() > 0) {
+                    dataBean = msgBean.data.get(0);
+                    msgTV.setText(StringUtil.valueOf(msgBean.data.get(0).notice_content));
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         HttpUtil.getGameList(mContext, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
@@ -139,11 +203,12 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
                 }
                 list.addAll(newList);
                 gameAdapter.refresh(list);
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }

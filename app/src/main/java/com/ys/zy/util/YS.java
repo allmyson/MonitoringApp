@@ -45,7 +45,13 @@ public class YS {
     //获取游戏列表
     public static final String GAME_LIST = IP + "/ysyx/gamecontrol/list";
     //系统公告
-    public static final String MSG = IP + "/appService/appNews";
+    public static final String MSG = IP + "/appService/msgcenter/notice";
+    //广告
+    public static final String AD = IP + "/appService/activity/list";
+    //最热游戏排名
+    public static final String HOT_GAME = IP + "/appService/discover/hotGameRank";
+    //昨日中奖榜
+    public static final String WINNER_USER_LIST = IP + "/appService/discover/yesterdayWinRank";
     //投注
     public static final String TZ = IP + "/appService/bet";
     //开奖结果
