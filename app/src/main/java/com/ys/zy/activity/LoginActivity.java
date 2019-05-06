@@ -138,7 +138,7 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
                             if (baseBean != null) {
                                 if (YS.SUCCESE.equals(baseBean.code)) {
                                     //登录成功
-                                    UserSP.saveInfo(mContext, response.get());
+                                    UserSP.saveLoginInfo(mContext, response.get());
                                     startActivity(new Intent(mContext, MainActivity.class));
                                     finish();
                                 }

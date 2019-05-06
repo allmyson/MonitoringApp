@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.activity.AboutActivity;
 import com.ys.zy.activity.MyFormActivity;
@@ -19,9 +22,16 @@ import com.ys.zy.activity.SafeActivity;
 import com.ys.zy.activity.TXActivity;
 import com.ys.zy.activity.UserInfoActivity;
 import com.ys.zy.adapter.MyAdapter;
+import com.ys.zy.api.FunctionApi;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.bean.FourBean;
+import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.User;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ui.MyListView;
+import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +51,9 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
     private ImageView headIV;
     private SwipeRefreshLayout srl;
     private RelativeLayout rechargeRL, txRL;
+    private String userId;
+    private TextView nickNameTV, userNameTV, yueTV;
+    private User user;
 
     public static FourFragment newInstance() {
         return new FourFragment();
@@ -48,12 +61,7 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                srl.setRefreshing(false);
-            }
-        }, 2000);
+        getData();
     }
 
     @Override
@@ -70,6 +78,10 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void init() {
+        headIV = getView(R.id.iv_head);
+        nickNameTV = getView(R.id.tv_nickName);
+        userNameTV = getView(R.id.tv_userName);
+        yueTV = getView(R.id.tv_yue);
         mlv = getView(R.id.mlv_my);
         myList = new ArrayList<>();
         myList.addAll(FourBean.getDefaultList());
@@ -104,11 +116,42 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
         txRL = getView(R.id.rl_tx);
         rechargeRL.setOnClickListener(this);
         txRL.setOnClickListener(this);
+        userId = UserSP.getUserId(mContext);
+        user = UserSP.getUserInfo(mContext);
     }
 
     @Override
     protected void getData() {
+        if (user != null && user.data != null) {
+            nickNameTV.setText(StringUtil.valueOf(user.data.consumerName));
+            userNameTV.setText("账号:" + StringUtil.valueOf(user.data.loginName));
+            yueTV.setText(StringUtil.StringToDoubleStr(user.data.balance));
+            Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).placeholder(R.mipmap.bg_default_head2).error(R.mipmap.bg_default_head2).into(headIV);
+        }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                User user = new Gson().fromJson(response.get(), User.class);
+                if (user != null && YS.SUCCESE.equals(user.code) && user.data != null) {
+                    nickNameTV.setText(StringUtil.valueOf(user.data.consumerName));
+                    userNameTV.setText("账号:" + StringUtil.valueOf(user.data.loginName));
+                    yueTV.setText(StringUtil.StringToDoubleStr(user.data.balance));
+                    Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).placeholder(R.mipmap.bg_default_head2).error(R.mipmap.bg_default_head2).into(headIV);
+                    UserSP.saveUser(mContext, response.get());
+                }
+                srl.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                srl.setRefreshing(false);
+            }
+        });
     }
 
     @Override

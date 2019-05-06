@@ -7,13 +7,22 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.bean.BaseBean;
+import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ui.TitleView;
+import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.KeyBoardUtils;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 
 public class SetNameActivity extends BaseActivity {
     private EditText et;
+    private String userId;
 
     @Override
     public int getLayoutId() {
@@ -30,9 +39,7 @@ public class SetNameActivity extends BaseActivity {
         titleView.setText("设置昵称").showBtn(true).setBtnText("保存").setDoListener(new TitleView.DoListener() {
             @Override
             public void finish() {
-                show("保存成功");
-//                finish();
-                SetNameActivity.this.finish();
+                save();
             }
         });
         et.addTextChangedListener(new TextWatcher() {
@@ -55,6 +62,7 @@ public class SetNameActivity extends BaseActivity {
                 }
             }
         });
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
@@ -65,5 +73,28 @@ public class SetNameActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
 
+    }
+
+    private void save() {
+        KeyBoardUtils.closeKeybord(et,mContext);
+        HttpUtil.updateUserInfo(mContext, userId, et.getText().toString().trim(), null, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                if (baseBean != null) {
+                    if (YS.SUCCESE.equals(baseBean.code)) {
+                        finish();
+                    }
+                    show(StringUtil.valueOf(baseBean.msg));
+                } else {
+                    show(YS.HTTP_TIP);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 }

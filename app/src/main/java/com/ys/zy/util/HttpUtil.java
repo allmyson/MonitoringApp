@@ -69,6 +69,14 @@ public class HttpUtil {
         String url = YS.WINNER_USER_LIST;
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
+
+    //获取短信验证码
+    public static void getYZM(Context context, String phone, HttpListener<String> httpListener) {
+        String url = YS.YZM + "?phone=" + phone;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
+
+
     //投注
     public static void tz(Context context, String json, HttpListener<String> httpListener) {
         String url = YS.TZ;
@@ -193,7 +201,7 @@ public class HttpUtil {
      * @param userId
      * @param httpListener
      */
-    public static void getUserInfo(Context context, String userId, HttpListener<String> httpListener) {
+    public static void getUserInfoById(Context context, String userId, HttpListener<String> httpListener) {
         String url = YS.USERINFO + "?userId=" + userId;
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
@@ -328,7 +336,7 @@ public class HttpUtil {
      * @param httpListener
      */
     public static void updateZJMM(Context context, String userId, String loginPwd, String Moneypwd, HttpListener<String> httpListener) {
-        String url = YS.UPDATE_ZJMM + "?userId=" + userId + "&loginPwd=" + loginPwd + "&Moneypwd=" + Moneypwd;
+        String url = YS.UPDATE_ZJMM + "?userId=" + userId + "&loginPwd=" + loginPwd + "&Moneypwd=" + Md5Util.getMD5String(Moneypwd);
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -340,7 +348,7 @@ public class HttpUtil {
      * @param httpListener
      */
     public static void updatePsd(Context context, String userId, String oldPsd, String newPsd, HttpListener<String> httpListener) {
-        String url = YS.UPDATE_PSD + "?userId=" + userId + "&oldPwd=" + oldPsd + "&pwd=" + newPsd;
+        String url = YS.UPDATE_PSD + "?userId=" + userId + "&oldPwd=" + Md5Util.getMD5String(oldPsd) + "&pwd=" + Md5Util.getMD5String(newPsd);
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 

@@ -43,7 +43,7 @@ public class YS {
     //登录
     public static final String LOGIN = IP + "/appService/loginForApp";
     //获取游戏列表
-    public static final String GAME_LIST = IP + "/ysyx/gamecontrol/list";
+    public static final String GAME_LIST = IP + "/appService/listGameForApp";
     //系统公告
     public static final String MSG = IP + "/appService/msgcenter/notice";
     //广告
@@ -52,6 +52,12 @@ public class YS {
     public static final String HOT_GAME = IP + "/appService/discover/hotGameRank";
     //昨日中奖榜
     public static final String WINNER_USER_LIST = IP + "/appService/discover/yesterdayWinRank";
+    //个人信息
+    public static final String USER_INFO = IP + "/appService/getUserInfoForApp";
+    //获取短信验证码
+    public static final String YZM = IP + "/appService/getVerificationCode";
+
+
     //投注
     public static final String TZ = IP + "/appService/bet";
     //开奖结果
@@ -65,7 +71,7 @@ public class YS {
     //团队管理
     public static final String TEAM_GL = IP + "/appService/appTeam";
     //查询用户信息
-    public static final String USERINFO = IP + "/appService/getSelfInfo";
+    public static final String USERINFO = IP + "/appService/getUserInfoForApp";
     //充值
     public static final String CZ = IP + "/appService/rechargeApply";
     //提现

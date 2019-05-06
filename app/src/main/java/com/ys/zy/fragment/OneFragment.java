@@ -3,14 +3,18 @@ package com.ys.zy.fragment;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.activity.MsgDetailActivity;
+import com.ys.zy.adapter.ImageHolder;
 import com.ys.zy.api.FunctionApi;
 import com.ys.zy.bean.ADBean;
 import com.ys.zy.bean.GameJson;
@@ -47,6 +51,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
     private List<ADBean.DataBean> adList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MsgBean.DataBean dataBean;
+    private ConvenientBanner convenientBanner;
 
     public static OneFragment newInstance() {
         return new OneFragment();
@@ -73,6 +78,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
 
     @Override
     protected void init() {
+        convenientBanner = getView(R.id.cb_);
         getView(R.id.ll_msg).setOnClickListener(this);
         getView(R.id.iv_kf).setOnClickListener(this);
         swipeRefreshLayout = getView(R.id.srl_);
@@ -85,6 +91,24 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
 //        list.addAll(GameBean.getDefaultList());
         gameAdapter = new GameAdapter(mContext, list, R.layout.item_game);
         gv.setAdapter(gameAdapter);
+        gv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                View firstView = view.getChildAt(firstVisibleItem);
+                if (firstVisibleItem == 0 && (firstView == null || firstView.getTop() == 0)) {
+                    /*上滑到listView的顶部时，下拉刷新组件可见*/
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    /*不是listView的顶部时，下拉刷新组件不可见*/
+                    swipeRefreshLayout.setEnabled(false);
+                }
+            }
+        });
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -158,6 +182,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
                         }
                     }
                 }
+                setPage();
                 //刷新广告
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -192,12 +217,12 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
                 if (gameJson != null && gameJson.data != null && gameJson.data.size() > 0) {
                     for (GameJson.DataBean dataBean : gameJson.data) {
                         GameBean gameBean = new GameBean();
-                        gameBean.status = dataBean.game_status;
-                        gameBean.code = dataBean.game_code;
+                        gameBean.status = dataBean.gameStatus;
+                        gameBean.code = dataBean.gameCode;
 //                        gameBean.name = dataBean.game_name;
-                        gameBean.name = GameBean.getNameByCode(dataBean.game_code);
-                        gameBean.des = GameBean.getDesByCode(dataBean.game_code);
-                        gameBean.drawableId = GameBean.getImageByCode(dataBean.game_code);
+                        gameBean.name = GameBean.getNameByCode(dataBean.gameCode);
+                        gameBean.des = GameBean.getDesByCode(dataBean.gameCode);
+                        gameBean.drawableId = GameBean.getImageByCode(dataBean.gameCode);
                         newList.add(gameBean);
                     }
                 }
@@ -216,5 +241,32 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
     @Override
     protected int getLayoutResource() {
         return R.layout.fragment_one;
+    }
+
+
+    private void setPage() {
+        convenientBanner.setPages(new CBViewHolderCreator<ImageHolder>() {
+            @Override
+            public ImageHolder createHolder() {
+                return new ImageHolder();
+            }
+        }, adList)//设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+                .setPageIndicator(new int[]{R.mipmap.ic_page_indicator, R.mipmap.ic_page_indicator_focused});
+                //设置指示器的方向
+//                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
+//                .setOnPageChangeListener(this)//监听翻页事件
+//                .setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        convenientBanner.startTurning(5000);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        convenientBanner.stopTurning();
     }
 }
