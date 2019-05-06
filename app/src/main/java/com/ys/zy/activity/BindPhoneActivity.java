@@ -48,6 +48,7 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
     }
 
     private void bindPhone() {
+        show("绑定成功");
     }
 
     private boolean isCanSave() {
