@@ -1,5 +1,7 @@
 package com.ys.zy.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +16,10 @@ public class FindPsdActivity extends BaseActivity {
     private ImageView phoneIV, kfIV;
     private Button nextBtn;
     private boolean isPhone = false;
+    public static final int TYPE_LOGIN_PSD = 100;//找回登录密码
+    public static final int TYPE_JY_PSD = 101;//找回交易密码
+    private int type = TYPE_LOGIN_PSD;
+    private static final String KEY = "key";
 
     @Override
     public int getLayoutId() {
@@ -22,8 +28,16 @@ public class FindPsdActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        type = getIntent().getIntExtra(KEY, TYPE_LOGIN_PSD);
         setBarColor("#ededed");
-        titleView.setText("忘记登录密码").showBtn(false);
+        //通过手机找回
+        if (type == TYPE_LOGIN_PSD) {
+            //找回登录密码
+            titleView.setText("忘记登录密码").showBtn(false);
+        } else if (type == TYPE_JY_PSD) {
+            //找回交易密码
+            titleView.setText("忘记交易密码").showBtn(false);
+        }
         phoneLL = getView(R.id.ll_phone);
         kfLL = getView(R.id.ll_kf);
         phoneIV = getView(R.id.iv_phone);
@@ -63,11 +77,26 @@ public class FindPsdActivity extends BaseActivity {
             case R.id.btn_next:
                 if (isPhone) {
                     //通过手机找回
+                    if (type == TYPE_LOGIN_PSD) {
+                        //找回登录密码
+                        BindPhoneActivity.intentToVerifyPhone(mContext, BindPhoneActivity.TYPE_FIND_LOGIN_PSD);
+                        finish();
+                    } else if (type == TYPE_JY_PSD) {
+                        //找回交易密码
+                        BindPhoneActivity.intentToVerifyPhone(mContext, BindPhoneActivity.TYPE_FIND_JY_PSD);
+                        finish();
+                    }
                 } else {
                     //通过客服找回
                     FunctionApi.contactKF(mContext);
                 }
                 break;
         }
+    }
+
+    public static void intentToFindPsdType(Context context, int type) {
+        Intent intent = new Intent(context, FindPsdActivity.class);
+        intent.putExtra(KEY, type);
+        context.startActivity(intent);
     }
 }

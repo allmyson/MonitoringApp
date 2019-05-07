@@ -1,6 +1,8 @@
 package com.ys.zy.activity;
 
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,35 +17,31 @@ import com.ys.zy.bean.BaseBean;
 import com.ys.zy.http.HttpListener;
 import com.ys.zy.sp.UserSP;
 import com.ys.zy.ui.TitleView;
-import com.ys.zy.util.ActivityUtil;
 import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.KeyBoardUtils;
-import com.ys.zy.util.PwdCheckUtil;
-import com.ys.zy.util.SPUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 
-import java.security.Key;
-
-public class SetLoginPsdActivity extends BaseActivity implements TextWatcher, View.OnFocusChangeListener {
+public class UpdateJyPsdActivity extends BaseActivity implements TextWatcher, View.OnFocusChangeListener {
     private EditText psdET, newPsdET, reNewPsdET;
     private RelativeLayout forgetRL;
     private String userId;
+    private String psd;
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_set_login_psd;
+        return R.layout.activity_update_jy_psd;
     }
 
     @Override
     public void initView() {
         setBarColor("#ededed");
-        titleView.setText("设置登录密码").showBtn(true).setBtnText("保存").setBtnClickable(false).setDoListener(new TitleView.DoListener() {
+        titleView.setText("修改交易密码").showBtn(true).setBtnText("保存").setBtnClickable(false).setDoListener(new TitleView.DoListener() {
             @Override
             public void finish() {
-                KeyBoardUtils.closeKeybord(psdET,mContext);
-                KeyBoardUtils.closeKeybord(newPsdET,mContext);
-                KeyBoardUtils.closeKeybord(reNewPsdET,mContext);
+                KeyBoardUtils.closeKeybord(psdET, mContext);
+                KeyBoardUtils.closeKeybord(newPsdET, mContext);
+                KeyBoardUtils.closeKeybord(reNewPsdET, mContext);
                 if (isCanUpdate()) {
                     updatePsd();
                 }
@@ -64,21 +62,20 @@ public class SetLoginPsdActivity extends BaseActivity implements TextWatcher, Vi
         forgetRL = getView(R.id.rl_forgetPsd);
         forgetRL.setOnClickListener(this);
         userId = UserSP.getUserId(mContext);
+        psd = UserSP.getPassword(mContext);
     }
 
     private void updatePsd() {
         KeyBoardUtils.closeKeybord(psdET, mContext);
         KeyBoardUtils.closeKeybord(newPsdET, mContext);
         KeyBoardUtils.closeKeybord(reNewPsdET, mContext);
-        HttpUtil.updatePsd(mContext, userId, psdET.getText().toString().trim(), newPsdET.getText().toString().trim(), new HttpListener<String>() {
+        HttpUtil.updateZJMM(mContext, userId, psd, newPsdET.getText().toString().trim(), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
                 if (baseBean != null) {
                     if (YS.SUCCESE.equals(baseBean.code)) {
-                        SPUtil.clear(mContext);
-                        ActivityUtil.finish();
-                        startActivity(new Intent(mContext, LoginActivity.class));
+                        finish();
                     }
                     show(baseBean.msg);
                 } else {
@@ -103,7 +100,7 @@ public class SetLoginPsdActivity extends BaseActivity implements TextWatcher, Vi
         switch (v.getId()) {
             case R.id.rl_forgetPsd:
 //                show("忘记密码");
-                startActivity(new Intent(mContext, FindPsdActivity.class));
+                FindPsdActivity.intentToFindPsdType(mContext, FindPsdActivity.TYPE_JY_PSD);
                 break;
         }
     }

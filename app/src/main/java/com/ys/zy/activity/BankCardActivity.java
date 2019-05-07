@@ -8,12 +8,13 @@ import android.widget.ListView;
 import com.ys.zy.R;
 import com.ys.zy.adapter.BankCardAdapter;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.ui.MyListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BankCardActivity extends BaseActivity {
-    private ListView lv;
+    private MyListView lv;
     private List<String> list;
     private BankCardAdapter adapter;
     private LinearLayout addBankCardLL;
@@ -29,6 +30,9 @@ public class BankCardActivity extends BaseActivity {
         titleView.setText("银行卡管理");
         lv = getView(R.id.lv_);
         list = new ArrayList<>();
+        list.add(null);
+        list.add(null);
+        list.add(null);
         list.add(null);
         list.add(null);
         list.add(null);

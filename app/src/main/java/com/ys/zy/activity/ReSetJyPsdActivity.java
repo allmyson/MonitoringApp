@@ -1,11 +1,13 @@
 package com.ys.zy.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
@@ -18,67 +20,55 @@ import com.ys.zy.ui.TitleView;
 import com.ys.zy.util.ActivityUtil;
 import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.KeyBoardUtils;
-import com.ys.zy.util.PwdCheckUtil;
 import com.ys.zy.util.SPUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 
-import java.security.Key;
-
-public class SetLoginPsdActivity extends BaseActivity implements TextWatcher, View.OnFocusChangeListener {
-    private EditText psdET, newPsdET, reNewPsdET;
-    private RelativeLayout forgetRL;
+public class ReSetJyPsdActivity extends BaseActivity implements TextWatcher, View.OnFocusChangeListener {
+    private EditText newPsdET, reNewPsdET;
     private String userId;
+    private String phone, yzm;
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_set_login_psd;
+        return R.layout.activity_re_set_jy_psd;
     }
 
     @Override
     public void initView() {
+        phone = getIntent().getStringExtra("phone");
+        yzm = getIntent().getStringExtra("yzm");
         setBarColor("#ededed");
-        titleView.setText("设置登录密码").showBtn(true).setBtnText("保存").setBtnClickable(false).setDoListener(new TitleView.DoListener() {
+        titleView.setText("设置交易密码").showBtn(true).setBtnText("保存").setBtnClickable(false).setDoListener(new TitleView.DoListener() {
             @Override
             public void finish() {
-                KeyBoardUtils.closeKeybord(psdET,mContext);
-                KeyBoardUtils.closeKeybord(newPsdET,mContext);
-                KeyBoardUtils.closeKeybord(reNewPsdET,mContext);
                 if (isCanUpdate()) {
                     updatePsd();
                 }
             }
         });
-        psdET = getView(R.id.et_psd);
         newPsdET = getView(R.id.et_newPsd);
         reNewPsdET = getView(R.id.et_reNewPsd);
 
-        psdET.addTextChangedListener(this);
         newPsdET.addTextChangedListener(this);
         reNewPsdET.addTextChangedListener(this);
 
 
-        psdET.setOnFocusChangeListener(this);
         newPsdET.setOnFocusChangeListener(this);
         reNewPsdET.setOnFocusChangeListener(this);
-        forgetRL = getView(R.id.rl_forgetPsd);
-        forgetRL.setOnClickListener(this);
         userId = UserSP.getUserId(mContext);
     }
 
     private void updatePsd() {
-        KeyBoardUtils.closeKeybord(psdET, mContext);
         KeyBoardUtils.closeKeybord(newPsdET, mContext);
         KeyBoardUtils.closeKeybord(reNewPsdET, mContext);
-        HttpUtil.updatePsd(mContext, userId, psdET.getText().toString().trim(), newPsdET.getText().toString().trim(), new HttpListener<String>() {
+        HttpUtil.findLoginPsd(mContext, phone, newPsdET.getText().toString().trim(), yzm, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
                 if (baseBean != null) {
                     if (YS.SUCCESE.equals(baseBean.code)) {
-                        SPUtil.clear(mContext);
-                        ActivityUtil.finish();
-                        startActivity(new Intent(mContext, LoginActivity.class));
+                        finish();
                     }
                     show(baseBean.msg);
                 } else {
@@ -109,14 +99,10 @@ public class SetLoginPsdActivity extends BaseActivity implements TextWatcher, Vi
     }
 
     private boolean isCanUpdate() {
-        String psd = psdET.getText().toString().trim();
         String newPsd = newPsdET.getText().toString().trim();
         String reNewPsd = reNewPsdET.getText().toString().trim();
-        if (StringUtil.isBlank(psd) || StringUtil.isBlank(newPsd) || StringUtil.isBlank(reNewPsd)) {
+        if (StringUtil.isBlank(newPsd) || StringUtil.isBlank(reNewPsd)) {
             show("密码不能为空");
-            return false;
-        } else if (psd.length() < 8 || psd.length() > 16 || !StringUtil.isLetterDigit(psd)) {
-            show("密码由8-16个字母或数字组成");
             return false;
         } else if (newPsd.length() < 8 || newPsd.length() > 16 || !StringUtil.isLetterDigit(newPsd)) {
             show("密码由8-16个字母或数字组成");
@@ -126,9 +112,6 @@ public class SetLoginPsdActivity extends BaseActivity implements TextWatcher, Vi
             return false;
         } else if (!newPsd.equals(reNewPsd)) {
             show("两次输入密码不一致");
-            return false;
-        } else if (psd.equals(newPsd)) {
-            show("新密码不能与旧密码一致");
             return false;
         }
         return true;
@@ -163,7 +146,7 @@ public class SetLoginPsdActivity extends BaseActivity implements TextWatcher, Vi
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (s.length() == 0 || StringUtil.isBlank(psdET.getText().toString()) || StringUtil.isBlank(newPsdET.getText().toString()) || StringUtil.isBlank(reNewPsdET.getText().toString())) {
+        if (s.length() == 0 || StringUtil.isBlank(newPsdET.getText().toString()) || StringUtil.isBlank(reNewPsdET.getText().toString())) {
             titleView.setBtnClickable(false);
         } else {
             titleView.setBtnClickable(true);
@@ -173,9 +156,6 @@ public class SetLoginPsdActivity extends BaseActivity implements TextWatcher, Vi
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         switch (v.getId()) {
-            case R.id.et_psd:
-                setFocusChange(hasFocus, getView(R.id.view_psd));
-                break;
             case R.id.et_newPsd:
                 setFocusChange(hasFocus, getView(R.id.view_rePsd));
                 break;
@@ -184,4 +164,12 @@ public class SetLoginPsdActivity extends BaseActivity implements TextWatcher, Vi
                 break;
         }
     }
+
+    public static void intentToFindJyPsd(Context context, String phone, String yzm) {
+        Intent intent = new Intent(context, ReSetJyPsdActivity.class);
+        intent.putExtra("phone", phone);
+        intent.putExtra("yzm", yzm);
+        context.startActivity(intent);
+    }
 }
+

@@ -117,7 +117,7 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
                 }
                 break;
             case R.id.tv_forget:
-                startActivity(new Intent(mContext, FindPsdActivity.class));
+                FindPsdActivity.intentToFindPsdType(mContext,FindPsdActivity.TYPE_LOGIN_PSD);
                 break;
             case R.id.tv_kf:
                 FunctionApi.contactKF(mContext);

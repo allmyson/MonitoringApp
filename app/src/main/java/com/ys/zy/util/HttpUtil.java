@@ -77,6 +77,12 @@ public class HttpUtil {
     }
 
 
+    //获取短信验证码
+    public static void bindPhone(Context context, String userId, String phone, HttpListener<String> httpListener) {
+        String url = YS.BIND_PHONE + "?userId=" + userId + "&phone=" + phone;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
     //投注
     public static void tz(Context context, String json, HttpListener<String> httpListener) {
         String url = YS.TZ;
@@ -349,6 +355,18 @@ public class HttpUtil {
      */
     public static void updatePsd(Context context, String userId, String oldPsd, String newPsd, HttpListener<String> httpListener) {
         String url = YS.UPDATE_PSD + "?userId=" + userId + "&oldPwd=" + Md5Util.getMD5String(oldPsd) + "&pwd=" + Md5Util.getMD5String(newPsd);
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    /**
+     * 找回登录密码
+     *
+     * @param context
+     * @param
+     * @param httpListener
+     */
+    public static void findLoginPsd(Context context, String phone, String newPsd, String yzm, HttpListener<String> httpListener) {
+        String url = YS.FIND_LOGIN_PSD + "?phone=" + phone + "&pwd=" + Md5Util.getMD5String(newPsd) + "&CheckCode=" + yzm;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 

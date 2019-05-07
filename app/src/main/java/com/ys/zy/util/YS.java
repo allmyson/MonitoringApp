@@ -56,6 +56,10 @@ public class YS {
     public static final String USER_INFO = IP + "/appService/getUserInfoForApp";
     //获取短信验证码
     public static final String YZM = IP + "/appService/getVerificationCode";
+    //绑定手机号
+    public static final String BIND_PHONE = IP + "/appService/editTelForApp";
+    //找回登录密码
+    public static final String FIND_LOGIN_PSD = IP + "/appService/fogetPwdForApp";
 
 
     //投注

@@ -92,11 +92,11 @@ public class SafeActivity extends BaseActivity {
                 if ("设置交易密码".equals(jymmTV.getText().toString().trim())) {
                     startActivity(new Intent(mContext, SetJyPsdActivity.class));
                 } else {
-
+                    startActivity(new Intent(mContext, UpdateJyPsdActivity.class));
                 }
                 break;
             case R.id.ll_bindPhone:
-                startActivity(new Intent(mContext, BindPhoneActivity.class));
+                BindPhoneActivity.intentToVerifyPhone(mContext, BindPhoneActivity.TYPE_BIND_PHONE);
                 break;
             case R.id.ll_card:
                 if (hasJymm) {
