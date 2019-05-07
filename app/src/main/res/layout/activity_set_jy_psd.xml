@@ -67,6 +67,7 @@
                 android:textColor="#1e1e1e" />
 
             <View
+                android:id="@+id/view_psd"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="5dp"
@@ -112,6 +113,7 @@
                 android:textColor="#1e1e1e" />
 
             <View
+                android:id="@+id/view_rePsd"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="5dp"

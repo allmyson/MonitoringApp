@@ -36,10 +36,11 @@
                 android:src="@mipmap/topbar_icon_online" />
         </RelativeLayout>
 
-        <View
+        <com.bigkoo.convenientbanner.ConvenientBanner
+            android:id="@+id/cb_"
             android:layout_width="match_parent"
             android:layout_height="144dp"
-            android:background="#dd2230" />
+            app:canLoop="true" />
 
         <View
             android:layout_width="match_parent"
@@ -47,9 +48,9 @@
             android:background="#ededed" />
 
         <LinearLayout
+            android:id="@+id/ll_msg"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:id="@+id/ll_msg"
             android:background="#ffffff"
             android:gravity="center_vertical"
             android:orientation="horizontal">

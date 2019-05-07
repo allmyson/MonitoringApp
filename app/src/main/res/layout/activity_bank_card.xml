@@ -18,42 +18,54 @@
         android:layout_marginBottom="32dp"
         android:background="#d1d1d1" />
 
-    <ListView
-        android:id="@+id/lv_"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:background="#ededed"
-        android:layout_marginRight="20dp"
-        android:divider="@null"
-        android:dividerHeight="10dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
 
-    <LinearLayout
-        android:id="@+id/ll_addBankCard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="26dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingLeft="5dp"
-        android:paddingBottom="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="6dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/bankcard_btn_add" />
+            <com.ys.zy.ui.MyListView
+                android:id="@+id/lv_"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="#ededed"
+                android:divider="@null"
+                android:dividerHeight="10dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="添加银行卡"
-            android:textColor="#1e1e1e"
-            android:textSize="16sp" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_addBankCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="26dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
 
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="6dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/bankcard_btn_add" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="添加银行卡"
+                    android:textColor="#1e1e1e"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

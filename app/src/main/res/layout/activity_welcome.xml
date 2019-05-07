@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/bg_welcome"
+    android:background="@mipmap/startpage_bg"
     tools:context=".activity.WelcomeActivity">
     <TextView
         android:id="@+id/tv_delay"

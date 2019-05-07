@@ -26,6 +26,7 @@
                 android:paddingLeft="28dp">
 
                 <ImageView
+                    android:id="@+id/iv_head"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_marginRight="20dp"
@@ -39,20 +40,20 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_nickName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:maxLines="1"
-                        android:text="时间旅行者"
                         android:textColor="#1e1e1e"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_userName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:text="账号：13924293"
                         android:textColor="#a5a5a5"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -150,11 +151,12 @@
                             android:src="@mipmap/middle_icon_ye" />
 
                         <TextView
+                            android:id="@+id/tv_yue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
-                            android:text="￥3578.00"
+                            android:text="￥0.00"
                             android:textColor="@color/main_color" />
                     </RelativeLayout>
                 </RelativeLayout>
