@@ -13,6 +13,7 @@ import com.ys.zy.adapter.MainFragmentAdapter;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.bean.MainBean;
 import com.ys.zy.ui.LhViewPager;
+import com.ys.zy.update.UpdateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void getData() {
-
+        new UpdateManager(mContext,false).checkUpdate();
     }
 
     @Override

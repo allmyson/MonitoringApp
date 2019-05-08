@@ -6,6 +6,7 @@ import android.view.View;
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonFragmentAdapter;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.base.BaseFragment;
 import com.ys.zy.bean.TabBean;
 import com.ys.zy.fragment.HotGameFragment;
 import com.ys.zy.fragment.InvitationCodeFragment;
@@ -24,6 +25,7 @@ public class SubOpenAccountActivity extends BaseActivity {
     private TabLayout tabLayout;
     private LhViewPager vp;
     private CommonFragmentAdapter mAdapter;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_sub_open_account;
@@ -51,11 +53,17 @@ public class SubOpenAccountActivity extends BaseActivity {
     public void onClick(View v) {
 
     }
+
     private List<TabBean> getList() {
         List<TabBean> list = new ArrayList<>();
         list.add(new TabBean("下级返点率", SubReturnRateFragment.newInstance()));
         list.add(new TabBean("邀请码", InvitationCodeFragment.newInstance()));
         list.add(new TabBean("返点赔率表", OddsTableFragment.newInstance()));
         return list;
+    }
+
+    //刷新邀请码列表
+    public void refreshInvitationCodeFragment() {
+        ((InvitationCodeFragment) mAdapter.getItem(1)).onRefresh();
     }
 }

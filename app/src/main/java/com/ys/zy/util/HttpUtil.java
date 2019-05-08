@@ -48,13 +48,13 @@ public class HttpUtil {
     //查询消息
     public static void selectMsg(Context context, HttpListener<String>
             httpListener) {
-        String url = YS.MSG;
+        String url = YS.MSG + "?start=1&length=1000";
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
     //获取广告
     public static void getAD(Context context, HttpListener<String> httpListener) {
-        String url = YS.AD;
+        String url = YS.AD + "?start=1&length=1000";
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
@@ -66,7 +66,7 @@ public class HttpUtil {
 
     //获取昨日中奖榜用户排名
     public static void getWinnerUserList(Context context, HttpListener<String> httpListener) {
-        String url = YS.WINNER_USER_LIST;
+        String url = YS.WINNER_USER_LIST + "?start=1&length=20";
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
@@ -210,6 +210,24 @@ public class HttpUtil {
     public static void getUserInfoById(Context context, String userId, HttpListener<String> httpListener) {
         String url = YS.USERINFO + "?userId=" + userId;
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
+
+    //生成邀请码
+    public static void createYqm(Context context, String userId, String backNum, HttpListener<String> httpListener) {
+        String url = YS.ADD_YQM + "?userId=" + userId + "&backNum=" + backNum;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //查询邀请码列表
+    public static void getYqmList(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.YQM_LIST + "?userId=" + userId + "&start=1&length=1000";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //获取赔率列表
+    public static void getOddList(Context context, HttpListener<String> httpListener) {
+        String url = YS.ODD_LIST + "?start=1&length=1000";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
     /**
@@ -368,6 +386,12 @@ public class HttpUtil {
     public static void findLoginPsd(Context context, String phone, String newPsd, String yzm, HttpListener<String> httpListener) {
         String url = YS.FIND_LOGIN_PSD + "?phone=" + phone + "&pwd=" + Md5Util.getMD5String(newPsd) + "&CheckCode=" + yzm;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //根据银行卡号获取开户行
+    public static void getBankNameByCard(Context context, String card, HttpListener<String> httpListener) {
+        String url = YS.BANK_INFO + card;
+        BaseHttp.getInstance().simpleGet(context, url, httpListener);
     }
 
     /**

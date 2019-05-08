@@ -19,7 +19,7 @@ public class MsgDetailActivity extends BaseActivity {
     private RelativeLayout backRL;
     private ImageView kfIV;
     private TextView titleTV, contentTV, timeTV;
-    private MsgBean.DataBean dataBean;
+    private MsgBean.DataBeanX.DataBean dataBean;
 
     @Override
     public int getLayoutId() {
@@ -35,7 +35,7 @@ public class MsgDetailActivity extends BaseActivity {
         titleTV = getView(R.id.tv_title);
         contentTV = getView(R.id.tv_content);
         timeTV = getView(R.id.tv_time);
-        dataBean = (MsgBean.DataBean) getIntent().getSerializableExtra(DATA);
+        dataBean = (MsgBean.DataBeanX.DataBean) getIntent().getSerializableExtra(DATA);
         if (dataBean != null) {
             titleTV.setText(StringUtil.valueOf(dataBean.notice_title));
             contentTV.setText("\t\t"+StringUtil.valueOf(dataBean.notice_content));
@@ -60,7 +60,7 @@ public class MsgDetailActivity extends BaseActivity {
         }
     }
 
-    public static void intentToMsgDetail(Context context, MsgBean.DataBean dataBean) {
+    public static void intentToMsgDetail(Context context, MsgBean.DataBeanX.DataBean dataBean) {
         Intent intent = new Intent(context, MsgDetailActivity.class);
         intent.putExtra(DATA, dataBean);
         context.startActivity(intent);

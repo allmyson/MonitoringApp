@@ -39,7 +39,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
     private ListView listView;
     private NoNetView noNetView;
     private BlankView blankView;
-    private List<MsgBean.DataBean> list;
+    private List<MsgBean.DataBeanX.DataBean> list;
     private MsgAdapter adapter;
 
     public static ThreeFragment newInstance() {
@@ -101,8 +101,8 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                 public void onSucceed(int what, Response<String> response) {
                     list.clear();
                     MsgBean msgBean = new Gson().fromJson(response.get(), MsgBean.class);
-                    if (msgBean != null && msgBean.data != null && msgBean.data.size() > 0) {
-                        list.addAll(msgBean.data);
+                    if (msgBean != null && msgBean.data != null&& msgBean.data.data != null && msgBean.data.data.size() > 0) {
+                        list.addAll(msgBean.data.data);
                     }
                     adapter.refresh(list);
                     if (adapter.getCount() > 0) {

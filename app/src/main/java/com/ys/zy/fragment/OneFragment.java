@@ -48,9 +48,9 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
     private GameAdapter gameAdapter;
     private List<GameBean> list;
     private TextView msgTV;
-    private List<ADBean.DataBean> adList;
+    private List<ADBean.DataBeanX.DataBean> adList;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private MsgBean.DataBean dataBean;
+    private MsgBean.DataBeanX.DataBean dataBean;
     private ConvenientBanner convenientBanner;
 
     public static OneFragment newInstance() {
@@ -174,8 +174,8 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
             public void onSucceed(int what, Response<String> response) {
                 adList.clear();
                 ADBean adBean = new Gson().fromJson(response.get(), ADBean.class);
-                if (adBean != null && adBean.data != null && adBean.data.size() > 0) {
-                    for (ADBean.DataBean dataBean : adBean.data) {
+                if (adBean != null && adBean.data != null && adBean.data.data != null&& adBean.data.data.size() > 0) {
+                    for (ADBean.DataBeanX.DataBean dataBean : adBean.data.data) {
                         if ("1001".equals(dataBean.activity_status)) {
                             //只取进行中的活动
                             adList.add(dataBean);
@@ -196,9 +196,9 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
             @Override
             public void onSucceed(int what, Response<String> response) {
                 MsgBean msgBean = new Gson().fromJson(response.get(), MsgBean.class);
-                if (msgBean != null && msgBean.data != null && msgBean.data.size() > 0) {
-                    dataBean = msgBean.data.get(0);
-                    msgTV.setText(StringUtil.valueOf(msgBean.data.get(0).notice_content));
+                if (msgBean != null && msgBean.data != null&& msgBean.data.data != null && msgBean.data.data.size() > 0) {
+                    dataBean = msgBean.data.data.get(0);
+                    msgTV.setText(StringUtil.valueOf(msgBean.data.data.get(0).notice_content));
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }

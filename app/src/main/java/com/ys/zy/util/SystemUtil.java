@@ -120,7 +120,6 @@ public class SystemUtil {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
         return versionname;
     }
 

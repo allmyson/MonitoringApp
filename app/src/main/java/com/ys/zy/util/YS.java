@@ -60,6 +60,12 @@ public class YS {
     public static final String BIND_PHONE = IP + "/appService/editTelForApp";
     //找回登录密码
     public static final String FIND_LOGIN_PSD = IP + "/appService/fogetPwdForApp";
+    //生成邀请码
+    public static final String ADD_YQM = IP + "/appService/my/proxy/regcode/add";
+    //邀请码列表
+    public static final String YQM_LIST = IP + "/appService/my/proxy/regcode/list";
+    //赔率列表
+    public static final String ODD_LIST = IP + "/appService/my/proxy/odd/list";
 
 
     //投注
@@ -104,6 +110,9 @@ public class YS {
     //APP在线更新
     public static final String APP_VERSION = IP + "/appService/getNewApk?type=1000";
 
+
+    //根据卡号获取开户行
+    public static final String BANK_INFO = "https://ccdcapi.alipay.com/validateAndCacheCardInfo.json?_input_charset=utf-8&cardBinCheck=true&cardNo=";
     //basebean == null 的时候的提示语
     public static final String HTTP_TIP = "服务器错误！";
 

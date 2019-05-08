@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide;
 import com.ys.zy.api.FunctionApi;
 import com.ys.zy.bean.ADBean;
 
-public class ImageHolder implements Holder<ADBean.DataBean> {
+public class ImageHolder implements Holder<ADBean.DataBeanX.DataBean> {
     private ImageView imageView;
 
     @Override
@@ -20,7 +20,7 @@ public class ImageHolder implements Holder<ADBean.DataBean> {
     }
 
     @Override
-    public void UpdateUI(Context context, int position, ADBean.DataBean data) {
+    public void UpdateUI(Context context, int position, ADBean.DataBeanX.DataBean data) {
         Glide.with(context).load(FunctionApi.getImagePath(data.activity_image)).into(imageView);
     }
 }

@@ -25,7 +25,7 @@ import java.util.List;
 public class WinnerListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, NoNetView.ClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listView;
-    private List<WinnerBean> list;
+    private List<WinnerUserBean.DataBeanX.DataBean> list;
     private WinnerListAdapter adapter;
     private NoNetView noNetView;
     private BlankView blankView;
@@ -77,8 +77,8 @@ public class WinnerListFragment extends BaseFragment implements SwipeRefreshLayo
                 public void onSucceed(int what, Response<String> response) {
                     list.clear();
                     WinnerUserBean winnerUserBean = new Gson().fromJson(response.get(), WinnerUserBean.class);
-                    if (winnerUserBean != null && winnerUserBean.data != null && winnerUserBean.data.size() > 0) {
-                        list.addAll(getList());
+                    if (winnerUserBean != null && winnerUserBean.data != null && winnerUserBean.data.data != null && winnerUserBean.data.data.size() > 0) {
+                        list.addAll(winnerUserBean.data.data);
                     }
                     adapter.refresh(list);
                     swipeRefreshLayout.setRefreshing(false);
