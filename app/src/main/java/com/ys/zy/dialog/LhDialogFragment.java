@@ -2,10 +2,13 @@ package com.ys.zy.dialog;
 
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
+
+import com.ys.zy.util.ToastUtil;
 
 
 public class LhDialogFragment extends DialogFragment implements OnClickListener {
@@ -132,5 +135,25 @@ public class LhDialogFragment extends DialogFragment implements OnClickListener 
 		
 		
 	}
+	protected void setBtnClickable(boolean canClick, View view) {
+		if (canClick) {
+			view.setClickable(true);
+			view.setAlpha(1f);
+		} else {
+			view.setClickable(false);
+			view.setAlpha(0.1f);
+		}
+	}
 
+	protected void setFocusChange(boolean hasFocus, View view) {
+		if (hasFocus) {
+			view.setBackgroundColor(Color.parseColor("#dd2230"));
+		} else {
+			view.setBackgroundColor(Color.parseColor("#d1d1d1"));
+		}
+	}
+
+	protected void show(String msg){
+		ToastUtil.show(getContext(),msg);
+	}
 }

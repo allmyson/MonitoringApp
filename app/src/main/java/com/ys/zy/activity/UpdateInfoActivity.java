@@ -37,10 +37,10 @@ public class UpdateInfoActivity extends BaseActivity {
         versionCode = SystemUtil.VersionCode(mContext);
         versionName = SystemUtil.VersionName(mContext);
         hasTV = getView(R.id.tv_has);
-        btn = getView(R.id.btn_);
+        btn = getView(R.id.btn_update);
         btn.setOnClickListener(this);
         hasTV.setText("已是最新版本：Version " + versionName);
-        btn.setVisibility(View.GONE);
+        setBtnClickable(false,btn);
     }
 
     @Override

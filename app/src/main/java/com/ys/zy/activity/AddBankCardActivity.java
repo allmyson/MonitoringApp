@@ -12,16 +12,20 @@ import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.bean.Bank;
+import com.ys.zy.bean.BaseBean;
 import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.util.BankUtil;
 import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.KeyBoardUtils;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 
 public class AddBankCardActivity extends BaseActivity implements TextWatcher, View.OnFocusChangeListener {
     private EditText nameET, cardET, reCardET, jymmET;
     private TextView bankTV;
     private Button sureBtn;
-
+    private String userId;
     @Override
     public int getLayoutId() {
         return R.layout.activity_add_bank_card;
@@ -51,18 +55,48 @@ public class AddBankCardActivity extends BaseActivity implements TextWatcher, Vi
 
     @Override
     public void getData() {
-
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_sure:
+                KeyBoardUtils.closeKeybord(nameET,mContext);
+                KeyBoardUtils.closeKeybord(cardET,mContext);
+                KeyBoardUtils.closeKeybord(reCardET,mContext);
+                KeyBoardUtils.closeKeybord(jymmET,mContext);
                 if (isCanAdd()) {
-                    show("添加成功");
+                    addBank();
                 }
                 break;
         }
+    }
+
+    private void addBank() {
+        String userName = nameET.getText().toString().trim();
+        String card = cardET.getText().toString().trim();
+        String jymm = jymmET.getText().toString().trim();
+        String bankName = bankTV.getText().toString().trim();
+        HttpUtil.addBank(mContext, userId, userName, card, bankName, jymm, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                BaseBean baseBean = new Gson().fromJson(response.get(),BaseBean.class);
+                if(baseBean!=null){
+                    if(YS.SUCCESE.equals(baseBean.code)){
+                        finish();
+                    }
+                    show(baseBean.msg);
+                }else {
+                    show(YS.HTTP_TIP);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.ys.zy.ssc.fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -15,12 +16,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.activity.RechargeActivity;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.dialog.TipFragment;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.RacingUtil;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.racing.adapter.RacingResultAdapter;
@@ -31,7 +35,10 @@ import com.ys.zy.racing.fragment.RacingFragment;
 import com.ys.zy.racing.fragment.RacingLHDFragment;
 import com.ys.zy.ssc.SscUtil;
 import com.ys.zy.ssc.activity.SscActivity;
+import com.ys.zy.ssc.adapter.SscHistoryAdapter;
 import com.ys.zy.ssc.adapter.SscResultAdapter;
+import com.ys.zy.ssc.bean.SscResultBean;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.TimeUtil;
@@ -51,9 +58,9 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
     private LinearLayout leftLL;
     private boolean isShowHistory = false;
     private LinearLayout historyLL;
-    private List<Object> historyList;
+    private List<SscResultBean.DataBean> historyList;
     private ListView historyLV;
-    private ScHistoryAdapter scHistoryAdapter;
+    private SscHistoryAdapter sscHistoryAdapter;
     private LinearLayout dataLL;
     private SscFragment currentFragment;
     private SscFragment dwdFragment, dxdsFragment, h2xFragment, wxFragment;
@@ -65,6 +72,8 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
     private TextView newResultTV, tzTipTV, djsTV;
     private int jgTime = 1;
     private List<Integer> resultList;
+    private int gameType = 1000;
+    private int year;
 
     public static SscTZFragment newInstance(int type, int play) {
         SscTZFragment sscTZFragment = new SscTZFragment();
@@ -75,6 +84,8 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     protected void init() {
+        Calendar now = Calendar.getInstance();
+        year = now.get(Calendar.YEAR);
         resultList = new ArrayList<>();
         resultList.addAll(getResultList());
         newResultTV = getView(R.id.tv_newResult);
@@ -101,19 +112,9 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
         historyLL = getView(R.id.ll_history);
 
         historyList = new ArrayList<>();
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        scHistoryAdapter = new ScHistoryAdapter(mContext, historyList, R.layout.item_ssc_history);
+        sscHistoryAdapter = new SscHistoryAdapter(mContext, historyList, R.layout.item_ssc_history);
         historyLV = getView(R.id.lv_);
-        historyLV.setAdapter(scHistoryAdapter);
+        historyLV.setAdapter(sscHistoryAdapter);
 
         dataLL = getView(R.id.ll_data);
         initFragment();
@@ -134,6 +135,11 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
     public void setType(int type) {
         this.type = type;
         jgTime = SscUtil.getJGTime(type);
+        if (type == SscActivity.TYPE_SSC) {
+            gameType = 1000;
+        } else {
+            gameType = 1001;
+        }
     }
 
     public void setPlay(int play) {
@@ -415,6 +421,40 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
             L.e("59当前期：" + currentNo);
             L.e("59上一期：" + lastNo);
         }
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if ((year + lastNo).equals(historyList.get(i).periodsNum)) {
+                    sscResultAdapter.closeRandom();
+                    break;
+                }
+            }
+        }
+        getResult();
     }
 
+
+    private void getResult() {
+        HttpUtil.getSscResult(mContext, gameType, 50, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                historyList.clear();
+                SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
+                if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
+                    historyList.addAll(sscResultBean.data);
+                }
+                sscHistoryAdapter.refresh(historyList);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getResult();
+                    }
+                }, 3000);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
 }

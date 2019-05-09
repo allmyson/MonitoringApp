@@ -62,7 +62,7 @@ public class ReSetJyPsdActivity extends BaseActivity implements TextWatcher, Vie
     private void updatePsd() {
         KeyBoardUtils.closeKeybord(newPsdET, mContext);
         KeyBoardUtils.closeKeybord(reNewPsdET, mContext);
-        HttpUtil.findLoginPsd(mContext, phone, newPsdET.getText().toString().trim(), yzm, new HttpListener<String>() {
+        HttpUtil.findJyPsd(mContext, phone, newPsdET.getText().toString().trim(), yzm, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);

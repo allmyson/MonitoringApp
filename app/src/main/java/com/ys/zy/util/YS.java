@@ -60,18 +60,32 @@ public class YS {
     public static final String BIND_PHONE = IP + "/appService/editTelForApp";
     //找回登录密码
     public static final String FIND_LOGIN_PSD = IP + "/appService/fogetPwdForApp";
+    //找回交易密码
+    public static final String FIND_JY_PSD = IP + "/appService/fogetPayPwdForApp";
     //生成邀请码
     public static final String ADD_YQM = IP + "/appService/my/proxy/regcode/add";
     //邀请码列表
     public static final String YQM_LIST = IP + "/appService/my/proxy/regcode/list";
     //赔率列表
     public static final String ODD_LIST = IP + "/appService/my/proxy/odd/list";
+    //查询绑定的银行卡列表
+    public static final String BANK_LIST = IP + "/appService/listCardForApp";
+    //添加银行卡
+    public static final String ADD_BANK = IP + "/appService/my/security/bankcard/bind";
+    //下级用户管理
+    public static final String SUB_USER_LIST = IP + "/appService/my/proxy/sub/userlist";
+    //今日盈亏
+    public static final String TODAY_YK = IP + "/appService/my/report/todayWinAndLoss";
+    //提现
+    public static final String TX = IP + "/appService/my/center/apply/add";
+    //APP下载地址
+    public static final String APP_DOWNLOAD_URL = IP + "/downloadFile?type=1000";
 
 
     //投注
     public static final String TZ = IP + "/appService/bet";
     //开奖结果
-    public static final String RESULT = IP + "/appService/getGameResultList";
+    public static final String SSC_RESULT = IP + "/appService/getGameResultList";
     //投注记录
     public static final String TZJL = IP + "/appService/payRecords";
     //修改用户信息
@@ -84,8 +98,8 @@ public class YS {
     public static final String USERINFO = IP + "/appService/getUserInfoForApp";
     //充值
     public static final String CZ = IP + "/appService/rechargeApply";
-    //提现
-    public static final String TX = IP + "/appService/applyCash";
+    //充值方式列表
+    public static final String TYPE_CZ = IP + "/appService/patformaccount/list";
     //追号
     public static final String ZH = IP + "/appService/trackNum";
     //团队记录

@@ -4,7 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +18,14 @@ import com.upsoft.qrlibrary.QRCodeUtil;
 import com.ys.zy.R;
 import com.ys.zy.util.Constant;
 import com.ys.zy.util.DensityUtil;
+import com.ys.zy.util.FileUtil;
 import com.ys.zy.util.L;
+import com.ys.zy.util.SystemShareUtil;
+import com.ys.zy.util.YS;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShareFragment extends LhDialogFragment {
     private int mTheme;
@@ -26,7 +34,8 @@ public class ShareFragment extends LhDialogFragment {
     private ClickListener clickListener;
     private TextView shareTV, saveTV;
     private ImageView iv;
-
+    private String path;
+    private Bitmap bitmap;
 
     public static ShareFragment newInstance(int style, int theme) {
         ShareFragment pFragment = new ShareFragment();
@@ -55,17 +64,36 @@ public class ShareFragment extends LhDialogFragment {
         shareTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener != null) {
-                    clickListener.shareToWX();
-                }
+//                if (clickListener != null) {
+//                    clickListener.shareToWX();
+//                }
+                List<String> list = new ArrayList<>();
+                list.add(path);
+                SystemShareUtil.shareImagesToWeiXin(getContext(), list, 0);
+                DialogUtil.removeDialog(getContext());
             }
         });
         saveTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener != null) {
-                    clickListener.saveToLocal();
-                }
+//                if (clickListener != null) {
+//                    clickListener.saveToLocal();
+//                }
+                MediaStore.Images.Media.insertImage(
+                        getContext().getContentResolver(),
+                        bitmap,
+                        "ewm",
+                        "file");
+//                MediaScannerConnection.scanFile(getContext()
+//                        , new String[]{path}
+//                        , new String[]{"image/jpeg"}, new MediaScannerConnection.OnScanCompletedListener() {
+//                            @Override
+//                            public void onScanCompleted(String path, Uri uri) {
+//
+//                            }
+//                        });
+                show("保存成功，可到相册查看");
+                DialogUtil.removeDialog(getContext());
             }
         });
         //去掉背景
@@ -73,12 +101,12 @@ public class ShareFragment extends LhDialogFragment {
                 ColorDrawable(Color.TRANSPARENT));
         //二维码
 //        Bitmap log = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_launcher);
-        String path = Constant.EWM_PATH + File.separator + "ewm.png";
+        path = Constant.EWM_PATH + File.separator + "ewm.png";
 //        L.e("二维码地址：" + path);
-        String shareUrl = "http://www.baidu.com";
+        String shareUrl = YS.APP_DOWNLOAD_URL;
         L.e("二维码地址：" + shareUrl);
         QRCodeUtil.createQRImage(shareUrl, 200, 200, null, path);
-        Bitmap bitmap = BitmapFactory.decodeFile(path);
+        bitmap = BitmapFactory.decodeFile(path);
         if (bitmap != null) {
             iv.setImageBitmap(bitmap);
         }
@@ -98,6 +126,6 @@ public class ShareFragment extends LhDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(DensityUtil.dp2px(getContext(),304), DensityUtil.dp2px(getContext(),300));
+        getDialog().getWindow().setLayout(DensityUtil.dp2px(getContext(), 304), DensityUtil.dp2px(getContext(), 300));
     }
 }

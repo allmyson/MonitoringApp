@@ -15,11 +15,19 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
 import com.ys.zy.bean.BankBean;
+import com.ys.zy.bean.BankData;
+import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.util.DensityUtil;
+import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.ToastUtil;
+import com.ys.zy.util.YS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +37,9 @@ public class BankFragment extends LhDialogFragment {
     private int mStyle;
     private View mContentView;
     private ListView lv;
-    private List<BankBean> list;
+    private List<BankData.DataBean> list;
     private BankAdapter bankAdapter;
-
+    private String userId;
     public static BankFragment newInstance(int style, int theme) {
         BankFragment pFragment = new BankFragment();
         Bundle args = new Bundle();
@@ -55,7 +63,6 @@ public class BankFragment extends LhDialogFragment {
         mContentView = inflater.inflate(R.layout.fragment_bank, null, false);
         lv = (ListView) mContentView.findViewById(R.id.lv_);
         list = new ArrayList<>();
-        list.addAll(BankBean.getList());
         bankAdapter = new BankAdapter(mContentView.getContext(), list, R.layout.item_bank_dialog);
         lv.setAdapter(bankAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,6 +95,7 @@ public class BankFragment extends LhDialogFragment {
             dialog.getWindow().getDecorView().setMinimumWidth(getResources().getDisplayMetrics().widthPixels);
             dialog.getWindow().setLayout(dm.widthPixels, getDialog().getWindow().getAttributes().height);
         }
+        userId = UserSP.getUserId(getContext());
         return mContentView;
     }
 
@@ -95,19 +103,39 @@ public class BankFragment extends LhDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
+        HttpUtil.getBankList(getContext(), userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                list.clear();
+                BankData bankData = new Gson().fromJson(response.get(), BankData.class);
+                if (bankData != null) {
+                    if (YS.SUCCESE.equals(bankData.code) && bankData.data != null && bankData.data.size() > 0) {
+                        list.addAll(bankData.data);
+                    }
+                } else {
+                    ToastUtil.show(getContext(),YS.HTTP_TIP);
+                }
+                bankAdapter.refresh(list);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
 
-    public class BankAdapter extends CommonAdapter<BankBean> {
+    public class BankAdapter extends CommonAdapter<BankData.DataBean> {
         private int selectItem = -1;
 
-        public BankAdapter(Context context, List<BankBean> mDatas, int itemLayoutId) {
+        public BankAdapter(Context context, List<BankData.DataBean> mDatas, int itemLayoutId) {
             super(context, mDatas, itemLayoutId);
         }
 
         @Override
-        public void convert(ViewHolder helper, BankBean item, int position) {
-            helper.setText(R.id.tv_, item.name + "（" + item.number.substring(item.number.length() - 4, item.number.length()) + "）");
+        public void convert(ViewHolder helper, BankData.DataBean item, int position) {
+            helper.setText(R.id.tv_, item.bankName + "（" + item.cardNumber.substring(item.cardNumber.length() - 4, item.cardNumber.length()) + "）");
             if (selectItem == position) {
                 helper.setImageResource(R.id.iv_, R.mipmap.checkbox_icon_select);
             } else {
@@ -124,7 +152,7 @@ public class BankFragment extends LhDialogFragment {
     private ClickListener clickListener;
 
     public interface ClickListener {
-        void click(BankBean bankBean);
+        void click(BankData.DataBean bankBean);
     }
 
     public void setClickListener(ClickListener clickListener) {

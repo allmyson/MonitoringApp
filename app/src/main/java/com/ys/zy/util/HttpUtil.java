@@ -3,6 +3,7 @@ package com.ys.zy.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.google.gson.Gson;
 import com.ys.zy.http.BaseHttp;
 import com.ys.zy.http.HttpListener;
 
@@ -77,9 +78,39 @@ public class HttpUtil {
     }
 
 
-    //获取短信验证码
+    //绑定手机
     public static void bindPhone(Context context, String userId, String phone, HttpListener<String> httpListener) {
         String url = YS.BIND_PHONE + "?userId=" + userId + "&phone=" + phone;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //获取银行卡列表
+    public static void getBankList(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.BANK_LIST + "?userId=" + userId;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //添加银行卡
+    public static void addBank(Context context, String userId, String userName, String cardNumber, String bankName, String jymm, HttpListener<String> httpListener) {
+        String url = null;
+        try {
+            url = YS.ADD_BANK + "?consumerId=" + userId + "&cardNumber=" + cardNumber + "&payPwd=" + Md5Util.getMD5String(jymm) + "&cardholder=" + URLEncoder.encode(userName, "utf-8") + "&bankName=" + URLEncoder.encode(bankName, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            url = "";
+        }
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //获取下级用户列表
+    public static void getSubUserList(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.SUB_USER_LIST + "?userId=" + userId + "&start=1&length=1000";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //获取今日盈亏
+    public static void getTodayYK(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.TODAY_YK + "?userId=" + userId;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -96,8 +127,8 @@ public class HttpUtil {
      * @param typeCode 1000  时时彩    1001   分分彩
      * @param num      查询数量
      */
-    public static void getKJResult(Context context, int typeCode, int num, HttpListener<String> httpListener) {
-        String url = YS.RESULT + "?gameTypeCode=" + typeCode + "&gameNum=" + num;
+    public static void getSscResult(Context context, int typeCode, int num, HttpListener<String> httpListener) {
+        String url = YS.SSC_RESULT + "?gameTypeCode=" + typeCode + "&gameNum=" + num;
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
@@ -230,6 +261,12 @@ public class HttpUtil {
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
+    //获取充值平台列表
+    public static void getCZList(Context context, HttpListener<String> httpListener) {
+        String url = YS.TYPE_CZ;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
     /**
      * 充值
      *
@@ -238,8 +275,8 @@ public class HttpUtil {
      * @param money
      * @param httpListener
      */
-    public static void cz(Context context, String userId, String money, HttpListener<String> httpListener) {
-        String url = YS.CZ + "?userId=" + userId + "&applyMoney=" + money;
+    public static void cz(Context context, String userId, String money, String accountId, HttpListener<String> httpListener) {
+        String url = YS.CZ + "?rechargeUserId=" + userId + "&rechargeNum=" + money + "&accountId=" + accountId;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -249,11 +286,14 @@ public class HttpUtil {
      * @param context
      * @param userId
      * @param money
-     * @param pwd
+     * @param jymm
      * @param httpListener
      */
-    public static void tx(Context context, String userId, String money, String pwd, HttpListener<String> httpListener) {
-        String url = YS.TX + "?userId=" + userId + "&applyTypeCode=1000&applyMoney=" + money + "&pwd=" + pwd;
+    public static void tx(Context context, String userId, String money, String jymm, String bankCard, HttpListener<String> httpListener) {
+        Map<String, String> jsonMap = new HashMap<>();
+        jsonMap.put("cardNumber", bankCard);
+        String json = new Gson().toJson(jsonMap);
+        String url = YS.TX + "?userId=" + userId + "&applyMoney=" + money + "&pwd=" + Md5Util.getMD5String(jymm) + "&bankcardInfo=" + json;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -385,6 +425,18 @@ public class HttpUtil {
      */
     public static void findLoginPsd(Context context, String phone, String newPsd, String yzm, HttpListener<String> httpListener) {
         String url = YS.FIND_LOGIN_PSD + "?phone=" + phone + "&pwd=" + Md5Util.getMD5String(newPsd) + "&CheckCode=" + yzm;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    /**
+     * 找回交易密码
+     *
+     * @param context
+     * @param
+     * @param httpListener
+     */
+    public static void findJyPsd(Context context, String phone, String newPsd, String yzm, HttpListener<String> httpListener) {
+        String url = YS.FIND_JY_PSD + "?phone=" + phone + "&pwd=" + Md5Util.getMD5String(newPsd) + "&CheckCode=" + yzm;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 

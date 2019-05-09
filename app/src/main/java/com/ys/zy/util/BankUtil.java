@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class BankUtil {
     public static Map<String, String> bankMap = new HashMap<>();
+    public static Map<String, Integer> iconMap = new HashMap<>();
 
     static {
         bankMap.put("SRCB", "深圳农村商业银行");
