@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ededed"
@@ -55,14 +56,13 @@
                     android:layout_height="20dp"
                     android:layout_marginRight="5dp"
                     android:scaleType="fitXY"
-                    android:src="@mipmap/wcash_icon_banklogo10" />
+                    android:src="@mipmap/ic_bank_default" />
 
                 <TextView
                     android:id="@+id/tv_bank"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
-                    android:text="工商银行(2254)"
                     android:textColor="@color/main_color"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -132,11 +132,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:text="￥1560.88"
+            android:text=""
             android:textColor="#1e1e1e"
             android:textSize="30sp" />
 
         <View
+            android:id="@+id/view_"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="5dp"
@@ -146,7 +147,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal">
 
             <TextView
@@ -165,7 +166,47 @@
                 android:textColor="@color/main_color"
                 android:textSize="12sp" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="32dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="交易密码"
+                android:textColor="#1e1e1e"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/et_jymm"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="请输入交易密码"
+                    android:inputType="textPassword"
+                    android:padding="5dp"
+                    android:textColor="#1e1e1e"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/view_jymm"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="#d1d1d1" />
+            </LinearLayout>
+        </LinearLayout>
         <Button
             android:id="@+id/btn_tx"
             android:layout_width="match_parent"

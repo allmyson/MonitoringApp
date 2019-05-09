@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rect_cornor_white6"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:paddingLeft="20dp"
+    android:paddingTop="50dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="50dp">
+
+
+    <EditText
+        android:id="@+id/et_"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:gravity="center"
+        android:hint="请输入充值金额"
+        android:maxLines="1"
+        android:padding="5dp"
+        android:inputType="number"
+        android:textColor="#1e1e1e"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/view_"
+        android:layout_width="200dp"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="20dp"
+        android:background="#d1d1d1" />
+
+    <Button
+        android:id="@+id/btn_sure"
+        android:layout_width="160dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/rect_cornor_red"
+        android:text="确认"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
+</LinearLayout>

@@ -24,7 +24,7 @@
         android:textSize="16sp" />
 
     <Button
-        android:id="@+id/btn_"
+        android:id="@+id/btn_update"
         android:layout_width="144dp"
         android:layout_height="36dp"
         android:layout_gravity="center_horizontal"
@@ -35,22 +35,22 @@
         android:textColor="#f7f7f7"
         android:textSize="16sp" />
 
-    <TextView
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="44dp"
-        android:layout_marginBottom="18dp"
-        android:text="Version 2.0主要更新"
-        android:textColor="#1e1e1e"
-        android:textSize="16sp" />
+    <!--<TextView-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="44dp"-->
+        <!--android:layout_marginBottom="18dp"-->
+        <!--android:text="Version 2.0主要更新"-->
+        <!--android:textColor="#1e1e1e"-->
+        <!--android:textSize="16sp" />-->
 
-    <TextView
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="44dp"
-        android:text="解决了若干bug"
-        android:textColor="#1e1e1e"
-        android:textSize="12sp" />
+    <!--<TextView-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="44dp"-->
+        <!--android:text="解决了若干bug"-->
+        <!--android:textColor="#1e1e1e"-->
+        <!--android:textSize="12sp" />-->
 </LinearLayout>
