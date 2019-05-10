@@ -26,7 +26,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.RegistActivity"></activity>
+        <activity android:name=".activity.ReSetJyPsdActivity"></activity>
+        <activity android:name=".activity.ReSetLoginPsdActivity" />
+        <activity android:name=".activity.UpdateJyPsdActivity" />
+        <activity android:name=".activity.FindPsdActivity" />
+        <activity android:name=".activity.RegistActivity" />
         <activity android:name=".ssc.activity.SscActivity" />
         <activity android:name=".racing.activity.RacingActivity" />
         <activity android:name=".roulette.activity.RouletteActivity" />
@@ -73,6 +77,7 @@
         <activity android:name=".fast3.activity.Fast3Activity" />
         <activity android:name=".winner.activity.WinnerActivity" />
         <activity android:name=".ttz.activity.TtzActivity" />
+        <activity android:name=".web.CommonWebviewActivity" />
     </application>
 
 </manifest>
