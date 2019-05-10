@@ -194,7 +194,9 @@ public class ImageSelectorActivity extends AppCompatActivity {
             @Override
             public void onPictureClick(LocalMedia media, int position) {
                 if (enablePreview) {
-                    startPreview(imageAdapter.getImages(), position);
+                    List<LocalMedia> list = new ArrayList<>();
+                    list.add(imageAdapter.getImages().get(position));
+                    startPreview(list, 0);
                 } else if (enableCrop) {
                     startCrop(media.getPath());
                 } else {
