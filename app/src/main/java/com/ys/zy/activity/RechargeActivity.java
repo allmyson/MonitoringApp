@@ -9,6 +9,7 @@ import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.adapter.PayAdapter;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.bean.CzBean;
 import com.ys.zy.bean.PayBean;
 import com.ys.zy.bean.RechargePlatform;
 import com.ys.zy.dialog.CzFragment;
@@ -18,6 +19,7 @@ import com.ys.zy.sp.UserSP;
 import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
+import com.ys.zy.web.CommonWebviewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class RechargeActivity extends BaseActivity {
     private List<RechargePlatform.DataBean> list;
     private PayAdapter payAdapter;
     private String userId;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_recharge;
@@ -50,7 +53,7 @@ public class RechargeActivity extends BaseActivity {
                     @Override
                     public void sure(String money) {
                         DialogUtil.removeDialog(mContext);
-                        cz(money,accountId);
+                        cz(money, accountId);
                     }
                 });
             }
@@ -58,11 +61,25 @@ public class RechargeActivity extends BaseActivity {
         userId = UserSP.getUserId(mContext);
     }
 
-    private void cz(String money,String accountId) {
+    private void cz(String money, String accountId) {
         HttpUtil.cz(mContext, userId, StringUtil.StringToDoubleStr(money), accountId, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
-
+                CzBean czBean = new Gson().fromJson(response.get(), CzBean.class);
+                if (czBean != null) {
+                    if (YS.SUCCESE.equals(czBean.code)) {
+                        String url = StringUtil.valueOf(czBean.data);
+                        if (url.startsWith("http")) {
+                            CommonWebviewActivity.openWebUrl(mContext, czBean.data);
+                        } else {
+                            show(url);
+                        }
+                    } else {
+                        show(StringUtil.valueOf(czBean.data));
+                    }
+                } else {
+                    show(YS.HTTP_TIP);
+                }
             }
 
             @Override

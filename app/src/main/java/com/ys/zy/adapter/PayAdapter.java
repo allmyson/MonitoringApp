@@ -17,19 +17,20 @@ public class PayAdapter extends CommonAdapter<RechargePlatform.DataBean> {
 
     @Override
     public void convert(ViewHolder helper, RechargePlatform.DataBean item, int position) {
-        if("WX".equals(item.accountTypeCode)){
+        if ("WX".equals(item.accountTypeCode)) {
             helper.setImageResource(R.id.iv_, R.mipmap.recharge_icon_wx);
             helper.setText(R.id.tv_description, "单笔最低10元，最高20000元");
-        }else if("ZFB".equals(item.accountTypeCode)){
+        } else if ("ZFB".equals(item.accountTypeCode)) {
             helper.setImageResource(R.id.iv_, R.mipmap.recharge_icon_z);
             helper.setText(R.id.tv_description, "单笔最低10元，最高50000元");
-        }else if("UNION_WALLET".equals(item.accountTypeCode)){
+        } else if ("UNION_WALLET".equals(item.accountTypeCode)) {
             helper.setImageResource(R.id.iv_, R.mipmap.recharge_icon_yl);
             helper.setText(R.id.tv_description, "单笔最低10元，最高500000元");
-        }else {
+        } else {
             helper.setImageResource(R.id.iv_, R.mipmap.platform_default);
             helper.setText(R.id.tv_description, "");
         }
+        helper.getView(R.id.tv_description).setVisibility(View.GONE);
         helper.setText(R.id.tv_name, StringUtil.valueOf(item.accountTypeName));
     }
 }

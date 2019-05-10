@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.fast3.Fast3Util;
 import com.ys.zy.fast3.activity.Fast3Activity;
@@ -26,8 +28,12 @@ import com.ys.zy.fast3.bean.Fast3Bean;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.dialog.TipFragment;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.RacingUtil;
 import com.ys.zy.racing.activity.RacingActivity;
+import com.ys.zy.ssc.activity.SscActivity;
+import com.ys.zy.ssc.bean.SscResultBean;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.TimeUtil;
@@ -55,7 +61,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     private String gameName;
     private String gameNo = "0214983";
     private Fast3HistoryAdapter fast3HistoryAdapter;
-    private List<Object> historyList;
+    private List<SscResultBean.DataBean> historyList;
     private ListView historyLV;
     private ImageView showHistoryIV;
     private boolean isShowHistory = false;
@@ -64,6 +70,8 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     private ImageView iv01, iv02, iv03;
     private TextView newResultTV, tzTipTV, djsTV;
     private int jgTime = 1;
+    private int gameType = 1005;
+    private boolean isStart = true;
 
     public static Fast3TZFragment newInstance(int type) {
         Fast3TZFragment fast3TZFragment = new Fast3TZFragment();
@@ -77,6 +85,13 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
     public void setType(int type) {
         this.type = type;
+        if (type == Fast3Activity.TYPE_JSK3) {
+            gameType = 1005;
+        } else if (type == Fast3Activity.TYPE_1FK3) {
+            gameType = 1006;
+        } else {
+            gameType = 1007;
+        }
         jgTime = Fast3Util.getJGTime(type);
     }
 
@@ -143,16 +158,6 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         clearTV.setOnClickListener(this);
         priceLL = getView(R.id.ll_price);
         historyList = new ArrayList<>();
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
         fast3HistoryAdapter = new Fast3HistoryAdapter(mContext, historyList, R.layout.item_fast3_history);
         historyLV = getView(R.id.lv_);
         historyLV.setAdapter(fast3HistoryAdapter);
@@ -164,7 +169,9 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     protected void getData() {
+        startRandomText();
         start();
+        getResult();
     }
 
     @Override
@@ -172,6 +179,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         super.onDestroyView();
         closeRandomText();
         cancel();
+        isStart = false;
     }
 
     @Override
@@ -376,6 +384,16 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                 L.e("59当前期：" + currentNo);
                 L.e("59上一期：" + lastNo);
             }
+
+            if (hasResult(lastNo)) {
+                closeRandomText();
+                List<Integer> list = getResult(lastNo);
+                if (list.size() == 3) {
+                    iv01.setImageResource(drawables[list.get(0)]);
+                    iv02.setImageResource(drawables[list.get(1)]);
+                    iv03.setImageResource(drawables[list.get(2)]);
+                }
+            }
         } else {
             //快3游戏不在游戏时间段内
             L.e("快3游戏不在游戏时间段内");
@@ -395,5 +413,69 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
             tzTV.setBackgroundResource(R.drawable.rect_cornor_red4);
 //            tzTV.setClickable(true);
         }
+    }
+
+    private void getResult() {
+        HttpUtil.getSscResult(mContext, gameType, 50, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                historyList.clear();
+                SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
+                if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
+                    historyList.addAll(sscResultBean.data);
+                }
+                fast3HistoryAdapter.refresh(historyList);
+                if (isStart) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getResult();
+                        }
+                    }, 3000);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
+    /**
+     * 是否已经开出这期结果
+     *
+     * @param lastNo
+     * @return
+     */
+    private boolean hasResult(String lastNo) {
+        boolean hasResult = false;
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    hasResult = true;
+                    break;
+                }
+            }
+        }
+        return hasResult;
+    }
+
+    private List<Integer> getResult(String lastNo) {
+        List<Integer> list = new ArrayList<>();
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    String result = historyList.get(i).lotteryNum;
+                    String[] str = result.split(",");
+                    if (str != null & str.length > 0) {
+                        for (String s : str) {
+                            list.add(StringUtil.StringToInt(s));
+                        }
+                    }
+                }
+            }
+        }
+        return list;
     }
 }

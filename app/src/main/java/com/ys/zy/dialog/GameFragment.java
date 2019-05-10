@@ -13,8 +13,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.bean.GameBean;
+import com.ys.zy.bean.GameJson;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.util.DensityUtil;
+import com.ys.zy.util.HttpUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GameFragment extends LhDialogFragment {
     private int mTheme;
@@ -22,6 +33,7 @@ public class GameFragment extends LhDialogFragment {
     private View mContentView;
     private ClickListener clickListener;
     private TextView tv0, tv1, tv2, tv3, tv4, tv5, tv6, tv7, tv8, tv9, tv10, tv11;
+    private Map<String, String> map;
 
     public static GameFragment newInstance(int style, int theme) {
         GameFragment pFragment = new GameFragment();
@@ -44,6 +56,7 @@ public class GameFragment extends LhDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContentView = inflater.inflate(R.layout.fragment_game, null, false);
+        map = new HashMap<>();
         tv0 = (TextView) mContentView.findViewById(R.id.tv0);
         tv1 = (TextView) mContentView.findViewById(R.id.tv1);
         tv2 = (TextView) mContentView.findViewById(R.id.tv2);
@@ -84,7 +97,28 @@ public class GameFragment extends LhDialogFragment {
             dialog.getWindow().setLayout((int) (dm.widthPixels * 0.5), ViewGroup.LayoutParams
                     .WRAP_CONTENT);
         }
+        getData();
         return mContentView;
+    }
+
+    private void getData() {
+        HttpUtil.getGameList(getContext(), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                map.clear();
+                GameJson gameJson = new Gson().fromJson(response.get(), GameJson.class);
+                if (gameJson != null && gameJson.data != null && gameJson.data.size() > 0) {
+                    for (GameJson.DataBean dataBean : gameJson.data) {
+                        map.put(GameBean.getNameByCode(dataBean.gameCode), dataBean.gameStatus);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
 
@@ -101,65 +135,52 @@ public class GameFragment extends LhDialogFragment {
         super.onClick(arg0);
         switch (arg0.getId()) {
             case R.id.tv0:
-                if(clickListener!=null){
-                    clickListener.click(0);
-                }
+                click(tv0, 0);
                 break;
             case R.id.tv1:
-                if(clickListener!=null){
-                    clickListener.click(1);
-                }
+                click(tv1, 1);
                 break;
             case R.id.tv2:
-                if(clickListener!=null){
-                    clickListener.click(2);
-                }
+                click(tv2, 2);
                 break;
             case R.id.tv3:
-                if(clickListener!=null){
-                    clickListener.click(3);
-                }
+                click(tv3, 3);
                 break;
             case R.id.tv4:
-                if(clickListener!=null){
-                    clickListener.click(4);
-                }
+                click(tv4, 4);
                 break;
             case R.id.tv5:
-                if(clickListener!=null){
-                    clickListener.click(5);
-                }
+                click(tv5, 5);
                 break;
             case R.id.tv6:
-                if(clickListener!=null){
-                    clickListener.click(6);
-                }
+                click(tv6, 6);
                 break;
             case R.id.tv7:
-                if(clickListener!=null){
-                    clickListener.click(7);
-                }
+                click(tv7, 7);
                 break;
             case R.id.tv8:
-                if(clickListener!=null){
-                    clickListener.click(8);
-                }
+                click(tv8, 8);
                 break;
             case R.id.tv9:
-                if(clickListener!=null){
-                    clickListener.click(9);
-                }
+                click(tv9, 9);
                 break;
             case R.id.tv10:
-                if(clickListener!=null){
-                    clickListener.click(10);
-                }
+                click(tv10, 10);
                 break;
             case R.id.tv11:
-                if(clickListener!=null){
-                    clickListener.click(11);
-                }
+//                click(tv11, 11);
                 break;
+        }
+    }
+
+    private void click(TextView tv, int position) {
+        if (clickListener != null) {
+            if ("1000".equals(map.get(tv.getText().toString()))) {
+                clickListener.click(position);
+            } else {
+                show(tv.getText().toString() + "维护中");
+                DialogUtil.removeDialog(getContext());
+            }
         }
     }
 }

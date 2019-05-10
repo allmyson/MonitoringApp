@@ -19,13 +19,17 @@ public class SscHistoryAdapter extends CommonAdapter<SscResultBean.DataBean> {
     @Override
     public void convert(ViewHolder helper, SscResultBean.DataBean item, int position) {
         String periods;
-        if(!StringUtil.isBlank(item.periodsNum)&&item.periodsNum.length()>4){
-            periods = item.periodsNum.substring(4);
-        }else {
+//        if(!StringUtil.isBlank(item.periodsNum)&&item.periodsNum.length()>4){
+//            periods = item.periodsNum.substring(4);
+//        }else {
             periods = StringUtil.valueOf(item.periodsNum);
-        }
+//        }
         helper.setText(R.id.tv_qh, periods);
-        helper.setText(R.id.tv_result, StringUtil.valueOf(item.lotteryNum));
+        String lotteryNum = StringUtil.valueOf(item.lotteryNum);
+        if(lotteryNum.contains(",")){
+            lotteryNum = lotteryNum.replaceAll(",","  ");
+        }
+        helper.setText(R.id.tv_result, lotteryNum);
         helper.setText(R.id.tv_time, DateUtil.changeTimeToHMS(item.lotteryTime));
     }
 }

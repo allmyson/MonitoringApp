@@ -19,6 +19,7 @@ import android.view.View;
 import com.ys.zy.R;
 import com.ys.zy.roulette.bean.LPBean;
 import com.ys.zy.util.DensityUtil;
+import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;

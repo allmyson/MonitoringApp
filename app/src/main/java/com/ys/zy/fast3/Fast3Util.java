@@ -1,5 +1,6 @@
 package com.ys.zy.fast3;
 
+import com.ys.zy.R;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.util.GameUtil;
 import com.ys.zy.util.L;
@@ -206,5 +207,30 @@ public class Fast3Util {
             result.add(getNumber(num));
         }
         return result;
+    }
+
+    public static int getDrawableIdByNum(int i) {
+        int drawableId= R.mipmap.k3_s1_icon;
+        switch (i) {
+            case 1:
+                drawableId= R.mipmap.k3_s1_icon;
+                break;
+            case 2:
+                drawableId= R.mipmap.k3_s2_icon;
+                break;
+            case 3:
+                drawableId= R.mipmap.k3_s3_icon;
+                break;
+            case 4:
+                drawableId= R.mipmap.k3_s4_icon;
+                break;
+            case 5:
+                drawableId= R.mipmap.k3_s5_icon;
+                break;
+            case 6:
+                drawableId= R.mipmap.k3_s6_icon;
+                break;
+        }
+        return drawableId;
     }
 }

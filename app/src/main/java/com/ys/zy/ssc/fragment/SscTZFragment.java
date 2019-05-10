@@ -73,7 +73,7 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
     private int jgTime = 1;
     private List<Integer> resultList;
     private int gameType = 1000;
-    private int year;
+    private boolean isStart = true;
 
     public static SscTZFragment newInstance(int type, int play) {
         SscTZFragment sscTZFragment = new SscTZFragment();
@@ -85,7 +85,6 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
     @Override
     protected void init() {
         Calendar now = Calendar.getInstance();
-        year = now.get(Calendar.YEAR);
         resultList = new ArrayList<>();
         resultList.addAll(getResultList());
         newResultTV = getView(R.id.tv_newResult);
@@ -124,7 +123,9 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     protected void getData() {
+        sscResultAdapter.startRandom();
         start();
+        getResult();
     }
 
     @Override
@@ -396,6 +397,7 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        isStart = false;
         cancel();
         sscResultAdapter.closeRandom();
     }
@@ -421,17 +423,50 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
             L.e("59当前期：" + currentNo);
             L.e("59上一期：" + lastNo);
         }
+        if (hasResult(lastNo)) {
+            sscResultAdapter.closeRandom();
+            resultList.clear();
+            resultList.addAll(getResult(lastNo));
+            sscResultAdapter.refresh(resultList);
+        }
+    }
+
+    /**
+     * 是否已经开出这期结果
+     *
+     * @param lastNo
+     * @return
+     */
+    private boolean hasResult(String lastNo) {
+        boolean hasResult = false;
         if (historyList.size() > 0) {
             for (int i = 0; i < historyList.size(); i++) {
-                if ((year + lastNo).equals(historyList.get(i).periodsNum)) {
-                    sscResultAdapter.closeRandom();
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    hasResult = true;
                     break;
                 }
             }
         }
-        getResult();
+        return hasResult;
     }
 
+    private List<Integer> getResult(String lastNo) {
+        List<Integer> list = new ArrayList<>();
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    String result = historyList.get(i).lotteryNum;
+                    String[] str = result.split(",");
+                    if (str != null & str.length > 0) {
+                        for (String s : str) {
+                            list.add(StringUtil.StringToInt(s));
+                        }
+                    }
+                }
+            }
+        }
+        return list;
+    }
 
     private void getResult() {
         HttpUtil.getSscResult(mContext, gameType, 50, new HttpListener<String>() {
@@ -443,12 +478,14 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
                     historyList.addAll(sscResultBean.data);
                 }
                 sscHistoryAdapter.refresh(historyList);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getResult();
-                    }
-                }, 3000);
+                if (isStart) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getResult();
+                        }
+                    }, 3000);
+                }
             }
 
             @Override
@@ -457,4 +494,5 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
             }
         });
     }
+
 }

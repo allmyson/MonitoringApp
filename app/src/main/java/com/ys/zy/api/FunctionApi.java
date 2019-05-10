@@ -12,6 +12,7 @@ import com.ys.zy.sp.UserSP;
 import com.ys.zy.util.SystemUtil;
 import com.ys.zy.util.ToastUtil;
 import com.ys.zy.util.YS;
+import com.ys.zy.web.CommonWebviewActivity;
 
 /**
  * @author lh
@@ -85,7 +86,8 @@ public class FunctionApi {
 
     //联系客服
     public static void contactKF(Context context) {
-        ToastUtil.show(context, "联系客服");
+//        ToastUtil.show(context, "联系客服");
+        CommonWebviewActivity.openWebUrl(context, YS.KF_URL);
     }
 
     //获取完整图片路径

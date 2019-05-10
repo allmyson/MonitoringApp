@@ -2,6 +2,7 @@ package com.ys.zy.roulette.fragment;
 
 import android.graphics.Color;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -10,19 +11,25 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.roulette.adapter.ChipAdapter;
 import com.ys.zy.roulette.adapter.LpHistoryAdapter;
 import com.ys.zy.roulette.bean.ChipBean;
 import com.ys.zy.roulette.bean.LPBean;
 import com.ys.zy.roulette.ui.LPView;
+import com.ys.zy.ssc.bean.SscResultBean;
 import com.ys.zy.ui.HorizontalListView;
 import com.ys.zy.util.GameUtil;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,7 +42,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     private LinearLayout historyLL;
     private boolean isShowHistory = false;
     private ListView historyLV;
-    private List<Object> historyList;
+    private List<SscResultBean.DataBean> historyList;
     private LpHistoryAdapter historyAdapter;
     private HorizontalListView horizontalListView;
     private List<ChipBean> chipBeanList;
@@ -44,6 +51,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     private LPView lpView;
     private List<LPBean> lpBeanList;
     private String gameNo = "0215096";
+    private boolean isStart = true;
 
     public static RouletteTZFragment newInstance() {
         RouletteTZFragment rouletteTZFragment = new RouletteTZFragment();
@@ -63,16 +71,6 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
         historyLL = getView(R.id.ll_history);
         historyLV = getView(R.id.lv_history);
         historyList = new ArrayList<>();
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
         historyAdapter = new LpHistoryAdapter(mContext, historyList, R.layout.item_lp_history);
         historyLV.setAdapter(historyAdapter);
 
@@ -116,7 +114,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                 }
                 timeTV.setText(getTimeStr(45 - second));
                 statusTV.setText("投注中...");
-                if(second == 0){
+                if (second == 0) {
                     setCurrentGameNo();
                 }
                 break;
@@ -127,15 +125,30 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
             case TYPE_KJ:
                 timeTV.setText(getTimeStr(55 - second));
                 statusTV.setText("开奖中...");
-                if (second != 54) {
+                if (second == 50) {
                     if (!lpView.isRamdomRunning()) {
                         L.e("lpView.startRandomColor()执行次数");
                         lpView.startRandomColor();
                     }
-                } else {
-                    L.e("lpView.setRandomResult()执行次数");
-                    lpView.setRandomResult();
                 }
+                if (hasResult(gameNo)) {
+                    String result = getResult(gameNo);
+                    lpView.setResult(result);
+                } else {
+                    if (second == 54) {
+                        lpView.closeRandomColor();
+                        lpView.clearColorAndResult();
+                    }
+                }
+//                if (second != 54) {
+//                    if (!lpView.isRamdomRunning()) {
+//                        L.e("lpView.startRandomColor()执行次数");
+//                        lpView.startRandomColor();
+//                    }
+//                } else {
+//                    L.e("lpView.setRandomResult()执行次数");
+//                    lpView.setRandomResult();
+//                }
                 break;
             case TYPE_PJ:
                 timeTV.setText(getTimeStr(60 - second));
@@ -151,6 +164,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     @Override
     protected void getData() {
         start();
+        getResult();
     }
 
     @Override
@@ -280,10 +294,11 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         cancel();
         lpView.closeRandomColor();
+        isStart = false;
     }
 
     private String getTimeStr(int num) {
@@ -297,5 +312,64 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     private void setCurrentGameNo() {
         gameNo = GameUtil.getCurrentLpPeriods();
         qsTV.setText(gameNo + "期");
+    }
+
+
+    private void getResult() {
+        HttpUtil.getSscResult(mContext, 1003, 50, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                historyList.clear();
+                SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
+                if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
+                    historyList.addAll(sscResultBean.data);
+                }
+                historyAdapter.refresh(historyList);
+                if (isStart) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getResult();
+                        }
+                    }, 500);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
+    /**
+     * 是否已经开出这期结果
+     *
+     * @param lastNo
+     * @return
+     */
+    private boolean hasResult(String lastNo) {
+        boolean hasResult = false;
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    hasResult = true;
+                    break;
+                }
+            }
+        }
+        return hasResult;
+    }
+
+    private String getResult(String lastNo) {
+        String result = "";
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    result = historyList.get(i).lotteryNum;
+                }
+            }
+        }
+        return result;
     }
 }

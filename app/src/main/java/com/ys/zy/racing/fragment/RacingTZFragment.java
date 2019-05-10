@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -17,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.adapter.ImageFolderAdapter;
 import com.ys.zy.R;
 import com.ys.zy.activity.RechargeActivity;
@@ -25,11 +28,15 @@ import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.dialog.TipFragment;
 import com.ys.zy.fast3.activity.Fast3Activity;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.RacingUtil;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.racing.adapter.DwdAdapter;
 import com.ys.zy.racing.adapter.RacingResultAdapter;
 import com.ys.zy.racing.adapter.ScHistoryAdapter;
+import com.ys.zy.ssc.activity.SscActivity;
+import com.ys.zy.ssc.bean.SscResultBean;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.TimeUtil;
@@ -50,7 +57,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
     private LinearLayout leftLL;
     private boolean isShowHistory = false;
     private LinearLayout historyLL;
-    private List<Object> historyList;
+    private List<SscResultBean.DataBean> historyList;
     private ListView historyLV;
     private ScHistoryAdapter scHistoryAdapter;
     private LinearLayout dataLL;
@@ -64,6 +71,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
     private TextView newResultTV, tzTipTV, djsTV;
     private int jgTime = 1;
     private List<String> resultList;
+    private int gameType = 1008;
 
     public static RacingTZFragment newInstance(int type, int play) {
         RacingTZFragment racingTZFragment = new RacingTZFragment();
@@ -102,16 +110,6 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
         historyLL = getView(R.id.ll_history);
 
         historyList = new ArrayList<>();
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
         scHistoryAdapter = new ScHistoryAdapter(mContext, historyList, R.layout.item_sc_history);
         historyLV = getView(R.id.lv_);
         historyLV.setAdapter(scHistoryAdapter);
@@ -124,7 +122,9 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected void getData() {
+        racingResultAdapter.startRandom();
         start();
+        getResult();
     }
 
     @Override
@@ -134,6 +134,13 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
 
     public void setType(int type) {
         this.type = type;
+        if (type == RacingActivity.TYPE_BJSC) {
+            gameType = 1008;
+        } else if (type == RacingActivity.TYPE_1FSC) {
+            gameType = 1009;
+        } else {
+            gameType = 1010;
+        }
         jgTime = RacingUtil.getJGTime(type);
     }
 
@@ -410,6 +417,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
         super.onDestroyView();
         cancel();
         racingResultAdapter.closeRandom();
+        isStart = false;
     }
 
     private void setStatus() {
@@ -437,9 +445,81 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
                 L.e("59当前期：" + currentNo);
                 L.e("59上一期：" + lastNo);
             }
+
+            if (hasResult(lastNo)) {
+                racingResultAdapter.closeRandom();
+                resultList.clear();
+                resultList.addAll(getResult(lastNo));
+                racingResultAdapter.refresh(resultList);
+            }
         } else {
             //赛车游戏不在游戏时间段内
         }
     }
 
+    private boolean isStart = true;
+
+    private void getResult() {
+        HttpUtil.getSscResult(mContext, gameType, 50, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                historyList.clear();
+                SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
+                if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
+                    historyList.addAll(sscResultBean.data);
+                }
+                scHistoryAdapter.refresh(historyList);
+                if (isStart) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getResult();
+                        }
+                    }, 3000);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
+    /**
+     * 是否已经开出这期结果
+     *
+     * @param lastNo
+     * @return
+     */
+    private boolean hasResult(String lastNo) {
+        boolean hasResult = false;
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    hasResult = true;
+                    break;
+                }
+            }
+        }
+        return hasResult;
+    }
+
+    private List<String> getResult(String lastNo) {
+        List<String> list = new ArrayList<>();
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    String result = historyList.get(i).lotteryNum;
+                    String[] str = result.split(",");
+                    if (str != null & str.length > 0) {
+                        for (String s : str) {
+                            list.add(RacingUtil.getNumber(StringUtil.StringToInt(s)));
+                        }
+                    }
+                }
+            }
+        }
+        return list;
+    }
 }

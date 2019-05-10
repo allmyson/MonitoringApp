@@ -14,6 +14,20 @@ import com.ys.zy.sp.CookieSP;
  * @date 2018/11/26 17:53
  */
 public class YS {
+    public static final int CODE_SSC = 1000;//时时彩
+    public static final int CODE_1FC = 1001;//1分彩
+    public static final int CODE_SLZ = 1002;//最后的胜利者
+    public static final int CODE_LP = 1003;//轮盘
+    public static final int CODE_TTZ = 1004;//推筒子
+    public static final int CODE_JSK3 = 1005;//江苏快3
+    public static final int CODE_1FK3 = 1006;//1分快3
+    public static final int CODE_5FK3 = 1007;//5分快3
+    public static final int CODE_BJSC = 1008;//北京赛车
+    public static final int CODE_1FSC = 1009;//1分赛车
+
+    //53KF固定链接
+//    public static final String KF_URL = "https://tb.53kf.com/code/app/d0abd1a231878826e99bfb89b70d3bbe/1?device=android";
+    public static final String KF_URL = "https://tb.53kf.com/code/app/d64eddc7eed37ad1918fb55807c85863/1?device=android";
     public static final String ACTION_TZ_SUCCESS = "action_tz_success";
     public static final String UNIT = "元";
     public static final double SINGLE_PRICE = 2;//每注2元
