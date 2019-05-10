@@ -12,13 +12,14 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_qh"
             android:layout_width="128dp"
             android:layout_height="match_parent"
             android:gravity="left|center_vertical"
             android:paddingLeft="44dp"
             android:text="0228233"
             android:textColor="#ffffff"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
 
         <RelativeLayout
             android:layout_width="5dp"
@@ -44,6 +45,7 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_result"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -51,6 +53,6 @@
             android:paddingRight="86dp"
             android:text="牛"
             android:textColor="#ededed"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>
