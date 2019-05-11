@@ -76,4 +76,12 @@ public class SscDWDFragment extends SscFragment {
         return "";
     }
 
+    @Override
+    public String getJsonResult() {
+        if(dwdAdapter!=null){
+            return dwdAdapter.getJsonResult();
+        }
+        return "";
+    }
+
 }

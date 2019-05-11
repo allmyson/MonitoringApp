@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.ys.zy.R;
 import com.ys.zy.base.BaseFragment;
+import com.ys.zy.bean.TzjlBean;
 import com.ys.zy.ssc.adapter.SscTZJLAdapter;
 import com.ys.zy.ui.BlankView;
 
@@ -19,7 +20,7 @@ public class WinnerTZJLFragment extends BaseFragment implements SwipeRefreshLayo
     private int type;
     private int play;
     private ListView lv;
-    private List<Object> list;
+    private List<TzjlBean.DataBeanX.DataBean> list;
     private SscTZJLAdapter adapter;
     private LinearLayout dataLL;
     private BlankView blankView;

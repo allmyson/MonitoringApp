@@ -154,18 +154,11 @@ public class HttpUtil {
      * @param context
      * @param userId
      * @param gameTypeCode
-     * @param complantTypeCode
-     * @param start
-     * @param length
      * @param httpListener
      */
-    public static void getTZJL(Context context, String userId, String gameTypeCode, String complantTypeCode, int
-            start, int length,
-                               HttpListener<String>
-                                       httpListener) {
-        String url = YS.TZJL_WINNER + "?userId=" + userId + "&recordTypeCode=1001&gameTypeCode=" + gameTypeCode +
-                "&complantTypeCode=" + complantTypeCode + "&start="
-                + start + "&length=" + length;
+    public static void getTZJL(Context context, String userId, String gameTypeCode, HttpListener<String> httpListener) {
+        String url = YS.TZJL + "?userId=" + userId + "&recordTypeCode=1001&gameTypeCode=" + gameTypeCode +
+                "&complantTypeCode=1000&start=1&length=1000";
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
@@ -328,16 +321,16 @@ public class HttpUtil {
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
-    /**
-     * 查询最后的胜利者投注记录
-     *
-     * @param context
-     * @param httpListener
-     */
-    public static void getWinnerTZJL(Context context, String userId, HttpListener<String> httpListener) {
-        String url = YS.TZJL_WINNER + "?userId=" + userId + "&gameTypeCode=1002&start=1&length=" + YS.LENGTH;
-        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
-    }
+//    /**
+//     * 查询最后的胜利者投注记录
+//     *
+//     * @param context
+//     * @param httpListener
+//     */
+//    public static void getWinnerTZJL(Context context, String userId, HttpListener<String> httpListener) {
+//        String url = YS.TZJL_WINNER + "?userId=" + userId + "&gameTypeCode=1002&start=1&length=" + YS.LENGTH;
+//        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+//    }
 
 
     /**

@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.google.gson.Gson;
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
@@ -102,12 +103,50 @@ public class SscWxAdapter extends CommonAdapter<String> {
 
     public int getTZNum() {
         int num = 0;
+        List<List<Integer>> aa = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
+            List<Integer> zz = new ArrayList<>();
             for (int j = 0; j < list.get(i).size(); j++) {
                 if (list.get(i).get(j)) {
-                    num++;
+                    zz.add(j);
                 }
             }
+            aa.add(zz);
+        }
+        boolean isShow = true;
+        for (int m = 0; m < aa.size(); m++) {
+            if (aa.get(m).size() == 0) {
+                num = 0;
+                isShow = false;
+                break;
+            }
+        }
+        if(isShow){
+            ArrayList<String> result = new ArrayList<>();
+            if (mDatas.size() == 5) {
+                for (int i = 0; i < aa.get(0).size(); i++) {
+                    for (int j = 0; j < aa.get(1).size(); j++) {
+                        for (int k = 0; k < aa.get(2).size(); k++) {
+                            for (int m = 0; m < aa.get(3).size(); m++) {
+                                for (int n = 0; n < aa.get(4).size(); n++) {
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.append(aa.get(0).get(i));
+                                    sb.append(",");
+                                    sb.append(aa.get(1).get(j));
+                                    sb.append(",");
+                                    sb.append(aa.get(2).get(k));
+                                    sb.append(",");
+                                    sb.append(aa.get(3).get(m));
+                                    sb.append(",");
+                                    sb.append(aa.get(4).get(n));
+                                    result.add(sb.toString());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            num = result.size();
         }
         return num;
     }
@@ -117,35 +156,53 @@ public class SscWxAdapter extends CommonAdapter<String> {
      * 02 03,03,03,03,-,-,-,-,-,-
      */
     public String getShowResult() {
-        String result = "";
+        List<List<Integer>> aa = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            String x = "";
-            List<Integer> data = new ArrayList<>();
+            List<Integer> zz = new ArrayList<>();
             for (int j = 0; j < list.get(i).size(); j++) {
                 if (list.get(i).get(j)) {
-                    data.add(j);
+                    zz.add(j);
                 }
             }
-            if (data.size() == 0) {
-                x = "-";
-            } else if (data.size() == 1) {
-                x = "" + data.get(0);
-            } else {
-                for (int j = 0; j < data.size(); j++) {
-                    if (j == data.size() - 1) {
-                        x += data.get(j);
-                    } else {
-                        x += (data.get(j) + " ");
+            aa.add(zz);
+        }
+        ArrayList<String> result = new ArrayList<>();
+        if (mDatas.size() == 5) {
+            for (int i = 0; i < aa.get(0).size(); i++) {
+                for (int j = 0; j < aa.get(1).size(); j++) {
+                    for (int k = 0; k < aa.get(2).size(); k++) {
+                        for (int m = 0; m < aa.get(3).size(); m++) {
+                            for (int n = 0; n < aa.get(4).size(); n++) {
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(aa.get(0).get(i));
+                                sb.append(",");
+                                sb.append(aa.get(1).get(j));
+                                sb.append(",");
+                                sb.append(aa.get(2).get(k));
+                                sb.append(",");
+                                sb.append(aa.get(3).get(m));
+                                sb.append(",");
+                                sb.append(aa.get(4).get(n));
+                                result.add(sb.toString());
+                            }
+                        }
                     }
                 }
             }
-            if (i == list.size() - 1) {
-                result += x;
-            } else {
-                result += x + ",";
+        }
+        String show = "";
+        if (result.size() == 1) {
+            show = "(" + result.get(0) + ")";
+        } else {
+            for (int m = 0; m < result.size(); m++) {
+                if (m != result.size() - 1) {
+                    show += "(" + result.get(m) + "),";
+                } else {
+                    show += "(" + result.get(m) + ")";
+                }
             }
         }
-        return result;
+        return show;
     }
 
     /**
@@ -153,29 +210,42 @@ public class SscWxAdapter extends CommonAdapter<String> {
      *
      * @return
      */
-    public Map<String, List<String>> getResult() {
-        Map<String, List<String>> map = new LinkedHashMap<>();
-        List<String> resultList = new ArrayList<>();
+    public String getJsonResult() {
+        List<List<Integer>> aa = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            List<String> data = new ArrayList<>();
+            List<Integer> zz = new ArrayList<>();
             for (int j = 0; j < list.get(i).size(); j++) {
-                String x = "";
                 if (list.get(i).get(j)) {
-                    for (int k = 0; k < list.get(i).size(); k++) {
-                        if (k != j) {
-                            x += "-,";
-                        } else {
-                            x += RacingUtil.getNumber(j + 1) + ",";
-                        }
-                    }
-                    x = x.substring(0, x.length() - 1);
-                    data.add(x);
+                    zz.add(j);
                 }
             }
-            if (data.size() > 0) {
-                map.put(RacingUtil.getNameByPosition(i), data);
+            aa.add(zz);
+        }
+        ArrayList<String> result = new ArrayList<>();
+        if (mDatas.size() == 5) {
+            for (int i = 0; i < aa.get(0).size(); i++) {
+                for (int j = 0; j < aa.get(1).size(); j++) {
+                    for (int k = 0; k < aa.get(2).size(); k++) {
+                        for (int m = 0; m < aa.get(3).size(); m++) {
+                            for (int n = 0; n < aa.get(4).size(); n++) {
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(aa.get(0).get(i));
+                                sb.append(",");
+                                sb.append(aa.get(1).get(j));
+                                sb.append(",");
+                                sb.append(aa.get(2).get(k));
+                                sb.append(",");
+                                sb.append(aa.get(3).get(m));
+                                sb.append(",");
+                                sb.append(aa.get(4).get(n));
+                                result.add(sb.toString());
+                            }
+                        }
+                    }
+                }
             }
         }
-        return map;
+        String json = new Gson().toJson(result);
+        return json;
     }
 }

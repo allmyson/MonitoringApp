@@ -76,4 +76,12 @@ public class SscH2XFragment extends SscFragment {
         return "";
     }
 
+    @Override
+    public String getJsonResult() {
+        if (h2xAdapter != null) {
+            return h2xAdapter.getJsonResult();
+        }
+        return "";
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.ys.zy.ssc.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,20 +15,31 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.api.FunctionApi;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.common.TZJLFragment;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
 import com.ys.zy.dialog.PlayFragment;
 import com.ys.zy.fast3.activity.Fast3Activity;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.racing.fragment.RacingTZFragment;
 import com.ys.zy.roulette.activity.RouletteActivity;
+import com.ys.zy.sp.User;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.SscUtil;
 import com.ys.zy.ssc.fragment.SscTZFragment;
 import com.ys.zy.ssc.fragment.SscTZJLFragment;
 import com.ys.zy.ttz.activity.TtzActivity;
+import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 import com.ys.zy.winner.activity.WinnerActivity;
 
 import java.util.ArrayList;
@@ -37,10 +50,10 @@ public class SscActivity extends BaseActivity {
     public static final int TYPE_SSC = 1000;//时时彩
     public static final int TYPE_1FC = 1001;//1分彩
     private int type = TYPE_SSC;
-    public static final int PLAY_DWD = 50;//定位胆
-    public static final int PLAY_DXDS = 51;//大小单双
-    public static final int PLAY_H2X = 52;//后二星
-    public static final int PLAY_WX = 53;//五星直选
+    public static final int PLAY_DWD = 100;//定位胆
+    public static final int PLAY_DXDS = 101;//大小单双
+    public static final int PLAY_H2X = 102;//后二星
+    public static final int PLAY_WX = 103;//五星直选
     private int play = PLAY_DWD;
     private RelativeLayout backRL;
     private LinearLayout gameLL;
@@ -55,14 +68,15 @@ public class SscActivity extends BaseActivity {
     private Fragment tzFragment, jlFragment;
     private TextView moneyTV;
     private ImageView showOrHideIV;
-    private boolean isShow = true;
-    private String money = "19992.23";
+    private boolean isShow = false;
+    private String money = "0.00";
     private ImageView gameMoreIV;
     private boolean isShowMoreGame = false;//是否显示其他游戏
     private LinearLayout playLL;
     private TextView playTV;
     private ImageView playIV;
     private String gameNo;
+    private String userId;
 
     @Override
     public int getLayoutId() {
@@ -71,6 +85,7 @@ public class SscActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        regist();
         moneyTV = getView(R.id.tv_money);
         moneyTV.setText(money);
         showOrHideIV = getView(R.id.iv_showOrHide);
@@ -106,10 +121,40 @@ public class SscActivity extends BaseActivity {
         playLL.setOnClickListener(this);
         playIV = getView(R.id.iv_play);
         playIV.setColorFilter(Color.parseColor("#dd2230"));
+        if (!isShow) {
+            showOrHideIV.setImageResource(R.mipmap.btn_hide);
+            moneyTV.setText(StringUtil.changeToX(money));
+        } else {
+            showOrHideIV.setImageResource(R.mipmap.btn_show);
+            moneyTV.setText(money);
+        }
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     public void getData() {
+        HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                User user = new Gson().fromJson(response.get(), User.class);
+                if (user != null && YS.SUCCESE.equals(user.code) && user.data != null) {
+                    money = StringUtil.StringToDoubleStr(user.data.balance);
+//                    moneyTV.setText(money);
+                    if (!isShow) {
+                        showOrHideIV.setImageResource(R.mipmap.btn_hide);
+                        moneyTV.setText(StringUtil.changeToX(money));
+                    } else {
+                        showOrHideIV.setImageResource(R.mipmap.btn_show);
+                        moneyTV.setText(money);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     @Override
@@ -237,6 +282,8 @@ public class SscActivity extends BaseActivity {
                         DialogUtil.removeDialog(mContext);
                         ((SscTZFragment) tzFragment).showFragment(name);
                         ((SscTZFragment) tzFragment).clearData();
+                        ((SscTZFragment) tzFragment).setPlay(play);
+                        ((TZJLFragment) jlFragment).setPlay(play);
                     }
                 }, new DialogInterface.OnCancelListener() {
                     @Override
@@ -278,7 +325,12 @@ public class SscActivity extends BaseActivity {
 
     private void initFragment() {
         tzFragment = SscTZFragment.newInstance(type, play);
-        jlFragment = SscTZJLFragment.newInstance(type, play);
+        if (type == TYPE_SSC) {
+            jlFragment = TZJLFragment.newInstance(YS.CODE_SSC, play);
+        } else {
+            jlFragment = TZJLFragment.newInstance(YS.CODE_1FC, play);
+        }
+//        jlFragment = SscTZJLFragment.newInstance(type, play);
     }
 
     public double getMoney() {
@@ -304,18 +356,18 @@ public class SscActivity extends BaseActivity {
                 gameName = "1分彩";
                 break;
         }
-        switch (play){
+        switch (play) {
             case PLAY_DWD:
-                gameName+="(定位胆)";
+                gameName += "(定位胆)";
                 break;
             case PLAY_DXDS:
-                gameName+="(大小单双)";
+                gameName += "(大小单双)";
                 break;
             case PLAY_H2X:
-                gameName+="(后二星组选)";
+                gameName += "(后二星组选)";
                 break;
             case PLAY_WX:
-                gameName+="(五星直选)";
+                gameName += "(五星直选)";
                 break;
         }
         return gameName;
@@ -335,5 +387,34 @@ public class SscActivity extends BaseActivity {
                 break;
         }
         return gameNo;
+    }
+
+    private TZSuccReceiver tzSuccReceiver;
+
+    private class TZSuccReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.e("收到TZFragment的投注成功广播！");
+            if(jlFragment.isAdded()) {
+                ((TZJLFragment) jlFragment).reload();
+            }
+        }
+    }
+    private void regist() {
+        IntentFilter intentFilter = new IntentFilter(YS.ACTION_TZ_SUCCESS);
+        tzSuccReceiver = new TZSuccReceiver();
+        registerReceiver(tzSuccReceiver, intentFilter);
+    }
+
+    private void unRegist() {
+        if (tzSuccReceiver != null) {
+            unregisterReceiver(tzSuccReceiver);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unRegist();
     }
 }

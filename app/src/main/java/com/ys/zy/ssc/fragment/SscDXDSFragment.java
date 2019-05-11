@@ -83,4 +83,12 @@ public class SscDXDSFragment extends SscFragment {
         return "";
     }
 
+    @Override
+    public String getJsonResult() {
+        if (dxdsAdapter != null) {
+            return dxdsAdapter.getJsonResult();
+        }
+        return "";
+    }
+
 }

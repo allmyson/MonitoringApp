@@ -1,4 +1,4 @@
-package com.ys.zy.ssc.adapter;
+package com.ys.zy.common;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,8 +12,8 @@ import com.ys.zy.util.YS;
 
 import java.util.List;
 
-public class SscTZJLAdapter extends CommonAdapter<TzjlBean.DataBeanX.DataBean> {
-    public SscTZJLAdapter(Context context, List<TzjlBean.DataBeanX.DataBean> mDatas, int itemLayoutId) {
+public class TZJLAdapter extends CommonAdapter<TzjlBean.DataBeanX.DataBean> {
+    public TZJLAdapter(Context context, List<TzjlBean.DataBeanX.DataBean> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
     }
 

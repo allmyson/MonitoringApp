@@ -24,6 +24,15 @@ public class YS {
     public static final int CODE_5FK3 = 1007;//5分快3
     public static final int CODE_BJSC = 1008;//北京赛车
     public static final int CODE_1FSC = 1009;//1分赛车
+    public static final int CODE_5FSC = 1010;//5分赛车
+
+
+    public static final int CODE_DWD = 101;//定位胆
+    public static final int CODE_DXDS = 102;//大小单双
+    public static final int CODE_H2X = 103;//后二星组选
+    public static final int CODE_WX = 104;//五星直选
+    public static final int CODE_LH = 109;//龙虎斗
+
 
     //53KF固定链接
 //    public static final String KF_URL = "https://tb.53kf.com/code/app/d0abd1a231878826e99bfb89b70d3bbe/1?device=android";
@@ -101,7 +110,7 @@ public class YS {
     //开奖结果
     public static final String SSC_RESULT = IP + "/appService/getGameResultList";
     //投注记录
-    public static final String TZJL = IP + "/appService/payRecords";
+//    public static final String TZJL = IP + "/appService/payRecords";
     //修改用户信息
     public static final String UPDATE_USERINFO = IP + "/appService/editUserForApp";
     //开户
@@ -121,7 +130,7 @@ public class YS {
     //胜利者数据
     public static final String WINNER_DATA = IP + "/appService/lastWinnerDetail";
     //查询投注记录
-    public static final String TZJL_WINNER = IP + "/appService/getSelfRecordList";
+    public static final String TZJL = IP + "/appService/getSelfRecordList";
     //最后的胜利者信息
     public static final String WINNER_INFO = IP + "/appService/getSlzGameInfo";
 

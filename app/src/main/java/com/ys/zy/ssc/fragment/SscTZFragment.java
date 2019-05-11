@@ -17,10 +17,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.activity.RechargeActivity;
 import com.ys.zy.base.BaseFragment;
+import com.ys.zy.bean.BaseBean;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.dialog.TipFragment;
@@ -33,6 +35,7 @@ import com.ys.zy.racing.fragment.RacingDWDFragment;
 import com.ys.zy.racing.fragment.RacingDXDSFragment;
 import com.ys.zy.racing.fragment.RacingFragment;
 import com.ys.zy.racing.fragment.RacingLHDFragment;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.SscUtil;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ssc.adapter.SscHistoryAdapter;
@@ -47,7 +50,9 @@ import com.ys.zy.util.YS;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SscTZFragment extends BaseFragment implements View.OnClickListener {
     private int type;
@@ -74,6 +79,8 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
     private List<Integer> resultList;
     private int gameType = 1000;
     private boolean isStart = true;
+    private String userId;
+    private String lotteryTypeCode;
 
     public static SscTZFragment newInstance(int type, int play) {
         SscTZFragment sscTZFragment = new SscTZFragment();
@@ -119,6 +126,7 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
         initFragment();
         showFragment(dwdFragment);
         isCanTZ();
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
@@ -145,6 +153,15 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
 
     public void setPlay(int play) {
         this.play = play;
+        if (play == SscActivity.PLAY_DWD) {
+            lotteryTypeCode = "1001";
+        } else if (play == SscActivity.PLAY_DXDS) {
+            lotteryTypeCode = "1002";
+        } else if (play == SscActivity.PLAY_H2X) {
+            lotteryTypeCode = "1003";
+        } else if (play == SscActivity.PLAY_WX) {
+            lotteryTypeCode = "1004";
+        }
     }
 
     private List<Integer> getResultList() {
@@ -206,12 +223,113 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
                         @Override
                         public void sure() {
                             DialogUtil.removeDialog(mContext);
-                            show("投注成功");
+                            tz();
                         }
                     });
                 }
                 break;
         }
+    }
+
+    private void tz() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("gameCode", gameType);
+        map.put("complantTypeCode", "1000");//手动
+        map.put("lotteryTypeCode ", lotteryTypeCode);
+        int bei = StringUtil.StringToInt(beiET.getText().toString());
+        int qi = StringUtil.StringToInt(qiET.getText().toString());
+        String periodsNum = "";
+        if (qi > 1) {
+            for (int i = 1; i <= qi; i++) {
+                if (i == qi) {
+                    periodsNum += SscUtil.getSscPeriods(type, i);
+                } else {
+                    periodsNum += SscUtil.getSscPeriods(type, i) + ",";
+                }
+            }
+        } else {
+            periodsNum = ((SscActivity) getActivity()).getGameNo();
+        }
+        map.put("periodsNum", periodsNum);
+        List<Map<String, Object>> list = new ArrayList<>();
+        String json = currentFragment.getJsonResult();
+        if (play == SscActivity.PLAY_DWD) {
+            List<Integer> integerList = new Gson().fromJson(json, new TypeToken<List<Integer>>() {
+            }.getType());
+            if (integerList != null && integerList.size() > 0) {
+                for (int i : integerList) {
+                    Map<String, Object> tzMap = new HashMap<>();
+                    tzMap.put("betsNum", i);
+                    tzMap.put("payMoney", YS.SINGLE_PRICE);
+                    tzMap.put("times", bei);
+                    list.add(tzMap);
+                }
+            }
+        } else if (play == SscActivity.PLAY_DXDS) {
+            List<Map<String, String>> dxdsList = new Gson().fromJson(json, new TypeToken<List<Map<String, Object>>>() {
+            }.getType());
+            if (dxdsList != null && dxdsList.size() > 0) {
+                for (Map<String, String> m : dxdsList) {
+                    Map<String, Object> tzMap = new HashMap<>();
+                    tzMap.put("betsNum", m.get("data"));
+                    tzMap.put("payMoney", YS.SINGLE_PRICE);
+                    tzMap.put("times", bei);
+                    tzMap.put("bit", m.get("bit"));
+                    list.add(tzMap);
+                }
+            }
+        } else if (play == SscActivity.PLAY_H2X) {
+            List<String> tzList = new Gson().fromJson(json, new TypeToken<List<String>>() {
+            }.getType());
+            if (tzList != null && tzList.size() > 0) {
+                for (String result : tzList) {
+                    Map<String, Object> tzMap = new HashMap<>();
+                    tzMap.put("betsNum", result);
+                    tzMap.put("payMoney", YS.SINGLE_PRICE);
+                    tzMap.put("times", bei);
+                    list.add(tzMap);
+                }
+            }
+        } else if (play == SscActivity.PLAY_WX) {
+            List<String> tzList = new Gson().fromJson(json, new TypeToken<List<String>>() {
+            }.getType());
+            if (tzList != null && tzList.size() > 0) {
+                for (String result : tzList) {
+                    Map<String, Object> tzMap = new HashMap<>();
+                    tzMap.put("betsNum", result);
+                    tzMap.put("payMoney", YS.SINGLE_PRICE);
+                    tzMap.put("times", bei);
+                    list.add(tzMap);
+                }
+            }
+        }
+        map.put("betDetail", list);
+        String tzResult = new Gson().toJson(map);
+        L.e("tz内容:" + tzResult);
+        HttpUtil.tz(mContext, tzResult, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                if (baseBean != null) {
+                    if (YS.SUCCESE.equals(baseBean.code)) {
+                        show("投注成功");
+                        //通知Activity刷新余额
+                        ((SscActivity) getActivity()).getData();
+                        sendMsg();//刷新投注记录
+                    } else {
+                        show(StringUtil.valueOf(baseBean.msg));
+                    }
+                } else {
+                    show(YS.HTTP_TIP);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     /**
@@ -494,5 +612,8 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
             }
         });
     }
-
+    private void sendMsg(){
+        Intent intent = new Intent(YS.ACTION_TZ_SUCCESS);
+        getActivity().sendBroadcast(intent);
+    }
 }

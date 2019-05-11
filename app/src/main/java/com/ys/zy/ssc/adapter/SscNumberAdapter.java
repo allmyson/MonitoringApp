@@ -133,6 +133,16 @@ public class SscNumberAdapter extends CommonAdapter<Integer> {
         }
     }
 
+    public int getChooseNum() {
+        int num = 0;
+        for (boolean b : list) {
+            if (b) {
+                num++;
+            }
+        }
+        return num;
+    }
+
     public String getShowChooseResult() {
         String result = "";
         List<String> data = new ArrayList<>();

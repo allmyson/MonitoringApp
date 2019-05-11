@@ -364,6 +364,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
             String currentNo = Fast3Util.getK3Periods(type, 1);//当前期
             String lastNo = Fast3Util.getK3Periods(type, 0);//上一期
             String nextNo = Fast3Util.getK3Periods(type, 2);//下一期
+            gameNo = currentNo;
             tzTipTV.setText(currentNo + "期投注截止");
             newResultTV.setText(lastNo + "期开奖号码");
             int totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1;
@@ -397,6 +398,20 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         } else {
             //快3游戏不在游戏时间段内
             L.e("快3游戏不在游戏时间段内");
+            gameNo = Fast3Util.getNextJSK3Periods();
+            tzTipTV.setText(gameNo + "期投注截止");
+            djsTV.setText("预售中");
+            String lastN = Fast3Util.getLastJSK3Periods();
+            newResultTV.setText(lastN + "期开奖号码");
+            if (hasResult(lastN)) {
+                closeRandomText();
+                List<Integer> list = getResult(lastN);
+                if (list.size() == 3) {
+                    iv01.setImageResource(drawables[list.get(0)]);
+                    iv02.setImageResource(drawables[list.get(1)]);
+                    iv03.setImageResource(drawables[list.get(2)]);
+                }
+            }
         }
     }
 

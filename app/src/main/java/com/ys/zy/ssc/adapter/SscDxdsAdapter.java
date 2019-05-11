@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
@@ -15,6 +16,7 @@ import com.ys.zy.racing.adapter.DwdAdapter;
 import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,34 +160,45 @@ public class SscDxdsAdapter extends CommonAdapter<String> {
      *
      * @return
      */
-    public Map<String, List<String>> getResult() {
-        Map<String, List<String>> map = new LinkedHashMap<>();
+    public String getJsonResult() {
         List<String> numberList = getNumberList();
-        List<String> resultList = new ArrayList<>();
+        String result = "";
+        List<Map<String, String>> data = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            List<String> data = new ArrayList<>();
             for (int j = 0; j < list.get(i).size(); j++) {
-                String x = "";
                 if (list.get(i).get(j)) {
-                    for (int k = 0; k < list.get(i).size(); k++) {
-                        if (k != j) {
-                            x += "-,";
-                        } else {
-                            x += numberList.get(j) + ",";
-                        }
-                    }
-                    x = x.substring(0, x.length() - 1);
-                    data.add(x);
+                    Map<String, String> map = new HashMap<>();
+                    map.put("bit", ""+getBit(i));
+                    map.put("data", numberList.get(j));
+                    data.add(map);
                 }
             }
-            if (data.size() > 0) {
-                map.put(RacingUtil.getNameByPosition(i), data);
-            }
         }
-        return map;
+        result = new Gson().toJson(data);
+        return result;
     }
 
-
+    public int getBit(int position) {
+        int result = 1000;
+        switch (position) {
+            case 0:
+                result = 1004;
+                break;
+            case 1:
+                result = 1003;
+                break;
+            case 2:
+                result = 1002;
+                break;
+            case 3:
+                result = 1001;
+                break;
+            case 4:
+                result = 1000;
+                break;
+        }
+        return result;
+    }
 
 
     class NumberAdapter extends CommonAdapter<String> {

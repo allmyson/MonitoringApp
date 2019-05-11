@@ -80,4 +80,12 @@ public class SscWXFragment extends SscFragment {
         return "";
     }
 
+    @Override
+    public String getJsonResult() {
+        if (wxAdapter != null) {
+            return wxAdapter.getJsonResult();
+        }
+        return "";
+    }
+
 }

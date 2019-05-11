@@ -210,27 +210,93 @@ public class Fast3Util {
     }
 
     public static int getDrawableIdByNum(int i) {
-        int drawableId= R.mipmap.k3_s1_icon;
+        int drawableId = R.mipmap.k3_s1_icon;
         switch (i) {
             case 1:
-                drawableId= R.mipmap.k3_s1_icon;
+                drawableId = R.mipmap.k3_s1_icon;
                 break;
             case 2:
-                drawableId= R.mipmap.k3_s2_icon;
+                drawableId = R.mipmap.k3_s2_icon;
                 break;
             case 3:
-                drawableId= R.mipmap.k3_s3_icon;
+                drawableId = R.mipmap.k3_s3_icon;
                 break;
             case 4:
-                drawableId= R.mipmap.k3_s4_icon;
+                drawableId = R.mipmap.k3_s4_icon;
                 break;
             case 5:
-                drawableId= R.mipmap.k3_s5_icon;
+                drawableId = R.mipmap.k3_s5_icon;
                 break;
             case 6:
-                drawableId= R.mipmap.k3_s6_icon;
+                drawableId = R.mipmap.k3_s6_icon;
                 break;
         }
         return drawableId;
+    }
+
+    //获取江苏快3不在运营时间内的下一期期号
+    public static String getNextJSK3Periods() {
+        String result="";
+        String format = "HH:mm:ss";
+        SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
+        String now = sf.format(new Date());
+        Date nowTime;
+        try {
+            nowTime = new SimpleDateFormat(format).parse(now);
+            Date startTime = new SimpleDateFormat(format).parse("00:00:01");
+            Date endTime = new SimpleDateFormat(format).parse("08:29:59");
+            if (GameUtil.isEffectiveDate(nowTime, startTime, endTime)) {
+                L.e("系统时间在早上00:00:01到08:29:59之间.");
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                int month = c.get(Calendar.MONTH) + 1;
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                result = getNumber(month) + getNumber(day) + "001";
+            } else {
+                L.e("系统时间在早上15:20:01到23:59:59之间.");
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                c.add(c.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动
+                int month = c.get(Calendar.MONTH) + 1;
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                result = getNumber(month) + getNumber(day) + "001";
+            }
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    //获取江苏快3不在运营时间内的开奖最后一期期号
+    public static String getLastJSK3Periods() {
+        String result="";
+        String format = "HH:mm:ss";
+        SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
+        String now = sf.format(new Date());
+        Date nowTime;
+        try {
+            nowTime = new SimpleDateFormat(format).parse(now);
+            Date startTime = new SimpleDateFormat(format).parse("00:00:01");
+            Date endTime = new SimpleDateFormat(format).parse("08:29:59");
+            if (GameUtil.isEffectiveDate(nowTime, startTime, endTime)) {
+                L.e("系统时间在早上00:00:01到08:29:59之间.");
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                c.add(c.DATE,-1);//把日期往前减一天.整数往后推,负数往前移动
+                int month = c.get(Calendar.MONTH) + 1;
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                result = getNumber(month) + getNumber(day) + "041";
+            } else {
+                L.e("系统时间在早上15:20:01到23:59:59之间.");
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                int month = c.get(Calendar.MONTH) + 1;
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                result = getNumber(month) + getNumber(day) + "041";
+            }
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

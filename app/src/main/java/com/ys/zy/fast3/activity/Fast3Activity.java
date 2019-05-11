@@ -13,17 +13,25 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.common.TZJLFragment;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
 import com.ys.zy.fast3.fragment.Fast3JLFragment;
 import com.ys.zy.fast3.fragment.Fast3TZFragment;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.activity.RouletteActivity;
+import com.ys.zy.sp.User;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ttz.activity.TtzActivity;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 import com.ys.zy.winner.activity.WinnerActivity;
 
 //快3
@@ -45,11 +53,11 @@ public class Fast3Activity extends BaseActivity {
     private Fragment tzFragment, jlFragment;
     private TextView moneyTV;
     private ImageView showOrHideIV;
-    private boolean isShow = true;
-    private String money = "1000.25";
+    private boolean isShow = false;
+    private String money = "0.00";
     private ImageView gameMoreIV;
     private boolean isShowMoreGame = false;//是否显示其他游戏
-
+    private String userId;
     @Override
     public int getLayoutId() {
         return R.layout.activity_fast3;
@@ -93,11 +101,40 @@ public class Fast3Activity extends BaseActivity {
         tzRL.setOnClickListener(this);
         tzjlRL.setOnClickListener(this);
         showFragment(tzFragment);
+        if (!isShow) {
+            showOrHideIV.setImageResource(R.mipmap.btn_hide);
+            moneyTV.setText(StringUtil.changeToX(money));
+        } else {
+            showOrHideIV.setImageResource(R.mipmap.btn_show);
+            moneyTV.setText(money);
+        }
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     public void getData() {
+        HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                User user = new Gson().fromJson(response.get(), User.class);
+                if (user != null && YS.SUCCESE.equals(user.code) && user.data != null) {
+                    money = StringUtil.StringToDoubleStr(user.data.balance);
+//                    moneyTV.setText(money);
+                    if (!isShow) {
+                        showOrHideIV.setImageResource(R.mipmap.btn_hide);
+                        moneyTV.setText(StringUtil.changeToX(money));
+                    } else {
+                        showOrHideIV.setImageResource(R.mipmap.btn_show);
+                        moneyTV.setText(money);
+                    }
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     @Override
@@ -242,7 +279,14 @@ public class Fast3Activity extends BaseActivity {
 
     private void initFragment() {
         tzFragment = Fast3TZFragment.newInstance(type);
-        jlFragment = Fast3JLFragment.newInstance(type);
+        if(type==TYPE_JSK3){
+            jlFragment = TZJLFragment.newInstance(YS.CODE_JSK3,1);
+        }else if(type==TYPE_1FK3){
+            jlFragment = TZJLFragment.newInstance(YS.CODE_1FK3,1);
+        }else {
+            jlFragment = TZJLFragment.newInstance(YS.CODE_5FK3,1);
+        }
+//        jlFragment = Fast3JLFragment.newInstance(type);
     }
 
     public double getMoney() {

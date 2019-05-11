@@ -5,11 +5,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.google.gson.Gson;
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
 import com.ys.zy.racing.RacingUtil;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.ZhUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -63,7 +65,9 @@ public class SscH2XAdapter extends CommonAdapter<String> {
                     numberAdapter.chooseOne(p);
                     list.get(position).set(p, true);
                 }
+//                if (numberAdapter.getChooseNum() > 1) {
                 callback();
+//                }
             }
         });
     }
@@ -102,12 +106,21 @@ public class SscH2XAdapter extends CommonAdapter<String> {
 
     public int getTZNum() {
         int num = 0;
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < list.get(i).size(); j++) {
-                if (list.get(i).get(j)) {
-                    num++;
-                }
+        List<Integer> aa = new ArrayList<>();
+        for (int j = 0; j < list.get(0).size(); j++) {
+            if (list.get(0).get(j)) {
+                aa.add(j);
             }
+        }
+        if (aa.size() < 2) {
+            num = 0;
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < aa.size(); i++) {
+                sb.append(aa.get(i));
+            }
+            List<String> cr = ZhUtil.getCombinationResult(2, ZhUtil.stringFilter(sb.toString()));
+            num = cr.size();
         }
         return num;
     }
@@ -117,32 +130,35 @@ public class SscH2XAdapter extends CommonAdapter<String> {
      * 02 03,03,03,03,-,-,-,-,-,-
      */
     public String getShowResult() {
+        List<Integer> aa = new ArrayList<>();
+        for (int j = 0; j < list.get(0).size(); j++) {
+            if (list.get(0).get(j)) {
+                aa.add(j);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < aa.size(); i++) {
+            sb.append(aa.get(i));
+        }
+        List<String> cr = ZhUtil.getCombinationResult(2, ZhUtil.stringFilter(sb.toString()));
+        List<String> dr = new ArrayList<>();
+        for (int j = 0; j < cr.size(); j++) {
+            StringBuilder sb1 = new StringBuilder(cr.get(j));
+            if (sb1.length() > 0) {
+                sb1.insert(1, ",");
+                dr.add(sb1.toString());
+            }
+        }
         String result = "";
-        for (int i = 0; i < list.size(); i++) {
-            String x = "";
-            List<Integer> data = new ArrayList<>();
-            for (int j = 0; j < list.get(i).size(); j++) {
-                if (list.get(i).get(j)) {
-                    data.add(j);
+        if (dr.size() == 1) {
+            result = "(" + dr.get(0) + ")";
+        } else {
+            for (int m = 0; m < dr.size(); m++) {
+                if (m != dr.size() - 1) {
+                    result += "(" + dr.get(m) + "),";
+                } else {
+                    result += "(" + dr.get(m) + ")";
                 }
-            }
-            if (data.size() == 0) {
-                x = "-";
-            } else if (data.size() == 1) {
-                x = "" + data.get(0);
-            } else {
-                for (int j = 0; j < data.size(); j++) {
-                    if (j == data.size() - 1) {
-                        x += data.get(j);
-                    } else {
-                        x += (data.get(j) + " ");
-                    }
-                }
-            }
-            if (i == list.size() - 1) {
-                result += x;
-            } else {
-                result += x + ",";
             }
         }
         return result;
@@ -153,29 +169,27 @@ public class SscH2XAdapter extends CommonAdapter<String> {
      *
      * @return
      */
-    public Map<String, List<String>> getResult() {
-        Map<String, List<String>> map = new LinkedHashMap<>();
-        List<String> resultList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            List<String> data = new ArrayList<>();
-            for (int j = 0; j < list.get(i).size(); j++) {
-                String x = "";
-                if (list.get(i).get(j)) {
-                    for (int k = 0; k < list.get(i).size(); k++) {
-                        if (k != j) {
-                            x += "-,";
-                        } else {
-                            x += RacingUtil.getNumber(j + 1) + ",";
-                        }
-                    }
-                    x = x.substring(0, x.length() - 1);
-                    data.add(x);
-                }
-            }
-            if (data.size() > 0) {
-                map.put(RacingUtil.getNameByPosition(i), data);
+    public String getJsonResult() {
+        List<Integer> aa = new ArrayList<>();
+        for (int j = 0; j < list.get(0).size(); j++) {
+            if (list.get(0).get(j)) {
+                aa.add(j);
             }
         }
-        return map;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < aa.size(); i++) {
+            sb.append(aa.get(i));
+        }
+        List<String> cr = ZhUtil.getCombinationResult(2, ZhUtil.stringFilter(sb.toString()));
+        List<String> dr = new ArrayList<>();
+        for (int j = 0; j < cr.size(); j++) {
+            StringBuilder sb1 = new StringBuilder(cr.get(j));
+            if (sb1.length() > 0) {
+                sb1.insert(1, ",");
+                dr.add(sb1.toString());
+            }
+        }
+        String json = new Gson().toJson(dr);
+        return json;
     }
 }

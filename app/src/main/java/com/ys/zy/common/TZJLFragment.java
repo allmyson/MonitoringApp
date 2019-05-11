@@ -1,6 +1,5 @@
-package com.ys.zy.ssc.fragment;
+package com.ys.zy.common;
 
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AbsListView;
@@ -11,16 +10,15 @@ import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseFragment;
-import com.ys.zy.bean.MsgBean;
 import com.ys.zy.bean.TzjlBean;
 import com.ys.zy.http.HttpListener;
-import com.ys.zy.sp.User;
 import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ssc.adapter.SscTZJLAdapter;
 import com.ys.zy.ui.BlankView;
 import com.ys.zy.ui.NoNetView;
 import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.L;
 import com.ys.zy.util.NetWorkUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
@@ -31,22 +29,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SscTZJLFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, NoNetView.ClickListener {
+public class TZJLFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, NoNetView.ClickListener {
     private int type;
     private int play;
     private ListView lv;
     private List<TzjlBean.DataBeanX.DataBean> allList;
     private List<TzjlBean.DataBeanX.DataBean> list;
-    private SscTZJLAdapter adapter;
+    private TZJLAdapter adapter;
     private LinearLayout dataLL;
     private BlankView blankView;
     private NoNetView noNetView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private int gameType = 1000;
     private String userId;
 
-    public static SscTZJLFragment newInstance(int type, int play) {
-        SscTZJLFragment sscTZJLFragment = new SscTZJLFragment();
+    public static TZJLFragment newInstance(int type, int play) {
+        TZJLFragment sscTZJLFragment = new TZJLFragment();
         sscTZJLFragment.setType(type);
         sscTZJLFragment.setPlay(play);
         return sscTZJLFragment;
@@ -64,7 +61,7 @@ public class SscTZJLFragment extends BaseFragment implements SwipeRefreshLayout.
         lv = getView(R.id.lv_);
         allList = new ArrayList<>();
         list = new ArrayList<>();
-        adapter = new SscTZJLAdapter(mContext, list, R.layout.item_ssc_tzjl);
+        adapter = new TZJLAdapter(mContext, list, R.layout.item_ssc_tzjl);
         lv.setAdapter(adapter);
         checkList();
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -93,7 +90,7 @@ public class SscTZJLFragment extends BaseFragment implements SwipeRefreshLayout.
         if (NetWorkUtil.isNetworkAvailable(mContext)) {
             noNetView.setVisibility(View.GONE);
             dataLL.setVisibility(View.VISIBLE);
-            HttpUtil.getTZJL(mContext, userId, "" + gameType, new HttpListener<String>() {
+            HttpUtil.getTZJL(mContext, userId, "" + type, new HttpListener<String>() {
                 @Override
                 public void onSucceed(int what, Response<String> response) {
                     allList.clear();
@@ -190,11 +187,6 @@ public class SscTZJLFragment extends BaseFragment implements SwipeRefreshLayout.
 
     public void setType(int type) {
         this.type = type;
-        if (type == SscActivity.TYPE_SSC) {
-            gameType = 1000;
-        } else {
-            gameType = 1001;
-        }
     }
 
     public void setPlay(int play) {
@@ -218,6 +210,8 @@ public class SscTZJLFragment extends BaseFragment implements SwipeRefreshLayout.
 
     @Override
     public void reload() {
-
+        L.e("刷新了");
+        swipeRefreshLayout.setRefreshing(true);
+        getData();
     }
 }
