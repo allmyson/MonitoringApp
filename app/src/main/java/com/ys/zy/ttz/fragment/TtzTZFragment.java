@@ -18,12 +18,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.utils.ScreenUtils;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseFragment;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.roulette.adapter.ChipAdapter;
 import com.ys.zy.roulette.adapter.LpHistoryAdapter;
 import com.ys.zy.roulette.bean.ChipBean;
+import com.ys.zy.ssc.bean.SscResultBean;
 import com.ys.zy.ttz.TtzUtil;
 import com.ys.zy.ttz.activity.TtzActivity;
 import com.ys.zy.ttz.adapter.PaiAdapter;
@@ -34,8 +38,10 @@ import com.ys.zy.ttz.ui.ParticleView;
 import com.ys.zy.ui.HorizontalListView;
 import com.ys.zy.util.DensityUtil;
 import com.ys.zy.util.GameUtil;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,7 +67,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private LinearLayout historyLL;
     private boolean isShowHistory = false;
     private ListView historyLV;
-    private List<Object> historyList;
+    private List<SscResultBean.DataBean> historyList;
     private TtzHistoryAdapter historyAdapter;
     private HorizontalListView horizontalListView;
     private List<ChipBean> chipBeanList;
@@ -200,16 +206,6 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         historyLL = getView(R.id.ll_history);
         historyLV = getView(R.id.lv_history);
         historyList = new ArrayList<>();
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
-        historyList.add(null);
         historyAdapter = new TtzHistoryAdapter(mContext, historyList, R.layout.item_ttz_history);
         historyLV.setAdapter(historyAdapter);
 
@@ -305,6 +301,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     @Override
     protected void getData() {
         start();
+        getResult();
     }
 
     @Override
@@ -438,7 +435,13 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
         cancel();
+        isStart = false;
     }
 
     private String getTimeStr(int num) {
@@ -749,5 +752,64 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                 }
             }
         }
+    }
+
+    private boolean isStart = true;
+    private void getResult() {
+        HttpUtil.getSscResult(mContext, YS.CODE_LP, 50, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                historyList.clear();
+                SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
+                if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
+                    historyList.addAll(sscResultBean.data);
+                }
+                historyAdapter.refresh(historyList);
+                if (isStart) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getResult();
+                        }
+                    }, 500);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
+    /**
+     * 是否已经开出这期结果
+     *
+     * @param lastNo
+     * @return
+     */
+    private boolean hasResult(String lastNo) {
+        boolean hasResult = false;
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    hasResult = true;
+                    break;
+                }
+            }
+        }
+        return hasResult;
+    }
+
+    private String getResult(String lastNo) {
+        String result = "";
+        if (historyList.size() > 0) {
+            for (int i = 0; i < historyList.size(); i++) {
+                if (lastNo.equals(historyList.get(i).periodsNum)) {
+                    result = historyList.get(i).lotteryNum;
+                }
+            }
+        }
+        return result;
     }
 }

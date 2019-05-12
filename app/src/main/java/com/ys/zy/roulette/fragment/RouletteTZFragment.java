@@ -373,7 +373,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
 
 
     private void getResult() {
-        HttpUtil.getSscResult(mContext, 1003, 50, new HttpListener<String>() {
+        HttpUtil.getSscResult(mContext, YS.CODE_LP, 50, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 historyList.clear();
