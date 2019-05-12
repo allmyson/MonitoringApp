@@ -1,7 +1,10 @@
 package com.ys.zy.ttz.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,19 +16,28 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.common.TZJLFragment;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
 import com.ys.zy.fast3.activity.Fast3Activity;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.roulette.fragment.RouletteJLFragment;
 import com.ys.zy.roulette.fragment.RouletteTZFragment;
+import com.ys.zy.sp.User;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ttz.fragment.TtzJLFragment;
 import com.ys.zy.ttz.fragment.TtzTZFragment;
+import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 import com.ys.zy.winner.activity.WinnerActivity;
 import com.ys.zy.winner.adapter.SmAdapter;
 
@@ -47,7 +59,7 @@ public class TtzActivity extends BaseActivity {
 
     private TextView moneyTV;
     private ImageView showOrHideIV;
-    private boolean isShow = true;
+    private boolean isShow = false;
     private String money;
     private boolean isShowMoreGame = false;//是否显示其他游戏
 
@@ -57,7 +69,7 @@ public class TtzActivity extends BaseActivity {
     private SmAdapter smAdapter;
     private List<String> smList;
     public static String content;
-
+    private String userId;
 
     @Override
     public int getLayoutId() {
@@ -66,6 +78,7 @@ public class TtzActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        regist();
         smContentLL = getView(R.id.ll_smContent);
         smLV = getView(R.id.lv_sm);
         smList = new ArrayList<>();
@@ -84,7 +97,6 @@ public class TtzActivity extends BaseActivity {
         gameNameTV = getView(R.id.tv_gameName);
 
         moneyTV = getView(R.id.tv_money);
-        money = moneyTV.getText().toString();
         showOrHideIV = getView(R.id.iv_showOrHide);
         showOrHideIV.setOnClickListener(this);
 
@@ -105,11 +117,40 @@ public class TtzActivity extends BaseActivity {
         manager = getSupportFragmentManager();
         initFragment();
         showFragment(tzFragment);
+        if (!isShow) {
+            showOrHideIV.setImageResource(R.mipmap.btn_hide);
+            moneyTV.setText(StringUtil.changeToX(money));
+        } else {
+            showOrHideIV.setImageResource(R.mipmap.btn_show);
+            moneyTV.setText(money);
+        }
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     public void getData() {
+        HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                User user = new Gson().fromJson(response.get(), User.class);
+                if (user != null && YS.SUCCESE.equals(user.code) && user.data != null) {
+                    money = StringUtil.StringToDoubleStr(user.data.balance);
+//                    moneyTV.setText(money);
+                    if (!isShow) {
+                        showOrHideIV.setImageResource(R.mipmap.btn_hide);
+                        moneyTV.setText(StringUtil.changeToX(money));
+                    } else {
+                        showOrHideIV.setImageResource(R.mipmap.btn_show);
+                        moneyTV.setText(money);
+                    }
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     @Override
@@ -257,7 +298,8 @@ public class TtzActivity extends BaseActivity {
 
     private void initFragment() {
         tzFragment = TtzTZFragment.newInstance();
-        jlFragment = TtzJLFragment.newInstance();
+//        jlFragment = TtzJLFragment.newInstance();
+        jlFragment = TZJLFragment.newInstance(YS.CODE_TTZ, 1);
     }
 
     private List<String> getSMList() {
@@ -265,5 +307,35 @@ public class TtzActivity extends BaseActivity {
         list.add("一筒到九筒共36张牌,每次给庄和闲多发两张,玩家对庄和闲的输赢情况进行下注。");
         list.add("两张筒子相加取个位,对子大于单点,点数相同比较单牌,单排大赢,牌型完全一样为平;对9>对8>...>对1>9点>8点>...>0点。");
         return list;
+    }
+
+    private TZSuccReceiver tzSuccReceiver;
+
+    private class TZSuccReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.e("收到TZFragment的投注成功广播！");
+            if (jlFragment.isAdded()) {
+                ((TZJLFragment) jlFragment).reload();
+            }
+        }
+    }
+
+    private void regist() {
+        IntentFilter intentFilter = new IntentFilter(YS.ACTION_TZ_SUCCESS);
+        tzSuccReceiver = new TZSuccReceiver();
+        registerReceiver(tzSuccReceiver, intentFilter);
+    }
+
+    private void unRegist() {
+        if (tzSuccReceiver != null) {
+            unregisterReceiver(tzSuccReceiver);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unRegist();
     }
 }
