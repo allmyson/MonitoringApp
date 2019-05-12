@@ -29,7 +29,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="00:09:50"
             android:textColor="#f86e00"
             android:textSize="20sp" />
     </LinearLayout>
@@ -89,8 +88,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:text="1900001期"
                     android:textColor="#ededed"
                     android:textSize="12sp" />
 
@@ -150,6 +147,7 @@
 
 
                         <TextView
+                            android:id="@+id/tv_fh"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="68.74"
@@ -181,6 +179,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_pay"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1360"
@@ -345,6 +344,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_slz_user"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="YS526641"
@@ -373,6 +373,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_slz_sn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="491"
@@ -401,6 +402,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_slz_money"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="27000.00"
@@ -463,6 +465,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_sj1_user"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="YS526641"
@@ -491,6 +494,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_sj1_sn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="491"
@@ -519,6 +523,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_sj1_money"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="27000.00"
@@ -581,6 +586,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_sj2_user"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="YS526641"
@@ -609,6 +615,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_sj2_sn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="491"
@@ -637,6 +644,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_sj2_money"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="27000.00"
@@ -699,6 +707,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_sj3_user"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="YS526641"
@@ -727,6 +736,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_sj3_sn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="491"
@@ -755,6 +765,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_sj3_money"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="27000.00"
