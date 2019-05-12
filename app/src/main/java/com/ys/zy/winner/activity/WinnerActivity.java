@@ -1,8 +1,10 @@
 package com.ys.zy.winner.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,17 +16,25 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.common.TZJLFragment;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
 import com.ys.zy.fast3.activity.Fast3Activity;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.roulette.fragment.RouletteJLFragment;
 import com.ys.zy.roulette.fragment.RouletteTZFragment;
+import com.ys.zy.sp.User;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ttz.activity.TtzActivity;
+import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 import com.ys.zy.winner.adapter.SmAdapter;
@@ -49,7 +59,7 @@ public class WinnerActivity extends BaseActivity {
 
     private TextView moneyTV;
     private ImageView showOrHideIV;
-    private boolean isShow = true;
+    private boolean isShow = false;
     private String money;
     private boolean isShowMoreGame = false;//是否显示其他游戏
 
@@ -59,6 +69,7 @@ public class WinnerActivity extends BaseActivity {
     private SmAdapter smAdapter;
     private List<String> smList;
     public static String content;
+    private String userId;
 
     @Override
     public int getLayoutId() {
@@ -67,6 +78,7 @@ public class WinnerActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        regist();
         setBarColor("#f7f7f7", true);
         smContentLL = getView(R.id.ll_smContent);
         smLV = getView(R.id.lv_sm);
@@ -85,7 +97,6 @@ public class WinnerActivity extends BaseActivity {
         gameNameTV = getView(R.id.tv_gameName);
 
         moneyTV = getView(R.id.tv_money);
-        money = moneyTV.getText().toString();
         showOrHideIV = getView(R.id.iv_showOrHide);
         showOrHideIV.setOnClickListener(this);
 
@@ -106,6 +117,14 @@ public class WinnerActivity extends BaseActivity {
         manager = getSupportFragmentManager();
         initFragment();
         showFragment(tzFragment);
+        if (!isShow) {
+            showOrHideIV.setImageResource(R.mipmap.btn_hide);
+            moneyTV.setText(StringUtil.changeToX(money));
+        } else {
+            showOrHideIV.setImageResource(R.mipmap.btn_show);
+            moneyTV.setText(money);
+        }
+        userId = UserSP.getUserId(mContext);
     }
 
     private void initContent() {
@@ -114,7 +133,28 @@ public class WinnerActivity extends BaseActivity {
 
     @Override
     public void getData() {
+        HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                User user = new Gson().fromJson(response.get(), User.class);
+                if (user != null && YS.SUCCESE.equals(user.code) && user.data != null) {
+                    money = StringUtil.StringToDoubleStr(user.data.balance);
+//                    moneyTV.setText(money);
+                    if (!isShow) {
+                        showOrHideIV.setImageResource(R.mipmap.btn_hide);
+                        moneyTV.setText(StringUtil.changeToX(money));
+                    } else {
+                        showOrHideIV.setImageResource(R.mipmap.btn_show);
+                        moneyTV.setText(money);
+                    }
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     @Override
@@ -254,7 +294,8 @@ public class WinnerActivity extends BaseActivity {
 
     private void initFragment() {
         tzFragment = WinnerTZFragment.newInstance();
-        jlFragment = WinnerTZJLFragment.newInstance();
+//        jlFragment = WinnerTZJLFragment.newInstance();
+        jlFragment = TZJLFragment.newInstance(YS.CODE_SLZ, 1);
     }
 
     public static void intentToWinner(Context context) {
@@ -270,4 +311,34 @@ public class WinnerActivity extends BaseActivity {
         list.add("SN售价超过200时,在SN100至SN199之间诞生随机大奖1（总奖池5%%）;SN售价超过300时,在SN200至SN299之间诞生随机大奖2（总奖池10%%）;SN售价超过400时,在SN300至SN399之间诞生随机大奖3（总奖池15%%）。");
         return list;
     }
+
+    private TZSuccReceiver tzSuccReceiver;
+
+    private class TZSuccReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.e("收到TZFragment的投注成功广播！");
+            if(jlFragment.isAdded()) {
+                ((TZJLFragment) jlFragment).reload();
+            }
+        }
+    }
+    private void regist() {
+        IntentFilter intentFilter = new IntentFilter(YS.ACTION_TZ_SUCCESS);
+        tzSuccReceiver = new TZSuccReceiver();
+        registerReceiver(tzSuccReceiver, intentFilter);
+    }
+
+    private void unRegist() {
+        if (tzSuccReceiver != null) {
+            unregisterReceiver(tzSuccReceiver);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unRegist();
+    }
+
 }

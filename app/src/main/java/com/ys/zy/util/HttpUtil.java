@@ -339,9 +339,20 @@ public class HttpUtil {
      * @param context
      * @param httpListener
      */
-    public static void getWinnerInfo(Context context, String periodsNum, HttpListener<String> httpListener) {
-        String url = YS.WINNER_INFO + "?periodsNum=" + periodsNum;
-        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    public static void getWinnerInfo(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.WINNER_INFO + "?userId=" + userId;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
+
+    /**
+     * 查询最后的胜利者时间信息
+     *
+     * @param context
+     * @param httpListener
+     */
+    public static void getWinnerResult(Context context, String periodNum, HttpListener<String> httpListener) {
+        String url = YS.WINNER_RESULT + "?periodNum=" + periodNum;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
     /**

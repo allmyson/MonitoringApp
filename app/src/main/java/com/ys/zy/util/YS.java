@@ -46,7 +46,7 @@ public class YS {
     public static final int TYPE_ZHDSLZ = 1002;//最后的胜利者
 
     public static final double MAX_MONEY = 125205;//最后的胜利者奖池最大金额
-    public static final double MAX_SN_PRICE = 500;//当前SN最大价格
+    public static final int MAX_SN_PRICE = 500;//当前SN最大价格
     public static final double MAX_FHFL = 12520.5;//个人返红分利最大
 
 
@@ -132,7 +132,9 @@ public class YS {
     //查询投注记录
     public static final String TZJL = IP + "/appService/getSelfRecordList";
     //最后的胜利者信息
-    public static final String WINNER_INFO = IP + "/appService/getSlzGameInfo";
+    public static final String WINNER_INFO = IP + "/appService/lastWinnerDetail";
+    //查询胜利者开奖结果
+    public static final String WINNER_RESULT = IP + "/appService/lastWinnerResult";
 
     //获取老板二维码
     public static final String GET_BOSS_PAY = IP + "/appService/getBossPay";

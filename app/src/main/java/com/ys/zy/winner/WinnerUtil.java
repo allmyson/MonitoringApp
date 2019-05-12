@@ -20,17 +20,17 @@ public class WinnerUtil {
                 endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo;
                 break;
             case TYPE_WAIT_KJ:
-                //暂定模拟60秒开奖
-                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 1 * 60 * 1000;
+                //暂定模拟5*60秒开奖
+                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 5 * 60 * 1000;
                 break;
             case TYPE_FINISH_KJ:
-//                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 15 * 60 * 1000;
+                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 15 * 60 * 1000;
                 //为方便测试将15分钟等待时间改为70秒
-                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 1 * 70 * 1000;
+//                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 1 * 70 * 1000;
                 break;
             case TYPE_END:
-//                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 15 * 60 * 1000;
-                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 1 * 70 * 1000;
+                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 15 * 60 * 1000;
+//                endTime = startTime + 2 * 60 * 60 * 1000 + 10 * 1000 * snNo + 1 * 70 * 1000;
                 break;
         }
         return endTime;
@@ -42,13 +42,13 @@ public class WinnerUtil {
         if (currentTime <= endTime) {
             return TYPE_TZ;
         } else {
-            //暂定60秒等待开奖时间
-            if (currentTime - endTime < 60 * 1000) {
+            //暂定5*60秒等待开奖时间
+            if (currentTime - endTime < 5 * 60 * 1000) {
                 return TYPE_WAIT_KJ;
 //            } else if (currentTime-endTime < 15 * 60 * 1000) {
-            } else if (currentTime - endTime < 1 * 69 * 1000) {
+            } else if (currentTime - endTime < 15 * 60 * 1000) {
                 return TYPE_FINISH_KJ;
-            } else if (currentTime - endTime >= 1 * 69 * 1000) {
+            } else if (currentTime - endTime >= 15 * 60 * 1000) {
                 return TYPE_END;
             } else {
                 return TYPE_TZ;
