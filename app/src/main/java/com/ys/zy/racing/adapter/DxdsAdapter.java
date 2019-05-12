@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
@@ -15,6 +16,7 @@ import com.ys.zy.racing.RacingUtil;
 import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,31 +161,22 @@ public class DxdsAdapter extends CommonAdapter<String> {
      *
      * @return
      */
-    public Map<String, List<String>> getResult() {
-        Map<String, List<String>> map = new LinkedHashMap<>();
-        List<String> numberList = getNumberList();
-        List<String> resultList = new ArrayList<>();
+    public String getJsonResult() {
+        List<String> numbers = getNumberList();
+        String json = "";
+        List<Map<String,String>> tzList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            List<String> data = new ArrayList<>();
             for (int j = 0; j < list.get(i).size(); j++) {
-                String x = "";
                 if (list.get(i).get(j)) {
-                    for (int k = 0; k < list.get(i).size(); k++) {
-                        if (k != j) {
-                            x += "-,";
-                        } else {
-                            x += numberList.get(j) + ",";
-                        }
-                    }
-                    x = x.substring(0, x.length() - 1);
-                    data.add(x);
+                    Map<String, String> map = new HashMap<>();
+                    map.put("betsNum", numbers.get(j));
+                    map.put("bit", RacingUtil.getType(mDatas.get(i)));
+                    tzList.add(map);
                 }
             }
-            if (data.size() > 0) {
-                map.put(RacingUtil.getNameByPosition(i), data);
-            }
         }
-        return map;
+        json = new Gson().toJson(tzList);
+        return json;
     }
 
 

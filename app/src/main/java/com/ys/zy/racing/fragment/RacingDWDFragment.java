@@ -84,4 +84,12 @@ public class RacingDWDFragment extends RacingFragment {
         return "";
     }
 
+    @Override
+    public String getJsonResult() {
+        if (dwdAdapter != null) {
+            return dwdAdapter.getJsonResult();
+        }
+        return "";
+    }
+
 }

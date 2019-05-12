@@ -28,6 +28,43 @@ public class RacingUtil {
         nameList.add("第十");
     }
 
+    public static String getType(String name) {
+        String code = "";
+        switch (name) {
+            case "冠军":
+                code = "1000";
+                break;
+            case "亚军":
+                code = "1001";
+                break;
+            case "季军":
+                code = "1002";
+                break;
+            case "第四":
+                code = "1003";
+                break;
+            case "第五":
+                code = "1004";
+                break;
+            case "第六":
+                code = "1005";
+                break;
+            case "第七":
+                code = "1006";
+                break;
+            case "第八":
+                code = "1007";
+                break;
+            case "第九":
+                code = "1008";
+                break;
+            case "第十":
+                code = "1009";
+                break;
+        }
+        return code;
+    }
+
     public static String getNumber(int i) {
         if (i < 10) {
             return "0" + i;

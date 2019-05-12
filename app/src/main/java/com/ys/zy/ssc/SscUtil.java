@@ -28,7 +28,7 @@ public class SscUtil {
         Calendar now = Calendar.getInstance();
         now.setTime(new Date());
         int month = now.get(Calendar.MONTH) + 1;
-        int day = now.get(Calendar.HOUR_OF_DAY);
+        int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
         int minute = now.get(Calendar.MINUTE);
         return getNumber(month) + getNumber(day) + GameUtil.toFourDigit(hour * 60 + minute + 1);

@@ -86,4 +86,12 @@ public class RacingDXDSFragment extends RacingFragment {
         return "";
     }
 
+    @Override
+    public String getJsonResult() {
+        if (dxdsAdapter != null) {
+            return dxdsAdapter.getJsonResult();
+        }
+        return "";
+    }
+
 }

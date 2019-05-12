@@ -1,7 +1,10 @@
 package com.ys.zy.roulette.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,17 +15,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.common.TZJLFragment;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.GameFragment;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.roulette.fragment.RouletteJLFragment;
 import com.ys.zy.roulette.fragment.RouletteTZFragment;
+import com.ys.zy.sp.User;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ttz.activity.TtzActivity;
+import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 import com.ys.zy.winner.activity.WinnerActivity;
 
 //轮盘
@@ -40,13 +52,13 @@ public class RouletteActivity extends BaseActivity {
 
     private TextView moneyTV;
     private ImageView showOrHideIV;
-    private boolean isShow = true;
-    private String money;
+    private boolean isShow = false;
+    private String money = "0.00";
     private boolean isShowMoreGame = false;//是否显示其他游戏
 
     private LinearLayout gameLL;
     private LinearLayout smLL;
-
+    private String userId;
     public static final String content = "投注时间里从12个生肖里选一个下注，开奖结果与所选生肖相同即中奖；红色数字代表赔率，蓝色是自己投注的金额，白色是所有玩家投注总额";
 
     @Override
@@ -56,6 +68,7 @@ public class RouletteActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        regist();
         setBarColor("#1e1e1e", false);
         backRL = getView(R.id.rl_back);
         backRL.setOnClickListener(this);
@@ -68,7 +81,6 @@ public class RouletteActivity extends BaseActivity {
         gameNameTV = getView(R.id.tv_gameName);
 
         moneyTV = getView(R.id.tv_money);
-        money = moneyTV.getText().toString();
         showOrHideIV = getView(R.id.iv_showOrHide);
         showOrHideIV.setOnClickListener(this);
 
@@ -89,11 +101,40 @@ public class RouletteActivity extends BaseActivity {
         manager = getSupportFragmentManager();
         initFragment();
         showFragment(tzFragment);
+        if (!isShow) {
+            showOrHideIV.setImageResource(R.mipmap.btn_hide);
+            moneyTV.setText(StringUtil.changeToX(money));
+        } else {
+            showOrHideIV.setImageResource(R.mipmap.btn_show);
+            moneyTV.setText(money);
+        }
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     public void getData() {
+        HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                User user = new Gson().fromJson(response.get(), User.class);
+                if (user != null && YS.SUCCESE.equals(user.code) && user.data != null) {
+                    money = StringUtil.StringToDoubleStr(user.data.balance);
+//                    moneyTV.setText(money);
+                    if (!isShow) {
+                        showOrHideIV.setImageResource(R.mipmap.btn_hide);
+                        moneyTV.setText(StringUtil.changeToX(money));
+                    } else {
+                        showOrHideIV.setImageResource(R.mipmap.btn_show);
+                        moneyTV.setText(money);
+                    }
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     @Override
@@ -166,26 +207,26 @@ public class RouletteActivity extends BaseActivity {
                                 break;
                             case 6:
                                 //1分彩
-                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_1FC);
+                                SscActivity.intentToSSC(mContext, SscActivity.TYPE_1FC);
                                 break;
                             case 7:
                                 //北京赛车
-                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_BJSC);
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_BJSC);
                                 break;
                             case 8:
                                 //时时彩
-                                SscActivity.intentToSSC(mContext,SscActivity.TYPE_SSC);
+                                SscActivity.intentToSSC(mContext, SscActivity.TYPE_SSC);
                                 break;
                             case 9:
                                 //1分赛车
-                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_1FSC);
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_1FSC);
                                 break;
                             case 10:
                                 //更多
                                 break;
                             case 11:
                                 //5分赛车
-                                RacingActivity.intentToRacing(mContext,RacingActivity.TYPE_5FSC);
+                                RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_5FSC);
                                 break;
 
                         }
@@ -199,7 +240,7 @@ public class RouletteActivity extends BaseActivity {
                 break;
             case R.id.ll_sm:
                 smIV.setImageResource(R.mipmap.bottom_btn_more);
-                DialogUtil.showSmDialog(mContext, content,new DialogInterface.OnCancelListener() {
+                DialogUtil.showSmDialog(mContext, content, new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         smIV.setImageResource(R.mipmap.top_btn_more);
@@ -233,6 +274,37 @@ public class RouletteActivity extends BaseActivity {
 
     private void initFragment() {
         tzFragment = RouletteTZFragment.newInstance();
-        jlFragment = RouletteJLFragment.newInstance();
+//        jlFragment = RouletteJLFragment.newInstance();
+        jlFragment = TZJLFragment.newInstance(YS.CODE_LP, 2);
+    }
+
+
+    private TZSuccReceiver tzSuccReceiver;
+
+    private class TZSuccReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.e("收到TZFragment的投注成功广播！");
+            if(jlFragment.isAdded()) {
+                ((TZJLFragment) jlFragment).reload();
+            }
+        }
+    }
+    private void regist() {
+        IntentFilter intentFilter = new IntentFilter(YS.ACTION_TZ_SUCCESS);
+        tzSuccReceiver = new TZSuccReceiver();
+        registerReceiver(tzSuccReceiver, intentFilter);
+    }
+
+    private void unRegist() {
+        if (tzSuccReceiver != null) {
+            unregisterReceiver(tzSuccReceiver);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unRegist();
     }
 }

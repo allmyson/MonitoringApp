@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.bean.BaseBean;
 import com.ys.zy.fast3.Fast3Util;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.activity.RechargeActivity;
@@ -31,6 +32,7 @@ import com.ys.zy.dialog.TipFragment;
 import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.RacingUtil;
 import com.ys.zy.racing.activity.RacingActivity;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ssc.bean.SscResultBean;
 import com.ys.zy.util.HttpUtil;
@@ -42,7 +44,9 @@ import com.ys.zy.util.YS;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.ys.zy.fast3.activity.Fast3Activity.TYPE_1FK3;
 import static com.ys.zy.fast3.activity.Fast3Activity.TYPE_5FK3;
@@ -72,6 +76,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     private int jgTime = 1;
     private int gameType = 1005;
     private boolean isStart = true;
+    private String userId;
 
     public static Fast3TZFragment newInstance(int type) {
         Fast3TZFragment fast3TZFragment = new Fast3TZFragment();
@@ -86,11 +91,11 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     public void setType(int type) {
         this.type = type;
         if (type == Fast3Activity.TYPE_JSK3) {
-            gameType = 1005;
+            gameType = YS.CODE_JSK3;
         } else if (type == Fast3Activity.TYPE_1FK3) {
-            gameType = 1006;
+            gameType = YS.CODE_1FK3;
         } else {
-            gameType = 1007;
+            gameType = YS.CODE_5FK3;
         }
         jgTime = Fast3Util.getJGTime(type);
     }
@@ -165,6 +170,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         getView(R.id.ll_left).setOnClickListener(this);
         historyLL = getView(R.id.ll_history);
         dataLL = getView(R.id.ll_data);
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
@@ -221,7 +227,8 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                         @Override
                         public void sure() {
                             DialogUtil.removeDialog(mContext);
-                            show("投注成功");
+                            tz();
+//                            show("投注成功");
                         }
                     });
                 }
@@ -240,6 +247,52 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                 }
                 break;
         }
+    }
+
+    private void tz() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("gameCode", gameType);
+        map.put("complantTypeCode", "1000");//手动
+        map.put("periodsNum  ", gameNo);
+        List<Map<String, Object>> list = new ArrayList<>();
+        List<Fast3Bean> tzList = fast3SumAdapter.getTZList();
+        double payMoney = StringUtil.StringToDoubleTwo(priceET.getText().toString());
+        if (tzList != null && tzList.size() > 0) {
+            for (Fast3Bean fast3Bean : tzList) {
+                Map<String, Object> tzMap = new HashMap<>();
+                tzMap.put("times", 1);
+                tzMap.put("payMoney", payMoney);
+                tzMap.put("betsNum", fast3Bean.value);
+                list.add(tzMap);
+            }
+        }
+        map.put("betDetail", list);
+        String json = new Gson().toJson(map);
+        HttpUtil.tz(mContext, json, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                if (baseBean != null) {
+                    if (YS.SUCCESE.equals(baseBean.code)) {
+                        show("投注成功");
+                        //通知Activity刷新余额
+                        ((Fast3Activity) getActivity()).getData();
+                        sendMsg();//刷新投注记录
+                    } else {
+                        show(StringUtil.valueOf(baseBean.msg));
+                    }
+                } else {
+                    show(YS.HTTP_TIP);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+
     }
 
     //是否余额不足
@@ -492,5 +545,10 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
             }
         }
         return list;
+    }
+
+    private void sendMsg() {
+        Intent intent = new Intent(YS.ACTION_TZ_SUCCESS);
+        getActivity().sendBroadcast(intent);
     }
 }

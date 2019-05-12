@@ -1,5 +1,6 @@
 package com.ys.zy.roulette.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -15,14 +16,19 @@ import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseFragment;
+import com.ys.zy.bean.BaseBean;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.http.HttpListener;
+import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.roulette.adapter.ChipAdapter;
 import com.ys.zy.roulette.adapter.LpHistoryAdapter;
 import com.ys.zy.roulette.bean.ChipBean;
 import com.ys.zy.roulette.bean.LPBean;
 import com.ys.zy.roulette.ui.LPView;
+import com.ys.zy.sp.UserSP;
+import com.ys.zy.ssc.SscUtil;
+import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ssc.bean.SscResultBean;
 import com.ys.zy.ui.HorizontalListView;
 import com.ys.zy.util.GameUtil;
@@ -33,7 +39,9 @@ import com.ys.zy.util.YS;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RouletteTZFragment extends BaseFragment implements View.OnClickListener {
     private TextView timeTV, statusTV, qsTV;
@@ -52,6 +60,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     private List<LPBean> lpBeanList;
     private String gameNo = "0215096";
     private boolean isStart = true;
+    private String userId;
 
     public static RouletteTZFragment newInstance() {
         RouletteTZFragment rouletteTZFragment = new RouletteTZFragment();
@@ -100,6 +109,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                 }
             }
         });
+        userId = UserSP.getUserId(mContext);
     }
 
     private void setStatus() {
@@ -216,8 +226,9 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                         public void sure() {
                             if (currentStatus == TYPE_TZ) {
                                 DialogUtil.removeDialog(mContext);
-                                show("投注成功");
-                                lpView.clearColorAndResult();
+                                tz();
+//                                show("投注成功");
+//                                lpView.clearColorAndResult();
                             } else {
                                 DialogUtil.removeDialog(mContext);
                                 show("当前时间段不能投注！");
@@ -227,6 +238,52 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                 }
                 break;
         }
+    }
+
+    private void tz() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("gameCode", YS.CODE_LP);
+        map.put("complantTypeCode", "1000");//手动
+        map.put("periodsNum", gameNo);//手动
+        List<Map<String, Object>> list = new ArrayList<>();
+        List<LPBean> result = lpView.getTZList();
+        if (result != null && result.size() > 0) {
+            for (LPBean lpBean : result) {
+                Map<String, Object> tzMap = new HashMap<>();
+                tzMap.put("betsNum", lpBean.name);
+                tzMap.put("payMoney", lpBean.myValue);
+                tzMap.put("times", 1);
+                list.add(tzMap);
+            }
+        }
+        map.put("betDetail", list);
+        String json = new Gson().toJson(map);
+        L.e("tz内容:" + json);
+        HttpUtil.tz(mContext, json, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                if (baseBean != null) {
+                    if (YS.SUCCESE.equals(baseBean.code)) {
+                        show("投注成功");
+                        lpView.clearColorAndResult();
+                        //通知Activity刷新余额
+                        ((RouletteActivity) getActivity()).getData();
+                        sendMsg();//刷新投注记录
+                    } else {
+                        show(StringUtil.valueOf(baseBean.msg));
+                    }
+                } else {
+                    show(YS.HTTP_TIP);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     public static final int TYPE_TZ = 1000;//投注中
@@ -371,5 +428,10 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
             }
         }
         return result;
+    }
+
+    private void sendMsg() {
+        Intent intent = new Intent(YS.ACTION_TZ_SUCCESS);
+        getActivity().sendBroadcast(intent);
     }
 }

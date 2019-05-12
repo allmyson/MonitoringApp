@@ -5,9 +5,13 @@ import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.ys.zy.R;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class RacingLHDFragment extends RacingFragment implements View.OnClickListener {
@@ -56,6 +60,19 @@ public class RacingLHDFragment extends RacingFragment implements View.OnClickLis
     @Override
     public String getTZResult() {
         return getShowResult();
+    }
+
+    @Override
+    public String getJsonResult() {
+        List<String> list= new ArrayList<>();
+        if(isLong){
+            list.add("龙");
+        }
+        if(isHu){
+            list.add("虎");
+        }
+        String json = new Gson().toJson(list);
+        return json;
     }
 
     private void setSM(double money) {
@@ -123,4 +140,5 @@ public class RacingLHDFragment extends RacingFragment implements View.OnClickLis
         }
         return "-,-";
     }
+
 }

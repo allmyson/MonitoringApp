@@ -1,8 +1,10 @@
 package com.ys.zy.fast3.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,6 +32,7 @@ import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ttz.activity.TtzActivity;
 import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 import com.ys.zy.winner.activity.WinnerActivity;
@@ -65,6 +68,7 @@ public class Fast3Activity extends BaseActivity {
 
     @Override
     public void initView() {
+        regist();
         moneyTV = getView(R.id.tv_money);
         moneyTV.setText(money);
         showOrHideIV = getView(R.id.iv_showOrHide);
@@ -291,5 +295,34 @@ public class Fast3Activity extends BaseActivity {
 
     public double getMoney() {
         return StringUtil.StringToDoubleTwo(money);
+    }
+
+    private TZSuccReceiver tzSuccReceiver;
+
+    private class TZSuccReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.e("收到TZFragment的投注成功广播！");
+            if(jlFragment.isAdded()) {
+                ((TZJLFragment) jlFragment).reload();
+            }
+        }
+    }
+    private void regist() {
+        IntentFilter intentFilter = new IntentFilter(YS.ACTION_TZ_SUCCESS);
+        tzSuccReceiver = new TZSuccReceiver();
+        registerReceiver(tzSuccReceiver, intentFilter);
+    }
+
+    private void unRegist() {
+        if (tzSuccReceiver != null) {
+            unregisterReceiver(tzSuccReceiver);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unRegist();
     }
 }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.google.gson.Gson;
 import com.ys.zy.R;
 import com.ys.zy.adapter.CommonAdapter;
 import com.ys.zy.adapter.ViewHolder;
@@ -157,29 +158,22 @@ public class DwdAdapter extends CommonAdapter<String> {
      *
      * @return
      */
-    public Map<String, List<String>> getResult() {
-        Map<String, List<String>> map = new LinkedHashMap<>();
-        List<String> resultList = new ArrayList<>();
+    public String getJsonResult() {
+        String json = "";
+        List<Map<String,String>> tzList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            List<String> data = new ArrayList<>();
             for (int j = 0; j < list.get(i).size(); j++) {
-                String x = "";
                 if (list.get(i).get(j)) {
-                    for (int k = 0; k < list.get(i).size(); k++) {
-                        if (k != j) {
-                            x += "-,";
-                        } else {
-                            x += RacingUtil.getNumber(j + 1) + ",";
-                        }
-                    }
-                    x = x.substring(0, x.length() - 1);
-                    data.add(x);
+                    Map<String, String> map = new HashMap<>();
+                    map.put("betsNum", "" + (j + 1));
+                    map.put("bit", RacingUtil.getType(mDatas.get(i)));
+                    tzList.add(map);
                 }
             }
-            if (data.size() > 0) {
-                map.put(RacingUtil.getNameByPosition(i), data);
-            }
         }
-        return map;
+        json = new Gson().toJson(tzList);
+        return json;
     }
+
+
 }

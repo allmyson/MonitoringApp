@@ -19,11 +19,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.adapter.ImageFolderAdapter;
 import com.ys.zy.R;
 import com.ys.zy.activity.RechargeActivity;
 import com.ys.zy.base.BaseFragment;
+import com.ys.zy.bean.BaseBean;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.dialog.TipFragment;
@@ -34,6 +36,8 @@ import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.racing.adapter.DwdAdapter;
 import com.ys.zy.racing.adapter.RacingResultAdapter;
 import com.ys.zy.racing.adapter.ScHistoryAdapter;
+import com.ys.zy.sp.UserSP;
+import com.ys.zy.ssc.SscUtil;
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.ssc.bean.SscResultBean;
 import com.ys.zy.util.HttpUtil;
@@ -45,6 +49,7 @@ import com.ys.zy.util.YS;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,6 +77,8 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
     private int jgTime = 1;
     private List<String> resultList;
     private int gameType = 1008;
+    private String userId;
+    private String lotteryTypeCode;
 
     public static RacingTZFragment newInstance(int type, int play) {
         RacingTZFragment racingTZFragment = new RacingTZFragment();
@@ -118,6 +125,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
         initFragment();
         showFragment(dwdFragment);
         isCanTZ();
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
@@ -135,17 +143,24 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
     public void setType(int type) {
         this.type = type;
         if (type == RacingActivity.TYPE_BJSC) {
-            gameType = 1008;
+            gameType = YS.CODE_BJSC;
         } else if (type == RacingActivity.TYPE_1FSC) {
-            gameType = 1009;
+            gameType = YS.CODE_1FSC;
         } else {
-            gameType = 1010;
+            gameType = YS.CODE_5FSC;
         }
         jgTime = RacingUtil.getJGTime(type);
     }
 
     public void setPlay(int play) {
         this.play = play;
+        if (play == RacingActivity.PLAY_DWD) {
+            lotteryTypeCode = "1001";
+        } else if (play == RacingActivity.PLAY_DXDS) {
+            lotteryTypeCode = "1002";
+        } else if (play == RacingActivity.PLAY_LHD) {
+            lotteryTypeCode = "1009";
+        }
     }
 
     private List<String> getResultList() {
@@ -212,12 +227,103 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
                         @Override
                         public void sure() {
                             DialogUtil.removeDialog(mContext);
-                            show("投注成功");
+                            tz();
+//                            show("投注成功");
                         }
                     });
                 }
                 break;
         }
+    }
+
+    private void tz() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("gameCode", gameType);
+        map.put("complantTypeCode", "1000");//手动
+        map.put("lotteryTypeCode ", lotteryTypeCode);
+        int bei = StringUtil.StringToInt(beiET.getText().toString());
+        int qi = StringUtil.StringToInt(qiET.getText().toString());
+        String periodsNum = "";
+        if (qi > 1) {
+            for (int i = 1; i <= qi; i++) {
+                if (i == qi) {
+                    periodsNum += RacingUtil.getSCPeriods(type, i);
+                } else {
+                    periodsNum += RacingUtil.getSCPeriods(type, i) + ",";
+                }
+            }
+        } else {
+            periodsNum = ((RacingActivity) getActivity()).getGameNo();
+        }
+        map.put("periodsNum", periodsNum);
+        List<Map<String, Object>> list = new ArrayList<>();
+        String json = currentFragment.getJsonResult();
+        if (play == RacingActivity.PLAY_DWD) {
+            List<Map<String, String>> tzList = new Gson().fromJson(json, new TypeToken<List<Map<String, String>>>() {
+            }.getType());
+            if (tzList != null && tzList.size() > 0) {
+                for (Map<String, String> m : tzList) {
+                    Map<String, Object> tzMap = new HashMap<>();
+                    tzMap.put("betsNum", m.get("betsNum"));
+                    tzMap.put("payMoney", YS.SINGLE_PRICE);
+                    tzMap.put("times", bei);
+                    tzMap.put("bit", m.get("bit"));
+                    list.add(tzMap);
+                }
+            }
+        } else if (play == RacingActivity.PLAY_DXDS) {
+            List<Map<String, String>> tzList = new Gson().fromJson(json, new TypeToken<List<Map<String, String>>>() {
+            }.getType());
+            if (tzList != null && tzList.size() > 0) {
+                for (Map<String, String> m : tzList) {
+                    Map<String, Object> tzMap = new HashMap<>();
+                    tzMap.put("betsNum", m.get("betsNum"));
+                    tzMap.put("payMoney", YS.SINGLE_PRICE);
+                    tzMap.put("times", bei);
+                    tzMap.put("bit", m.get("bit"));
+                    list.add(tzMap);
+                }
+            }
+        } else if (play == RacingActivity.PLAY_LHD) {
+            List<String> tzList = new Gson().fromJson(json, new TypeToken<List<String>>() {
+            }.getType());
+            if (tzList != null && tzList.size() > 0) {
+                for (String result : tzList) {
+                    Map<String, Object> tzMap = new HashMap<>();
+                    tzMap.put("betsNum", result);
+                    tzMap.put("payMoney", YS.SINGLE_PRICE);
+                    tzMap.put("times", bei);
+                    list.add(tzMap);
+                }
+            }
+        }
+        map.put("betDetail", list);
+        String tzResult = new Gson().toJson(map);
+        L.e("tz内容:" + tzResult);
+        HttpUtil.tz(mContext, tzResult, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                if (baseBean != null) {
+                    if (YS.SUCCESE.equals(baseBean.code)) {
+                        show("投注成功");
+                        //通知Activity刷新余额
+                        ((RacingActivity) getActivity()).getData();
+                        sendMsg();//刷新投注记录
+                    } else {
+                        show(StringUtil.valueOf(baseBean.msg));
+                    }
+                } else {
+                    show(YS.HTTP_TIP);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     /**
@@ -367,6 +473,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
             zhuAndPriceTV.setText("共" + tzNum + "注" + bei + "倍" + qi + "期" + StringUtil.StringToDoubleStr(tzNum * bei * qi * YS.SINGLE_PRICE) + YS.UNIT);
             isCanTZ();
         }
+
     }
 
 
@@ -521,5 +628,10 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
             }
         }
         return list;
+    }
+
+    private void sendMsg() {
+        Intent intent = new Intent(YS.ACTION_TZ_SUCCESS);
+        getActivity().sendBroadcast(intent);
     }
 }
