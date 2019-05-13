@@ -72,11 +72,12 @@
             android:paddingRight="8dp">
 
             <TextView
+                android:id="@+id/tv_odds"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="3dp"
-                android:text="11.71"
+                android:text=""
                 android:textColor="@color/main_color"
                 android:textSize="16sp" />
 

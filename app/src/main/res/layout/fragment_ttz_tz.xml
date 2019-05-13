@@ -91,29 +91,29 @@
                 android:paddingBottom="4dp">
 
                 <TextView
+                    android:id="@+id/tv_odds_z"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="赔1.96"
                     android:textColor="#a5a5a5"
                     android:textSize="8dp" />
 
                 <TextView
+                    android:id="@+id/tv_odds_p"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="赔1.96"
                     android:textColor="#a5a5a5"
                     android:textSize="8dp" />
 
                 <TextView
+                    android:id="@+id/tv_odds_x"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="赔1.96"
                     android:textColor="#a5a5a5"
                     android:textSize="8dp" />
             </LinearLayout>
