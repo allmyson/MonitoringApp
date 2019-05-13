@@ -4,8 +4,14 @@ import android.text.Html;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.bean.OddsBean;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.adapter.DwdAdapter;
+import com.ys.zy.sp.UserSP;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 
@@ -17,7 +23,7 @@ public class RacingDWDFragment extends RacingFragment {
     private ListView lv;
     private List<String> list;
     private DwdAdapter dwdAdapter;
-
+    private String userId;
     public static RacingDWDFragment newInstance() {
         return new RacingDWDFragment();
     }
@@ -25,7 +31,7 @@ public class RacingDWDFragment extends RacingFragment {
     @Override
     protected void init() {
         smTV = getView(R.id.tv_sm);
-        setSM(19.50);
+        setSM(0.00);
         lv = getView(R.id.lv_);
         list = new ArrayList<>();
         list.add("冠军");
@@ -48,11 +54,12 @@ public class RacingDWDFragment extends RacingFragment {
                 }
             }
         });
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     protected void getData() {
-
+        getOdds();
     }
 
     @Override
@@ -91,5 +98,20 @@ public class RacingDWDFragment extends RacingFragment {
         }
         return "";
     }
+    private void getOdds() {
+        HttpUtil.getGameOdds(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                OddsBean oddsBean = new Gson().fromJson(response.get(), OddsBean.class);
+                if (oddsBean != null && YS.SUCCESE.equals(oddsBean.code) && oddsBean.data != null) {
+                    setSM(StringUtil.StringToDoubleTwo(oddsBean.data.scDwd));
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
 }

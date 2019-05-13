@@ -111,6 +111,14 @@ public class YS {
     public static final String GET_TTZ_TZ_SUM = IP + "/appService/ttzResult";
     //下级交易记录
     public static final String SUB_JYJL = IP + "/appService/my/proxy/sub/tradeReport";
+    //我的交易记录
+    public static final String MY_JYJL = IP + "/appService/my/report/tradeReport";
+    //我的消费记录
+    public static final String MY_XFJL = IP + "/appService/my/report/consumeReport";
+    //团队报表总览
+    public static final String TEAM_BB_TOTAL = IP + "/appService/my/proxy/teamcount/summary";
+    //团队报表列表
+    public static final String TEAM_BB_LIST = IP + "/appService/my/proxy/teamcount/list";
 
 
     //投注

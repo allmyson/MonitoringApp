@@ -4,9 +4,15 @@ import android.text.Html;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.bean.OddsBean;
+import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.adapter.SscDwdAdapter;
 import com.ys.zy.ssc.adapter.SscH2XAdapter;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 
@@ -18,7 +24,7 @@ public class SscH2XFragment extends SscFragment {
     private ListView lv;
     private List<String> list;
     private SscH2XAdapter h2xAdapter;
-
+    private String userId;
     public static SscH2XFragment newInstance() {
         return new SscH2XFragment();
     }
@@ -26,7 +32,7 @@ public class SscH2XFragment extends SscFragment {
     @Override
     protected void init() {
         smTV = getView(R.id.tv_sm);
-        setSM(98.00);
+        setSM(0.00);
         lv = getView(R.id.lv_);
         list = new ArrayList<>();
         list.add("组选");
@@ -40,11 +46,12 @@ public class SscH2XFragment extends SscFragment {
                 }
             }
         });
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     protected void getData() {
-
+        getOdds();
     }
 
     @Override
@@ -83,5 +90,20 @@ public class SscH2XFragment extends SscFragment {
         }
         return "";
     }
+    private void getOdds() {
+        HttpUtil.getGameOdds(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                OddsBean oddsBean = new Gson().fromJson(response.get(), OddsBean.class);
+                if (oddsBean != null && YS.SUCCESE.equals(oddsBean.code) && oddsBean.data != null) {
+                    setSM(StringUtil.StringToDoubleTwo(oddsBean.data.sscHexzx));
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
 }

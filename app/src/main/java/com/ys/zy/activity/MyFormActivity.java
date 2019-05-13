@@ -10,6 +10,9 @@ import com.ys.zy.adapter.CommonFragmentAdapter;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.bean.TabBean;
 import com.ys.zy.fragment.InvitationCodeFragment;
+import com.ys.zy.fragment.MyHdjjFragment;
+import com.ys.zy.fragment.MyJybbFragment;
+import com.ys.zy.fragment.MyXfbbFragment;
 import com.ys.zy.fragment.OddsTableFragment;
 import com.ys.zy.fragment.SubReturnRateFragment;
 import com.ys.zy.fragment.TodayYKFragment;
@@ -23,6 +26,7 @@ public class MyFormActivity extends BaseActivity {
     private TabLayout tabLayout;
     private LhViewPager vp;
     private CommonFragmentAdapter mAdapter;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_my_form;
@@ -54,11 +58,12 @@ public class MyFormActivity extends BaseActivity {
     public void onClick(View v) {
 
     }
+
     private List<TabBean> getList() {
         List<TabBean> list = new ArrayList<>();
-        list.add(new TabBean("交易报表", InvitationCodeFragment.newInstance()));
-        list.add(new TabBean("消费报表", InvitationCodeFragment.newInstance()));
-        list.add(new TabBean("活动奖金", InvitationCodeFragment.newInstance()));
+        list.add(new TabBean("交易报表", MyJybbFragment.newInstance()));
+        list.add(new TabBean("消费报表", MyXfbbFragment.newInstance()));
+        list.add(new TabBean("活动奖金", MyHdjjFragment.newInstance()));
         list.add(new TabBean("今日盈亏", TodayYKFragment.newInstance()));
         return list;
     }

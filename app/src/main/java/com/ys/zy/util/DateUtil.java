@@ -359,7 +359,19 @@ public class DateUtil {
         str = str + " 23:59:59";
         return dateToStamp(str);
     }
+    public static String getCurrentDayStartStr() {
+        long current = System.currentTimeMillis();
+        String str = longToYMD(current);
+        str = str + " 00:00:00";
+        return str;
+    }
 
+    public static String getCurrentDayEndStr() {
+        long current = System.currentTimeMillis();
+        String str = longToYMD(current);
+        str = str + " 23:59:59";
+        return str;
+    }
     /**
      *
      * @param str 2018-12-05

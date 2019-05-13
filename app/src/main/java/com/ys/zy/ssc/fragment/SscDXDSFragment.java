@@ -4,12 +4,19 @@ import android.text.Html;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.bean.OddsBean;
+import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.adapter.DwdAdapter;
 import com.ys.zy.racing.adapter.DxdsAdapter;
 import com.ys.zy.racing.fragment.RacingFragment;
 import com.ys.zy.racing.fragment.RacingTZFragment;
+import com.ys.zy.sp.User;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.adapter.SscDxdsAdapter;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 
@@ -21,7 +28,7 @@ public class SscDXDSFragment extends SscFragment {
     private ListView lv;
     private List<String> list;
     private SscDxdsAdapter dxdsAdapter;
-
+    private String userId;
     public static SscDXDSFragment newInstance() {
         return new SscDXDSFragment();
     }
@@ -29,7 +36,7 @@ public class SscDXDSFragment extends SscFragment {
     @Override
     protected void init() {
         smTV = getView(R.id.tv_sm);
-        setSM(3.92);
+        setSM(0.00);
         lv = getView(R.id.lv_);
         list = new ArrayList<>();
         list.add("万位");
@@ -47,11 +54,12 @@ public class SscDXDSFragment extends SscFragment {
                 }
             }
         });
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     protected void getData() {
-
+        getOdds();
     }
 
     @Override
@@ -90,5 +98,20 @@ public class SscDXDSFragment extends SscFragment {
         }
         return "";
     }
+    private void getOdds() {
+        HttpUtil.getGameOdds(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                OddsBean oddsBean = new Gson().fromJson(response.get(), OddsBean.class);
+                if (oddsBean != null && YS.SUCCESE.equals(oddsBean.code) && oddsBean.data != null) {
+                    setSM(StringUtil.StringToDoubleTwo(oddsBean.data.sscDxds));
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
 }

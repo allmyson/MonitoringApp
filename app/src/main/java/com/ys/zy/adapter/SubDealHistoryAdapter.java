@@ -19,5 +19,14 @@ public class SubDealHistoryAdapter extends CommonAdapter<SubJYJL.DataBeanX.DataB
         helper.setText(R.id.tv_name, StringUtil.valueOf(item.login_name));
         helper.setText(R.id.tv_odds, StringUtil.valueOf(item.money));
         helper.setText(R.id.tv_time, DateUtil.changeTimeToYMD(item.date_time));
+        if ("1001".equals(item.type_code)) {
+            //充值
+            helper.setText(R.id.tv_odds, StringUtil.valueOf(item.money));
+            helper.setText(R.id.tv_time, "0");
+        } else {
+            //提现
+            helper.setText(R.id.tv_odds, "0");
+            helper.setText(R.id.tv_time, StringUtil.valueOf(item.money));
+        }
     }
 }

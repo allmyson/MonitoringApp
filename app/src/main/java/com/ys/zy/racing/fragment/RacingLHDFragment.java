@@ -6,7 +6,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
+import com.ys.zy.bean.OddsBean;
+import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.UserSP;
+import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 
@@ -18,7 +23,7 @@ public class RacingLHDFragment extends RacingFragment implements View.OnClickLis
     private TextView smTV, longTV, huTV;
     private boolean isLong = false;
     private boolean isHu = false;
-
+    private String userId;
     public static RacingLHDFragment newInstance() {
         return new RacingLHDFragment();
     }
@@ -26,16 +31,17 @@ public class RacingLHDFragment extends RacingFragment implements View.OnClickLis
     @Override
     protected void init() {
         smTV = getView(R.id.tv_sm);
-        setSM(3.916);
+        setSM(0.00);
         longTV = getView(R.id.tv_long);
         huTV = getView(R.id.tv_hu);
         longTV.setOnClickListener(this);
         huTV.setOnClickListener(this);
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     protected void getData() {
-
+        getOdds();
     }
 
     @Override
@@ -140,5 +146,20 @@ public class RacingLHDFragment extends RacingFragment implements View.OnClickLis
         }
         return "-,-";
     }
+    private void getOdds() {
+        HttpUtil.getGameOdds(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                OddsBean oddsBean = new Gson().fromJson(response.get(), OddsBean.class);
+                if (oddsBean != null && YS.SUCCESE.equals(oddsBean.code) && oddsBean.data != null) {
+                    setSM(StringUtil.StringToDoubleTwo(oddsBean.data.scLhd));
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
 }

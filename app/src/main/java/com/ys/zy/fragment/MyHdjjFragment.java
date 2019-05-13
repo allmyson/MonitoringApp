@@ -1,22 +1,22 @@
-package com.ys.zy.activity;
+package com.ys.zy.fragment;
 
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
-import com.ys.zy.adapter.SubDealHistoryAdapter;
-import com.ys.zy.base.BaseActivity;
-import com.ys.zy.bean.MsgBean;
+import com.ys.zy.adapter.MyHdjjAdapter;
+import com.ys.zy.adapter.MyJyjlAdapter;
+import com.ys.zy.base.BaseFragment;
+import com.ys.zy.bean.HdjjBean;
 import com.ys.zy.bean.SubJYJL;
 import com.ys.zy.http.HttpListener;
 import com.ys.zy.sp.UserSP;
 import com.ys.zy.ui.BlankView;
 import com.ys.zy.ui.NoNetView;
-import com.ys.zy.util.DateUtil;
 import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.NetWorkUtil;
 import com.ys.zy.util.YS;
@@ -24,36 +24,29 @@ import com.ys.zy.util.YS;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubDealHistoryActivity extends BaseActivity implements NoNetView.ClickListener {
-
+public class MyHdjjFragment extends BaseFragment implements NoNetView.ClickListener {
     private ListView lv;
-    private List<SubJYJL.DataBeanX.DataBean> list;
-    private SubDealHistoryAdapter adapter;
+    private List<HdjjBean.DataBeanX.DataBean> list;
+    private MyHdjjAdapter adapter;
     private String userId;
-    private TextView dayTV;
     private NoNetView noNetView;
     private BlankView blankView;
     private LinearLayout dataLL;
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_sub_deal_history;
+    public static Fragment newInstance() {
+        return new MyHdjjFragment();
     }
 
     @Override
-    public void initView() {
-        setBarColor("#ededed");
-        titleView.setText("下级交易记录");
+    protected void init() {
         dataLL = getView(R.id.ll_data);
         noNetView = getView(R.id.nnv_);
         blankView = getView(R.id.bv_);
         blankView.setImage(R.mipmap.blank_inf_img).setText("暂无记录");
         noNetView.setClickListener(this);
-        dayTV = getView(R.id.tv_day);
-        dayTV.setText(DateUtil.longToYMD(System.currentTimeMillis()));
         lv = getView(R.id.lv_);
         list = new ArrayList<>();
-        adapter = new SubDealHistoryAdapter(mContext, list, R.layout.item_sub_manage);
+        adapter = new MyHdjjAdapter(mContext, list, R.layout.item_sub_manage);
         lv.setAdapter(adapter);
         userId = UserSP.getUserId(mContext);
     }
@@ -63,14 +56,14 @@ public class SubDealHistoryActivity extends BaseActivity implements NoNetView.Cl
         if (NetWorkUtil.isNetworkAvailable(mContext)) {
             noNetView.setVisibility(View.GONE);
             dataLL.setVisibility(View.VISIBLE);
-            HttpUtil.getSubJYJL(mContext, userId, DateUtil.getCurrentDayStartStr(), DateUtil.getCurrentDayEndStr(), new HttpListener<String>() {
+            HttpUtil.getMyJYJL(mContext, userId, new HttpListener<String>() {
                 @Override
                 public void onSucceed(int what, Response<String> response) {
                     list.clear();
-                    SubJYJL subJYJL = new Gson().fromJson(response.get(), SubJYJL.class);
-                    if (subJYJL != null) {
-                        if (YS.SUCCESE.equals(subJYJL.code) && subJYJL.data != null && subJYJL.data.data != null && subJYJL.data.data.size() > 0) {
-                            list.addAll(subJYJL.data.data);
+                    HdjjBean hdjjBean = new Gson().fromJson(response.get(), HdjjBean.class);
+                    if (hdjjBean != null) {
+                        if (YS.SUCCESE.equals(hdjjBean.code) && hdjjBean.data != null && hdjjBean.data.data != null && hdjjBean.data.data.size() > 0) {
+                            list.addAll(hdjjBean.data.data);
                         }
                     } else {
                         show(YS.HTTP_TIP);
@@ -95,9 +88,10 @@ public class SubDealHistoryActivity extends BaseActivity implements NoNetView.Cl
         }
     }
 
-    @Override
-    public void onClick(View v) {
 
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.fragment_my_hdjj;
     }
 
     @Override

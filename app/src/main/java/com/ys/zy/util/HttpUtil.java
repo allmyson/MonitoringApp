@@ -114,6 +114,18 @@ public class HttpUtil {
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
+    //团队报表总览
+    public static void getTotalTeamData(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.TEAM_BB_TOTAL + "?userId=" + userId;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //团队报表列表
+    public static void getTeamBBList(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.TEAM_BB_LIST + "?userId=" + userId + "&start=1&length=" + YS.LENGTH;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
     //投注
     public static void tz(Context context, String json, HttpListener<String> httpListener) {
         String url = YS.TZ;
@@ -181,10 +193,28 @@ public class HttpUtil {
     }
 
 
-    //获取推筒子每个类型投注总额
-    public static void getSubJYJL(Context context, String userId, HttpListener<String> httpListener) {
-        String url = YS.SUB_JYJL + "?userId=" + userId + "&start=1&length=1000";
-        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    //获取下级交易记录
+    public static void getSubJYJL(Context context, String userId, String startTime, String endTime, HttpListener<String> httpListener) {
+        String url = "";
+        try {
+            String start = URLEncoder.encode(startTime, "utf-8");
+            String end = URLEncoder.encode(endTime, "utf-8");
+            url = YS.SUB_JYJL + "?userId=" + userId + "&start=1&length=1000&startTime=" + start + "&endTime=" + end;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //获取我的交易报表
+    public static void getMyJYJL(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.MY_JYJL + "?userId=" + userId + "&start=1&length=1000";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+ //获取我的消费报表
+    public static void getMyXFJL(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.MY_XFJL + "?userId=" + userId + "&start=1&length=1000";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
     /**
