@@ -17,6 +17,7 @@ import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseFragment;
 import com.ys.zy.bean.BaseBean;
+import com.ys.zy.bean.OddsBean;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.http.HttpListener;
@@ -25,6 +26,7 @@ import com.ys.zy.roulette.adapter.ChipAdapter;
 import com.ys.zy.roulette.adapter.LpHistoryAdapter;
 import com.ys.zy.roulette.bean.ChipBean;
 import com.ys.zy.roulette.bean.LPBean;
+import com.ys.zy.roulette.bean.LpTz;
 import com.ys.zy.roulette.ui.LPView;
 import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.SscUtil;
@@ -58,10 +60,11 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     private Button clearBtn, sureBtn;
     private LPView lpView;
     private List<LPBean> lpBeanList;
-    private String gameNo = "0215096";
+    private String gameNo = "";
     private boolean isStart = true;
     private String userId;
 
+    //    private boolean isShowCurrentResult = false;//是否已显示当前期开奖结果
     public static RouletteTZFragment newInstance() {
         RouletteTZFragment rouletteTZFragment = new RouletteTZFragment();
         return rouletteTZFragment;
@@ -141,15 +144,20 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                         lpView.startRandomColor();
                     }
                 }
-                if (hasResult(gameNo)) {
-                    String result = getResult(gameNo);
-                    lpView.setResult(result);
-                } else {
-                    if (second == 54) {
-                        lpView.closeRandomColor();
-                        lpView.clearColorAndResult();
+                //让轮盘先转3秒
+                if (second == 53) {
+                    if (hasResult(gameNo)) {
+                        String result = getResult(gameNo);
+                        L.e("lp", "second=" + second + "--result=" + result);
+                        lpView.setResult(result);
                     }
                 }
+//                else {
+//                    if (second == 54) {
+//                        lpView.closeRandomColor();
+//                        lpView.clearColorAndResult();
+//                    }
+//                }
 //                if (second != 54) {
 //                    if (!lpView.isRamdomRunning()) {
 //                        L.e("lpView.startRandomColor()执行次数");
@@ -163,6 +171,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
             case TYPE_PJ:
                 timeTV.setText(getTimeStr(60 - second));
                 statusTV.setText("派奖中...");
+//                lpView.closeRandomColor();
                 if (second == 59) {
                     L.e("lpView.clearColorAndResult()执行次数");
                     lpView.clearColorAndResult();
@@ -175,6 +184,8 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     protected void getData() {
         start();
         getResult();
+        getTotalTz();
+        getOdds();
     }
 
     @Override
@@ -394,7 +405,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                getResult();
             }
         });
     }
@@ -433,5 +444,61 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     private void sendMsg() {
         Intent intent = new Intent(YS.ACTION_TZ_SUCCESS);
         getActivity().sendBroadcast(intent);
+    }
+
+    private void getOdds() {
+        HttpUtil.getGameOdds(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                OddsBean oddsBean = new Gson().fromJson(response.get(), OddsBean.class);
+                if (oddsBean != null && YS.SUCCESE.equals(oddsBean.code) && oddsBean.data != null) {
+                    ((TextView) getView(R.id.tv_odds)).setText(StringUtil.valueOf(oddsBean.data.lunpan));
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
+    private void getTotalTz() {
+        HttpUtil.getLpAllTz(mContext, gameNo, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                if (chipAdapter.getChooseData() != null && currentStatus == TYPE_TZ) {
+                    LpTz lpTz = new Gson().fromJson(response.get(), LpTz.class);
+                    if (lpTz != null && YS.SUCCESE.equals(lpTz.code) && lpTz.data != null) {
+                        lpBeanList.get(0).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.rabbitWinNum);
+                        lpBeanList.get(1).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.loongWinNum);
+                        lpBeanList.get(2).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.snakeWinNum);
+                        lpBeanList.get(3).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.horseWinNum);
+                        lpBeanList.get(4).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.sheepWinNum);
+                        lpBeanList.get(5).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.monkeyWinNum);
+                        lpBeanList.get(6).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.chickenWinNum);
+                        lpBeanList.get(7).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.dogWinNum);
+                        lpBeanList.get(8).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.pigWinNum);
+                        lpBeanList.get(9).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.mouseWinNum);
+                        lpBeanList.get(10).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.cattleWinNum);
+                        lpBeanList.get(11).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.tigerWinNum);
+                        lpView.setData(lpBeanList);
+                    }
+                }
+                if (isStart) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getTotalTz();
+                        }
+                    }, 2000);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                getTotalTz();
+            }
+        });
     }
 }

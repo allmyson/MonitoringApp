@@ -608,11 +608,12 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                getResult();
             }
         });
     }
-    private void sendMsg(){
+
+    private void sendMsg() {
         Intent intent = new Intent(YS.ACTION_TZ_SUCCESS);
         getActivity().sendBroadcast(intent);
     }

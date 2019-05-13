@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.view.View;
 import com.ys.zy.R;
 import com.ys.zy.roulette.bean.LPBean;
 import com.ys.zy.util.DensityUtil;
+import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
 
 import java.util.ArrayList;
@@ -242,6 +244,21 @@ public class LPView extends View {
         randomThraed.start();
     }
 
+    private int defaultStopConut = 36;
+    //转1圈=11秒，转3n-1下
+    private int stopCount = defaultStopConut;
+
+    public void startRandomColor(int count) {
+        this.stopCount = count;
+        if (randomThraed != null) {
+            randomThraed.setOver(true);
+            randomThraed.interrupt();
+            randomThraed = null;
+        }
+        randomThraed = new RandomThraed();
+        randomThraed.start();
+    }
+
     /**
      * 线程是否正在进行
      *
@@ -296,13 +313,19 @@ public class LPView extends View {
                         list.get(j).color = "#ff854b";
                     }
                 }
-                list.get(i).color = "#f7f7f7";
-                currentResult = list.get(i).name;
-                i++;
-                if (i > 11) {
-                    i = 0;
-                }
+                int m = i % 12;
+                list.get(m).color = "#f7f7f7";
+                currentResult = list.get(m).name;
                 invalidate();
+                i++;
+                L.e("lplp", "i=" + i);
+                if (i == stopCount) {
+                    closeRandomColor();
+                    L.e("lplp", "转盘在i=" + i + "的时候停止");
+                    L.e("lplp", "currentResult=" + currentResult);
+                    i = 0;
+                    stopCount = defaultStopConut;
+                }
             } else if (msg.what == 1) {
 
             }
@@ -310,30 +333,15 @@ public class LPView extends View {
     };
 
     public void setResult(final String result) {
-        if (currentResult == result) {
-            closeRandomColor();
-            currentResult = result;
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).name.equals(result)) {
-                    list.get(i).color = "#f7f7f7";
-                } else {
-                    if (i % 2 == 0) {
-                        list.get(i).color = "#ffa958";
-                    } else {
-                        list.get(i).color = "#ff854b";
-                    }
-                }
+        int resultIndex = 0;
+        for (int i = 0; i < sx.length; i++) {
+            if (sx[i].equals(result)) {
+                resultIndex = i;
             }
-            invalidate();
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setResult(result);
-                }
-            }, 100);
         }
+        stopCount = defaultStopConut + resultIndex + 1;
     }
+
 
     public static final String[] sx = new String[]{"兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪", "鼠", "牛", "虎"};
 

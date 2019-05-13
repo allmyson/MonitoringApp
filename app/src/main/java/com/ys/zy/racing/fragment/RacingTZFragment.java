@@ -588,7 +588,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                getResult();
             }
         });
     }

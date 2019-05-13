@@ -29,7 +29,9 @@ public class Fast3SumAdapter extends CommonAdapter<Fast3Bean> {
     public void convert(ViewHolder helper, Fast3Bean item, final int position) {
         LinearLayout ll = helper.getView(R.id.ll_);
         helper.setText(R.id.tv_value, StringUtil.valueOf(item.value));
-        helper.setText(R.id.tv_odds, "赔" + StringUtil.valueOf(item.odds));
+        if (!StringUtil.isBlank(item.odds)) {
+            helper.setText(R.id.tv_odds, "赔" + StringUtil.valueOf(item.odds));
+        }
         if (booleanList.get(position)) {
             ll.setBackgroundResource(R.drawable.rect_cornor_red3);
             helper.setTextColor(R.id.tv_value, Color.WHITE);

@@ -162,6 +162,31 @@ public class HttpUtil {
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
+    //获取游戏赔率
+    public static void getGameOdds(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.GET_GAME_ODDS + "?userId=" + userId;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
+
+    //获取轮盘每个生肖投注总额
+    public static void getLpAllTz(Context context, String periodNum, HttpListener<String> httpListener) {
+        String url = YS.GET_LP_TZ_SUM + "?periodNum=" + periodNum;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
+
+    //获取推筒子每个类型投注总额
+    public static void getTtzAllTz(Context context, String periodNum, HttpListener<String> httpListener) {
+        String url = YS.GET_TTZ_TZ_SUM + "?periodNum=" + periodNum;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
+
+
+    //获取推筒子每个类型投注总额
+    public static void getSubJYJL(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.SUB_JYJL + "?userId=" + userId + "&start=1&length=1000";
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
+
     /**
      * 修改用户信息
      *

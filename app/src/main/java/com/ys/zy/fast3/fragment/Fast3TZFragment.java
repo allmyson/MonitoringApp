@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.bean.BaseBean;
+import com.ys.zy.bean.OddsBean;
 import com.ys.zy.fast3.Fast3Util;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.activity.RechargeActivity;
@@ -175,6 +176,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     protected void getData() {
+        getOdds();
         startRandomText();
         start();
         getResult();
@@ -443,9 +445,9 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                 closeRandomText();
                 List<Integer> list = getResult(lastNo);
                 if (list.size() == 3) {
-                    iv01.setImageResource(drawables[list.get(0)]);
-                    iv02.setImageResource(drawables[list.get(1)]);
-                    iv03.setImageResource(drawables[list.get(2)]);
+                    iv01.setImageResource(drawables[list.get(0) - 1]);
+                    iv02.setImageResource(drawables[list.get(1) - 1]);
+                    iv03.setImageResource(drawables[list.get(2) - 1]);
                 }
             }
         } else {
@@ -505,7 +507,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                getResult();
             }
         });
     }
@@ -550,5 +552,45 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     private void sendMsg() {
         Intent intent = new Intent(YS.ACTION_TZ_SUCCESS);
         getActivity().sendBroadcast(intent);
+    }
+
+    private void getOdds() {
+        HttpUtil.getGameOdds(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                OddsBean oddsBean = new Gson().fromJson(response.get(), OddsBean.class);
+                if (oddsBean != null && YS.SUCCESE.equals(oddsBean.code) && oddsBean.data != null) {
+                    list.clear();
+                    List<Fast3Bean> tempList = new ArrayList<>();
+                    tempList.add(new Fast3Bean("大", oddsBean.data.ksDxds));
+                    tempList.add(new Fast3Bean("小", oddsBean.data.ksDxds));
+                    tempList.add(new Fast3Bean("单", oddsBean.data.ksDxds));
+                    tempList.add(new Fast3Bean("双", oddsBean.data.ksDxds));
+                    tempList.add(new Fast3Bean("3", oddsBean.data.ksHz318));
+                    tempList.add(new Fast3Bean("4", oddsBean.data.ksHz417));
+                    tempList.add(new Fast3Bean("5", oddsBean.data.ksHz516));
+                    tempList.add(new Fast3Bean("6", oddsBean.data.ksHz615));
+                    tempList.add(new Fast3Bean("7", oddsBean.data.ksHz714));
+                    tempList.add(new Fast3Bean("8", oddsBean.data.ksHz813));
+                    tempList.add(new Fast3Bean("9", oddsBean.data.ksHz912));
+                    tempList.add(new Fast3Bean("10", oddsBean.data.ksHz1011));
+                    tempList.add(new Fast3Bean("11", oddsBean.data.ksHz1011));
+                    tempList.add(new Fast3Bean("12", oddsBean.data.ksHz813));
+                    tempList.add(new Fast3Bean("13", oddsBean.data.ksHz813));
+                    tempList.add(new Fast3Bean("14", oddsBean.data.ksHz714));
+                    tempList.add(new Fast3Bean("15", oddsBean.data.ksHz615));
+                    tempList.add(new Fast3Bean("16", oddsBean.data.ksHz516));
+                    tempList.add(new Fast3Bean("17", oddsBean.data.ksHz417));
+                    tempList.add(new Fast3Bean("18", oddsBean.data.ksHz318));
+                    list.addAll(tempList);
+                    fast3SumAdapter.refresh(list);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 }

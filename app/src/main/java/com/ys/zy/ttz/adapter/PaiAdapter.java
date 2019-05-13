@@ -139,4 +139,22 @@ public class PaiAdapter extends CommonAdapter<PaiBean> {
             }
         }, 500);
     }
+
+
+    public void faPai(final List<Integer> list) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDatas.clear();
+                mDatas.addAll(TtzUtil.getRandomList(randomResult, list));
+                refresh(mDatas);
+                randomResult++;
+                if (randomResult < 5) {
+                    faPai();
+                } else {
+                    randomResult = 1;
+                }
+            }
+        }, 500);
+    }
 }

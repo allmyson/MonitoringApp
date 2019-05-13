@@ -1,6 +1,7 @@
 package com.ys.zy.ttz.fragment;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -19,14 +20,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.utils.ScreenUtils;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseFragment;
+import com.ys.zy.bean.BaseBean;
+import com.ys.zy.bean.OddsBean;
+import com.ys.zy.dialog.DialogUtil;
+import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.http.HttpListener;
+import com.ys.zy.roulette.activity.RouletteActivity;
 import com.ys.zy.roulette.adapter.ChipAdapter;
 import com.ys.zy.roulette.adapter.LpHistoryAdapter;
 import com.ys.zy.roulette.bean.ChipBean;
+import com.ys.zy.roulette.bean.LPBean;
+import com.ys.zy.roulette.bean.LpTz;
+import com.ys.zy.sp.UserSP;
 import com.ys.zy.ssc.bean.SscResultBean;
 import com.ys.zy.ttz.TtzUtil;
 import com.ys.zy.ttz.activity.TtzActivity;
@@ -34,6 +44,7 @@ import com.ys.zy.ttz.adapter.PaiAdapter;
 import com.ys.zy.ttz.adapter.TtzHistoryAdapter;
 import com.ys.zy.ttz.bean.MoneyBean;
 import com.ys.zy.ttz.bean.PaiBean;
+import com.ys.zy.ttz.bean.TtzTz;
 import com.ys.zy.ttz.ui.ParticleView;
 import com.ys.zy.ui.HorizontalListView;
 import com.ys.zy.util.DensityUtil;
@@ -110,6 +121,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private RelativeLayout z1CircleRL, z2CircleRL, z3CircleRL;
     private RelativeLayout p1CircleRL, p2CircleRL, p3CircleRL;
     private RelativeLayout x1CircleRL, x2CircleRL, x3CircleRL;
+    private String userId;
 
     public static TtzTZFragment newInstance() {
         TtzTZFragment ttzTZFragment = new TtzTZFragment();
@@ -221,6 +233,8 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         clearBtn.setOnClickListener(this);
         sureBtn.setOnClickListener(this);
         setBtnClickable(false, sureBtn);
+
+        userId = UserSP.getUserId(mContext);
     }
 
     private void initLocation() {
@@ -278,13 +292,31 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 //                    paiAdater.toDefault();
 //                    setRandomResultColor();
 //                }
-                if (second == 51) {
-                    paiAdater.faPai();
+//                if (second == 51) {
+//                    paiAdater.faPai();
+//                }
+                if (second == 51 && hasResult(gameNo)) {
+                    String result = getResult(gameNo);
+                    List<Integer> list = new Gson().fromJson(result, new TypeToken<List<Integer>>() {
+                    }.getType());
+                    if (list != null && list.size() == 8) {
+                        paiList.clear();
+                        paiList.add(new PaiBean("庄", list.get(0), list.get(1)));
+                        paiList.add(new PaiBean("闲1", list.get(2), list.get(3)));
+                        paiList.add(new PaiBean("闲2", list.get(4), list.get(5)));
+                        paiList.add(new PaiBean("闲3", list.get(6), list.get(7)));
+                        paiAdater.refresh(paiList);
+                    }
                 }
                 break;
             case TYPE_PJ:
                 timeTV.setText(getTimeStr(60 - second));
                 statusTV.setText("派奖中...");
+                if (second == 56 && hasResult(gameNo)) {
+                    String result = getResult(gameNo);
+                    String[] str = TtzUtil.getAllResult(result);
+                    setResultColor(str[0], str[1], str[2]);
+                }
                 if (second == 59) {
                     //恢复初始状态
                     startClearAnima();
@@ -302,6 +334,8 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     protected void getData() {
         start();
         getResult();
+        getTotalTz();
+        getOdds();
     }
 
     @Override
@@ -324,12 +358,6 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                 }
                 break;
             case R.id.btn_clear:
-//                chipAdapter.clear();
-                //清空投注
-//                for (int i = 0; i < lpBeanList.size(); i++) {
-//                    lpBeanList.get(i).myValue = 0;
-//                }
-//                lpView.setData(lpBeanList);
                 startClearAnima();
                 setBtnClickable(false, sureBtn);
                 break;
@@ -338,34 +366,86 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                     show("当前时间段不能投注！");
                     return;
                 }
-//                List<LPBean> result = lpView.getTZList();
-//                if (result != null && result.size() > 0) {
-//                    double sum = 0;
-//                    String content = "";
-//                    for (int i = 0; i < result.size(); i++) {
-//                        sum += result.get(i).myValue;
-//                        if (i != result.size() - 1) {
-//                            content += result.get(i).name + ",";
-//                        } else {
-//                            content += result.get(i).name;
-//                        }
-//                    }
-//                    DialogUtil.showTZTip(mContext, "轮盘", gameNo, StringUtil.StringToDoubleStr(sum), content, new TZTipFragment.ClickListener() {
-//                        @Override
-//                        public void sure() {
-//                            if (currentStatus == TYPE_TZ) {
-//                                DialogUtil.removeDialog(mContext);
-//                                show("投注成功");
-//                                lpView.clearColorAndResult();
-//                            } else {
-//                                DialogUtil.removeDialog(mContext);
-//                                show("当前时间段不能投注！");
-//                            }
-//                        }
-//                    });
+                String content = "";
+                List<String> contentList = new ArrayList<>();
+                for (MoneyBean moneyBean : moneyBeanList) {
+                    if (moneyBean.chipBeanList.size() > 0) {
+                        contentList.add(MoneyBean.getShowByType(moneyBean.type));
+                    }
+                }
+                if (contentList.size() == 1) {
+                    content = contentList.get(0);
+                } else {
+                    for (int i = 0; i < contentList.size(); i++) {
+                        if (i == contentList.size() - 1) {
+                            content += contentList.get(i);
+                        } else {
+                            content += contentList.get(i) + "\n";
+                        }
+                    }
+                }
+//
+                DialogUtil.showTZTip(mContext, "推筒子", gameNo, "" + getCurrentTzMoney(), content, new TZTipFragment.ClickListener() {
+                    @Override
+                    public void sure() {
+                        if (currentStatus == TYPE_TZ) {
+                            DialogUtil.removeDialog(mContext);
+                            tz();
+                        } else {
+                            DialogUtil.removeDialog(mContext);
+                            show("当前时间段不能投注！");
+                        }
+                    }
+                });
 //                }
                 break;
         }
+    }
+
+    private void tz() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("gameCode", YS.CODE_TTZ);
+        map.put("complantTypeCode", "1000");//手动
+        map.put("periodsNum", gameNo);//期号
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (MoneyBean moneyBean : moneyBeanList) {
+            if (moneyBean.chipBeanList.size() > 0) {
+                Map<String, Object> tzMap = new HashMap<>();
+                tzMap.put("betsNum", MoneyBean.getCodeByType(moneyBean.type));
+                tzMap.put("payMoney", getMoney(moneyBean.chipBeanList));
+                tzMap.put("times", 1);
+                list.add(tzMap);
+            }
+        }
+        map.put("betDetail", list);
+        String json = new Gson().toJson(map);
+        L.e("tz内容:" + json);
+        HttpUtil.tz(mContext, json, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                if (baseBean != null) {
+                    if (YS.SUCCESE.equals(baseBean.code)) {
+                        show("投注成功");
+                        startClearAnima();
+                        setBtnClickable(false, sureBtn);
+                        //通知Activity刷新余额
+                        ((TtzActivity) getActivity()).getData();
+                        sendMsg();//刷新投注记录
+                    } else {
+                        show(StringUtil.valueOf(baseBean.msg));
+                    }
+                } else {
+                    show(YS.HTTP_TIP);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     public static final int TYPE_TZ = 1000;//投注中
@@ -636,6 +716,99 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         return money;
     }
 
+    private int getType(String type) {
+        int res = 0;
+        switch (type) {
+            case "庄":
+                res = 0;
+                break;
+            case "平":
+                res = 1;
+                break;
+            case "闲":
+                res = 2;
+                break;
+        }
+        return res;
+    }
+
+    private void setResultColor(String x1, String x2, String x3) {
+        L.e(x1 + "-" + x2 + "-" + x3);
+        int r1 = getType(x1);
+        int r2 = getType(x2);
+        int r3 = getType(x3);
+        if (r1 == 0) {
+            z1ResultTV.setTextColor(Color.parseColor("#dd2230"));
+            p1ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x1ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z1CircleRL.setBackgroundResource(R.drawable.circle11);
+            p1CircleRL.setBackgroundResource(R.drawable.circle10);
+            x1CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else if (r1 == 1) {
+            z1ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p1ResultTV.setTextColor(Color.parseColor("#a5a5a5"));
+            x1ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z1CircleRL.setBackgroundResource(R.drawable.circle10);
+            p1CircleRL.setBackgroundResource(R.drawable.circle11);
+            x1CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else {
+            z1ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p1ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x1ResultTV.setTextColor(Color.parseColor("#29abe2"));
+            z1CircleRL.setBackgroundResource(R.drawable.circle10);
+            p1CircleRL.setBackgroundResource(R.drawable.circle10);
+            x1CircleRL.setBackgroundResource(R.drawable.circle11);
+        }
+
+
+        if (r2 == 0) {
+            z2ResultTV.setTextColor(Color.parseColor("#dd2230"));
+            p2ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x2ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z2CircleRL.setBackgroundResource(R.drawable.circle11);
+            p2CircleRL.setBackgroundResource(R.drawable.circle10);
+            x2CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else if (r2 == 1) {
+            z2ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p2ResultTV.setTextColor(Color.parseColor("#a5a5a5"));
+            x2ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z2CircleRL.setBackgroundResource(R.drawable.circle10);
+            p2CircleRL.setBackgroundResource(R.drawable.circle11);
+            x2CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else {
+            z2ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p2ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x2ResultTV.setTextColor(Color.parseColor("#29abe2"));
+            z2CircleRL.setBackgroundResource(R.drawable.circle10);
+            p2CircleRL.setBackgroundResource(R.drawable.circle10);
+            x2CircleRL.setBackgroundResource(R.drawable.circle11);
+        }
+
+        if (r3 == 0) {
+            z3ResultTV.setTextColor(Color.parseColor("#dd2230"));
+            p3ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x3ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z3CircleRL.setBackgroundResource(R.drawable.circle11);
+            p3CircleRL.setBackgroundResource(R.drawable.circle10);
+            x3CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else if (r3 == 1) {
+            z3ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p3ResultTV.setTextColor(Color.parseColor("#a5a5a5"));
+            x3ResultTV.setTextColor(Color.parseColor("#4d29abe2"));
+            z3CircleRL.setBackgroundResource(R.drawable.circle10);
+            p3CircleRL.setBackgroundResource(R.drawable.circle11);
+            x3CircleRL.setBackgroundResource(R.drawable.circle10);
+        } else {
+            z3ResultTV.setTextColor(Color.parseColor("#4ddd2230"));
+            p3ResultTV.setTextColor(Color.parseColor("#4da5a5a5"));
+            x3ResultTV.setTextColor(Color.parseColor("#29abe2"));
+            z3CircleRL.setBackgroundResource(R.drawable.circle10);
+            p3CircleRL.setBackgroundResource(R.drawable.circle10);
+            x3CircleRL.setBackgroundResource(R.drawable.circle11);
+        }
+    }
+
+
     private void setRandomResultColor() {
         Random random = new Random();
         int r1 = random.nextInt(3);
@@ -755,8 +928,9 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private boolean isStart = true;
+
     private void getResult() {
-        HttpUtil.getSscResult(mContext, YS.CODE_LP, 50, new HttpListener<String>() {
+        HttpUtil.getSscResult(mContext, YS.CODE_TTZ, 50, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 historyList.clear();
@@ -777,7 +951,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                getResult();
             }
         });
     }
@@ -811,5 +985,65 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
             }
         }
         return result;
+    }
+
+    private void sendMsg() {
+        Intent intent = new Intent(YS.ACTION_TZ_SUCCESS);
+        getActivity().sendBroadcast(intent);
+    }
+
+
+    private void getOdds() {
+        HttpUtil.getGameOdds(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                OddsBean oddsBean = new Gson().fromJson(response.get(), OddsBean.class);
+                if (oddsBean != null && YS.SUCCESE.equals(oddsBean.code) && oddsBean.data != null) {
+                    ((TextView) getView(R.id.tv_odds_z)).setText("赔" + StringUtil.valueOf(oddsBean.data.ttzZx));
+                    ((TextView) getView(R.id.tv_odds_p)).setText("赔" + StringUtil.valueOf(oddsBean.data.ttzPing));
+                    ((TextView) getView(R.id.tv_odds_x)).setText("赔" + StringUtil.valueOf(oddsBean.data.ttzZx));
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
+    private void getTotalTz() {
+        HttpUtil.getTtzAllTz(mContext, gameNo, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                if (chipAdapter.getChooseData() != null && currentStatus == TYPE_TZ) {
+                    TtzTz ttzTz = new Gson().fromJson(response.get(), TtzTz.class);
+                    if (ttzTz != null && YS.SUCCESE.equals(ttzTz.code) && ttzTz.data != null) {
+                        total_z_1TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zyx1));
+                        total_z_2TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zyx2));
+                        total_z_3TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zyx3));
+                        total_p_1TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zpx1));
+                        total_p_2TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zpx2));
+                        total_p_3TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zpx3));
+                        total_x_1TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zsx1));
+                        total_x_2TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zsx2));
+                        total_x_3TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zsx3));
+                    }
+                }
+                if (isStart) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getTotalTz();
+                        }
+                    }, 2000);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                getTotalTz();
+            }
+        });
     }
 }

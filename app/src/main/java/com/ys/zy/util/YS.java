@@ -103,6 +103,14 @@ public class YS {
     public static final String TX = IP + "/appService/my/center/apply/add";
     //APP下载地址
     public static final String APP_DOWNLOAD_URL = IP + "/downloadFile?type=1000";
+    //获取游戏赔率
+    public static final String GET_GAME_ODDS = IP + "/appService/gameBackNum";
+    //获取轮盘每个生肖投注总额
+    public static final String GET_LP_TZ_SUM = IP + "/appService/wheelResult";
+    //获取推筒子每个类型投注总额
+    public static final String GET_TTZ_TZ_SUM = IP + "/appService/ttzResult";
+    //下级交易记录
+    public static final String SUB_JYJL = IP + "/appService/my/proxy/sub/tradeReport";
 
 
     //投注

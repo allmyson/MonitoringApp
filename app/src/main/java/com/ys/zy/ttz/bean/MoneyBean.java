@@ -28,4 +28,82 @@ public class MoneyBean {
         list.add(new MoneyBean(TtzTZFragment.TYPE_X3, new ArrayList<ChipBean>()));
         return list;
     }
+
+    public static String getShowByType(int type) {
+        String show = "";
+        switch (type) {
+            case TtzTZFragment.TYPE_Z1:
+                show = "庄对闲1(庄)";
+                break;
+            case TtzTZFragment.TYPE_P1:
+                show = "庄对闲1(平)";
+                break;
+            case TtzTZFragment.TYPE_X1:
+                show = "庄对闲1(闲)";
+                break;
+            case TtzTZFragment.TYPE_Z2:
+                show = "庄对闲2(庄)";
+                break;
+            case TtzTZFragment.TYPE_P2:
+                show = "庄对闲2(平)";
+                break;
+            case TtzTZFragment.TYPE_X2:
+                show = "庄对闲2(闲)";
+                break;
+            case TtzTZFragment.TYPE_Z3:
+                show = "庄对闲3(庄)";
+                break;
+            case TtzTZFragment.TYPE_P3:
+                show = "庄对闲3(平)";
+                break;
+            case TtzTZFragment.TYPE_X3:
+                show = "庄对闲4(闲)";
+                break;
+        }
+        return show;
+    }
+
+    public static String getCodeByType(int type) {
+        String show = "";
+        switch (type) {
+            case TtzTZFragment.TYPE_Z1:
+                show = "1000";
+                break;
+            case TtzTZFragment.TYPE_P1:
+                show = "1001";
+                break;
+            case TtzTZFragment.TYPE_X1:
+                show = "1002";
+                break;
+            case TtzTZFragment.TYPE_Z2:
+                show = "1010";
+                break;
+            case TtzTZFragment.TYPE_P2:
+                show = "1011";
+                break;
+            case TtzTZFragment.TYPE_X2:
+                show = "1012";
+                break;
+            case TtzTZFragment.TYPE_Z3:
+                show = "1100";
+                break;
+            case TtzTZFragment.TYPE_P3:
+                show = "1101";
+                break;
+            case TtzTZFragment.TYPE_X3:
+                show = "1102";
+                break;
+        }
+        return show;
+    }
+
+    public static double getMoney(List<ChipBean> list) {
+        double sum = 0;
+        if (list != null && list.size() > 0) {
+            for (ChipBean chipBean : list) {
+                sum += chipBean.money;
+            }
+        }
+        return sum;
+    }
 }
