@@ -1,31 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f7f7f7"
-    android:orientation="vertical">
+    android:background="#ededed"
+    android:orientation="vertical"
+    android:paddingTop="8dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp">
-
-        <com.ys.zy.ui.TitleView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="48dp" />
-
-        <TextView
-            android:id="@+id/tv_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:textColor="#1e1e1e"
-            android:textSize="16sp" />
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +19,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="下级账号"
+            android:text="游戏期号"
             android:textColor="#1e1e1e"
             android:textSize="16sp" />
 
@@ -54,7 +34,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="充值"
+            android:text="投注金额"
             android:textColor="#1e1e1e"
             android:textSize="16sp" />
 
@@ -69,7 +49,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="提现"
+            android:text="奖金"
             android:textColor="#1e1e1e"
             android:textSize="16sp" />
 
@@ -110,5 +90,4 @@
                 android:background="#d1d1d1" />
         </LinearLayout>
     </FrameLayout>
-
 </LinearLayout>

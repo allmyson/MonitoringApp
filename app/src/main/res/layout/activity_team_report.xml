@@ -27,10 +27,11 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
-                android:text="6"
+                android:text="0"
                 android:textColor="@color/main_color"
                 android:textSize="16sp" />
 
@@ -56,10 +57,11 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_tzNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
-                android:text="9000000.00"
+                android:text="0.00"
                 android:textColor="@color/main_color"
                 android:textSize="16sp" />
 
@@ -85,10 +87,11 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_backNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
-                android:text="15863.66"
+                android:text="0.00"
                 android:textColor="@color/main_color"
                 android:textSize="16sp" />
 
@@ -153,15 +156,40 @@
             android:textSize="16sp" />
 
     </LinearLayout>
-    <ListView
-        android:id="@+id/lv_"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:dividerHeight="0.5dp"
-        android:divider="#d1d1d1"
-        android:background="#f7f7f7"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#d1d1d1"/>
+        android:layout_height="match_parent">
+
+        <com.ys.zy.ui.NoNetView
+            android:id="@+id/nnv_"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <com.ys.zy.ui.BlankView
+            android:id="@+id/bv_"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/lv_"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#f7f7f7"
+                android:divider="#d1d1d1"
+                android:dividerHeight="0.5dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#d1d1d1" />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>
