@@ -201,7 +201,27 @@ public class DialogUtil {
         ft.commitAllowingStateLoss();
         return newFragment;
     }
-
+    /**
+     * 弹出退出确认框
+     *
+     * @param context
+     * @param clickListener
+     * @return
+     */
+    public static ExitFragment showExit(Context context, ExitFragment.ClickListener clickListener) {
+        FragmentActivity activity = (FragmentActivity) context;
+        removeDialog(activity);
+        ExitFragment newFragment = ExitFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
+                .Theme_Holo_Light_Dialog);
+        newFragment.setClickListener(clickListener);
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        // 指定一个过渡动画
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        newFragment.show(ft, mDialogTag);//Can not perform this action after onSaveInstanceState
+        ft.add(newFragment, mDialogTag);
+        ft.commitAllowingStateLoss();
+        return newFragment;
+    }
     /**
      * 弹出游戏框
      *

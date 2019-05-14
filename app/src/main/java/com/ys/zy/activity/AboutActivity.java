@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.dialog.DialogUtil;
+import com.ys.zy.dialog.ExitFragment;
 import com.ys.zy.dialog.ShareFragment;
 import com.ys.zy.util.ActivityUtil;
 import com.ys.zy.util.AppUtil;
@@ -63,9 +64,14 @@ public class AboutActivity extends BaseActivity {
                 startActivity(new Intent(mContext, UpdateInfoActivity.class));
                 break;
             case R.id.ll_exit:
-                SPUtil.clear(mContext);
-                ActivityUtil.finish();
-                startActivity(new Intent(mContext, LoginActivity.class));
+                DialogUtil.showExit(mContext, new ExitFragment.ClickListener() {
+                    @Override
+                    public void sure() {
+                        SPUtil.clear(mContext);
+                        ActivityUtil.finish();
+                        startActivity(new Intent(mContext, LoginActivity.class));
+                    }
+                });
                 break;
         }
     }
