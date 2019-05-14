@@ -211,6 +211,11 @@ public class HttpUtil {
         String url = YS.MY_JYJL + "?userId=" + userId + "&start=1&length=1000";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
+    //获取我的活动奖金记录
+    public static void getMyHdjj(Context context, String userId, HttpListener<String> httpListener) {
+        String url = YS.MY_HDJJ + "?userId=" + userId + "&start=1&length=1000";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
  //获取我的消费报表
     public static void getMyXFJL(Context context, String userId, HttpListener<String> httpListener) {
         String url = YS.MY_XFJL + "?userId=" + userId + "&start=1&length=1000";

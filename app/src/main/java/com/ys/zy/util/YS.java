@@ -115,6 +115,8 @@ public class YS {
     public static final String MY_JYJL = IP + "/appService/my/report/tradeReport";
     //我的消费记录
     public static final String MY_XFJL = IP + "/appService/my/report/consumeReport";
+    //我的活动奖金
+    public static final String MY_HDJJ = IP + "/appService/my/report/activityMoney";
     //团队报表总览
     public static final String TEAM_BB_TOTAL = IP + "/appService/my/proxy/teamcount/summary";
     //团队报表列表

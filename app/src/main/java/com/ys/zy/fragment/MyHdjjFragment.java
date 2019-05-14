@@ -56,7 +56,7 @@ public class MyHdjjFragment extends BaseFragment implements NoNetView.ClickListe
         if (NetWorkUtil.isNetworkAvailable(mContext)) {
             noNetView.setVisibility(View.GONE);
             dataLL.setVisibility(View.VISIBLE);
-            HttpUtil.getMyJYJL(mContext, userId, new HttpListener<String>() {
+            HttpUtil.getMyHdjj(mContext, userId, new HttpListener<String>() {
                 @Override
                 public void onSucceed(int what, Response<String> response) {
                     list.clear();
