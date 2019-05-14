@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ededed"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <com.ys.zy.ui.TitleView
         android:id="@+id/title"
@@ -35,8 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="手机号"
-            android:textSize="16sp"
-            android:textColor="#1e1e1e"/>
+            android:textColor="#1e1e1e"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -49,11 +48,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:textSize="16sp"
                 android:background="@null"
                 android:hint="输入要绑定的手机号"
                 android:padding="5dp"
-                android:textColor="#1e1e1e" />
+                android:textColor="#1e1e1e"
+                android:textSize="16sp" />
 
             <View
                 android:id="@+id/view_phone"
@@ -80,8 +79,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="验证码"
-            android:textSize="16sp"
-            android:textColor="#1e1e1e" />
+            android:textColor="#1e1e1e"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -92,21 +91,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_marginBottom="3dp"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/et_num"
-                    android:textSize="16sp"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
                     android:hint="输入手机验证码"
                     android:padding="5dp"
-                    android:textColor="#1e1e1e" />
+                    android:textColor="#1e1e1e"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/btn_send"
@@ -134,7 +133,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"

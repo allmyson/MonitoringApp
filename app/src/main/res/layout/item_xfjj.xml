@@ -20,9 +20,11 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="1分快3"
+                android:id="@+id/tv_gameName"
                 android:textColor="#1e1e1e"
                 android:textSize="12sp" />
             <TextView
+                android:id="@+id/tv_periods_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -34,7 +36,7 @@
 
 
         <TextView
-            android:id="@+id/tv_odds"
+            android:id="@+id/tv_betMoney"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -45,7 +47,7 @@
 
 
         <TextView
-            android:id="@+id/tv_time"
+            android:id="@+id/tv_isZJ"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
