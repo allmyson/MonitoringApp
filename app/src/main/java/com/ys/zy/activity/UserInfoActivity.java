@@ -17,16 +17,19 @@ import com.ys.zy.bean.BaseBean;
 import com.ys.zy.http.HttpListener;
 import com.ys.zy.sp.User;
 import com.ys.zy.sp.UserSP;
+import com.ys.zy.ui.CircleImageView;
 import com.ys.zy.ui.TitleView;
 import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class UserInfoActivity extends BaseActivity {
     private LinearLayout headLL, nickLL;
-    private ImageView headIV;
+    private CircleImageView headIV;
     private String photoUrl;
     private TextView nickTV, usernameTV, typeTV, fdTV;
     private String userId;
@@ -61,13 +64,8 @@ public class UserInfoActivity extends BaseActivity {
             usernameTV.setText(StringUtil.valueOf(user.data.loginName));
             typeTV.setText(StringUtil.valueOf(user.data.levelName));
             fdTV.setText(StringUtil.StringToDoubleStr(user.data.backNum));
-            Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).placeholder(R.mipmap.bg_default_head2).error(R.mipmap.bg_default_head2).into(headIV);
+            Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
@@ -77,7 +75,7 @@ public class UserInfoActivity extends BaseActivity {
                     usernameTV.setText(StringUtil.valueOf(user.data.loginName));
                     typeTV.setText(StringUtil.valueOf(user.data.levelName));
                     fdTV.setText(StringUtil.StringToDoubleStr(user.data.backNum));
-                    Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).placeholder(R.mipmap.bg_default_head2).error(R.mipmap.bg_default_head2).into(headIV);
+                    Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
                     UserSP.saveUser(mContext, response.get());
                 }
             }
@@ -86,6 +84,12 @@ public class UserInfoActivity extends BaseActivity {
             public void onFailed(int what, Response<String> response) {
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -109,7 +113,10 @@ public class UserInfoActivity extends BaseActivity {
                     ArrayList<String> images = (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
                             .REQUEST_OUTPUT);
                     photoUrl = images.get(0);
+                    L.e("photoUrl=" + photoUrl);
                     updatePhoto();
+//                    headIV.setImageResource(R.mipmap.about_logo_icon);
+//                    Glide.with(mContext).load("https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1908239510,917370588&fm=26&gp=0.jpg").into(headIV);
                     break;
             }
         }
@@ -122,8 +129,7 @@ public class UserInfoActivity extends BaseActivity {
                 BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
                 if (baseBean != null) {
                     if (YS.SUCCESE.equals(baseBean.code)) {
-                        Glide.with(mContext).load(photoUrl).placeholder(R.mipmap.bg_default_head2).error(R.mipmap
-                                .bg_default_head2).into(headIV);
+                        Glide.with(mContext).load(photoUrl).into(headIV);
                     }
                     show(StringUtil.valueOf(baseBean.msg));
                 } else {

@@ -62,6 +62,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class TtzTZFragment extends BaseFragment implements View.OnClickListener, View.OnTouchListener {
+    private FrameLayout parentFL;
     public final static int TYPE_Z1 = 100;//点击区域
     public final static int TYPE_P1 = 101;
     public final static int TYPE_X1 = 102;
@@ -97,6 +98,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private RelativeLayout z1RL, p1RL, x1RL;
     private RelativeLayout z2RL, p2RL, x2RL;
     private RelativeLayout z3RL, p3RL, x3RL;
+    private int[] locationParent;
     private int[] locationZ1;
     private int[] locationP1;
     private int[] locationX1;
@@ -130,6 +132,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     protected void init() {
+        parentFL = getView(R.id.fl_parent);
         z1CircleRL = getView(R.id.rl_1_z_circle);
         z2CircleRL = getView(R.id.rl_2_z_circle);
         z3CircleRL = getView(R.id.rl_3_z_circle);
@@ -201,7 +204,8 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         z3RL = getView(R.id.rl_3_z);
         p3RL = getView(R.id.rl_3_p);
         x3RL = getView(R.id.rl_3_x);
-        ((ViewGroup) getActivity().getWindow().getDecorView().findViewById(android.R.id.content)).getChildAt(0).setOnTouchListener(this);
+//        ((ViewGroup) getActivity().getWindow().getDecorView().findViewById(android.R.id.content)).getChildAt(0).setOnTouchListener(this);
+        parentFL.setOnTouchListener(this);
         paiGV = getView(R.id.gv_);
         paiList = new ArrayList<>();
         paiList.addAll(TtzUtil.getDefaultList());
@@ -238,6 +242,8 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void initLocation() {
+        locationParent = new int[2];
+        parentFL.getLocationOnScreen(locationParent);
         locationZ1 = new int[2];
         z1RL.getLocationOnScreen(locationZ1);
         locationP1 = new int[2];
@@ -602,7 +608,8 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DensityUtil.dp2px(mContext, 20), DensityUtil.dp2px(mContext, 20));
         layoutParams.leftMargin = (int) (x - DensityUtil.dp2px(mContext, 10));
         layoutParams.topMargin = (int) (y - DensityUtil.dp2px(mContext, 10));
-        getActivity().addContentView(imageView, layoutParams);
+        parentFL.addView(imageView, layoutParams);
+//        getActivity().addContentView(imageView, layoutParams);
         imageViewList.add(imageView);
 //        TranslateAnimation animation = new TranslateAnimation(-x - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10), -y - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10));
         TranslateAnimation animation = new TranslateAnimation(fromX - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10), fromY - DensityUtil.dp2px(mContext, 10), 0 - DensityUtil.dp2px(mContext, 10));
@@ -679,9 +686,9 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    FrameLayout group = (FrameLayout) getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+//                    FrameLayout group = (FrameLayout) getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
                     for (ImageView imageView : imageViewList) {
-                        group.removeView(imageView);
+                        parentFL.removeView(imageView);
                     }
                     imageViewList.clear();
                     for (TextView value : myTVMap.values()) {

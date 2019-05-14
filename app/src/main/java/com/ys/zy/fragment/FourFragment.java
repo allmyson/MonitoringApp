@@ -1,12 +1,9 @@
 package com.ys.zy.fragment;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,6 +25,7 @@ import com.ys.zy.bean.FourBean;
 import com.ys.zy.http.HttpListener;
 import com.ys.zy.sp.User;
 import com.ys.zy.sp.UserSP;
+import com.ys.zy.ui.CircleImageView;
 import com.ys.zy.ui.MyListView;
 import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.StringUtil;
@@ -48,7 +46,7 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
     private MyListView mlv;
     private List<FourBean> myList;
     private MyAdapter myAdapter;
-    private ImageView headIV;
+    private CircleImageView headIV;
     private SwipeRefreshLayout srl;
     private RelativeLayout rechargeRL, txRL;
     private String userId;
@@ -61,7 +59,7 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onRefresh() {
-        getData();
+        getPhoto();
     }
 
     @Override
@@ -126,13 +124,17 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
             nickNameTV.setText(StringUtil.valueOf(user.data.consumerName));
             userNameTV.setText("账号:" + StringUtil.valueOf(user.data.loginName));
             yueTV.setText(StringUtil.StringToDoubleStr(user.data.balance));
-            Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).placeholder(R.mipmap.bg_default_head2).error(R.mipmap.bg_default_head2).into(headIV);
+            Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        getPhoto();
+    }
+
+    private void getPhoto() {
         HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
@@ -141,7 +143,7 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
                     nickNameTV.setText(StringUtil.valueOf(user.data.consumerName));
                     userNameTV.setText("账号:" + StringUtil.valueOf(user.data.loginName));
                     yueTV.setText(StringUtil.StringToDoubleStr(user.data.balance));
-                    Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).placeholder(R.mipmap.bg_default_head2).error(R.mipmap.bg_default_head2).into(headIV);
+                    Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
                     UserSP.saveUser(mContext, response.get());
                 }
                 srl.setRefreshing(false);

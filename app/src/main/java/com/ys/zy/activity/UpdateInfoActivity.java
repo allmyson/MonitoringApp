@@ -40,7 +40,7 @@ public class UpdateInfoActivity extends BaseActivity {
         btn = getView(R.id.btn_update);
         btn.setOnClickListener(this);
         hasTV.setText("已是最新版本：Version " + versionName);
-        setBtnClickable(false,btn);
+        setBtnClickable(true,btn);
     }
 
     @Override
