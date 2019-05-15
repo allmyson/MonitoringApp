@@ -6,9 +6,25 @@ android {
         applicationId "com.ys.zy"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        release {
+            keyAlias 'ys.jks'
+            keyPassword '123456'
+            storeFile file('ys.jks')
+            storePassword '123456'
+            //sha1 12:59:91:D1:63:AB:83:E0:32:55:1E:D9:80:C4:A3:F7:DA:0A:FE:B2
+        }
+
+        debug {
+            keyAlias 'ys.jks'
+            keyPassword '123456'
+            storeFile file('ys.jks')
+            storePassword '123456'
+        }
     }
     buildTypes {
         release {
@@ -34,10 +50,10 @@ dependencies {
     implementation rootProject.ext.dependencies.nohttp
     implementation rootProject.ext.dependencies.multidex
     implementation rootProject.ext.dependencies.permisson
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:0.5'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
     implementation project(':imageSelect')
     implementation project(':qrcode')
+    implementation project(':convenientbanner')
 }
