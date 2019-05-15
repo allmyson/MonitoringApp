@@ -9,16 +9,20 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.bean.Bank;
 import com.ys.zy.bean.BaseBean;
 import com.ys.zy.bean.Yzm;
 import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.User;
 import com.ys.zy.sp.UserSP;
 import com.ys.zy.ui.TitleView;
+import com.ys.zy.util.BankUtil;
 import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.KeyBoardUtils;
 import com.ys.zy.util.PwdCheckUtil;
@@ -36,6 +40,8 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
 
     private int type = TYPE_BIND_PHONE;
     private static final String KEY = "key_phone";
+    private boolean isCanSendYZM = false;
+    private ImageView checkIV;
 
     @Override
     public int getLayoutId() {
@@ -46,6 +52,7 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
     public void initView() {
         type = getIntent().getIntExtra(KEY, TYPE_BIND_PHONE);
         setBarColor("#ededed");
+        checkIV = getView(R.id.iv_check);
         if (type == TYPE_BIND_PHONE) {
             //绑定手机
             titleView.setText("绑定手机");
@@ -77,6 +84,8 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
         numET = getView(R.id.et_num);
         phoneET.addTextChangedListener(this);
         numET.addTextChangedListener(this);
+        phoneET.setOnFocusChangeListener(this);
+        numET.setOnFocusChangeListener(this);
         sendBtn = getView(R.id.btn_send);
         sendBtn.setOnClickListener(this);
         userId = UserSP.getUserId(mContext);
@@ -126,11 +135,17 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send:
-                if (StringUtil.isPhone(phoneET.getText().toString().trim())) {
+                if (!StringUtil.isPhone(phoneET.getText().toString().trim())) {
+                    show("请输入正确的手机号码");
+                } else if (!isCanSendYZM) {
+                    if (type == TYPE_BIND_PHONE) {
+                        show("该号码已经绑定过");
+                    } else {
+                        show("该号码未进行绑定");
+                    }
+                } else {
                     sendMsg();
                     start();
-                } else {
-                    show("请输入正确的手机号码");
                 }
                 break;
         }
@@ -165,7 +180,49 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (StringUtil.isPhone(phoneET.getText().toString().trim())) {
+            HttpUtil.getUserInfoByPhone(mContext, phoneET.getText().toString().trim(), new HttpListener<String>() {
+                @Override
+                public void onSucceed(int what, Response<String> response) {
+                    User user = new Gson().fromJson(response.get(), User.class);
+                    if (user != null && YS.SUCCESE.equals(user.code) && user.data != null) {
+                        if (!StringUtil.isBlank(user.data.tel)) {
+                            if (type == TYPE_BIND_PHONE) {
+                                isCanSendYZM = false;
+                                checkIV.setImageResource(R.mipmap.phonecheck_btn_err);
+                            } else {
+                                isCanSendYZM = true;
+                                checkIV.setImageResource(R.mipmap.phonecheck_btn_ok);
+                            }
+                        } else {
+                            if (type == TYPE_BIND_PHONE) {
+                                isCanSendYZM = true;
+                                checkIV.setImageResource(R.mipmap.phonecheck_btn_ok);
+                            } else {
+                                isCanSendYZM = false;
+                                checkIV.setImageResource(R.mipmap.phonecheck_btn_err);
+                            }
+                        }
+                    } else {
+                        if (type == TYPE_BIND_PHONE) {
+                            isCanSendYZM = true;
+                            checkIV.setImageResource(R.mipmap.phonecheck_btn_ok);
+                        } else {
+                            isCanSendYZM = false;
+                            checkIV.setImageResource(R.mipmap.phonecheck_btn_err);
+                        }
+                    }
+                }
 
+                @Override
+                public void onFailed(int what, Response<String> response) {
+
+                }
+            });
+        } else {
+            isCanSendYZM = false;
+            checkIV.setImageResource(R.mipmap.phonecheck_btn_err);
+        }
     }
 
     @Override
@@ -183,7 +240,7 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
             case R.id.et_phone:
                 setFocusChange(hasFocus, getView(R.id.view_phone));
                 break;
-            case R.id.et_yzm:
+            case R.id.et_num:
                 setFocusChange(hasFocus, getView(R.id.view_yzm));
                 break;
         }

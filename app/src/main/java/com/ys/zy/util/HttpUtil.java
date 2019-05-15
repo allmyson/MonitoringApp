@@ -43,7 +43,7 @@ public class HttpUtil {
     //获取游戏列表
     public static void getGameList(Context context, HttpListener<String> httpListener) {
         String url = YS.GAME_LIST;
-        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
     //查询消息
@@ -296,6 +296,16 @@ public class HttpUtil {
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 
+    /**
+     * 通过电话查询用户信息
+     * @param context
+     * @param phone
+     * @param httpListener
+     */
+    public static void getUserInfoByPhone(Context context, String phone, HttpListener<String> httpListener) {
+        String url = YS.USERINFO + "?phone=" + phone;
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
+    }
     //生成邀请码
     public static void createYqm(Context context, String userId, String backNum, HttpListener<String> httpListener) {
         String url = YS.ADD_YQM + "?userId=" + userId + "&backNum=" + backNum;

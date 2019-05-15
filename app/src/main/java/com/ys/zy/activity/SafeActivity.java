@@ -96,7 +96,11 @@ public class SafeActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_bindPhone:
-                BindPhoneActivity.intentToVerifyPhone(mContext, BindPhoneActivity.TYPE_BIND_PHONE);
+                if ("未绑定".equals(bindTV.getText().toString())) {
+                    BindPhoneActivity.intentToVerifyPhone(mContext, BindPhoneActivity.TYPE_BIND_PHONE);
+                } else {
+                    show("已绑定手机");
+                }
                 break;
             case R.id.ll_card:
                 if (hasJymm) {

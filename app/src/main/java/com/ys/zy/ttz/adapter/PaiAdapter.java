@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.ys.zy.R;
@@ -15,15 +17,20 @@ import com.ys.zy.ttz.TtzUtil;
 import com.ys.zy.ttz.bean.PaiBean;
 import com.ys.zy.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PaiAdapter extends CommonAdapter<PaiBean> {
+    private Animation animation;
+    private int currentAnimaItem = -1;
+
     public PaiAdapter(Context context, List<PaiBean> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
+        animation = AnimationUtils.loadAnimation(mContext, R.anim.gridview_item_anim);
     }
 
     @Override
-    public void convert(ViewHolder helper, PaiBean item, int position) {
+    public void convert(final ViewHolder helper, PaiBean item, int position) {
         helper.setText(R.id.tv_, StringUtil.valueOf(item.name));
         if (position == 0) {
             ((TextView) helper.getView(R.id.tv_)).setTextColor(Color.parseColor("#dd2230"));
@@ -32,6 +39,18 @@ public class PaiAdapter extends CommonAdapter<PaiBean> {
         }
         helper.setImageResource(R.id.iv01, PaiBean.getDrawableId(item.firstValue));
         helper.setImageResource(R.id.iv02, PaiBean.getDrawableId(item.secondValue));
+        if (currentAnimaItem != -1) {
+            if (position == currentAnimaItem) {
+                helper.getView(R.id.iv01).startAnimation(animation);
+                helper.getView(R.id.iv02).startAnimation(animation);
+            } else {
+                helper.getView(R.id.iv01).clearAnimation();
+                helper.getView(R.id.iv02).clearAnimation();
+            }
+        } else {
+            helper.getView(R.id.iv01).startAnimation(animation);
+            helper.getView(R.id.iv02).startAnimation(animation);
+        }
     }
 
 
@@ -142,19 +161,54 @@ public class PaiAdapter extends CommonAdapter<PaiBean> {
 
 
     public void faPai(final List<Integer> list) {
-        handler.postDelayed(new Runnable() {
+        List<PaiBean> list1 = new ArrayList<>();
+        List<PaiBean> list2 = new ArrayList<>();
+        List<PaiBean> list3 = new ArrayList<>();
+        List<PaiBean> list4 = new ArrayList<>();
+
+        list1.add(new PaiBean("庄", list.get(0), list.get(1)));
+        list1.add(new PaiBean("闲1", 0, 0));
+        list1.add(new PaiBean("闲2", 0, 0));
+        list1.add(new PaiBean("闲3", 0, 0));
+
+        list2.add(new PaiBean("庄", list.get(0), list.get(1)));
+        list2.add(new PaiBean("闲1", list.get(2), list.get(3)));
+        list2.add(new PaiBean("闲2", 0, 0));
+        list2.add(new PaiBean("闲3", 0, 0));
+
+        list3.add(new PaiBean("庄", list.get(0), list.get(1)));
+        list3.add(new PaiBean("闲1", list.get(2), list.get(3)));
+        list3.add(new PaiBean("闲2", list.get(4), list.get(5)));
+        list3.add(new PaiBean("闲3", 0, 0));
+
+
+        list4.add(new PaiBean("庄", list.get(0), list.get(1)));
+        list4.add(new PaiBean("闲1", list.get(2), list.get(3)));
+        list4.add(new PaiBean("闲2", list.get(4), list.get(5)));
+        list4.add(new PaiBean("闲3", list.get(6), list.get(7)));
+        refreshDelay(list1, 0, 0);
+        refreshDelay(list2, 500, 1);
+        refreshDelay(list3, 1000, 2);
+        refreshDelay(list4, 1500, 3);
+    }
+
+    //延迟刷新
+    private void refreshDelay(final List<PaiBean> list, long delay, final int position) {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mDatas.clear();
-                mDatas.addAll(TtzUtil.getRandomList(randomResult, list));
-                refresh(mDatas);
-                randomResult++;
-                if (randomResult < 5) {
-                    faPai();
-                } else {
-                    randomResult = 1;
-                }
+                currentAnimaItem = position;
+                refresh(list);
+//                currentAnimaItem = -1;
             }
-        }, 500);
+        }, delay);
+    }
+
+    public int getCurrentAnimaItem() {
+        return currentAnimaItem;
+    }
+
+    public void setCurrentAnimaItem(int currentAnimaItem) {
+        this.currentAnimaItem = currentAnimaItem;
     }
 }

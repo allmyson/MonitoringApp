@@ -306,12 +306,13 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                     List<Integer> list = new Gson().fromJson(result, new TypeToken<List<Integer>>() {
                     }.getType());
                     if (list != null && list.size() == 8) {
-                        paiList.clear();
-                        paiList.add(new PaiBean("庄", list.get(0), list.get(1)));
-                        paiList.add(new PaiBean("闲1", list.get(2), list.get(3)));
-                        paiList.add(new PaiBean("闲2", list.get(4), list.get(5)));
-                        paiList.add(new PaiBean("闲3", list.get(6), list.get(7)));
-                        paiAdater.refresh(paiList);
+//                        paiList.clear();
+//                        paiList.add(new PaiBean("庄", list.get(0), list.get(1)));
+//                        paiList.add(new PaiBean("闲1", list.get(2), list.get(3)));
+//                        paiList.add(new PaiBean("闲2", list.get(4), list.get(5)));
+//                        paiList.add(new PaiBean("闲3", list.get(6), list.get(7)));
+//                        paiAdater.refresh(paiList);
+                        paiAdater.faPai(list);
                     }
                 }
                 break;
@@ -329,6 +330,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                     setBtnClickable(false, sureBtn);
                     paiList.clear();
                     paiList.addAll(TtzUtil.getDefaultList());
+                    paiAdater.setCurrentAnimaItem(-1);
                     paiAdater.refresh(paiList);
                     setDefaultResultColor();
                 }
@@ -1026,15 +1028,15 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                 if (chipAdapter.getChooseData() != null && currentStatus == TYPE_TZ) {
                     TtzTz ttzTz = new Gson().fromJson(response.get(), TtzTz.class);
                     if (ttzTz != null && YS.SUCCESE.equals(ttzTz.code) && ttzTz.data != null) {
-                        total_z_1TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zyx1));
-                        total_z_2TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zyx2));
-                        total_z_3TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zyx3));
-                        total_p_1TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zpx1));
-                        total_p_2TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zpx2));
-                        total_p_3TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zpx3));
-                        total_x_1TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zsx1));
-                        total_x_2TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zsx2));
-                        total_x_3TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zsx3));
+                        total_z_1TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zyx1t));
+                        total_z_2TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zyx2t));
+                        total_z_3TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zyx3t));
+                        total_p_1TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zpx1t));
+                        total_p_2TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zpx2t));
+                        total_p_3TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zpx3t));
+                        total_x_1TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zsx1t));
+                        total_x_2TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zsx2t));
+                        total_x_3TV.setText(StringUtil.StringToDoubleStr(ttzTz.data.zsx3t));
                     }
                 }
                 if (isStart) {

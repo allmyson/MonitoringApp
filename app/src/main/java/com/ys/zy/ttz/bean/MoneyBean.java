@@ -57,7 +57,7 @@ public class MoneyBean {
                 show = "庄对闲3(平)";
                 break;
             case TtzTZFragment.TYPE_X3:
-                show = "庄对闲4(闲)";
+                show = "庄对闲3(闲)";
                 break;
         }
         return show;

@@ -470,18 +470,18 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                 if (chipAdapter.getChooseData() != null && currentStatus == TYPE_TZ) {
                     LpTz lpTz = new Gson().fromJson(response.get(), LpTz.class);
                     if (lpTz != null && YS.SUCCESE.equals(lpTz.code) && lpTz.data != null) {
-                        lpBeanList.get(0).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.rabbitWinNum);
-                        lpBeanList.get(1).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.loongWinNum);
-                        lpBeanList.get(2).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.snakeWinNum);
-                        lpBeanList.get(3).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.horseWinNum);
-                        lpBeanList.get(4).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.sheepWinNum);
-                        lpBeanList.get(5).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.monkeyWinNum);
-                        lpBeanList.get(6).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.chickenWinNum);
-                        lpBeanList.get(7).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.dogWinNum);
-                        lpBeanList.get(8).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.pigWinNum);
-                        lpBeanList.get(9).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.mouseWinNum);
-                        lpBeanList.get(10).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.cattleWinNum);
-                        lpBeanList.get(11).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.tigerWinNum);
+                        lpBeanList.get(0).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.rabbitPayNum);
+                        lpBeanList.get(1).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.loongPayNum);
+                        lpBeanList.get(2).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.snakePayNum);
+                        lpBeanList.get(3).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.horsePayNum);
+                        lpBeanList.get(4).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.sheepPayNum);
+                        lpBeanList.get(5).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.monkeyPayNum);
+                        lpBeanList.get(6).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.chickenPayNum);
+                        lpBeanList.get(7).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.dogPayNum);
+                        lpBeanList.get(8).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.pigPayNum);
+                        lpBeanList.get(9).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.mousePayNum);
+                        lpBeanList.get(10).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.cattlePayNum);
+                        lpBeanList.get(11).totalValue = StringUtil.StringToDoubleTwo(lpTz.data.tigerPayNum);
                         lpView.setData(lpBeanList);
                     }
                 }
