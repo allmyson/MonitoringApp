@@ -74,7 +74,7 @@ public class UpdateInfoActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_:
+            case R.id.btn_update:
                 if (hasPermission(mContext, permissionName)) {
                     //用系统浏览器下载
                     StringUtil.openBrowser(mContext, downloadUrl);

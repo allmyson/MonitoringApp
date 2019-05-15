@@ -528,6 +528,6 @@ public class HttpUtil {
      */
     public static void getAppVersion(Context context, HttpListener<String> httpListener) {
         String url = YS.APP_VERSION;
-        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+        BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
 }
