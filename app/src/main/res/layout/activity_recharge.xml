@@ -16,11 +16,34 @@
         android:layout_marginBottom="8dp"
         android:background="#dfdfdf" />
 
-    <ListView
-        android:id="@+id/lv_"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="#ededed"
-        android:dividerHeight="8dp"
-        android:scrollbars="none" />
+        android:layout_height="match_parent"
+        android:background="#ededed">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.ys.zy.ui.NoNetView
+                android:id="@+id/nnv_"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <com.ys.zy.ui.BlankView
+                android:id="@+id/bv_"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ListView
+                android:id="@+id/lv_"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="#ededed"
+                android:dividerHeight="8dp"
+                android:scrollbars="none" />
+        </FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

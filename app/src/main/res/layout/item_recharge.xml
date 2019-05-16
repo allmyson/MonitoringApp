@@ -43,7 +43,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:maxLines="1"
-                android:text="单笔最低10元，最高500000元"
                 android:textColor="#d1d1d1"
                 android:textSize="12sp" />
         </LinearLayout>
