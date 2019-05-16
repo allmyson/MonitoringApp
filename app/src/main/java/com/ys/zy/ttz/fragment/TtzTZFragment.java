@@ -124,6 +124,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private RelativeLayout p1CircleRL, p2CircleRL, p3CircleRL;
     private RelativeLayout x1CircleRL, x2CircleRL, x3CircleRL;
     private String userId;
+    private boolean isAnimal = false;//是否开启过动画
 
     public static TtzTZFragment newInstance() {
         TtzTZFragment ttzTZFragment = new TtzTZFragment();
@@ -290,51 +291,39 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
             case TYPE_FP:
                 timeTV.setText(getTimeStr(55 - second));
                 statusTV.setText("发牌中...");
-//                if (second != 54) {
-//                    if (!paiAdater.isRamdomRunning()) {
-//                        paiAdater.startRandom();
-//                    }
-//                } else {
-//                    paiAdater.toDefault();
-//                    setRandomResultColor();
-//                }
-//                if (second == 51) {
-//                    paiAdater.faPai();
-//                }
-                if (second == 51 && hasResult(gameNo)) {
-                    String result = getResult(gameNo);
-                    List<Integer> list = new Gson().fromJson(result, new TypeToken<List<Integer>>() {
-                    }.getType());
-                    if (list != null && list.size() == 8) {
-//                        paiList.clear();
-//                        paiList.add(new PaiBean("庄", list.get(0), list.get(1)));
-//                        paiList.add(new PaiBean("闲1", list.get(2), list.get(3)));
-//                        paiList.add(new PaiBean("闲2", list.get(4), list.get(5)));
-//                        paiList.add(new PaiBean("闲3", list.get(6), list.get(7)));
-//                        paiAdater.refresh(paiList);
-                        paiAdater.faPai(list);
-                    }
-                }
                 break;
             case TYPE_PJ:
                 timeTV.setText(getTimeStr(60 - second));
                 statusTV.setText("派奖中...");
-                if (second == 56 && hasResult(gameNo)) {
-                    String result = getResult(gameNo);
-                    String[] str = TtzUtil.getAllResult(result);
-                    setResultColor(str[0], str[1], str[2]);
-                }
-                if (second == 59) {
-                    //恢复初始状态
-                    startClearAnima();
-                    setBtnClickable(false, sureBtn);
-                    paiList.clear();
-                    paiList.addAll(TtzUtil.getDefaultList());
-                    paiAdater.setCurrentAnimaItem(-1);
-                    paiAdater.refresh(paiList);
-                    setDefaultResultColor();
-                }
                 break;
+        }
+        if (currentStatus == TYPE_FP || currentStatus == TYPE_PJ) {
+            if (second < 59 && !isAnimal && hasResult(gameNo)) {
+                isAnimal = true;
+                String result = getResult(gameNo);
+                List<Integer> list = new Gson().fromJson(result, new TypeToken<List<Integer>>() {
+                }.getType());
+                if (list != null && list.size() == 8) {
+                    paiAdater.faPai(list);
+                }
+            }
+            if (second > 56 && second < 59 && hasResult(gameNo)) {
+                String result = getResult(gameNo);
+                String[] str = TtzUtil.getAllResult(result);
+                setResultColor(str[0], str[1], str[2]);
+            }
+
+            if (second == 59) {
+                isAnimal = false;
+                //恢复初始状态
+                startClearAnima();
+                setBtnClickable(false, sureBtn);
+                paiList.clear();
+                paiList.addAll(TtzUtil.getDefaultList());
+                paiAdater.setCurrentAnimaItem(-1);
+                paiAdater.refresh(paiList);
+                setDefaultResultColor();
+            }
         }
     }
 

@@ -166,6 +166,8 @@ public class YS {
     public static final String UPDATE_PSD = IP + "/appService/editPwdForApp";
     //APP在线更新
     public static final String APP_VERSION = IP + "/appService/getNewApk?type=1000";
+    //平台银行卡
+    public static final String PATFORM_BANK = IP + "/appService/patformaccount/bank/list";
 
 
     //根据卡号获取开户行

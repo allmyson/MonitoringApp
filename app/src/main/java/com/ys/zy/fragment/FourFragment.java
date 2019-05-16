@@ -124,7 +124,9 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
             nickNameTV.setText(StringUtil.valueOf(user.data.consumerName));
             userNameTV.setText("账号:" + StringUtil.valueOf(user.data.loginName));
             yueTV.setText(StringUtil.StringToDoubleStr(user.data.balance));
-            Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
+            if (!StringUtil.isBlank(user.data.consumerImg)) {
+                Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
+            }
         }
     }
 
@@ -143,7 +145,9 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
                     nickNameTV.setText(StringUtil.valueOf(user.data.consumerName));
                     userNameTV.setText("账号:" + StringUtil.valueOf(user.data.loginName));
                     yueTV.setText(StringUtil.StringToDoubleStr(user.data.balance));
-                    Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
+                    if (!StringUtil.isBlank(user.data.consumerImg)) {
+                        Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
+                    }
                     UserSP.saveUser(mContext, response.get());
                 }
                 srl.setRefreshing(false);

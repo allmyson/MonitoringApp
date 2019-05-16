@@ -30,17 +30,17 @@ public class Fast3HistoryAdapter extends CommonAdapter<SscResultBean.DataBean> {
             helper.setText(R.id.tv_sum,""+sum);
             if(sum>=3&&sum<=10){
                 helper.setText(R.id.tv_bigOrSmall,"小");
-                helper.getView(R.id.tv_bigOrSmall).setBackgroundColor(Color.parseColor("#1288d8"));
+                helper.getView(R.id.tv_bigOrSmall).setBackgroundColor(Color.parseColor("#fbae17"));
             }else {
                 helper.setText(R.id.tv_bigOrSmall,"大");
-                helper.getView(R.id.tv_bigOrSmall).setBackgroundColor(Color.parseColor("#fbae17"));
+                helper.getView(R.id.tv_bigOrSmall).setBackgroundColor(Color.parseColor("#1288d8"));
             }
             if(sum%2==0){
                 helper.setText(R.id.tv_singleOrDouble,"双");
-                helper.getView(R.id.tv_singleOrDouble).setBackgroundColor(Color.parseColor("#1288d8"));
+                helper.getView(R.id.tv_singleOrDouble).setBackgroundColor(Color.parseColor("#fbae17"));
             }else {
                 helper.setText(R.id.tv_singleOrDouble,"单");
-                helper.getView(R.id.tv_singleOrDouble).setBackgroundColor(Color.parseColor("#fbae17"));
+                helper.getView(R.id.tv_singleOrDouble).setBackgroundColor(Color.parseColor("#1288d8"));
             }
         }
     }

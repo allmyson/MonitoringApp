@@ -219,6 +219,7 @@ public class LPView extends View {
      * 恢复默认
      */
     public void clearColorAndResult() {
+        stopCount = defaultStopConut;
         currentResult = "";
         for (int i = 0; i < list.size(); i++) {
             if (i % 2 == 0) {
@@ -341,7 +342,23 @@ public class LPView extends View {
         }
         stopCount = defaultStopConut + resultIndex + 1;
     }
-
+    public void setResultWithNoAnimal(final String result) {
+        for (int j = 0; j < list.size(); j++) {
+            if (j % 2 == 0) {
+                list.get(j).color = "#ffa958";
+            } else {
+                list.get(j).color = "#ff854b";
+            }
+        }
+        for(int i = 0;i<sx.length;i++){
+            if(result.equals(sx[i])){
+                list.get(i).color = "#f7f7f7";
+                currentResult = result;
+                break;
+            }
+        }
+        invalidate();
+    }
 
     public static final String[] sx = new String[]{"兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪", "鼠", "牛", "虎"};
 

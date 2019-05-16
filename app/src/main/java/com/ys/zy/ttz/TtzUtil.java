@@ -129,9 +129,9 @@ public class TtzUtil {
             result = "闲";
         } else {
             //都不是对子
-            if ((a + b) > (m + n)) {
+            if (getGewei(a + b) > getGewei(m + n)) {
                 result = "庄";
-            } else if ((a + b) < (m + n)) {
+            } else if (getGewei(a + b) < getGewei(m + n)) {
                 result = "闲";
             } else {
                 int x = Math.max(a, b);
@@ -154,5 +154,13 @@ public class TtzUtil {
             return true;
         }
         return false;
+    }
+
+    public static int getGewei(int sum) {
+        if (sum < 10) {
+            return sum;
+        } else {
+            return sum - 10;
+        }
     }
 }

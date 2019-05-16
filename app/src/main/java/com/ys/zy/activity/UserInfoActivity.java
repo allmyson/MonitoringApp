@@ -64,8 +64,15 @@ public class UserInfoActivity extends BaseActivity {
             usernameTV.setText(StringUtil.valueOf(user.data.loginName));
             typeTV.setText(StringUtil.valueOf(user.data.levelName));
             fdTV.setText(StringUtil.StringToDoubleStr(user.data.backNum));
-            Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
+            if (!StringUtil.isBlank(user.data.consumerImg)) {
+                Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
+            }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
@@ -75,7 +82,9 @@ public class UserInfoActivity extends BaseActivity {
                     usernameTV.setText(StringUtil.valueOf(user.data.loginName));
                     typeTV.setText(StringUtil.valueOf(user.data.levelName));
                     fdTV.setText(StringUtil.StringToDoubleStr(user.data.backNum));
-                    Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
+                    if (!StringUtil.isBlank(user.data.consumerImg)) {
+                        Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
+                    }
                     UserSP.saveUser(mContext, response.get());
                 }
             }
@@ -84,12 +93,6 @@ public class UserInfoActivity extends BaseActivity {
             public void onFailed(int what, Response<String> response) {
             }
         });
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override

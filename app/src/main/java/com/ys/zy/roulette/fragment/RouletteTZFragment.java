@@ -63,6 +63,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     private String gameNo = "";
     private boolean isStart = true;
     private String userId;
+    private boolean isLPAnimal = false;//是否开启过开奖动画，确保只执行一次
 
     //    private boolean isShowCurrentResult = false;//是否已显示当前期开奖结果
     public static RouletteTZFragment newInstance() {
@@ -138,45 +139,33 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
             case TYPE_KJ:
                 timeTV.setText(getTimeStr(55 - second));
                 statusTV.setText("开奖中...");
-                if (second == 50) {
-                    if (!lpView.isRamdomRunning()) {
-                        L.e("lpView.startRandomColor()执行次数");
-                        lpView.startRandomColor();
-                    }
-                }
-                //让轮盘先转3秒
-                if (second == 53) {
-                    if (hasResult(gameNo)) {
-                        String result = getResult(gameNo);
-                        L.e("lp", "second=" + second + "--result=" + result);
-                        lpView.setResult(result);
-                    }
-                }
-//                else {
-//                    if (second == 54) {
-//                        lpView.closeRandomColor();
-//                        lpView.clearColorAndResult();
-//                    }
-//                }
-//                if (second != 54) {
-//                    if (!lpView.isRamdomRunning()) {
-//                        L.e("lpView.startRandomColor()执行次数");
-//                        lpView.startRandomColor();
-//                    }
-//                } else {
-//                    L.e("lpView.setRandomResult()执行次数");
-//                    lpView.setRandomResult();
-//                }
                 break;
             case TYPE_PJ:
                 timeTV.setText(getTimeStr(60 - second));
                 statusTV.setText("派奖中...");
-//                lpView.closeRandomColor();
-                if (second == 59) {
-                    L.e("lpView.clearColorAndResult()执行次数");
-                    lpView.clearColorAndResult();
-                }
                 break;
+        }
+        if (currentStatus == TYPE_KJ || currentStatus == TYPE_PJ) {
+            if (second < 55) {
+                if (!lpView.isRamdomRunning() && !isLPAnimal) {
+                    lpView.startRandomColor();
+                    isLPAnimal = true;
+                }
+                if (hasResult(gameNo)) {
+                    String result = getResult(gameNo);
+                    L.e("lp", "second=" + second + "--result=" + result);
+                    lpView.setResult(result);
+                }
+            } else if (second < 59) {
+                if (hasResult(gameNo)) {
+                    String result = getResult(gameNo);
+                    lpView.setResultWithNoAnimal(result);
+                }
+            } else {
+                lpView.closeRandomColor();
+                lpView.clearColorAndResult();
+                isLPAnimal = false;
+            }
         }
     }
 

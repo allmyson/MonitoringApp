@@ -211,12 +211,14 @@ public class HttpUtil {
         String url = YS.MY_JYJL + "?userId=" + userId + "&start=1&length=1000";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
+
     //获取我的活动奖金记录
     public static void getMyHdjj(Context context, String userId, HttpListener<String> httpListener) {
         String url = YS.MY_HDJJ + "?userId=" + userId + "&start=1&length=1000";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
- //获取我的消费报表
+
+    //获取我的消费报表
     public static void getMyXFJL(Context context, String userId, HttpListener<String> httpListener) {
         String url = YS.MY_XFJL + "?userId=" + userId + "&start=1&length=1000";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
@@ -298,6 +300,7 @@ public class HttpUtil {
 
     /**
      * 通过电话查询用户信息
+     *
      * @param context
      * @param phone
      * @param httpListener
@@ -306,6 +309,7 @@ public class HttpUtil {
         String url = YS.USERINFO + "?phone=" + phone;
         BaseHttp.getInstance().postSimpleJson2(context, url, "", httpListener);
     }
+
     //生成邀请码
     public static void createYqm(Context context, String userId, String backNum, HttpListener<String> httpListener) {
         String url = YS.ADD_YQM + "?userId=" + userId + "&backNum=" + backNum;
@@ -518,6 +522,12 @@ public class HttpUtil {
     public static void getBankNameByCard(Context context, String card, HttpListener<String> httpListener) {
         String url = YS.BANK_INFO + card;
         BaseHttp.getInstance().simpleGet(context, url, httpListener);
+    }
+
+    //获取平台银行卡列表
+    public static void getPatformBankList(Context context, HttpListener<String> httpListener) {
+        String url = YS.PATFORM_BANK;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
     /**

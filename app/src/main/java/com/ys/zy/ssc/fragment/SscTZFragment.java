@@ -263,6 +263,7 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
                     tzMap.put("betsNum", i);
                     tzMap.put("payMoney", YS.SINGLE_PRICE);
                     tzMap.put("times", bei);
+                    tzMap.put("bit","1000");
                     list.add(tzMap);
                 }
             }
