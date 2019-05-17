@@ -60,7 +60,7 @@ public class SscDWDFragment extends SscFragment {
     }
 
     private void setSM(double money) {
-        String sm = String.format("选择一个号码作为个位开奖号码，所选号码与开奖结果一致，奖金:<font color=\"#dd2230\">%s</font>" + YS.UNIT + "。", StringUtil.StringToDoubleStr(money));
+        String sm = String.format("选择一个号码作为个位开奖号码，所选号码与开奖结果一致，赔率:<font color=\"#dd2230\">%s</font>", StringUtil.StringToDoubleStr(money));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             smTV.setText(Html.fromHtml(sm, Html.FROM_HTML_MODE_LEGACY));
         } else {

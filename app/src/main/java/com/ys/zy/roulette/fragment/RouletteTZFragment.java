@@ -133,6 +133,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                 }
                 break;
             case TYPE_STOP_TZ:
+                DialogUtil.removeDialog(mContext);
                 timeTV.setText(getTimeStr(50 - second));
                 statusTV.setText("停止投注...");
                 break;
@@ -173,7 +174,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     protected void getData() {
         start();
         getResult();
-        getTotalTz();
+//        getTotalTz();
         getOdds();
     }
 

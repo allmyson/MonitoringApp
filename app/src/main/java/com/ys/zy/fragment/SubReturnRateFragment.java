@@ -1,6 +1,8 @@
 package com.ys.zy.fragment;
 
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -15,17 +17,22 @@ import com.ys.zy.bean.BaseBean;
 import com.ys.zy.http.HttpListener;
 import com.ys.zy.sp.User;
 import com.ys.zy.sp.UserSP;
+import com.ys.zy.util.DecimalInputTextWatcher;
 import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.KeyBoardUtils;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
 
 //下级返点率
-public class SubReturnRateFragment extends BaseFragment implements View.OnClickListener {
+public class SubReturnRateFragment extends BaseFragment implements View.OnClickListener, View.OnFocusChangeListener {
     private EditText et;
     private Button btn;
     private User user;
     private String userId;
+    /**
+     * 输入框小数的位数
+     */
+    private static final int DECIMAL_DIGITS = 1;
 
     public static SubReturnRateFragment newInstance() {
         return new SubReturnRateFragment();
@@ -36,26 +43,18 @@ public class SubReturnRateFragment extends BaseFragment implements View.OnClickL
         et = getView(R.id.et_);
         btn = getView(R.id.btn_);
         setBtnClickable(false, btn);
-        et.addTextChangedListener(new TextWatcher() {
+        et.addTextChangedListener(new DecimalInputTextWatcher(et, 1, 1) {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() == 0) {
+            public void afterTextChanged(Editable editable) {
+                super.afterTextChanged(editable);
+                if (editable.length() == 0) {
                     setBtnClickable(false, btn);
                 } else {
                     setBtnClickable(true, btn);
                 }
             }
-        });
+        });//限制输入位数：整数1位，小数点后1位
+        et.setOnFocusChangeListener(this);
         btn.setOnClickListener(this);
     }
 
@@ -79,7 +78,12 @@ public class SubReturnRateFragment extends BaseFragment implements View.OnClickL
             case R.id.btn_:
 //                show("生成邀请码");
                 KeyBoardUtils.closeKeybord(et, mContext);
-                addYqm();
+                double fd = StringUtil.StringToDoubleOne(et.getText().toString().trim());
+                if (fd >= 0 && fd <= StringUtil.StringToDoubleOne(user.data.backNum)) {
+                    addYqm();
+                } else {
+                    show("自身返点率" + StringUtil.valueOf(user.data.backNum) + ",可设置返点率0.0-" + StringUtil.valueOf(user.data.backNum));
+                }
                 break;
         }
     }
@@ -107,4 +111,12 @@ public class SubReturnRateFragment extends BaseFragment implements View.OnClickL
         });
     }
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        switch (v.getId()){
+            case R.id.et_:
+                setFocusChange(hasFocus,getView(R.id.view_fd));
+                break;
+        }
+    }
 }

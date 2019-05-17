@@ -60,7 +60,7 @@ public class SscH2XFragment extends SscFragment {
     }
 
     private void setSM(double money) {
-        String sm = String.format("从0-9中选择2个数字组成一注，所选号码与开奖号码后二位相同，顺序不限（不含对子）奖金:<font color=\"#dd2230\">%s</font>" + YS.UNIT + "。", StringUtil.StringToDoubleStr(money));
+        String sm = String.format("从0-9中选择2个数字组成一注，所选号码与开奖号码后二位相同，顺序不限（不含对子）赔率:<font color=\"#dd2230\">%s</font>", StringUtil.StringToDoubleStr(money));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             smTV.setText(Html.fromHtml(sm, Html.FROM_HTML_MODE_LEGACY));
         } else {

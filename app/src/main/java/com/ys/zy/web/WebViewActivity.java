@@ -30,6 +30,7 @@ import android.widget.FrameLayout;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.zy.R;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.util.AndroidBug5497Workaround;
 import com.ys.zy.util.Constant;
 import com.ys.zy.util.L;
 
@@ -50,6 +51,7 @@ public abstract class WebViewActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        mImmersionBar.keyboardEnable(true).init();
         upsoftWebview = getView(R.id.uw);
         initWebViewSet();
         initWebListener();

@@ -17,14 +17,14 @@ public class PayAdapter extends CommonAdapter<RechargePlatform.DataBean> {
 
     @Override
     public void convert(ViewHolder helper, RechargePlatform.DataBean item, int position) {
-        if ("WX".equals(item.accountTypeCode)) {
+        if ("WX".equals(item.accountTypeCode)||"WX_WAP".equals(item.accountTypeCode)) {
             helper.setImageResource(R.id.iv_, R.mipmap.recharge_icon_wx);
-        } else if ("ZFB".equals(item.accountTypeCode)) {
+        } else if ("ZFB".equals(item.accountTypeCode)||"ZFB_WAP".equals(item.accountTypeCode)) {
             helper.setImageResource(R.id.iv_, R.mipmap.recharge_icon_z);
         } else if ("UNION_WALLET".equals(item.accountTypeCode)) {
             helper.setImageResource(R.id.iv_, R.mipmap.recharge_icon_yl);
         } else {
-            helper.setImageResource(R.id.iv_, R.mipmap.platform_default);
+            helper.setImageResource(R.id.iv_, R.mipmap.recharge_icon_yl);
         }
         helper.setText(R.id.tv_description, StringUtil.valueOf(item.remark));
         helper.setText(R.id.tv_name, StringUtil.valueOf(item.accountTypeName));

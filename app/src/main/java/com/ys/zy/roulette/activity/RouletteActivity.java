@@ -59,7 +59,8 @@ public class RouletteActivity extends BaseActivity {
     private LinearLayout gameLL;
     private LinearLayout smLL;
     private String userId;
-    public static final String content = "投注时间里从12个生肖里选一个下注，开奖结果与所选生肖相同即中奖；红色数字代表赔率，蓝色是自己投注的金额，白色是所有玩家投注总额";
+//    public static final String content = "投注时间里从12个生肖里选一个下注，开奖结果与所选生肖相同即中奖；红色数字代表赔率，蓝色是自己投注的金额，白色是所有玩家投注总额";
+    public static final String content = "投注时间里从12个生肖里选一个下注，开奖结果与所选生肖相同即中奖；红色数字代表赔率，蓝色是自己投注的金额";
 
     @Override
     public int getLayoutId() {

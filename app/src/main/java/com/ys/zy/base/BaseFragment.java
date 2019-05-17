@@ -2,6 +2,7 @@ package com.ys.zy.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -85,6 +86,14 @@ public abstract class BaseFragment extends Fragment {
         }else {
             view.setClickable(false);
             view.setAlpha(0.3f);
+        }
+    }
+
+    protected void setFocusChange(boolean hasFocus, View view) {
+        if (hasFocus) {
+            view.setBackgroundColor(Color.parseColor("#dd2230"));
+        } else {
+            view.setBackgroundColor(Color.parseColor("#d1d1d1"));
         }
     }
 }

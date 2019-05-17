@@ -82,7 +82,7 @@ public class RacingLHDFragment extends RacingFragment implements View.OnClickLis
     }
 
     private void setSM(double money) {
-        String sm = String.format("冠军与亚军车号比较，冠军车号大则为龙，反之则为虎，奖金:<font color=\"#dd2230\">%s</font>" + YS.UNIT + "。", StringUtil.StringToDoubleStr(money));
+        String sm = String.format("冠军与亚军车号比较，冠军车号大则为龙，反之则为虎，赔率:<font color=\"#dd2230\">%s</font>", StringUtil.StringToDoubleStr(money));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             smTV.setText(Html.fromHtml(sm, Html.FROM_HTML_MODE_LEGACY));
         } else {

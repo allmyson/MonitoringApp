@@ -285,12 +285,13 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                 }
                 break;
             case TYPE_STOP_TZ:
+                DialogUtil.removeDialog(mContext);
                 timeTV.setText(getTimeStr(50 - second));
                 statusTV.setText("停止投注...");
                 break;
             case TYPE_FP:
                 timeTV.setText(getTimeStr(55 - second));
-                statusTV.setText("发牌中...");
+                statusTV.setText("开牌中...");
                 break;
             case TYPE_PJ:
                 timeTV.setText(getTimeStr(60 - second));

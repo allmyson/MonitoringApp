@@ -236,7 +236,7 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
         map.put("userId", userId);
         map.put("gameCode", gameType);
         map.put("complantTypeCode", "1000");//手动
-        map.put("lotteryTypeCode ", lotteryTypeCode);
+        map.put("lotteryTypeCode", lotteryTypeCode);
         int bei = StringUtil.StringToInt(beiET.getText().toString());
         int qi = StringUtil.StringToInt(qiET.getText().toString());
         String periodsNum = "";
@@ -318,6 +318,7 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
                         //通知Activity刷新余额
                         ((SscActivity) getActivity()).getData();
                         sendMsg();//刷新投注记录
+                        clearData();
                     } else {
                         show(StringUtil.valueOf(baseBean.msg));
                     }
@@ -536,6 +537,9 @@ public class SscTZFragment extends BaseFragment implements View.OnClickListener 
         int differenceSecond = totalSecond - ((hour * 60 + minute) * 60 + second);
         L.e("differenceSecond=" + differenceSecond);
         djsTV.setText(TimeUtil.getTime(differenceSecond));
+        if (differenceSecond == 0) {
+            DialogUtil.removeDialog(mContext);
+        }
         if (differenceSecond == 59) {
             //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
             sscResultAdapter.startRandom();

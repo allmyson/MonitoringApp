@@ -24,5 +24,10 @@ public class GameAdapter extends CommonAdapter<GameBean> {
         } else {
             helper.getView(R.id.tv_status).setVisibility(View.VISIBLE);
         }
+//        if (StringUtil.isBlank(item.des)) {
+//            helper.getView(R.id.tv_des).setVisibility(View.GONE);
+//        } else {
+//            helper.getView(R.id.tv_des).setVisibility(View.VISIBLE);
+//        }
     }
 }

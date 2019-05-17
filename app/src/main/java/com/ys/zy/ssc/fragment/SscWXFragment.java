@@ -64,7 +64,7 @@ public class SscWXFragment extends SscFragment {
     }
 
     private void setSM(double money) {
-        String sm = String.format("每位至少选择一个号码，与开奖号码和位置都对应即中奖，奖金:<font color=\"#dd2230\">%s</font>" + YS.UNIT + "。", StringUtil.StringToDoubleStr(money));
+        String sm = String.format("每位至少选择一个号码，与开奖号码和位置都对应即中奖，赔率:<font color=\"#dd2230\">%s</font>", StringUtil.StringToDoubleStr(money));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             smTV.setText(Html.fromHtml(sm, Html.FROM_HTML_MODE_LEGACY));
         } else {

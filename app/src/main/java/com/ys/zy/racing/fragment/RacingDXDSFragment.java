@@ -70,7 +70,7 @@ public class RacingDXDSFragment extends RacingFragment {
     }
 
     private void setSM(double money) {
-        String sm = String.format("猜任意名次上的大小单双，01-05为小，06-10为大，选号与相同名次上的开奖号码形态一致，奖金:<font color=\"#dd2230\">%s</font>" + YS.UNIT + "。", StringUtil.StringToDoubleStr(money));
+        String sm = String.format("猜任意名次上的大小单双，01-05为小，06-10为大，选号与相同名次上的开奖号码形态一致，赔率:<font color=\"#dd2230\">%s</font>", StringUtil.StringToDoubleStr(money));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             smTV.setText(Html.fromHtml(sm, Html.FROM_HTML_MODE_LEGACY));
         } else {

@@ -30,13 +30,13 @@ public class GameBean {
 
     public static List<GameBean> getDefaultList() {
         List<GameBean> list = new ArrayList<>();
-        list.add(new GameBean(R.mipmap.game_k3_icon, "江苏快3", "全天41期"));
+        list.add(new GameBean(R.mipmap.game_k3_icon, "10分快3", "10分钟1期"));
         list.add(new GameBean(R.mipmap.game_k3_icon, "1分快3", "1分钟1期"));
         list.add(new GameBean(R.mipmap.game_k3_icon, "5分快3", "5分钟1期"));
         list.add(new GameBean(R.mipmap.game_lp_icon, "轮盘", "1分钟1期"));
         list.add(new GameBean(R.mipmap.game_ttz_icon, "推筒子", "1分钟1期"));
-        list.add(new GameBean(R.mipmap.game_lwin_icon, "最后的胜利者", ""));
-        list.add(new GameBean(R.mipmap.game_pk_icon, "北京赛车", "全天44期"));
+        list.add(new GameBean(R.mipmap.game_lwin_icon, "最后胜利者", "10:00-22:00"));
+        list.add(new GameBean(R.mipmap.game_pk_icon, "20分赛车", "20分钟1期"));
         list.add(new GameBean(R.mipmap.game_pk_icon, "1分赛车", "1分钟1期"));
         list.add(new GameBean(R.mipmap.game_pk_icon, "5分赛车", "5分钟1期"));
         list.add(new GameBean(R.mipmap.game_ssc_icon, "1分彩", "1分钟1期"));
@@ -44,7 +44,12 @@ public class GameBean {
         list.add(new GameBean(R.mipmap.home_game_icon_more, "更多", ""));
         return list;
     }
-
+    public static GameBean getMoreBean(){
+        GameBean gameBean = new GameBean(R.mipmap.home_game_icon_more, "更多", "");
+        gameBean.status="1000";
+        gameBean.code="800";
+        return gameBean;
+    }
     public static String getNameByCode(String game_code) {
         String name = "";
         switch (game_code) {
@@ -55,7 +60,7 @@ public class GameBean {
                 name = "1分彩";
                 break;
             case "1002":
-                name = "最后的胜利者";
+                name = "最后胜利者";
                 break;
             case "1003":
                 name = "轮盘";
@@ -64,7 +69,7 @@ public class GameBean {
                 name = "推筒子";
                 break;
             case "1005":
-                name = "江苏快3";
+                name = "10分快3";
                 break;
             case "1006":
                 name = "1分快3";
@@ -73,7 +78,7 @@ public class GameBean {
                 name = "5分快3";
                 break;
             case "1008":
-                name = "北京赛车";
+                name = "20分赛车";
                 break;
             case "1009":
                 name = "1分赛车";
@@ -95,7 +100,7 @@ public class GameBean {
                 dec = "1分钟1期";
                 break;
             case "1002":
-                dec = "";
+                dec = "10:00-22:00";
                 break;
             case "1003":
                 dec = "1分钟1期";
@@ -104,7 +109,7 @@ public class GameBean {
                 dec = "1分钟1期";
                 break;
             case "1005":
-                dec = "全天41期";
+                dec = "10分钟1期";
                 break;
             case "1006":
                 dec = "1分钟1期";
@@ -113,7 +118,7 @@ public class GameBean {
                 dec = "5分钟1期";
                 break;
             case "1008":
-                dec = "全天44期";
+                dec = "20分钟1期";
                 break;
             case "1009":
                 dec = "1分钟1期";

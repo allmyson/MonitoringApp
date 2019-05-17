@@ -2,11 +2,12 @@ package com.ys.zy.sp;
 
 public class User {
 
+
     /**
      * code : SUCCESS
      * msg : 查询成功
-     * data : {"consumerId":"dc258de6f71848c6b3278350d609537e","backNum":"0.09","balance":0,"consumerImg":"","consumerName":"88b629eefc954a8fa461865a73824506","createId":null,"createTime":"2019-05-05T08:09:00.000+0000","levelCode":"1001","levelName":"代理会员","loginName":"longhui0","moneyPwd":null,"onlineTime":"2019-05-06T05:38:20.000+0000","parentConsumerId":"be6cca47335946b9827ca5e09bea5f7c","parentConsumerName":null,"payUrl":null,"pwd":"dd4b21e9ef71e1291183a46b913ae6f2","qqNum":null,"remark":null,"status":"1001","weixinNum":null,"tel":null,"regCode":null,"delFlag":"0"}
-     * systemDate : 1557123065644
+     * data : {"consumerId":"6542c3007f824566838217e3292664ab","backNum":"3.0","balance":1.002756095E7,"consumerImg":"/userapp/2019/05/15///1557922618940.jpg","consumerName":"折欲","createId":null,"createTime":"2019-05-10T06:12:36.000+0000","levelCode":"1001","levelName":"代理会员","loginName":"longhui0","moneyPwd":"dd4b21e9ef71e1291183a46b913ae6f2","onlineTime":"2019-05-16T06:27:25.000+0000","parentConsumerId":"85e71457c01e41d18d4561cf32170878","parentConsumerName":null,"payUrl":null,"pwd":"dd4b21e9ef71e1291183a46b913ae6f2","qqNum":null,"remark":null,"status":"1001","weixinNum":null,"tel":"13640507192","regCode":"RBUS7F4X","delFlag":"0","withdrawMoney":231.42}
+     * systemDate : 1558083500946
      */
 
     public String code;
@@ -16,19 +17,19 @@ public class User {
 
     public static class DataBean {
         /**
-         * consumerId : dc258de6f71848c6b3278350d609537e
-         * backNum : 0.09
-         * balance : 0
-         * consumerImg :
-         * consumerName : 88b629eefc954a8fa461865a73824506
+         * consumerId : 6542c3007f824566838217e3292664ab
+         * backNum : 3.0
+         * balance : 1.002756095E7
+         * consumerImg : /userapp/2019/05/15///1557922618940.jpg
+         * consumerName : 折欲
          * createId : null
-         * createTime : 2019-05-05T08:09:00.000+0000
+         * createTime : 2019-05-10T06:12:36.000+0000
          * levelCode : 1001
          * levelName : 代理会员
          * loginName : longhui0
-         * moneyPwd : null
-         * onlineTime : 2019-05-06T05:38:20.000+0000
-         * parentConsumerId : be6cca47335946b9827ca5e09bea5f7c
+         * moneyPwd : dd4b21e9ef71e1291183a46b913ae6f2
+         * onlineTime : 2019-05-16T06:27:25.000+0000
+         * parentConsumerId : 85e71457c01e41d18d4561cf32170878
          * parentConsumerName : null
          * payUrl : null
          * pwd : dd4b21e9ef71e1291183a46b913ae6f2
@@ -36,9 +37,10 @@ public class User {
          * remark : null
          * status : 1001
          * weixinNum : null
-         * tel : null
-         * regCode : null
+         * tel : 13640507192
+         * regCode : RBUS7F4X
          * delFlag : 0
+         * withdrawMoney : 231.42
          */
 
         public String consumerId;
@@ -64,5 +66,6 @@ public class User {
         public String tel;
         public String regCode;
         public String delFlag;
+        public String withdrawMoney;
     }
 }

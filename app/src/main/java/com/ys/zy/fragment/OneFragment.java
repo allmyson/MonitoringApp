@@ -120,6 +120,9 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
                     return;
                 }
                 switch (code) {
+                    case "800":
+                        show("敬请期待");
+                        break;
                     case "1000":
                         SscActivity.intentToSSC(mContext, SscActivity.TYPE_SSC);
 //                        Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_JSK3);
@@ -174,7 +177,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
             public void onSucceed(int what, Response<String> response) {
                 adList.clear();
                 ADBean adBean = new Gson().fromJson(response.get(), ADBean.class);
-                if (adBean != null && adBean.data != null && adBean.data.data != null&& adBean.data.data.size() > 0) {
+                if (adBean != null && adBean.data != null && adBean.data.data != null && adBean.data.data.size() > 0) {
                     for (ADBean.DataBeanX.DataBean dataBean : adBean.data.data) {
                         if ("1001".equals(dataBean.activity_status)) {
                             //只取进行中的活动
@@ -196,7 +199,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
             @Override
             public void onSucceed(int what, Response<String> response) {
                 MsgBean msgBean = new Gson().fromJson(response.get(), MsgBean.class);
-                if (msgBean != null && msgBean.data != null&& msgBean.data.data != null && msgBean.data.data.size() > 0) {
+                if (msgBean != null && msgBean.data != null && msgBean.data.data != null && msgBean.data.data.size() > 0) {
                     dataBean = msgBean.data.data.get(0);
                     msgTV.setText(StringUtil.valueOf(msgBean.data.data.get(0).notice_content));
                 }
@@ -227,6 +230,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
                     }
                 }
                 list.addAll(newList);
+                list.add(GameBean.getMoreBean());
                 gameAdapter.refresh(list);
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -252,7 +256,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
             }
         }, adList)//设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
                 .setPageIndicator(new int[]{R.mipmap.ic_page_indicator, R.mipmap.ic_page_indicator_focused});
-                //设置指示器的方向
+        //设置指示器的方向
 //                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
 //                .setOnPageChangeListener(this)//监听翻页事件
 //                .setOnItemClickListener(this);

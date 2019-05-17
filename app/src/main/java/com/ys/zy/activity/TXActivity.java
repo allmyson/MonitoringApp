@@ -59,7 +59,7 @@ public class TXActivity extends BaseActivity implements View.OnFocusChangeListen
         moneyET = getView(R.id.et_money);
         moneyET.setSelection(moneyET.getText().length());
         yueTV = getView(R.id.tv_totalMoney);
-        yueTV.setText("当前余额" + money + YS.UNIT + "，");
+        yueTV.setText("可提金额" + money + YS.UNIT + "，");
         allTxTV = getView(R.id.tv_allTx);
         allTxTV.setOnClickListener(this);
         txBtn = getView(R.id.btn_tx);
@@ -100,8 +100,8 @@ public class TXActivity extends BaseActivity implements View.OnFocusChangeListen
             public void onSucceed(int what, Response<String> response) {
                 User user = new Gson().fromJson(response.get(), User.class);
                 if (user != null && YS.SUCCESE.equals(user.code) && user.data != null) {
-                    money = StringUtil.StringToDoubleStr(user.data.balance);
-                    yueTV.setText("当前余额" + money + YS.UNIT + "，");
+                    money = StringUtil.StringToDoubleStr(user.data.withdrawMoney);
+                    yueTV.setText("可提金额" + money + YS.UNIT + "，");
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.ys.zy.activity;
 
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,7 +23,6 @@ import com.ys.zy.util.ClipboardUtils;
 import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.StringUtil;
 import com.ys.zy.util.YS;
-import com.ys.zy.web.CommonWebviewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +40,8 @@ public class NormalCzActivity extends BaseActivity {
     private String userId;
     private PatformBankBean currentBean;
     private List<String> list;
+    private TextView smTV, contentTV;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_normal_cz;
@@ -50,6 +52,9 @@ public class NormalCzActivity extends BaseActivity {
         list = new ArrayList<>();
         setBarColor("#ededed");
         titleView.setText("银行转账");
+        smTV = getView(R.id.tv_sm);
+        contentTV = getView(R.id.tv_content);
+        setSM();
         spinner = getView(R.id.spinner_bank);
         khNameTV = getView(R.id.tv_khName);
         bankNumTV = getView(R.id.tv_bankNum);
@@ -65,7 +70,7 @@ public class NormalCzActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 PatformBankBean.DataBean dataBean = currentBean.data.get(position);
-                if(dataBean!=null) {
+                if (dataBean != null) {
                     accountId = dataBean.accountId;
                     bankNumTV.setText(StringUtil.valueOf(dataBean.bankNumber));
                     khNameTV.setText(StringUtil.valueOf(dataBean.bankUser));
@@ -176,4 +181,17 @@ public class NormalCzActivity extends BaseActivity {
         });
     }
 
+    private void setSM() {
+        String sm = String.format("(最低<font color=\"#dd2230\">%s</font>" + YS.UNIT + ",最高<font color=\"#dd2230\">%s</font>" + YS.UNIT + ")", 100, 49999);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            smTV.setText(Html.fromHtml(sm, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            smTV.setText(Html.fromHtml(sm));
+        }
+
+        String content = "1.请使用网银/支付宝/微信/各银行APP/云闪付等转账\n" +
+                "2.转账前核对收款卡号和户名\n" +
+                "3.转账后再提交订单,否则无法及时入款,切勿重复提交订单,若有问题请及时沟通客服";
+        contentTV.setText(content);
+    }
 }

@@ -199,7 +199,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_clear:
-                fast3SumAdapter.clear();
+                clear();
                 break;
             case R.id.tv_tz:
                 if (fast3SumAdapter.getTZList().size() == 0) {
@@ -251,12 +251,16 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
+    private void clear() {
+        fast3SumAdapter.clear();
+    }
+
     private void tz() {
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         map.put("gameCode", gameType);
         map.put("complantTypeCode", "1000");//手动
-        map.put("periodsNum  ", gameNo);
+        map.put("periodsNum", gameNo);
         List<Map<String, Object>> list = new ArrayList<>();
         List<Fast3Bean> tzList = fast3SumAdapter.getTZList();
         double payMoney = StringUtil.StringToDoubleTwo(priceET.getText().toString());
@@ -281,6 +285,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                         //通知Activity刷新余额
                         ((Fast3Activity) getActivity()).getData();
                         sendMsg();//刷新投注记录
+                        clear();
                     } else {
                         show(StringUtil.valueOf(baseBean.msg));
                     }
@@ -434,6 +439,9 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
             int differenceSecond = totalSecond - ((hour * 60 + minute) * 60 + second);
             L.e("differenceSecond=" + differenceSecond);
             djsTV.setText(TimeUtil.getTime(differenceSecond));
+            if (differenceSecond == 0) {
+                DialogUtil.removeDialog(mContext);
+            }
             if (differenceSecond == 59) {
                 //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
                 startRandomText();
@@ -575,7 +583,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                     tempList.add(new Fast3Bean("9", oddsBean.data.ksHz912));
                     tempList.add(new Fast3Bean("10", oddsBean.data.ksHz1011));
                     tempList.add(new Fast3Bean("11", oddsBean.data.ksHz1011));
-                    tempList.add(new Fast3Bean("12", oddsBean.data.ksHz813));
+                    tempList.add(new Fast3Bean("12", oddsBean.data.ksHz912));
                     tempList.add(new Fast3Bean("13", oddsBean.data.ksHz813));
                     tempList.add(new Fast3Bean("14", oddsBean.data.ksHz714));
                     tempList.add(new Fast3Bean("15", oddsBean.data.ksHz615));
@@ -593,4 +601,6 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
             }
         });
     }
+
+
 }
