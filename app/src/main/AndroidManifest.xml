@@ -26,7 +26,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ReSetJyPsdActivity"></activity>
+        <activity android:name=".activity.NormalCzActivity"></activity>
+        <activity android:name=".activity.EwmActivity" />
+        <activity android:name=".activity.ReSetJyPsdActivity" />
         <activity android:name=".activity.ReSetLoginPsdActivity" />
         <activity android:name=".activity.UpdateJyPsdActivity" />
         <activity android:name=".activity.FindPsdActivity" />
@@ -74,7 +76,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".fast3.activity.Fast3Activity" />
+        <activity
+            android:name=".fast3.activity.Fast3Activity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".winner.activity.WinnerActivity" />
         <activity android:name=".ttz.activity.TtzActivity" />
         <activity android:name=".web.CommonWebviewActivity" />
