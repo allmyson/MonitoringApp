@@ -55,7 +55,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:background="@null"
-                    android:hint="输入要绑定的手机号"
+                    android:hint="输入绑定的手机号"
                     android:padding="5dp"
                     android:textColor="#1e1e1e"
                     android:textSize="16sp" />
