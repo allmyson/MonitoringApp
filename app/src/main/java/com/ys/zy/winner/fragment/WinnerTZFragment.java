@@ -70,7 +70,8 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
     private TextView currentQ0, currentQ1, currentQ2, currentQ3;
     private String userId;
     private TextView fhTV, payTV;
-    private TextView slzUser,sj1User,sj2User,sj3User,slzSn,sj1Sn,sj2Sn,sj3Sn,slzMoney,sj1Money,sj2Money,sj3Money;
+    private TextView slzUser, sj1User, sj2User, sj3User, slzSn, sj1Sn, sj2Sn, sj3Sn, slzMoney, sj1Money, sj2Money, sj3Money;
+
     public static WinnerTZFragment newInstance() {
         WinnerTZFragment winnerTZFragment = new WinnerTZFragment();
         return winnerTZFragment;
@@ -108,7 +109,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         waitKjCPB.setText2Color("#26ffffff");
         waitKjCPB.setText2Size(16);
         waitKjCPB.setPercent("开奖核算中");
-        waitKjCPB.setDescription("1900001期");
+//        waitKjCPB.setDescription("1900001期");
         waitKjCPB.setText2ScaleY(0.8);
         waitKjCPB.setProgress(0);
         formatter = new SimpleDateFormat("HH:mm:ss");//初始化Formatter的转换格式。
@@ -298,7 +299,17 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         setCurrentQ(currentQs);
         nextQsTV.setText(StringUtil.StringToInt(currentQs) + 1 + "期投注倒计时");
         long endTime = WinnerUtil.getEndTime(type, startTime, snNum);
-        djsTV.setText(formatter.format(endTime - System.currentTimeMillis()));
+        long dfferenceTime = endTime - System.currentTimeMillis();
+        L.e("dfferenceTime=" + dfferenceTime);
+        String hms = "00:00:00";
+        if (dfferenceTime < 0) {
+            dfferenceTime = -dfferenceTime;
+            hms = "-" + formatter.format(dfferenceTime);
+        } else {
+            hms = formatter.format(dfferenceTime);
+        }
+        djsTV.setText(hms);
+//        L.e("winner", "endTime=" + endTime+"---diffrentTime="+(endTime - System.currentTimeMillis()));
         switch (type) {
             case WinnerUtil.TYPE_TZ:
                 tzLL.setVisibility(View.VISIBLE);
@@ -391,7 +402,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                         payTV.setText(StringUtil.valueOf(winnerData.data.lastWinnerBaseVo.payMoney));
                         totalMoneyCPB.setPercent(StringUtil.valueOf(winnerData.data.lastWinnerBaseVo.totleMoney));
                         totalMoneyCPB.setDescription("奖池金额");
-                        totalMoneyCPB.setProgress((int) (StringUtil.StringToDouble(winnerData.data.lastWinnerBaseVo.totleMoney)*100/YS.MAX_MONEY));
+                        totalMoneyCPB.setProgress((int) (StringUtil.StringToDouble(winnerData.data.lastWinnerBaseVo.totleMoney) * 100 / YS.MAX_MONEY));
                         singlePriceCPB.setPercent(StringUtil.valueOf(winnerData.data.lastWinnerBaseVo.snprice));
                         singlePriceCPB.setDescription("当前单价");
                         singlePriceCPB.setProgress(StringUtil.StringToInt(winnerData.data.lastWinnerBaseVo.snprice) * 100 / YS.MAX_SN_PRICE);
@@ -418,7 +429,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                getWinnerInfo();
             }
         });
     }

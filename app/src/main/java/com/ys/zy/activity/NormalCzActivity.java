@@ -164,7 +164,7 @@ public class NormalCzActivity extends BaseActivity {
                 BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
                 if (baseBean != null) {
                     if (YS.SUCCESE.equals(baseBean.code)) {
-                        show("充值成功");
+                        show("充值已提交");
                         finish();
                     } else {
                         show(StringUtil.valueOf(baseBean.msg));

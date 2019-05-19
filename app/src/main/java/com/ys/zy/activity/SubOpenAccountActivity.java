@@ -56,7 +56,7 @@ public class SubOpenAccountActivity extends BaseActivity {
 
     private List<TabBean> getList() {
         List<TabBean> list = new ArrayList<>();
-        list.add(new TabBean("下级返点率", SubReturnRateFragment.newInstance()));
+        list.add(new TabBean("下级返点", SubReturnRateFragment.newInstance()));
         list.add(new TabBean("邀请码", InvitationCodeFragment.newInstance()));
         list.add(new TabBean("返点赔率表", OddsTableFragment.newInstance()));
         return list;

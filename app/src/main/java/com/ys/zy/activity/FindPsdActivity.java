@@ -7,9 +7,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.zy.R;
 import com.ys.zy.api.FunctionApi;
 import com.ys.zy.base.BaseActivity;
+import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.User;
+import com.ys.zy.sp.UserSP;
+import com.ys.zy.util.HttpUtil;
+import com.ys.zy.util.StringUtil;
 
 public class FindPsdActivity extends BaseActivity {
     private LinearLayout phoneLL, kfLL;
@@ -20,6 +27,8 @@ public class FindPsdActivity extends BaseActivity {
     public static final int TYPE_JY_PSD = 101;//找回交易密码
     private int type = TYPE_LOGIN_PSD;
     private static final String KEY = "key";
+    private String userId;
+    private boolean isBindPhone = false;
 
     @Override
     public int getLayoutId() {
@@ -50,11 +59,29 @@ public class FindPsdActivity extends BaseActivity {
         phoneIV.setImageResource(R.mipmap.checkbox_icon_select);
         kfIV.setImageResource(R.mipmap.checkbox_icon_normal);
         setBtnClickable(true, nextBtn);
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
     public void getData() {
+        HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                User user = new Gson().fromJson(response.get(), User.class);
+                if (user != null && user.data != null) {
+                    if (StringUtil.isBlank(user.data.tel)) {
+                        isBindPhone = false;
+                    } else {
+                        isBindPhone = true;
+                    }
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     @Override
@@ -76,6 +103,10 @@ public class FindPsdActivity extends BaseActivity {
                 break;
             case R.id.btn_next:
                 if (isPhone) {
+                    if (!isBindPhone) {
+                        show("该账号未绑定手机");
+                        return;
+                    }
                     //通过手机找回
                     if (type == TYPE_LOGIN_PSD) {
                         //找回登录密码
@@ -99,4 +130,6 @@ public class FindPsdActivity extends BaseActivity {
         intent.putExtra(KEY, type);
         context.startActivity(intent);
     }
+
+
 }

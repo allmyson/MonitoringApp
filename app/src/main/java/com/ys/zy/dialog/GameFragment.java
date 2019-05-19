@@ -168,13 +168,18 @@ public class GameFragment extends LhDialogFragment {
                 click(tv10, 10);
                 break;
             case R.id.tv11:
-//                click(tv11, 11);
+                click(tv11, 11);
                 break;
         }
     }
 
     private void click(TextView tv, int position) {
         if (clickListener != null) {
+            if (tv.getId() == R.id.tv10) {
+                show("敬请期待");
+                DialogUtil.removeDialog(getContext());
+                return;
+            }
             if ("1000".equals(map.get(tv.getText().toString()))) {
                 clickListener.click(position);
             } else {

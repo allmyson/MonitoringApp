@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.ys.zy.roulette.bean.ChipBean;
 import com.ys.zy.roulette.bean.LPBean;
 import com.ys.zy.roulette.bean.LpTz;
 import com.ys.zy.sp.UserSP;
+import com.ys.zy.ssc.adapter.SscResultAdapter;
 import com.ys.zy.ssc.bean.SscResultBean;
 import com.ys.zy.ttz.TtzUtil;
 import com.ys.zy.ttz.activity.TtzActivity;
@@ -125,6 +127,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private RelativeLayout x1CircleRL, x2CircleRL, x3CircleRL;
     private String userId;
     private boolean isAnimal = false;//是否开启过动画
+    private String[] currentResult = new String[3];
 
     public static TtzTZFragment newInstance() {
         TtzTZFragment ttzTZFragment = new TtzTZFragment();
@@ -308,13 +311,23 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                     paiAdater.faPai(list);
                 }
             }
-            if (second > 56 && second < 59 && hasResult(gameNo)) {
+            if (second > 55 && second < 59 && hasResult(gameNo)) {
                 String result = getResult(gameNo);
                 String[] str = TtzUtil.getAllResult(result);
-                setResultColor(str[0], str[1], str[2]);
+                currentResult[0] = str[0];
+                currentResult[1] = str[1];
+                currentResult[2] = str[2];
+//                setResultColor(str[0], str[1], str[2]);
+                if (!isRamdomRunning()) {
+                    startRandom();
+                }
             }
 
             if (second == 59) {
+                closeRandom();
+                currentResult[0] = "";
+                currentResult[1] = "";
+                currentResult[2] = "";
                 isAnimal = false;
                 //恢复初始状态
                 startClearAnima();
@@ -518,6 +531,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        closeRandom();
         cancel();
         isStart = false;
     }
@@ -1045,4 +1059,82 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
             }
         });
     }
+
+
+    private RandomThraed randomThraed;
+
+    public void startRandom() {
+        if (randomThraed != null) {
+            randomThraed.setOver(true);
+            randomThraed.interrupt();
+            randomThraed = null;
+        }
+        randomThraed = new RandomThraed();
+        randomThraed.start();
+    }
+
+    /**
+     * 线程是否正在进行
+     *
+     * @return
+     */
+    public boolean isRamdomRunning() {
+        return randomThraed != null && !randomThraed.isOver();
+    }
+
+    public void closeRandom() {
+        if (randomThraed != null) {
+            randomThraed.setOver(true);
+            randomThraed.interrupt();
+            randomThraed = null;
+        }
+    }
+
+    class RandomThraed extends Thread {
+        private volatile boolean isOver = false;
+        private int i = 0;
+
+        public int getI() {
+            return i;
+        }
+
+        public void setI(int i) {
+            this.i = i;
+        }
+
+        public boolean isOver() {
+            return isOver;
+        }
+
+        public void setOver(boolean over) {
+            isOver = over;
+        }
+
+        @Override
+        public void run() {
+            while (!isOver) {
+                try {
+                    Thread.sleep(50);
+                    handler.sendEmptyMessage(i % 2);
+                    i++;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                if (!StringUtil.isBlank(currentResult[0])) {
+                    setResultColor(currentResult[0], currentResult[1], currentResult[2]);
+                }
+            } else if (msg.what == 1) {
+                setDefaultResultColor();
+            }
+        }
+    };
 }
