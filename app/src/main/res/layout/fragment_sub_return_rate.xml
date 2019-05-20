@@ -48,7 +48,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="温馨提示：为下级设置的返点率越低赔率越低，详见返点赔率表"
+        android:text="温馨提示：为下级设置的返点越低赔率越低，详见返点赔率表"
         android:textColor="#a5a5a5"
         android:textSize="12sp" />
 </LinearLayout>

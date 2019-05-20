@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="返点率"
+            android:text="返点"
             android:textColor="#1e1e1e"
             android:textSize="16sp" />
 
