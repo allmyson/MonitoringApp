@@ -1049,7 +1049,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                         public void run() {
                             getTotalTz();
                         }
-                    }, 2000);
+                    }, 500);
                 }
             }
 

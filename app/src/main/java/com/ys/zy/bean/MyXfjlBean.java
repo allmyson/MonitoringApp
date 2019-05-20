@@ -64,6 +64,8 @@ public class MyXfjlBean {
             public String win_money;
             public String game_code;
             public String periods_num;
+            public String bets_time;
+            public String game_status;
 
             @Override
             public int compareTo(@NonNull DataBean o) {

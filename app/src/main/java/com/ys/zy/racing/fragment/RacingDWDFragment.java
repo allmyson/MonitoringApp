@@ -68,7 +68,7 @@ public class RacingDWDFragment extends RacingFragment {
     }
 
     private void setSM(double money) {
-        String sm = String.format("从任意名次上选择一个号码组成一组，每组<font color=\"#dd2230\">2</font>元，选号与相同名次的号码一致即中奖，赔率:<font color=\"#dd2230\">%s</font>", StringUtil.StringToDoubleStr(money));
+        String sm = String.format("从任意名次上选择一个号码组成一注，每注<font color=\"#dd2230\">2</font>元，选号与相同名次的号码一致即中奖，赔率:<font color=\"#dd2230\">%s</font>", StringUtil.StringToDoubleStr(money));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             smTV.setText(Html.fromHtml(sm, Html.FROM_HTML_MODE_LEGACY));
         } else {

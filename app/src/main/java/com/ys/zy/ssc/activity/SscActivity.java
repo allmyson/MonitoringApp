@@ -85,6 +85,7 @@ public class SscActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setBarColor2("#f7f7f7",true);
         regist();
         moneyTV = getView(R.id.tv_money);
         moneyTV.setText(money);

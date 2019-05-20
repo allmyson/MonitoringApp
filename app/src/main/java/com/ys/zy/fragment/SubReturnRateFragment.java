@@ -63,7 +63,7 @@ public class SubReturnRateFragment extends BaseFragment implements View.OnClickL
         userId = UserSP.getUserId(mContext);
         user = UserSP.getUserInfo(mContext);
         if (user != null && user.data != null) {
-            et.setHint("自身返点率" + StringUtil.valueOf(user.data.backNum) + ",可设置返点率0.0-" + StringUtil.valueOf(user.data.backNum));
+            et.setHint("自身返点" + StringUtil.valueOf(user.data.backNum) + ",可设置返点0.0-" + StringUtil.valueOf(user.data.backNum));
         }
     }
 

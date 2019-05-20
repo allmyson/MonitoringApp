@@ -29,6 +29,7 @@ import com.ys.zy.bean.BaseBean;
 import com.ys.zy.dialog.DialogUtil;
 import com.ys.zy.dialog.TZTipFragment;
 import com.ys.zy.dialog.TipFragment;
+import com.ys.zy.fast3.Fast3Util;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.http.HttpListener;
 import com.ys.zy.racing.RacingUtil;
@@ -52,6 +53,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.ys.zy.fast3.activity.Fast3Activity.TYPE_1FK3;
+import static com.ys.zy.fast3.activity.Fast3Activity.TYPE_5FK3;
+import static com.ys.zy.fast3.activity.Fast3Activity.TYPE_JSK3;
+import static com.ys.zy.racing.activity.RacingActivity.TYPE_1FSC;
+import static com.ys.zy.racing.activity.RacingActivity.TYPE_5FSC;
+import static com.ys.zy.racing.activity.RacingActivity.TYPE_BJSC;
 
 public class RacingTZFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
     private int type;
@@ -79,7 +87,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
     private int gameType = 1008;
     private String userId;
     private String lotteryTypeCode;
-
+    private String gameNo = "0214983";
     public static RacingTZFragment newInstance(int type, int play) {
         RacingTZFragment racingTZFragment = new RacingTZFragment();
         racingTZFragment.setType(type);
@@ -142,9 +150,9 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
 
     public void setType(int type) {
         this.type = type;
-        if (type == RacingActivity.TYPE_BJSC) {
+        if (type == TYPE_BJSC) {
             gameType = YS.CODE_BJSC;
-        } else if (type == RacingActivity.TYPE_1FSC) {
+        } else if (type == TYPE_1FSC) {
             gameType = YS.CODE_1FSC;
         } else {
             gameType = YS.CODE_5FSC;
@@ -531,12 +539,13 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
     private void setStatus() {
         if (RacingUtil.isScRunning(type)) {
             String currentNo = RacingUtil.getSCPeriods(type, 1);//当前期
+            gameNo = currentNo;
             String lastNo = RacingUtil.getSCPeriods(type, 0);//上一期
             String nextNo = RacingUtil.getSCPeriods(type, 2);//下一期
             tzTipTV.setText(currentNo + "期投注截止");
             newResultTV.setText(lastNo + "期开奖号码");
             int totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1;
-            if (type == RacingActivity.TYPE_BJSC) {
+            if (type == TYPE_BJSC) {
                 totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1 + (9 * 60 + 10) * 60;
             }
             Calendar now = Calendar.getInstance();
@@ -556,7 +565,36 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
                 L.e("59当前期：" + currentNo);
                 L.e("59上一期：" + lastNo);
             }
-
+            if (type == TYPE_BJSC) {
+                if (differenceSecond == 599) {
+                    //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                    if (!racingResultAdapter.isRamdomRunning()) {
+                        racingResultAdapter.startRandom();
+                        L.e("599当前期：" + currentNo);
+                        L.e("599上一期：" + lastNo);
+                    }
+                }
+            } else if (type == TYPE_5FSC) {
+                if (differenceSecond == 299) {
+                    //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                    //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                    if (!racingResultAdapter.isRamdomRunning()) {
+                        racingResultAdapter.startRandom();
+                        L.e("299当前期：" + currentNo);
+                        L.e("299上一期：" + lastNo);
+                    }
+                }
+            } else if (type == TYPE_1FSC) {
+                if (differenceSecond == 59) {
+                    //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                    //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                    if (!racingResultAdapter.isRamdomRunning()) {
+                        racingResultAdapter.startRandom();
+                        L.e("59当前期：" + currentNo);
+                        L.e("59上一期：" + lastNo);
+                    }
+                }
+            }
             if (hasResult(lastNo)) {
                 racingResultAdapter.closeRandom();
                 resultList.clear();
@@ -565,6 +603,18 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
             }
         } else {
             //赛车游戏不在游戏时间段内
+            L.e("快3游戏不在游戏时间段内");
+            gameNo = RacingUtil.getNextBJSCPeriods();
+            tzTipTV.setText(gameNo + "期投注截止");
+            djsTV.setText("预售中");
+            String lastN = RacingUtil.getLastBJSCPeriods();
+            newResultTV.setText(lastN + "期开奖号码");
+            if (hasResult(lastN)) {
+                racingResultAdapter.closeRandom();
+                resultList.clear();
+                resultList.addAll(getResult(lastN));
+                racingResultAdapter.refresh(resultList);
+            }
         }
     }
 

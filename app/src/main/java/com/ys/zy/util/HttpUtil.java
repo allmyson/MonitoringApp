@@ -360,6 +360,11 @@ public class HttpUtil {
         Map<String, String> jsonMap = new HashMap<>();
         jsonMap.put("cardNumber", bankCard);
         String json = new Gson().toJson(jsonMap);
+        try {
+            json = URLEncoder.encode(json,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String url = YS.TX + "?userId=" + userId + "&applyMoney=" + money + "&pwd=" + Md5Util.getMD5String(jymm) + "&bankcardInfo=" + json;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }

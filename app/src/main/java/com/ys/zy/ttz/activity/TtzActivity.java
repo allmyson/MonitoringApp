@@ -304,7 +304,7 @@ public class TtzActivity extends BaseActivity {
 
     private List<String> getSMList() {
         List<String> list = new ArrayList<>();
-        list.add("一筒到九筒共36张牌,每次给庄和闲多发两张,玩家对庄和闲的输赢情况进行下注。");
+        list.add("一筒到九筒共36张牌,每次给庄和闲发两张,玩家对庄和闲的输赢情况进行下注。");
         list.add("两张筒子相加取个位,对子大于单点,点数相同比较单牌,单排大赢,牌型完全一样为平;对9>对8>...>对1>9点>8点>...>0点。");
         return list;
     }

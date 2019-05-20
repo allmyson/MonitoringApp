@@ -12,6 +12,7 @@ import com.ys.zy.R;
 import com.ys.zy.adapter.MyJyjlAdapter;
 import com.ys.zy.adapter.SubDealHistoryAdapter;
 import com.ys.zy.base.BaseFragment;
+import com.ys.zy.bean.MyJYBB;
 import com.ys.zy.bean.SubJYJL;
 import com.ys.zy.http.HttpListener;
 import com.ys.zy.sp.UserSP;
@@ -27,7 +28,7 @@ import java.util.List;
 
 public class MyJybbFragment extends BaseFragment implements NoNetView.ClickListener {
     private ListView lv;
-    private List<SubJYJL.DataBeanX.DataBean> list;
+    private List<MyJYBB.DataBeanX.DataBean> list;
     private MyJyjlAdapter adapter;
     private String userId;
     private NoNetView noNetView;
@@ -47,7 +48,7 @@ public class MyJybbFragment extends BaseFragment implements NoNetView.ClickListe
         noNetView.setClickListener(this);
         lv = getView(R.id.lv_);
         list = new ArrayList<>();
-        adapter = new MyJyjlAdapter(mContext, list, R.layout.item_sub_manage);
+        adapter = new MyJyjlAdapter(mContext, list, R.layout.item_my_jybb);
         lv.setAdapter(adapter);
         userId = UserSP.getUserId(mContext);
     }
@@ -61,10 +62,10 @@ public class MyJybbFragment extends BaseFragment implements NoNetView.ClickListe
                 @Override
                 public void onSucceed(int what, Response<String> response) {
                     list.clear();
-                    SubJYJL subJYJL = new Gson().fromJson(response.get(), SubJYJL.class);
-                    if (subJYJL != null) {
-                        if (YS.SUCCESE.equals(subJYJL.code) && subJYJL.data != null && subJYJL.data.data != null && subJYJL.data.data.size() > 0) {
-                            list.addAll(subJYJL.data.data);
+                    MyJYBB myJybb = new Gson().fromJson(response.get(), MyJYBB.class);
+                    if (myJybb != null) {
+                        if (YS.SUCCESE.equals(myJybb.code) && myJybb.data != null && myJybb.data.data != null && myJybb.data.data.size() > 0) {
+                            list.addAll(myJybb.data.data);
                         }
                     } else {
                         show(YS.HTTP_TIP);

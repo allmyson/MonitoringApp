@@ -12,6 +12,7 @@ import com.ys.zy.bean.TabBean;
 import com.ys.zy.fragment.InvitationCodeFragment;
 import com.ys.zy.fragment.MyHdjjFragment;
 import com.ys.zy.fragment.MyJybbFragment;
+import com.ys.zy.fragment.MyXfbb2Fragment;
 import com.ys.zy.fragment.MyXfbbFragment;
 import com.ys.zy.fragment.OddsTableFragment;
 import com.ys.zy.fragment.SubReturnRateFragment;
@@ -62,7 +63,8 @@ public class MyFormActivity extends BaseActivity {
     private List<TabBean> getList() {
         List<TabBean> list = new ArrayList<>();
         list.add(new TabBean("交易报表", MyJybbFragment.newInstance()));
-        list.add(new TabBean("消费报表", MyXfbbFragment.newInstance()));
+//        list.add(new TabBean("消费报表", MyXfbbFragment.newInstance()));
+        list.add(new TabBean("消费报表", MyXfbb2Fragment.newInstance()));
         list.add(new TabBean("活动奖金", MyHdjjFragment.newInstance()));
         list.add(new TabBean("今日盈亏", TodayYKFragment.newInstance()));
         return list;

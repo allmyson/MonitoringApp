@@ -25,7 +25,7 @@ public class ScHistoryAdapter extends CommonAdapter<SscResultBean.DataBean> {
         String result="";
         if (str != null & str.length > 0) {
             for (String s : str) {
-                result +=RacingUtil.getNumber(StringUtil.StringToInt(s))+"  ";
+                result +=RacingUtil.getNumber(StringUtil.StringToInt(s))+" ";
             }
         }
         helper.setText(R.id.tv_result, result);

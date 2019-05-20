@@ -206,7 +206,7 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
 //                .statusBarColor(R.color.main_color)   //状态栏颜色，不写默认透明色
                 .statusBarColor(R.color.main_gray)   //状态栏颜色，不写默认透明色
                 .statusBarDarkFont(true)
-                .keyboardEnable(true)
+//                .keyboardEnable(true)
                 .fitsSystemWindows(true)//解决状态栏和布局重叠问题，任选其一，默认为false，当为true时一定要指定statusBarColor()，不然状态栏为透明色
                 .init();   //所有子类都将继承这些相同的属性
     }
@@ -275,7 +275,14 @@ public abstract class BaseActivity extends FragmentActivity implements Permissio
                 .fitsSystemWindows(true)//解决状态栏和布局重叠问题，任选其一，默认为false，当为true时一定要指定statusBarColor()，不然状态栏为透明色
                 .init();   //所有子类都将继承这些相同的属性
     }
-
+    protected void setBarColor2(String color, boolean isBlack) {
+        mImmersionBar
+                .statusBarColor(color)     //状态栏颜色，不写默认透明色
+                .statusBarDarkFont(isBlack)
+                .keyboardEnable(true)
+                .fitsSystemWindows(true)//解决状态栏和布局重叠问题，任选其一，默认为false，当为true时一定要指定statusBarColor()，不然状态栏为透明色
+                .init();   //所有子类都将继承这些相同的属性
+    }
     /**
      * 设置 app 不随着系统字体的调整而变化
      */

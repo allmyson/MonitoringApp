@@ -315,6 +315,15 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     private RandomThraed randomThraed;
     private int[] drawables = new int[]{R.mipmap.k3_s1_icon, R.mipmap.k3_s2_icon, R.mipmap.k3_s3_icon, R.mipmap.k3_s4_icon, R.mipmap.k3_s5_icon, R.mipmap.k3_s6_icon};
 
+    /**
+     * 线程是否正在进行
+     *
+     * @return
+     */
+    public boolean isRamdomRunning() {
+        return randomThraed != null && !randomThraed.isOver();
+    }
+
     private void startRandomText() {
         if (randomThraed != null) {
             randomThraed.setOver(true);
@@ -442,11 +451,33 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
             if (differenceSecond == 0) {
                 DialogUtil.removeDialog(mContext);
             }
-            if (differenceSecond == 59) {
-                //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
-                startRandomText();
-                L.e("59当前期：" + currentNo);
-                L.e("59上一期：" + lastNo);
+            if (type == TYPE_JSK3) {
+                if (differenceSecond == 599) {
+                    //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                    if (!isRamdomRunning()) {
+                        startRandomText();
+                        L.e("599当前期：" + currentNo);
+                        L.e("599上一期：" + lastNo);
+                    }
+                }
+            } else if (type == TYPE_5FK3) {
+                if (differenceSecond == 299) {
+                    //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                    if (!isRamdomRunning()) {
+                        startRandomText();
+                        L.e("299当前期：" + currentNo);
+                        L.e("299上一期：" + lastNo);
+                    }
+                }
+            } else if (type == TYPE_1FK3) {
+                if (differenceSecond == 59) {
+                    //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
+                    if (!isRamdomRunning()) {
+                        startRandomText();
+                        L.e("59当前期：" + currentNo);
+                        L.e("59上一期：" + lastNo);
+                    }
+                }
             }
 
             if (hasResult(lastNo)) {
@@ -470,9 +501,9 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                 closeRandomText();
                 List<Integer> list = getResult(lastN);
                 if (list.size() == 3) {
-                    iv01.setImageResource(drawables[list.get(0)]);
-                    iv02.setImageResource(drawables[list.get(1)]);
-                    iv03.setImageResource(drawables[list.get(2)]);
+                    iv01.setImageResource(drawables[list.get(0) - 1]);
+                    iv02.setImageResource(drawables[list.get(1) - 1]);
+                    iv03.setImageResource(drawables[list.get(2) - 1]);
                 }
             }
         }
