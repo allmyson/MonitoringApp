@@ -101,7 +101,7 @@ public class RacingActivity extends BaseActivity {
         gameMoreIV = getView(R.id.iv_gameMore);
         switch (type) {
             case TYPE_BJSC:
-                gameTV.setText("北京赛车");
+                gameTV.setText("20分赛车");
                 break;
             case TYPE_1FSC:
                 gameTV.setText("1分赛车");
@@ -110,7 +110,7 @@ public class RacingActivity extends BaseActivity {
                 gameTV.setText("5分赛车");
                 break;
             default:
-                gameTV.setText("北京赛车");
+                gameTV.setText("20分赛车");
                 break;
         }
         tzRL = getView(R.id.rl_wytz);
@@ -353,10 +353,10 @@ public class RacingActivity extends BaseActivity {
     }
 
     public String getGameName() {
-        String gameName = "北京赛车";
+        String gameName = "20分赛车";
         switch (type) {
             case TYPE_BJSC:
-                gameName = "北京赛车";
+                gameName = "20分赛车";
                 break;
             case TYPE_1FSC:
                 gameName = "1分赛车";
@@ -365,7 +365,7 @@ public class RacingActivity extends BaseActivity {
                 gameName = "5分赛车";
                 break;
             default:
-                gameName = "北京赛车";
+                gameName = "20分赛车";
                 break;
         }
         switch (play){

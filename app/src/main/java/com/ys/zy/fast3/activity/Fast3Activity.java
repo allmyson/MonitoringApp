@@ -85,7 +85,7 @@ public class Fast3Activity extends BaseActivity {
         gameMoreIV = getView(R.id.iv_gameMore);
         switch (type) {
             case TYPE_JSK3:
-                gameTV.setText("江苏快3");
+                gameTV.setText("10分快3");
                 break;
             case TYPE_1FK3:
                 gameTV.setText("1分快3");
@@ -94,7 +94,7 @@ public class Fast3Activity extends BaseActivity {
                 gameTV.setText("5分快3");
                 break;
             default:
-                gameTV.setText("江苏快3");
+                gameTV.setText("10分快3");
                 break;
         }
         tzRL = getView(R.id.rl_wytz);

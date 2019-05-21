@@ -16,13 +16,13 @@ import com.ys.zy.sp.CookieSP;
 public class YS {
     public static final int CODE_SSC = 1000;//时时彩
     public static final int CODE_1FC = 1001;//1分彩
-    public static final int CODE_SLZ = 1002;//最后的胜利者
+    public static final int CODE_SLZ = 1002;//最后胜利者
     public static final int CODE_LP = 1003;//轮盘
     public static final int CODE_TTZ = 1004;//推筒子
-    public static final int CODE_JSK3 = 1005;//江苏快3
+    public static final int CODE_JSK3 = 1005;//10分快3
     public static final int CODE_1FK3 = 1006;//1分快3
     public static final int CODE_5FK3 = 1007;//5分快3
-    public static final int CODE_BJSC = 1008;//北京赛车
+    public static final int CODE_BJSC = 1008;//20分赛车
     public static final int CODE_1FSC = 1009;//1分赛车
     public static final int CODE_5FSC = 1010;//5分赛车
 
@@ -77,6 +77,8 @@ public class YS {
     public static final String WINNER_USER_LIST = IP + "/appService/discover/yesterdayWinRank";
     //个人信息
     public static final String USER_INFO = IP + "/appService/getUserInfoForApp";
+    //根据登录名获取用户信息
+    public static final String USER_INFO_BY_LOGIN = IP + "/appService/getUserByLoginNameForApp";
     //获取短信验证码
     public static final String YZM = IP + "/appService/getVerificationCode";
     //绑定手机号

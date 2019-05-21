@@ -59,7 +59,10 @@ public class FindPsdActivity extends BaseActivity {
         phoneIV.setImageResource(R.mipmap.checkbox_icon_select);
         kfIV.setImageResource(R.mipmap.checkbox_icon_normal);
         setBtnClickable(true, nextBtn);
-        userId = UserSP.getUserId(mContext);
+        userId = getIntent().getStringExtra("userId");
+        if (StringUtil.isBlank(userId)) {
+            userId = UserSP.getUserId(mContext);
+        }
     }
 
     @Override
@@ -110,7 +113,7 @@ public class FindPsdActivity extends BaseActivity {
                     //通过手机找回
                     if (type == TYPE_LOGIN_PSD) {
                         //找回登录密码
-                        BindPhoneActivity.intentToVerifyPhone(mContext, BindPhoneActivity.TYPE_FIND_LOGIN_PSD);
+                        BindPhoneActivity.intentToVerifyPhone(mContext,userId, BindPhoneActivity.TYPE_FIND_LOGIN_PSD);
                         finish();
                     } else if (type == TYPE_JY_PSD) {
                         //找回交易密码
@@ -131,5 +134,11 @@ public class FindPsdActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    public static void intentToFindPsdType(Context context, String userId, int type) {
+        Intent intent = new Intent(context, FindPsdActivity.class);
+        intent.putExtra(KEY, type);
+        intent.putExtra("userId", userId);
+        context.startActivity(intent);
+    }
 
 }

@@ -57,7 +57,10 @@ public class ReSetLoginPsdActivity extends BaseActivity implements TextWatcher, 
 
         newPsdET.setOnFocusChangeListener(this);
         reNewPsdET.setOnFocusChangeListener(this);
-        userId = UserSP.getUserId(mContext);
+        userId = getIntent().getStringExtra("userId");
+        if (StringUtil.isBlank(userId)) {
+            userId = UserSP.getUserId(mContext);
+        }
     }
 
     private void updatePsd() {
@@ -172,6 +175,14 @@ public class ReSetLoginPsdActivity extends BaseActivity implements TextWatcher, 
         Intent intent = new Intent(context, ReSetLoginPsdActivity.class);
         intent.putExtra("phone", phone);
         intent.putExtra("yzm", yzm);
+        context.startActivity(intent);
+    }
+
+    public static void intentToFindLoginPsd(Context context, String userId, String phone, String yzm) {
+        Intent intent = new Intent(context, ReSetLoginPsdActivity.class);
+        intent.putExtra("phone", phone);
+        intent.putExtra("yzm", yzm);
+        intent.putExtra("userId", userId);
         context.startActivity(intent);
     }
 }

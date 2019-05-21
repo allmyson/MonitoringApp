@@ -105,7 +105,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
     protected void init() {
         switch (type) {
             case TYPE_JSK3:
-                gameName = "江苏快3";
+                gameName = "10分快3";
                 break;
             case TYPE_1FK3:
                 gameName = "1分快3";

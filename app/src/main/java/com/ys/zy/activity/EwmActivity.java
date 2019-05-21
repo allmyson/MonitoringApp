@@ -19,6 +19,7 @@ import java.io.File;
 public class EwmActivity extends BaseActivity {
     private ImageView ewmIV;
     private String url;
+    private String type;
 
     @Override
     public int getLayoutId() {
@@ -28,12 +29,13 @@ public class EwmActivity extends BaseActivity {
     @Override
     public void initView() {
         setBarColor("#ededed");
-        titleView.setText("微信充值二维码");
+        type = getIntent().getStringExtra("type");
+        titleView.setText(type + "充值二维码");
         ewmIV = getView(R.id.iv_ewm);
         url = getIntent().getStringExtra("url");
         L.e("url=" + url);
         String path = Constant.EWM_PATH + File.separator + "wx_zf.png";
-        QRCodeUtil.createQRImage(url, DensityUtil.dp2px(mContext,200), DensityUtil.dp2px(mContext,200), null, path);
+        QRCodeUtil.createQRImage(url, DensityUtil.dp2px(mContext, 200), DensityUtil.dp2px(mContext, 200), null, path);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         if (bitmap != null) {
             ewmIV.setImageBitmap(bitmap);
@@ -50,9 +52,10 @@ public class EwmActivity extends BaseActivity {
 
     }
 
-    public static void intentToEwm(Context context, String url) {
+    public static void intentToEwm(Context context, String type, String url) {
         Intent intent = new Intent(context, EwmActivity.class);
         intent.putExtra("url", url);
+        intent.putExtra("type", type);
         context.startActivity(intent);
     }
 }

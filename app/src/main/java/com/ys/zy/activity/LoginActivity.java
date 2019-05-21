@@ -18,6 +18,7 @@ import com.ys.zy.api.FunctionApi;
 import com.ys.zy.base.BaseActivity;
 import com.ys.zy.bean.BaseBean;
 import com.ys.zy.http.HttpListener;
+import com.ys.zy.sp.User;
 import com.ys.zy.sp.UserSP;
 import com.ys.zy.util.HttpUtil;
 import com.ys.zy.util.KeyBoardUtils;
@@ -117,7 +118,9 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
                 }
                 break;
             case R.id.tv_forget:
-                FindPsdActivity.intentToFindPsdType(mContext,FindPsdActivity.TYPE_LOGIN_PSD);
+                if (isCanFind()) {
+                    getUser();
+                }
                 break;
             case R.id.tv_kf:
                 FunctionApi.contactKF(mContext);
@@ -161,6 +164,35 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
         }
     }
 
+    private void getUser() {
+        final String loginName = userET.getText().toString().trim();
+        HttpUtil.getInfoByLoginName(mContext, loginName, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                User user = new Gson().fromJson(response.get(), User.class);
+                if (user != null) {
+                    if (YS.SUCCESE.equals(user.code) && user.data != null) {
+                        if (StringUtil.isBlank(user.data.tel)) {
+                            show("账号为" + loginName + "的用户未绑定手机");
+                        } else {
+                            FindPsdActivity.intentToFindPsdType(mContext, StringUtil.valueOf(user.data.consumerId), FindPsdActivity.TYPE_LOGIN_PSD);
+                        }
+                    } else {
+                        show("无此账号");
+                    }
+                } else {
+                    show(YS.HTTP_TIP);
+                }
+
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
     private boolean isCanLogin() {
         String user = userET.getText().toString().trim();
         String psd = psdET.getText().toString().trim();
@@ -175,6 +207,18 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
             return false;
         } else if (psd.length() < 8 || psd.length() > 16 || !StringUtil.isLetterDigit(psd)) {
             show("密码由8-16个字母或数字组成");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isCanFind() {
+        String user = userET.getText().toString().trim();
+        if (StringUtil.isBlank(user)) {
+            show("用户名不能为空");
+            return false;
+        } else if (user.length() < 8 || user.length() > 16 || !StringUtil.isLetterDigit(user)) {
+            show("用户名由8-16个字母或数字组成");
             return false;
         }
         return true;

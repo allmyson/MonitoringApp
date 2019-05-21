@@ -70,7 +70,7 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
                         bindPhone();
                     } else if (type == TYPE_FIND_LOGIN_PSD) {
                         //找回登录密码
-                        ReSetLoginPsdActivity.intentToFindLoginPsd(mContext, phoneET.getText().toString().trim(), numET.getText().toString().trim());
+                        ReSetLoginPsdActivity.intentToFindLoginPsd(mContext,userId, phoneET.getText().toString().trim(), numET.getText().toString().trim());
                         BindPhoneActivity.this.finish();
                     } else if (type == TYPE_FIND_JY_PSD) {
                         //找回交易密码
@@ -88,7 +88,10 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
         numET.setOnFocusChangeListener(this);
         sendBtn = getView(R.id.btn_send);
         sendBtn.setOnClickListener(this);
-        userId = UserSP.getUserId(mContext);
+        userId = getIntent().getStringExtra("userId");
+        if (StringUtil.isBlank(userId)) {
+            userId = UserSP.getUserId(mContext);
+        }
     }
 
     private void bindPhone() {
@@ -297,6 +300,13 @@ public class BindPhoneActivity extends BaseActivity implements TextWatcher, View
     public static void intentToVerifyPhone(Context context, int type) {
         Intent intent = new Intent(context, BindPhoneActivity.class);
         intent.putExtra(KEY, type);
+        context.startActivity(intent);
+    }
+
+    public static void intentToVerifyPhone(Context context, String userId, int type) {
+        Intent intent = new Intent(context, BindPhoneActivity.class);
+        intent.putExtra(KEY, type);
+        intent.putExtra("userId", userId);
         context.startActivity(intent);
     }
 }

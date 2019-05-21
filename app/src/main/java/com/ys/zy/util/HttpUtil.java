@@ -223,7 +223,11 @@ public class HttpUtil {
         String url = YS.MY_XFJL + "?userId=" + userId + "&start=1&length=1000";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
-
+    //根据登录名获取用户信息
+    public static void getInfoByLoginName(Context context, String loginName, HttpListener<String> httpListener) {
+        String url = YS.USER_INFO_BY_LOGIN + "?loginName=" + loginName ;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
     /**
      * 修改用户信息
      *

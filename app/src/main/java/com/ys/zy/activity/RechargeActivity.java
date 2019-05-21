@@ -40,6 +40,7 @@ public class RechargeActivity extends BaseActivity implements SwipeRefreshLayout
     private NoNetView noNetView;
     private BlankView blankView;
     private String accountTypeCode;
+    private String accountTypeName;
 
     @Override
     public int getLayoutId() {
@@ -65,6 +66,7 @@ public class RechargeActivity extends BaseActivity implements SwipeRefreshLayout
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 accountTypeCode = payAdapter.getItem(position).accountTypeCode;
+                accountTypeName = payAdapter.getItem(position).accountTypeName;
                 if ("BANK".equals(accountTypeCode)) {
                     //一般充值
                     startActivity(new Intent(mContext, NormalCzActivity.class));
@@ -108,9 +110,9 @@ public class RechargeActivity extends BaseActivity implements SwipeRefreshLayout
                 CzBean czBean = new Gson().fromJson(response.get(), CzBean.class);
                 if (czBean != null) {
                     if (YS.SUCCESE.equals(czBean.code)) {
-                        if ("WX".equals(accountTypeCode)) {
+                        if ("WX".equals(accountTypeCode) || "UNION_WALLET".equals(accountTypeCode) || "JD".equals(accountTypeCode) || "ZFB".equals(accountTypeCode)) {
                             //微信生成支付二维码
-                            EwmActivity.intentToEwm(mContext, czBean.data);
+                            EwmActivity.intentToEwm(mContext, accountTypeName, czBean.data);
                         } else {
                             CommonWebviewActivity.openWebUrl(mContext, czBean.data);
                         }
