@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:text="北京赛车"
+                android:text="20分赛车"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
