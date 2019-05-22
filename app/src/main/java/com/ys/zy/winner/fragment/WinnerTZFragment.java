@@ -419,7 +419,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         currentQ1.setText(currentQ + "期");
         currentQ2.setText(currentQ + "期");
         currentQ3.setText(currentQ + "期");
-        nextQsTV.setText(StringUtil.valueOf(StringUtil.StringToInt(currentQs) + 1) + "期投注倒计时");
+        nextQsTV.setText(StringUtil.valueOf(StringUtil.StringToLong(currentQs) + 1) + "期投注倒计时");
     }
 
     private boolean isStart = true;
@@ -438,7 +438,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                         setCurrentQ(currentQs);
                         startTime = DateUtil.changeTimeToLong(winnerData.data.lastWinnerBaseVo.gameStartTime);
                         endTime = DateUtil.changeTimeToLong(winnerData.data.lastWinnerBaseVo.endTime);
-                        type = WinnerUtil.getType(winnerData.data.lastWinnerBaseVo.gameStatusName);
+                        type = WinnerUtil.getType(winnerData.data.lastWinnerBaseVo.gameStatusName,endTime);
                         if (type == WinnerUtil.TYPE_TZ) {
 
                         } else if (type == WinnerUtil.TYPE_WAIT_KJ) {

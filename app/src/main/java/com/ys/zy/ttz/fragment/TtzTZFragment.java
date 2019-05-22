@@ -82,6 +82,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
     private boolean isShowHistory = false;
     private ListView historyLV;
     private List<SscResultBean.DataBean> historyList;
+    private List<SscResultBean.DataBean> allList;
     private TtzHistoryAdapter historyAdapter;
     private HorizontalListView horizontalListView;
     private List<ChipBean> chipBeanList;
@@ -226,6 +227,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         historyLL = getView(R.id.ll_history);
         historyLV = getView(R.id.lv_history);
         historyList = new ArrayList<>();
+        allList = new ArrayList<>();
         historyAdapter = new TtzHistoryAdapter(mContext, historyList, R.layout.item_ttz_history);
         historyLV.setAdapter(historyAdapter);
 
@@ -946,10 +948,20 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         HttpUtil.getSscResult(mContext, YS.CODE_TTZ, 50, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
+                allList.clear();
                 historyList.clear();
                 SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
                 if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
+                    allList.clear();
                     historyList.addAll(sscResultBean.data);
+                }
+                if (currentStatus == TYPE_TZ) {
+                    for (SscResultBean.DataBean dataBean : historyList) {
+                        if (gameNo.equals(dataBean.periodsNum)) {
+                            historyList.remove(dataBean);
+                            break;
+                        }
+                    }
                 }
                 historyAdapter.refresh(historyList);
                 if (isStart) {

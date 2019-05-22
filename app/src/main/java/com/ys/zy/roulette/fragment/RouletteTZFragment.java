@@ -53,6 +53,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
     private boolean isShowHistory = false;
     private ListView historyLV;
     private List<SscResultBean.DataBean> historyList;
+    private List<SscResultBean.DataBean> allList;
     private LpHistoryAdapter historyAdapter;
     private HorizontalListView horizontalListView;
     private List<ChipBean> chipBeanList;
@@ -84,6 +85,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
         historyLL = getView(R.id.ll_history);
         historyLV = getView(R.id.lv_history);
         historyList = new ArrayList<>();
+        allList = new ArrayList<>();
         historyAdapter = new LpHistoryAdapter(mContext, historyList, R.layout.item_lp_history);
         historyLV.setAdapter(historyAdapter);
 
@@ -378,9 +380,19 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onSucceed(int what, Response<String> response) {
                 historyList.clear();
+                allList.clear();
                 SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
                 if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
+                    allList.addAll(sscResultBean.data);
                     historyList.addAll(sscResultBean.data);
+                }
+                if(currentStatus==TYPE_TZ) {
+                    for (SscResultBean.DataBean dataBean:historyList){
+                        if(gameNo.equals(dataBean.periodsNum)){
+                            historyList.remove(dataBean);
+                            break;
+                        }
+                    }
                 }
                 historyAdapter.refresh(historyList);
                 if (isStart) {
@@ -408,9 +420,9 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
      */
     private boolean hasResult(String lastNo) {
         boolean hasResult = false;
-        if (historyList.size() > 0) {
-            for (int i = 0; i < historyList.size(); i++) {
-                if (lastNo.equals(historyList.get(i).periodsNum)) {
+        if (allList.size() > 0) {
+            for (int i = 0; i < allList.size(); i++) {
+                if (lastNo.equals(allList.get(i).periodsNum)) {
                     hasResult = true;
                     break;
                 }
@@ -421,10 +433,10 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
 
     private String getResult(String lastNo) {
         String result = "";
-        if (historyList.size() > 0) {
-            for (int i = 0; i < historyList.size(); i++) {
-                if (lastNo.equals(historyList.get(i).periodsNum)) {
-                    result = historyList.get(i).lotteryNum;
+        if (allList.size() > 0) {
+            for (int i = 0; i < allList.size(); i++) {
+                if (lastNo.equals(allList.get(i).periodsNum)) {
+                    result = allList.get(i).lotteryNum;
                 }
             }
         }
