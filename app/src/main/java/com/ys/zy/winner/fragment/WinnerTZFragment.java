@@ -60,6 +60,8 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
     private TextView nextQsTV, djsTV, currentQsTV;
     private String currentQs = "";
     private long startTime;
+    private long endTime;
+    private int type;
     private SimpleDateFormat formatter;
     private LinearLayout tzLL;
     private RelativeLayout waitKjRL;
@@ -119,7 +121,6 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         djsTV = getView(R.id.tv_djs);
         currentQsTV = getView(R.id.tv_currentQS);
         setCurrentQ(currentQs);
-        nextQsTV.setText(StringUtil.StringToInt(currentQs) + 1 + "期投注倒计时");
         buySnIV = getView(R.id.iv_buySn);
         buySnIV.setColorFilter(Color.parseColor("#ffffff"));
         moreRL = getView(R.id.rl_more);
@@ -146,24 +147,6 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         buyDataLV.setAdapter(buyDataAdapter);
         mySnGV = getView(R.id.gv_sn);
         snList = new ArrayList<>();
-//        for (int k = 0; k < 24; k++) {
-//            snList.add("SN00" + k);
-//        }
-//        int size = snList.size();
-//        if (size < 24) {
-//            for (int i = 0; i < 24 - size; i++) {
-//                snList.add(null);
-//            }
-//        } else if (size == 24) {
-//
-//        } else {
-//            int yu = snList.size() % 4;
-//            if (yu != 0) {
-//                for (int j = 0; j < 4 - yu; j++) {
-//                    snList.add(null);
-//                }
-//            }
-//        }
         mySNAdapter = new MySNAdapter(mContext, snList, R.layout.item_my_sn);
         mySnGV.setAdapter(mySNAdapter);
         snLL = getView(R.id.ll_sn);
@@ -294,11 +277,69 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         isStart = false;
     }
 
+//    private void setStatus() {
+//        int type = WinnerUtil.getType(startTime, snNum);
+//        setCurrentQ(currentQs);
+//        long endTime = WinnerUtil.getEndTime(type, startTime, snNum);
+//        long dfferenceTime = endTime - System.currentTimeMillis();
+//        L.e("dfferenceTime=" + dfferenceTime);
+//        String hms = "00:00:00";
+//        if (dfferenceTime < 0) {
+//            dfferenceTime = -dfferenceTime;
+//            hms = "-" + formatter.format(dfferenceTime);
+//        } else {
+//            hms = formatter.format(dfferenceTime);
+//        }
+//        djsTV.setText(hms);
+////        L.e("winner", "endTime=" + endTime+"---diffrentTime="+(endTime - System.currentTimeMillis()));
+//        switch (type) {
+//            case WinnerUtil.TYPE_TZ:
+//                tzLL.setVisibility(View.VISIBLE);
+//                djsTV.setVisibility(View.VISIBLE);
+//                waitKjRL.setVisibility(View.GONE);
+//                finishKjLL.setVisibility(View.GONE);
+//                nextQsTV.setVisibility(View.GONE);
+//                setBtnClickable(true, tzTV);
+//                break;
+//            case WinnerUtil.TYPE_WAIT_KJ:
+//                //系统结算中
+//                tzLL.setVisibility(View.GONE);
+//                nextQsTV.setVisibility(View.GONE);
+//                djsTV.setVisibility(View.GONE);
+//                waitKjRL.setVisibility(View.VISIBLE);
+//                finishKjLL.setVisibility(View.GONE);
+//                waitKjCPB.setDescription(currentQs + "期");
+//                waitKjCPB.setProgress(100 - (int) ((endTime - System.currentTimeMillis()) * 100 / (60 * 1000)));
+//                setBtnClickable(false, tzTV);
+//                break;
+//            case WinnerUtil.TYPE_FINISH_KJ:
+//                //已开奖
+//                tzLL.setVisibility(View.GONE);
+//                nextQsTV.setVisibility(View.VISIBLE);
+//                djsTV.setVisibility(View.VISIBLE);
+//                waitKjRL.setVisibility(View.GONE);
+//                finishKjLL.setVisibility(View.VISIBLE);
+//                setBtnClickable(false, tzTV);
+//                getWinnerResult();
+//                break;
+//            case WinnerUtil.TYPE_END:
+//                //本期游戏结束，期号加1，下期游戏开始
+////                startTime = System.currentTimeMillis() - 119 * 60 * 1000 - 40 * 1000;
+////                currentQs = StringUtil.StringToInt(currentQs) + 1 + "";
+////                snNum = 0;//snNum清0
+//                tzLL.setVisibility(View.VISIBLE);
+//                djsTV.setVisibility(View.VISIBLE);
+//                waitKjRL.setVisibility(View.GONE);
+//                finishKjLL.setVisibility(View.GONE);
+//                nextQsTV.setVisibility(View.GONE);
+//                setBtnClickable(false, tzTV);
+//                break;
+//        }
+//    }
+
+
     private void setStatus() {
-        int type = WinnerUtil.getType(startTime, snNum);
         setCurrentQ(currentQs);
-        nextQsTV.setText(StringUtil.StringToInt(currentQs) + 1 + "期投注倒计时");
-        long endTime = WinnerUtil.getEndTime(type, startTime, snNum);
         long dfferenceTime = endTime - System.currentTimeMillis();
         L.e("dfferenceTime=" + dfferenceTime);
         String hms = "00:00:00";
@@ -327,7 +368,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                 waitKjRL.setVisibility(View.VISIBLE);
                 finishKjLL.setVisibility(View.GONE);
                 waitKjCPB.setDescription(currentQs + "期");
-                waitKjCPB.setProgress(100 - (int) ((endTime - System.currentTimeMillis()) * 100 / (60 * 1000)));
+                waitKjCPB.setProgress(100 - (int) ((endTime - System.currentTimeMillis()) * 100 / (WinnerUtil.WAIT_KJ_MINUTE * 60 * 1000)));
                 setBtnClickable(false, tzTV);
                 break;
             case WinnerUtil.TYPE_FINISH_KJ:
@@ -340,20 +381,18 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                 setBtnClickable(false, tzTV);
                 getWinnerResult();
                 break;
-            case WinnerUtil.TYPE_END:
-                //本期游戏结束，期号加1，下期游戏开始
-//                startTime = System.currentTimeMillis() - 119 * 60 * 1000 - 40 * 1000;
-//                currentQs = StringUtil.StringToInt(currentQs) + 1 + "";
-//                snNum = 0;//snNum清0
-                tzLL.setVisibility(View.VISIBLE);
-                djsTV.setVisibility(View.VISIBLE);
-                waitKjRL.setVisibility(View.GONE);
-                finishKjLL.setVisibility(View.GONE);
-                nextQsTV.setVisibility(View.GONE);
-                setBtnClickable(false, tzTV);
-                break;
+//            case WinnerUtil.TYPE_END:
+//                //本期游戏结束，期号加1，下期游戏开始
+//                tzLL.setVisibility(View.VISIBLE);
+//                djsTV.setVisibility(View.VISIBLE);
+//                waitKjRL.setVisibility(View.GONE);
+//                finishKjLL.setVisibility(View.GONE);
+//                nextQsTV.setVisibility(View.GONE);
+//                setBtnClickable(false, tzTV);
+//                break;
         }
     }
+
 
     @Override
     protected void setBtnClickable(boolean canClick, View view) {
@@ -380,6 +419,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         currentQ1.setText(currentQ + "期");
         currentQ2.setText(currentQ + "期");
         currentQ3.setText(currentQ + "期");
+        nextQsTV.setText(StringUtil.valueOf(StringUtil.StringToInt(currentQs) + 1) + "期投注倒计时");
     }
 
     private boolean isStart = true;
@@ -397,7 +437,16 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                         currentQs = StringUtil.valueOf(winnerData.data.lastWinnerBaseVo.periodNum);
                         setCurrentQ(currentQs);
                         startTime = DateUtil.changeTimeToLong(winnerData.data.lastWinnerBaseVo.gameStartTime);
-                        L.e("winner", "startTime=" + startTime);
+                        endTime = DateUtil.changeTimeToLong(winnerData.data.lastWinnerBaseVo.endTime);
+                        type = WinnerUtil.getType(winnerData.data.lastWinnerBaseVo.gameStatusName);
+                        if (type == WinnerUtil.TYPE_TZ) {
+
+                        } else if (type == WinnerUtil.TYPE_WAIT_KJ) {
+                            endTime += WinnerUtil.WAIT_KJ_MINUTE * 60 * 1000;//5分钟等待开奖
+                        } else if (type == WinnerUtil.TYPE_FINISH_KJ) {
+                            endTime += WinnerUtil.FINISH_KJ_MINUTE * 60 * 1000;
+                        }
+                        L.e("winner", "startTime=" + startTime + "---endTime=" + endTime);
                         fhTV.setText(StringUtil.valueOf(winnerData.data.lastWinnerBaseVo.earnMoney));
                         payTV.setText(StringUtil.valueOf(winnerData.data.lastWinnerBaseVo.payMoney));
                         totalMoneyCPB.setPercent(StringUtil.valueOf(winnerData.data.lastWinnerBaseVo.totleMoney));

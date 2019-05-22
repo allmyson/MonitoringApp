@@ -24,15 +24,15 @@ public class TZJLAdapter extends CommonAdapter<TzjlBean.DataBeanX.DataBean> {
         if ("1000".equals(item.is_win_code)) {
 //            helper.setText(R.id.tv_isZJ, "已中奖");
             helper.setText(R.id.tv_isZJ, StringUtil.StringToDoubleStr(item.win_money) + YS.UNIT);
-            helper.setTextColor(R.id.tv_isZJ, Color.parseColor("#fc6a44"));
+            helper.setTextColor(R.id.tv_isZJ, Color.parseColor("#dd2230"));
         } else if ("1001".equals(item.is_win_code)) {
 //            helper.setText(R.id.tv_isZJ, "未中奖");
             helper.setText(R.id.tv_isZJ, StringUtil.valueOf(item.is_win_name));
-            helper.setTextColor(R.id.tv_isZJ, Color.parseColor("#fc6a44"));
+            helper.setTextColor(R.id.tv_isZJ, Color.parseColor("#000000"));
         } else if ("1002".equals(item.is_win_code)) {
 //            helper.setText(R.id.tv_isZJ, "未开奖");
             helper.setText(R.id.tv_isZJ, StringUtil.valueOf(item.is_win_name));
-            helper.setTextColor(R.id.tv_isZJ, Color.GREEN);
+            helper.setTextColor(R.id.tv_isZJ, Color.parseColor("#27c427"));
         }
     }
 }
