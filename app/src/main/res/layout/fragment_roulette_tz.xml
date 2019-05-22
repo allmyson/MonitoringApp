@@ -95,6 +95,11 @@
             android:orientation="vertical"
             android:visibility="gone">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c9c5c5" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
@@ -108,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:text="游戏期号"
                     android:textColor="#ffffff"
-                    android:textSize="12sp" />
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="0dp"
@@ -120,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:text="生肖"
                     android:textColor="#ffffff"
-                    android:textSize="12sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <View
@@ -135,6 +140,10 @@
                 android:divider="@null"
                 android:dividerHeight="0dp"
                 android:scrollbars="none" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c9c5c5" />
         </LinearLayout>
     </FrameLayout>
 
@@ -152,11 +161,11 @@
             android:id="@+id/btn_clear"
             android:layout_width="48dp"
             android:layout_height="match_parent"
+            android:layout_marginTop="3dp"
             android:layout_marginRight="14dp"
+            android:layout_marginBottom="3dp"
             android:background="@drawable/rect_cornor_red"
             android:gravity="center"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
             android:text="清空"
             android:textColor="#f7f7f7"
             android:textSize="16sp" />

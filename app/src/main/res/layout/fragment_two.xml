@@ -10,7 +10,6 @@
         android:id="@+id/tl_"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginBottom="12dp"
         android:background="#f7f7f7"
         app:tabIndicatorColor="#dd2230"
         app:tabIndicatorHeight="4dp"

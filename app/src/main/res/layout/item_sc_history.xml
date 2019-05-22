@@ -18,7 +18,7 @@
             android:gravity="left|center_vertical"
             android:text="0228233"
             android:textColor="#a5a5a5"
-            android:textSize="16sp" />
+            android:textSize="12sp" />
 
         <RelativeLayout
             android:layout_width="5dp"

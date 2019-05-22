@@ -8,6 +8,6 @@
     android:gravity="center"
     android:text="0"
     android:textColor="@color/main_color"
-    android:textSize="20sp" />
+    android:textSize="16sp" />
 
 
