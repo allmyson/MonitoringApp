@@ -955,7 +955,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                     allList.clear();
                     historyList.addAll(sscResultBean.data);
                 }
-                if (currentStatus == TYPE_TZ) {
+                if (currentStatus != TYPE_PJ) {
                     for (SscResultBean.DataBean dataBean : historyList) {
                         if (gameNo.equals(dataBean.periodsNum)) {
                             historyList.remove(dataBean);

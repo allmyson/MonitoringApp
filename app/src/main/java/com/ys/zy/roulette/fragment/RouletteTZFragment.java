@@ -386,7 +386,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                     allList.addAll(sscResultBean.data);
                     historyList.addAll(sscResultBean.data);
                 }
-                if(currentStatus==TYPE_TZ) {
+                if(currentStatus!=TYPE_PJ) {
                     for (SscResultBean.DataBean dataBean:historyList){
                         if(gameNo.equals(dataBean.periodsNum)){
                             historyList.remove(dataBean);
