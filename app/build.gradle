@@ -6,8 +6,8 @@ android {
         applicationId "com.ys.zy"
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode 13
-        versionName "1.12"
+        versionCode 14
+        versionName "1.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
