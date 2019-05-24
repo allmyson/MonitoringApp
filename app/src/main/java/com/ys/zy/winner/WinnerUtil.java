@@ -41,7 +41,15 @@ public class WinnerUtil {
     public static int getType(String status, long endTime) {
         int type = TYPE_TZ;
         if ("进行中".equals(status)) {
-            type = TYPE_TZ;
+            if (endTime >= System.currentTimeMillis()) {
+                type = TYPE_TZ;
+            }else {
+                if (System.currentTimeMillis() <= endTime + WAIT_KJ_MINUTE * 60 * 1000) {
+                    type = TYPE_WAIT_KJ;
+                } else {
+                    type = TYPE_FINISH_KJ;
+                }
+            }
         } else {
             if (System.currentTimeMillis() <= endTime + WAIT_KJ_MINUTE * 60 * 1000) {
                 type = TYPE_WAIT_KJ;

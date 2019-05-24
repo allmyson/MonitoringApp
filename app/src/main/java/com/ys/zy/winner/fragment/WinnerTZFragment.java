@@ -344,12 +344,13 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         L.e("dfferenceTime=" + dfferenceTime);
         String hms = "00:00:00";
         if (dfferenceTime < 0) {
-            dfferenceTime = -dfferenceTime;
-            hms = "-" + formatter.format(dfferenceTime);
+//            dfferenceTime = -dfferenceTime;
+//            hms = "-" + formatter.format(dfferenceTime);
+            djsTV.setText("即将开始...");
         } else {
             hms = formatter.format(dfferenceTime);
+            djsTV.setText(hms);
         }
-        djsTV.setText(hms);
 //        L.e("winner", "endTime=" + endTime+"---diffrentTime="+(endTime - System.currentTimeMillis()));
         switch (type) {
             case WinnerUtil.TYPE_TZ:
