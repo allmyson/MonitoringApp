@@ -133,8 +133,9 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:text=""
+            android:textStyle="bold"
             android:textColor="#1e1e1e"
-            android:textSize="30sp" />
+            android:textSize="36sp" />
 
         <View
             android:id="@+id/view_"

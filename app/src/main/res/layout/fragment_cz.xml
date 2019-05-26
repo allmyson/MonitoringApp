@@ -20,12 +20,13 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:gravity="center"
-        android:hint="请输入充值金额"
+        android:hint="请输入金额"
+        android:inputType="number"
         android:maxLines="1"
         android:padding="5dp"
-        android:inputType="number"
         android:textColor="#1e1e1e"
-        android:textSize="16sp" />
+        android:textSize="36sp"
+        android:textStyle="bold" />
 
     <View
         android:id="@+id/view_"
