@@ -438,7 +438,11 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
             newResultTV.setText(lastNo + "期开奖号码");
             int totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1;
             if (type == Fast3Activity.TYPE_JSK3) {
-                totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1 + (8 * 60 + 30) * 60;
+                if (StringUtil.StringToInt(currentNo.substring(4)) == 41) {
+                    totalSecond = 41 * jgTime * 60 - 1 + (8 * 60 + 30) * 60;
+                } else {
+                    totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1 + (8 * 60 + 30) * 60;
+                }
             }
             Calendar now = Calendar.getInstance();
             now.setTime(new Date());

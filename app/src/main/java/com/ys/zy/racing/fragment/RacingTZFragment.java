@@ -88,6 +88,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
     private String userId;
     private String lotteryTypeCode;
     private String gameNo = "0214983";
+
     public static RacingTZFragment newInstance(int type, int play) {
         RacingTZFragment racingTZFragment = new RacingTZFragment();
         racingTZFragment.setType(type);
@@ -546,7 +547,11 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
             newResultTV.setText(lastNo + "期开奖号码");
             int totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1;
             if (type == TYPE_BJSC) {
-                totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1 + (9 * 60 + 10) * 60;
+                if (StringUtil.StringToInt(currentNo.substring(4)) == 44) {
+                    totalSecond = 44 * jgTime * 60 - 1 + (9 * 60 + 10) * 60;
+                } else {
+                    totalSecond = (StringUtil.StringToInt(nextNo.substring(4)) - 1) * jgTime * 60 - 1 + (9 * 60 + 10) * 60;
+                }
             }
             Calendar now = Calendar.getInstance();
             now.setTime(new Date());
@@ -554,7 +559,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
             int minute = now.get(Calendar.MINUTE);
             int second = now.get(Calendar.SECOND);
             int differenceSecond = totalSecond - ((hour * 60 + minute) * 60 + second);
-            L.e("differenceSecond=" + differenceSecond);
+            L.e("totalSecond=" + totalSecond + "--differenceSecond=" + differenceSecond);
             djsTV.setText(TimeUtil.getTime(differenceSecond));
             if (differenceSecond == 0) {
                 DialogUtil.removeDialog(mContext);
@@ -603,7 +608,7 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
             }
         } else {
             //赛车游戏不在游戏时间段内
-            L.e("快3游戏不在游戏时间段内");
+            L.e("赛车游戏不在游戏时间段内");
             gameNo = RacingUtil.getNextBJSCPeriods();
             tzTipTV.setText(gameNo + "期投注截止");
             djsTV.setText("预售中");
