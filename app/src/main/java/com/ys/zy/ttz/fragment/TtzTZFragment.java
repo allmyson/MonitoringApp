@@ -948,11 +948,11 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         HttpUtil.getSscResult(mContext, YS.CODE_TTZ, 50, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
-                allList.clear();
                 historyList.clear();
+                allList.clear();
                 SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
                 if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
-                    allList.clear();
+                    allList.addAll(sscResultBean.data);
                     historyList.addAll(sscResultBean.data);
                 }
                 if (currentStatus != TYPE_PJ) {
@@ -989,9 +989,9 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
      */
     private boolean hasResult(String lastNo) {
         boolean hasResult = false;
-        if (historyList.size() > 0) {
-            for (int i = 0; i < historyList.size(); i++) {
-                if (lastNo.equals(historyList.get(i).periodsNum)) {
+        if (allList.size() > 0) {
+            for (int i = 0; i < allList.size(); i++) {
+                if (lastNo.equals(allList.get(i).periodsNum)) {
                     hasResult = true;
                     break;
                 }
@@ -1002,10 +1002,10 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 
     private String getResult(String lastNo) {
         String result = "";
-        if (historyList.size() > 0) {
-            for (int i = 0; i < historyList.size(); i++) {
-                if (lastNo.equals(historyList.get(i).periodsNum)) {
-                    result = historyList.get(i).lotteryNum;
+        if (allList.size() > 0) {
+            for (int i = 0; i < allList.size(); i++) {
+                if (lastNo.equals(allList.get(i).periodsNum)) {
+                    result = allList.get(i).lotteryNum;
                 }
             }
         }

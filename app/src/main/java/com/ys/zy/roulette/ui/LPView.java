@@ -342,6 +342,7 @@ public class LPView extends View {
         }
         stopCount = defaultStopConut + resultIndex + 1;
     }
+
     public void setResultWithNoAnimal(final String result) {
         for (int j = 0; j < list.size(); j++) {
             if (j % 2 == 0) {
@@ -350,8 +351,8 @@ public class LPView extends View {
                 list.get(j).color = "#ff854b";
             }
         }
-        for(int i = 0;i<sx.length;i++){
-            if(result.equals(sx[i])){
+        for (int i = 0; i < sx.length; i++) {
+            if (result.equals(sx[i])) {
                 list.get(i).color = "#f7f7f7";
                 currentResult = result;
                 break;
@@ -465,5 +466,34 @@ public class LPView extends View {
             }
         }
         return tzList;
+    }
+
+    private int k = 0;
+
+    //position  0-11   12为一圈
+    public void move(final int position) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setResultWithNoAnimal(sx[k % 12]);
+                k++;
+                if (k <= position) {
+                    move(position);
+                } else {
+                    k = 0;
+                }
+            }
+        }, 100);
+    }
+
+    public static int getPostionByResult(String result) {
+        int position = -1;
+        for (int i = 0; i < sx.length; i++) {
+            if (sx[i].equals(result)) {
+                position = i;
+                break;
+            }
+        }
+        return position;
     }
 }

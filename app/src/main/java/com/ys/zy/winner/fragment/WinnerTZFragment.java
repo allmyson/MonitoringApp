@@ -158,13 +158,13 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
     @Override
     protected void getData() {
         getWinnerInfo();
-        //延迟2秒开启倒计时，等待接口返回结果
+        //延迟1秒开启倒计时，等待接口返回结果
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 start();
             }
-        }, 2000);
+        }, 1000);
     }
 
     @Override

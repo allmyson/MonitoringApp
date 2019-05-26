@@ -123,6 +123,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
         int second = getCurrentSecond();
         switch (currentStatus) {
             case TYPE_TZ:
+                isLPAnimal = false;
                 if (chipAdapter.getChooseData() != null && lpView.getTZList().size() > 0) {
                     setBtnClickable(true, sureBtn);
                 } else {
@@ -149,26 +150,41 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                 break;
         }
         if (currentStatus == TYPE_KJ || currentStatus == TYPE_PJ) {
-            if (second < 55) {
-                if (!lpView.isRamdomRunning() && !isLPAnimal) {
-                    lpView.startRandomColor();
+            if (!isLPAnimal) {
+                if (hasResult(gameNo)) {
+                    String result = getResult(gameNo);
+                    int position = LPView.getPostionByResult(result);
+                    int quan = Math.max(55 - second, 0);
+                    int move = quan * 12 + position;
+                    L.e("lp","进入轮盘游戏的秒数=" + second + "-" + result + "-position=" + position + "-圈数=" + quan + "-总步数=" + move);
+                    lpView.move(move);
                     isLPAnimal = true;
                 }
-                if (hasResult(gameNo)) {
-                    String result = getResult(gameNo);
-                    L.e("lp", "second=" + second + "--result=" + result);
-                    lpView.setResult(result);
-                }
-            } else if (second < 59) {
-                if (hasResult(gameNo)) {
-                    String result = getResult(gameNo);
-                    lpView.setResultWithNoAnimal(result);
-                }
-            } else {
-                lpView.closeRandomColor();
-                lpView.clearColorAndResult();
-                isLPAnimal = false;
             }
+//            if (second == 59) {
+//                lpView.clearColorAndResult();
+//                isLPAnimal = false;
+//            }
+//            if (second < 55) {
+//                if (!lpView.isRamdomRunning() && !isLPAnimal) {
+//                    lpView.startRandomColor();
+//                    isLPAnimal = true;
+//                }
+//                if (hasResult(gameNo)) {
+//                    String result = getResult(gameNo);
+//                    L.e("lp", "second=" + second + "--result=" + result);
+//                    lpView.setResult(result);
+//                }
+//            } else if (second < 59) {
+//                if (hasResult(gameNo)) {
+//                    String result = getResult(gameNo);
+//                    lpView.setResultWithNoAnimal(result);
+//                }
+//            } else {
+//                lpView.closeRandomColor();
+//                lpView.clearColorAndResult();
+//                isLPAnimal = false;
+//            }
         }
     }
 
@@ -386,9 +402,9 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                     allList.addAll(sscResultBean.data);
                     historyList.addAll(sscResultBean.data);
                 }
-                if(currentStatus!=TYPE_PJ) {
-                    for (SscResultBean.DataBean dataBean:historyList){
-                        if(gameNo.equals(dataBean.periodsNum)){
+                if (currentStatus != TYPE_PJ) {
+                    for (SscResultBean.DataBean dataBean : historyList) {
+                        if (gameNo.equals(dataBean.periodsNum)) {
                             historyList.remove(dataBean);
                             break;
                         }
