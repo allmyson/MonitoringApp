@@ -123,6 +123,7 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
         int second = getCurrentSecond();
         switch (currentStatus) {
             case TYPE_TZ:
+                lpView.clearColorAndResult2();
                 isLPAnimal = false;
                 if (chipAdapter.getChooseData() != null && lpView.getTZList().size() > 0) {
                     setBtnClickable(true, sureBtn);
@@ -156,15 +157,15 @@ public class RouletteTZFragment extends BaseFragment implements View.OnClickList
                     int position = LPView.getPostionByResult(result);
                     int quan = Math.max(55 - second, 0);
                     int move = quan * 12 + position;
-                    L.e("lp","进入轮盘游戏的秒数=" + second + "-" + result + "-position=" + position + "-圈数=" + quan + "-总步数=" + move);
+                    L.e("lp", "进入轮盘游戏的秒数=" + second + "-" + result + "-position=" + position + "-圈数=" + quan + "-总步数=" + move);
                     lpView.move(move);
                     isLPAnimal = true;
                 }
             }
-//            if (second == 59) {
-//                lpView.clearColorAndResult();
-//                isLPAnimal = false;
-//            }
+            if (second == 59) {
+                lpView.clearColorAndResult();
+                isLPAnimal = false;
+            }
 //            if (second < 55) {
 //                if (!lpView.isRamdomRunning() && !isLPAnimal) {
 //                    lpView.startRandomColor();

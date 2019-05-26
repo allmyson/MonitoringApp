@@ -233,6 +233,19 @@ public class LPView extends View {
         invalidate();
     }
 
+
+    public void clearColorAndResult2() {
+        stopCount = defaultStopConut;
+        currentResult = "";
+        for (int i = 0; i < list.size(); i++) {
+            if (i % 2 == 0) {
+                list.get(i).color = "#ffa958";
+            } else {
+                list.get(i).color = "#ff854b";
+            }
+        }
+        invalidate();
+    }
     private RandomThraed randomThraed;
 
     public void startRandomColor() {
