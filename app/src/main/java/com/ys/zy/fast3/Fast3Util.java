@@ -4,6 +4,7 @@ import com.ys.zy.R;
 import com.ys.zy.fast3.activity.Fast3Activity;
 import com.ys.zy.util.GameUtil;
 import com.ys.zy.util.L;
+import com.ys.zy.util.YS;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class Fast3Util {
     public static String getCurrentJSK3Periods() {
         if (isJSK3Running()) {
             Calendar now = Calendar.getInstance();
-            now.setTime(new Date());
+            now.setTime(YS.getCurrentDate());
             int month = now.get(Calendar.MONTH) + 1;
             int day = now.get(Calendar.DAY_OF_MONTH);
             int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -49,7 +50,7 @@ public class Fast3Util {
     public static String getJSK3Periods(int qi) {
         if (isJSK3Running()) {
             Calendar now = Calendar.getInstance();
-            now.setTime(new Date());
+            now.setTime(YS.getCurrentDate());
             int month = now.get(Calendar.MONTH) + 1;
             int day = now.get(Calendar.DAY_OF_MONTH);
             int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -72,7 +73,7 @@ public class Fast3Util {
         boolean runFlag = false;
         String format = "HH:mm:ss";
         SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
-        String now = sf.format(new Date());
+        String now = sf.format(YS.getCurrentDate());
         Date nowTime;
         try {
             nowTime = new SimpleDateFormat(format).parse(now);
@@ -107,7 +108,7 @@ public class Fast3Util {
      */
     public static String getCurrent1FK3Periods() {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.HOUR_OF_DAY);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -123,7 +124,7 @@ public class Fast3Util {
      */
     public static String get1FK3Periods(int qi) {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -142,7 +143,7 @@ public class Fast3Util {
      */
     public static String getCurrent5FK3Periods() {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -157,7 +158,7 @@ public class Fast3Util {
      */
     public static String get5FK3Periods(int qi) {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -239,7 +240,7 @@ public class Fast3Util {
         String result="";
         String format = "HH:mm:ss";
         SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
-        String now = sf.format(new Date());
+        String now = sf.format(YS.getCurrentDate());
         Date nowTime;
         try {
             nowTime = new SimpleDateFormat(format).parse(now);
@@ -248,14 +249,14 @@ public class Fast3Util {
             if (GameUtil.isEffectiveDate(nowTime, startTime, endTime)) {
                 L.e("系统时间在早上00:00:01到08:29:59之间.");
                 Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
+                c.setTime(YS.getCurrentDate());
                 int month = c.get(Calendar.MONTH) + 1;
                 int day = c.get(Calendar.DAY_OF_MONTH);
                 result = getNumber(month) + getNumber(day) + "001";
             } else {
                 L.e("系统时间在早上15:20:01到23:59:59之间.");
                 Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
+                c.setTime(YS.getCurrentDate());
                 c.add(c.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动
                 int month = c.get(Calendar.MONTH) + 1;
                 int day = c.get(Calendar.DAY_OF_MONTH);
@@ -272,7 +273,7 @@ public class Fast3Util {
         String result="";
         String format = "HH:mm:ss";
         SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
-        String now = sf.format(new Date());
+        String now = sf.format(YS.getCurrentDate());
         Date nowTime;
         try {
             nowTime = new SimpleDateFormat(format).parse(now);
@@ -281,7 +282,7 @@ public class Fast3Util {
             if (GameUtil.isEffectiveDate(nowTime, startTime, endTime)) {
                 L.e("系统时间在早上00:00:01到08:29:59之间.");
                 Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
+                c.setTime(YS.getCurrentDate());
                 c.add(c.DATE,-1);//把日期往前减一天.整数往后推,负数往前移动
                 int month = c.get(Calendar.MONTH) + 1;
                 int day = c.get(Calendar.DAY_OF_MONTH);
@@ -289,7 +290,7 @@ public class Fast3Util {
             } else {
                 L.e("系统时间在早上15:20:01到23:59:59之间.");
                 Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
+                c.setTime(YS.getCurrentDate());
                 int month = c.get(Calendar.MONTH) + 1;
                 int day = c.get(Calendar.DAY_OF_MONTH);
                 result = getNumber(month) + getNumber(day) + "041";

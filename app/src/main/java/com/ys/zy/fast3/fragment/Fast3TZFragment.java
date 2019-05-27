@@ -392,6 +392,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
         countDownTimer = new CountDownTimer(24 * 60 * 60 * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                YS.add();
                 setStatus();
             }
 
@@ -445,7 +446,7 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
                 }
             }
             Calendar now = Calendar.getInstance();
-            now.setTime(new Date());
+            now.setTime(YS.getCurrentDate());
             int hour = now.get(Calendar.HOUR_OF_DAY);
             int minute = now.get(Calendar.MINUTE);
             int second = now.get(Calendar.SECOND);
@@ -534,6 +535,12 @@ public class Fast3TZFragment extends BaseFragment implements View.OnClickListene
             public void onSucceed(int what, Response<String> response) {
                 historyList.clear();
                 SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
+                if (sscResultBean != null) {
+                    if (!isTB) {
+                        YS.setCurrentTimeMillis(sscResultBean.systemDate + YS.TIME_DELAY);
+                        isTB = true;
+                    }
+                }
                 if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
                     historyList.addAll(sscResultBean.data);
                 }

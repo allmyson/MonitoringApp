@@ -234,6 +234,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
         countDownTimer = new CountDownTimer(24 * 60 * 60 * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                YS.add();
                 setStatus();
             }
 
@@ -340,7 +341,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
 
     private void setStatus() {
         setCurrentQ(currentQs);
-        long dfferenceTime = endTime - System.currentTimeMillis();
+        long dfferenceTime = endTime - YS.currentTimeMillis();
         L.e("dfferenceTime=" + dfferenceTime);
         String hms = "00:00:00";
         if (dfferenceTime < 0) {
@@ -369,7 +370,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                 waitKjRL.setVisibility(View.VISIBLE);
                 finishKjLL.setVisibility(View.GONE);
                 waitKjCPB.setDescription(currentQs + "期");
-                waitKjCPB.setProgress(100 - (int) ((endTime - System.currentTimeMillis()) * 100 / (WinnerUtil.WAIT_KJ_MINUTE * 60 * 1000)));
+                waitKjCPB.setProgress(100 - (int) ((endTime - YS.currentTimeMillis()) * 100 / (WinnerUtil.WAIT_KJ_MINUTE * 60 * 1000)));
                 setBtnClickable(false, tzTV);
                 break;
             case WinnerUtil.TYPE_FINISH_KJ:
@@ -432,6 +433,12 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                 snList.clear();
                 buyDataList.clear();
                 WinnerData winnerData = new Gson().fromJson(response.get(), WinnerData.class);
+                if (winnerData != null) {
+                    if (!isTB) {
+                        YS.setCurrentTimeMillis(winnerData.systemDate + YS.TIME_DELAY);
+                        isTB = true;
+                    }
+                }
                 if (winnerData != null && YS.SUCCESE.equals(winnerData.code) && winnerData.data != null) {
                     if (winnerData.data.lastWinnerBaseVo != null) {
                         snNum = StringUtil.StringToInt(winnerData.data.lastWinnerBaseVo.snprice) - 1;
@@ -439,7 +446,7 @@ public class WinnerTZFragment extends BaseFragment implements View.OnClickListen
                         setCurrentQ(currentQs);
                         startTime = DateUtil.changeTimeToLong(winnerData.data.lastWinnerBaseVo.gameStartTime);
                         endTime = DateUtil.changeTimeToLong(winnerData.data.lastWinnerBaseVo.endTime);
-                        type = WinnerUtil.getType(winnerData.data.lastWinnerBaseVo.gameStatusName,endTime);
+                        type = WinnerUtil.getType(winnerData.data.lastWinnerBaseVo.gameStatusName, endTime);
                         if (type == WinnerUtil.TYPE_TZ) {
 
                         } else if (type == WinnerUtil.TYPE_WAIT_KJ) {

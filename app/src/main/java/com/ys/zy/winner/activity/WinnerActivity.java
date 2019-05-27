@@ -205,18 +205,22 @@ public class WinnerActivity extends BaseActivity {
                             case 0:
                                 //轮盘
                                 startActivity(new Intent(mContext, RouletteActivity.class));
+                                finish();
                                 break;
                             case 1:
                                 //1分快3
                                 Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_1FK3);
+                                finish();
                                 break;
                             case 2:
                                 //推筒子
                                 startActivity(new Intent(mContext, TtzActivity.class));
+                                finish();
                                 break;
                             case 3:
                                 //5分快3
                                 Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_5FK3);
+                                finish();
                                 break;
                             case 4:
                                 //最后胜利者
@@ -224,22 +228,27 @@ public class WinnerActivity extends BaseActivity {
                             case 5:
                                 //江苏快3
                                 Fast3Activity.intentToFast3(mContext, Fast3Activity.TYPE_JSK3);
+                                finish();
                                 break;
                             case 6:
                                 //1分彩
                                 SscActivity.intentToSSC(mContext, SscActivity.TYPE_1FC);
+                                finish();
                                 break;
                             case 7:
                                 //北京赛车
                                 RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_BJSC);
+                                finish();
                                 break;
                             case 8:
                                 //时时彩
                                 SscActivity.intentToSSC(mContext, SscActivity.TYPE_SSC);
+                                finish();
                                 break;
                             case 9:
                                 //1分赛车
                                 RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_1FSC);
+                                finish();
                                 break;
                             case 10:
                                 //更多
@@ -247,6 +256,7 @@ public class WinnerActivity extends BaseActivity {
                             case 11:
                                 //5分赛车
                                 RacingActivity.intentToRacing(mContext, RacingActivity.TYPE_5FSC);
+                                finish();
                                 break;
 
                         }

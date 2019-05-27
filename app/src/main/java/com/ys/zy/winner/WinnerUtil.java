@@ -1,5 +1,7 @@
 package com.ys.zy.winner;
 
+import com.ys.zy.util.YS;
+
 public class WinnerUtil {
     public static final int TYPE_TZ = 100;//投注中
     public static final int TYPE_WAIT_KJ = 101;//开奖核算中
@@ -41,17 +43,17 @@ public class WinnerUtil {
     public static int getType(String status, long endTime) {
         int type = TYPE_TZ;
         if ("进行中".equals(status)) {
-            if (endTime >= System.currentTimeMillis()) {
+            if (endTime >= YS.currentTimeMillis()) {
                 type = TYPE_TZ;
             }else {
-                if (System.currentTimeMillis() <= endTime + WAIT_KJ_MINUTE * 60 * 1000) {
+                if (YS.currentTimeMillis() <= endTime + WAIT_KJ_MINUTE * 60 * 1000) {
                     type = TYPE_WAIT_KJ;
                 } else {
                     type = TYPE_FINISH_KJ;
                 }
             }
         } else {
-            if (System.currentTimeMillis() <= endTime + WAIT_KJ_MINUTE * 60 * 1000) {
+            if (YS.currentTimeMillis() <= endTime + WAIT_KJ_MINUTE * 60 * 1000) {
                 type = TYPE_WAIT_KJ;
             } else {
                 type = TYPE_FINISH_KJ;

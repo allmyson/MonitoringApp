@@ -6,6 +6,8 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.ys.zy.sp.CookieSP;
 
+import java.util.Date;
+
 /**
  * @author lh
  * @version 1.0.0
@@ -14,6 +16,9 @@ import com.ys.zy.sp.CookieSP;
  * @date 2018/11/26 17:53
  */
 public class YS {
+
+    public static final long TIME_DELAY = 2000;//服务器时间和北京时间的差值（算上网络请求）
+    public static long CURRENT_TIME_SERVER = 0;//服务器当前时间
     public static final int CODE_SSC = 1000;//时时彩
     public static final int CODE_1FC = 1001;//1分彩
     public static final int CODE_SLZ = 1002;//最后胜利者
@@ -180,5 +185,29 @@ public class YS {
 
     public static GlideUrl getGlideUrl(Context context, String url) {
         return new GlideUrl(url, new LazyHeaders.Builder().addHeader("Cookie", CookieSP.getCookie(context)).build());
+    }
+
+    public static long currentTimeMillis() {
+        if (CURRENT_TIME_SERVER == 0) {
+            return System.currentTimeMillis();
+        }
+        return CURRENT_TIME_SERVER;
+    }
+
+    public static void setCurrentTimeMillis(long time) {
+        CURRENT_TIME_SERVER = time;
+    }
+
+    public static Date getCurrentDate() {
+        if (CURRENT_TIME_SERVER == 0) {
+            return new Date();
+        }
+        return new Date(CURRENT_TIME_SERVER);
+    }
+
+    public static void add() {
+        if (CURRENT_TIME_SERVER != 0) {
+            CURRENT_TIME_SERVER += 1000;
+        }
     }
 }

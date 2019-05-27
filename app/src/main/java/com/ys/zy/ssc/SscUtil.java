@@ -2,6 +2,8 @@ package com.ys.zy.ssc;
 
 import com.ys.zy.ssc.activity.SscActivity;
 import com.ys.zy.util.GameUtil;
+import com.ys.zy.util.YS;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +28,7 @@ public class SscUtil {
      */
     public static String getCurrent1FCPeriods() {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -42,7 +44,7 @@ public class SscUtil {
      */
     public static String get1FCPeriods(int qi) {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -61,7 +63,7 @@ public class SscUtil {
      */
     public static String getCurrentSscPeriods() {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -76,7 +78,7 @@ public class SscUtil {
      */
     public static String getSscPeriods(int qi) {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);

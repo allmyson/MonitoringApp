@@ -4,6 +4,7 @@ import com.ys.zy.racing.activity.RacingActivity;
 import com.ys.zy.util.GameUtil;
 import com.ys.zy.util.L;
 import com.ys.zy.util.StringUtil;
+import com.ys.zy.util.YS;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class RacingUtil {
     public static String getCurrentBJSCPeriods() {
         if (isBJSCRunning()) {
             Calendar now = Calendar.getInstance();
-            now.setTime(new Date());
+            now.setTime(YS.getCurrentDate());
             int month = now.get(Calendar.MONTH) + 1;
             int day = now.get(Calendar.DAY_OF_MONTH);
             int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -106,7 +107,7 @@ public class RacingUtil {
     public static String getBJSCPeriods(int qi) {
         if (isBJSCRunning()) {
             Calendar now = Calendar.getInstance();
-            now.setTime(new Date());
+            now.setTime(YS.getCurrentDate());
             int month = now.get(Calendar.MONTH) + 1;
             int day = now.get(Calendar.DAY_OF_MONTH);
             int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -120,7 +121,7 @@ public class RacingUtil {
             String result = "";
             String format = "HH:mm:ss";
             SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
-            String now = sf.format(new Date());
+            String now = sf.format(YS.getCurrentDate());
             Date nowTime;
             try {
                 nowTime = new SimpleDateFormat(format).parse(now);
@@ -139,7 +140,7 @@ public class RacingUtil {
                 } else {
                     L.e("系统时间在早上23:50:01到23:59:59之间.");
                     Calendar c = Calendar.getInstance();
-                    c.setTime(new Date());
+                    c.setTime(YS.getCurrentDate());
                     c.add(c.DATE, 1);//把日期往后增加一天.整数往后推,负数往前移动
                     int month = c.get(Calendar.MONTH) + 1;
                     int day = c.get(Calendar.DAY_OF_MONTH);
@@ -164,7 +165,7 @@ public class RacingUtil {
         boolean runFlag = false;
         String format = "HH:mm:ss";
         SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
-        String now = sf.format(new Date());
+        String now = sf.format(YS.getCurrentDate());
         Date nowTime;
         try {
             nowTime = new SimpleDateFormat(format).parse(now);
@@ -199,7 +200,7 @@ public class RacingUtil {
      */
     public static String getCurrent1FSCPeriods() {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.HOUR_OF_DAY);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -215,7 +216,7 @@ public class RacingUtil {
      */
     public static String get1FSCPeriods(int qi) {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -234,7 +235,7 @@ public class RacingUtil {
      */
     public static String getCurrent5FSCPeriods() {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -249,7 +250,7 @@ public class RacingUtil {
      */
     public static String get5FSCPeriods(int qi) {
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+        now.setTime(YS.getCurrentDate());
         int month = now.get(Calendar.MONTH) + 1;
         int day = now.get(Calendar.DAY_OF_MONTH);
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -307,7 +308,7 @@ public class RacingUtil {
         String result = "";
         String format = "HH:mm:ss";
         SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
-        String now = sf.format(new Date());
+        String now = sf.format(YS.getCurrentDate());
         Date nowTime;
         try {
             nowTime = new SimpleDateFormat(format).parse(now);
@@ -316,14 +317,14 @@ public class RacingUtil {
             if (GameUtil.isEffectiveDate(nowTime, startTime, endTime)) {
                 L.e("系统时间在早上00:00:01到09:09:59之间.");
                 Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
+                c.setTime(YS.getCurrentDate());
                 int month = c.get(Calendar.MONTH) + 1;
                 int day = c.get(Calendar.DAY_OF_MONTH);
                 result = getNumber(month) + getNumber(day) + "01";
             } else {
                 L.e("系统时间在早上23:50:01到23:59:59之间.");
                 Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
+                c.setTime(YS.getCurrentDate());
                 c.add(c.DATE, 1);//把日期往后增加一天.整数往后推,负数往前移动
                 int month = c.get(Calendar.MONTH) + 1;
                 int day = c.get(Calendar.DAY_OF_MONTH);
@@ -341,7 +342,7 @@ public class RacingUtil {
         String result = "";
         String format = "HH:mm:ss";
         SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss");
-        String now = sf.format(new Date());
+        String now = sf.format(YS.getCurrentDate());
         Date nowTime;
         try {
             nowTime = new SimpleDateFormat(format).parse(now);
@@ -350,7 +351,7 @@ public class RacingUtil {
             if (GameUtil.isEffectiveDate(nowTime, startTime, endTime)) {
                 L.e("系统时间在早上00:00:01到09:09:59之间.");
                 Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
+                c.setTime(YS.getCurrentDate());
                 c.add(c.DATE, -1);//把日期往前减一天.整数往后推,负数往前移动
                 int month = c.get(Calendar.MONTH) + 1;
                 int day = c.get(Calendar.DAY_OF_MONTH);
@@ -358,7 +359,7 @@ public class RacingUtil {
             } else {
                 L.e("系统时间在早上23:10:01到23:59:59之间.");
                 Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
+                c.setTime(YS.getCurrentDate());
                 int month = c.get(Calendar.MONTH) + 1;
                 int day = c.get(Calendar.DAY_OF_MONTH);
                 result = getNumber(month) + getNumber(day) + "44";

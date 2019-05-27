@@ -18,6 +18,7 @@ public abstract class BaseFragment extends Fragment {
     protected View mView;
     protected Context mContext;
     protected Activity mActivity;
+    protected boolean isTB = false;//是否同步过服务器时间
 
     @Override
     public void onAttach(Context context) {
@@ -46,12 +47,15 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected abstract void init();
+
     protected abstract void getData();
+
     protected abstract int getLayoutResource();
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        isTB = false;
     }
 
     @Override
@@ -79,11 +83,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
-    protected void setBtnClickable(boolean canClick,View view){
-        if(canClick){
+    protected void setBtnClickable(boolean canClick, View view) {
+        if (canClick) {
             view.setClickable(true);
             view.setAlpha(1f);
-        }else {
+        } else {
             view.setClickable(false);
             view.setAlpha(0.3f);
         }

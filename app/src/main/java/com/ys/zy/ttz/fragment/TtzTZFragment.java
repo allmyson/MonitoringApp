@@ -469,6 +469,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 
     private int getGameStatus() {
         Calendar now = Calendar.getInstance();
+        now.setTime(YS.getCurrentDate());
         int second = now.get(Calendar.SECOND);
         if (second >= 0 && second < 45) {
             return TYPE_TZ;
@@ -483,6 +484,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
 
     private int getCurrentSecond() {
         Calendar now = Calendar.getInstance();
+        now.setTime(YS.getCurrentDate());
         int second = now.get(Calendar.SECOND);
         return second;
     }
@@ -494,6 +496,7 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
         countDownTimer = new CountDownTimer(24 * 60 * 60 * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                YS.add();
                 setStatus();
             }
 
@@ -951,6 +954,13 @@ public class TtzTZFragment extends BaseFragment implements View.OnClickListener,
                 historyList.clear();
                 allList.clear();
                 SscResultBean sscResultBean = new Gson().fromJson(response.get(), SscResultBean.class);
+                if (sscResultBean != null) {
+                    if (!isTB) {
+                        YS.setCurrentTimeMillis(sscResultBean.systemDate + YS.TIME_DELAY);
+                        isTB = true;
+                        setCurrentGameNo();
+                    }
+                }
                 if (sscResultBean != null && YS.SUCCESE.equals(sscResultBean.code) && sscResultBean.data != null && sscResultBean.data.size() > 0) {
                     allList.addAll(sscResultBean.data);
                     historyList.addAll(sscResultBean.data);

@@ -10,7 +10,7 @@ public class GameUtil {
      * @return
      */
     public static String getCurrentTtzPeriods() {
-        return getCurrentLpPeriods(System.currentTimeMillis());
+        return getCurrentLpPeriods(YS.currentTimeMillis());
     }
 
     public static String getCurrentTtzPeriods(long time) {
@@ -30,7 +30,7 @@ public class GameUtil {
      * @return
      */
     public static String getCurrentLpPeriods() {
-        return getCurrentLpPeriods(System.currentTimeMillis());
+        return getCurrentLpPeriods(YS.currentTimeMillis());
     }
 
     public static String getCurrentLpPeriods(long time) {
