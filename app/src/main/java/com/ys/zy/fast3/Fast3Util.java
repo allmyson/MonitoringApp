@@ -36,7 +36,7 @@ public class Fast3Util {
             int day = now.get(Calendar.DAY_OF_MONTH);
             int hour = now.get(Calendar.HOUR_OF_DAY);
             int minute = now.get(Calendar.MINUTE);
-            return getNumber(month) + getNumber(day) + getNumber((hour * 60 + minute - 8 * 60 - 30) / 10 + 1);
+            return getNumber(month) + getNumber(day) + toThreeDigit((hour * 60 + minute - 8 * 60 - 30) / 10 + 1);
         }
         return "";
     }
@@ -59,7 +59,7 @@ public class Fast3Util {
             if (qishu > 41) {
                 qishu = 41;
             }
-            return getNumber(month) + getNumber(day) + getNumber(qishu);
+            return getNumber(month) + getNumber(day) + toThreeDigit(qishu);
         }
         return "";
     }
