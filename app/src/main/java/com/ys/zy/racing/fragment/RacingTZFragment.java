@@ -565,14 +565,8 @@ public class RacingTZFragment extends BaseFragment implements View.OnClickListen
             if (differenceSecond == 0) {
                 DialogUtil.removeDialog(mContext);
             }
-            if (differenceSecond == 59) {
-                //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
-                racingResultAdapter.startRandom();
-                L.e("59当前期：" + currentNo);
-                L.e("59上一期：" + lastNo);
-            }
             if (type == TYPE_BJSC) {
-                if (differenceSecond == 599) {
+                if (differenceSecond == 1199) {
                     //请求lastNo的开奖数据，取服务器最新一期的开奖结果，如果不是lastNo的就一直转圈圈。
                     if (!racingResultAdapter.isRamdomRunning()) {
                         racingResultAdapter.startRandom();
