@@ -6,8 +6,8 @@ android {
         applicationId "com.ys.zy"
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode 26
-        versionName "1.25"
+        versionCode 27
+        versionName "1.26"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -57,4 +57,5 @@ dependencies {
     implementation project(':imageSelect')
     implementation project(':qrcode')
     implementation project(':convenientbanner')
+    implementation 'com.android.support:support-v4:25.3.1'
 }
