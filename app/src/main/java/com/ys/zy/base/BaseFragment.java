@@ -61,6 +61,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        isTB = false;
     }
 
     @Override
