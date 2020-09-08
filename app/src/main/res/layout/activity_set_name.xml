@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".activity.UserInfoActivity">
 
-    <com.ys.zy.ui.TitleView
+    <com.ys.monitor.ui.TitleView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="50dp" />

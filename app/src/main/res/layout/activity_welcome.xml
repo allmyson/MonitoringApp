@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/rl_bg"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/startpage_bg"
+    android:background="@mipmap/bg_welcome"
     tools:context=".activity.WelcomeActivity">
+
     <TextView
         android:id="@+id/tv_delay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_alignParentRight="true"
-        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"
         android:padding="10dp"
         android:text="2s"
-        android:textSize="18sp"/>
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 </RelativeLayout>

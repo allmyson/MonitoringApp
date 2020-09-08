@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ededed"
+    android:background="#ffffff"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="15dp"
@@ -10,41 +10,26 @@
     android:paddingRight="20dp"
     android:paddingBottom="8dp">
 
-    <LinearLayout
-        android:id="@+id/ll_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+    <RelativeLayout
+        android:id="@+id/rl_back"
+        android:layout_width="44dp"
+        android:layout_centerVertical="true"
+        android:layout_height="44dp">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="8dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_centerVertical="true"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_back2" />
+    </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="个人信息"
-            android:textColor="#1e1e1e"
-            android:textSize="16sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="#ff343434"
+        android:textSize="18sp" />
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" />
-
-    <Button
-        android:id="@+id/btn_"
-        android:layout_width="54dp"
-        android:layout_height="32dp"
-        android:background="@drawable/rect_cornor_red"
-        android:text="完成"
-        android:textSize="16sp"
-        android:textColor="#ffffff"
-        android:visibility="gone" />
-</LinearLayout>
+</RelativeLayout>

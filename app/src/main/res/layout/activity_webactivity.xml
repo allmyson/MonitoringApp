@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 
-    <com.ys.zy.web.UpsoftWebview
+    <com.ys.monitor.web.UpsoftWebview
         android:id="@+id/uw"
         android:layout_width="match_parent"
         android:layout_height="0dp"

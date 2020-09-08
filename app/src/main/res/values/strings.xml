@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">弈尚游戏</string>
+    <string name="app_name">MonitorApp</string>
     <string name="kefu">尊敬的会员您好：\n\t\t\t弈尚游戏欢迎您！如果您需要联系官方客服，请通过官方公布的以下途径。</string>
 
     <string name="wait_dialog_title">正在请求，请稍后</string>

@@ -25,7 +25,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:scaleType="fitXY"
-            android:src="@mipmap/topbar_icon_online" />
+            />
     </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,13 +38,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.ys.zy.ui.NoNetView
+            <com.ys.monitor.ui.NoNetView
                 android:id="@+id/nnv_"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
 
-            <com.ys.zy.ui.BlankView
+            <com.ys.monitor.ui.BlankView
                 android:id="@+id/bv_"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

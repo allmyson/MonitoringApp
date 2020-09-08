@@ -7,14 +7,14 @@
     android:background="#ffffff"
     android:paddingLeft="32dp"
     android:paddingRight="32dp"
-    tools:context="com.ys.zy.activity.LoginActivity">
+    tools:context="com.ys.monitor.activity.LoginActivity">
 
     <ImageView
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginTop="68dp"
         android:scaleType="fitXY"
-        android:src="@mipmap/topbar_home_logo_icon" />
+       />
 
     <LinearLayout
         android:layout_width="match_parent"

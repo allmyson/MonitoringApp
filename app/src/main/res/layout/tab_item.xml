@@ -9,9 +9,8 @@
 
     <ImageView
         android:id="@+id/iv"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginBottom="4dp"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
         android:scaleType="fitXY"
     />
     <TextView
@@ -20,6 +19,6 @@
         android:layout_height="wrap_content"
         android:text="首页"
         android:textColor="@color/gray_color"
-        android:textSize="12sp"/>
+        android:textSize="10sp"/>
 
 </LinearLayout>
