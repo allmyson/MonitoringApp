@@ -15,6 +15,7 @@ import com.ys.monitor.bean.LoginBean;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
+import com.ys.monitor.util.YS;
 
 import java.util.ArrayList;
 
@@ -50,9 +51,11 @@ public class UserInfoActivity extends BaseActivity {
         if (user != null && user.data != null) {
             usernameTV.setText(StringUtil.valueOf(user.data.trueName));
             phoneTV.setText(StringUtil.valueOf(user.data.mobilePhoneNumber));
-            orgTV.setText(StringUtil.StringToDoubleStr(user.data.positional));
+            orgTV.setText(StringUtil.StringToDoubleStr(user.data.dutyName));
             if (!StringUtil.isBlank(user.data.icon)) {
                 Glide.with(mContext).load(FunctionApi.getImagePath(user.data.icon)).into(headIV);
+            }else {
+                YS.showRoundImage(mContext,YS.testImageUrl,headIV);
             }
         }
     }

@@ -8,13 +8,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ys.monitor.R;
+import com.ys.monitor.activity.AboutActivity;
 import com.ys.monitor.activity.KefuActivity;
+import com.ys.monitor.activity.SetActivity;
 import com.ys.monitor.activity.UserInfoActivity;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.LoginBean;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.StringUtil;
+import com.ys.monitor.util.YS;
 
 
 /**
@@ -49,10 +52,10 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
                 startActivity(new Intent(mContext, KefuActivity.class));
                 break;
             case R.id.ll_about:
-//                startActivity(new Intent(mContext, TXActivity.class));
+                startActivity(new Intent(mContext, AboutActivity.class));
                 break;
             case R.id.ll_set:
-//                startActivity(new Intent(mContext, TXActivity.class));
+                startActivity(new Intent(mContext, SetActivity.class));
                 break;
             case R.id.tv_exit:
 //                startActivity(new Intent(mContext, TXActivity.class));
@@ -81,9 +84,11 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
     protected void getData() {
         if (loginBean != null && loginBean.data != null) {
             userNameTV.setText(StringUtil.valueOf(loginBean.data.trueName));
-            orgTV.setText(StringUtil.valueOf(loginBean.data.positional));
+            orgTV.setText(StringUtil.valueOf(loginBean.data.dutyName));
             if (!StringUtil.isBlank(loginBean.data.icon)) {
                 Glide.with(mContext).load(FunctionApi.getImagePath(loginBean.data.icon)).into(headIV);
+            }else {
+                YS.showRoundImage(mContext,YS.testImageUrl,headIV);
             }
         }
     }

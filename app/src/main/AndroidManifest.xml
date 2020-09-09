@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ys.zy">
+    package="com.ys.monitor">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -20,46 +20,26 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name=".base.App"
+        android:name="com.ys.monitor.base.App"
         android:allowBackup="true"
-        android:icon="@mipmap/icon_launcher"
+        android:icon="@mipmap/ic_logo_new"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.NormalCzActivity"></activity>
-        <activity android:name=".activity.EwmActivity" />
-        <activity android:name=".activity.ReSetJyPsdActivity" />
-        <activity android:name=".activity.ReSetLoginPsdActivity" />
-        <activity android:name=".activity.UpdateJyPsdActivity" />
-        <activity android:name=".activity.FindPsdActivity" />
-        <activity android:name=".activity.RegistActivity" />
-        <activity android:name=".ssc.activity.SscActivity" />
-        <activity android:name=".racing.activity.RacingActivity" />
-        <activity android:name=".roulette.activity.RouletteActivity" />
-        <activity android:name=".activity.TXActivity" />
-        <activity android:name=".activity.RechargeActivity" />
-        <activity android:name=".activity.MyFormActivity" />
-        <activity android:name=".activity.UpdateInfoActivity" />
-        <activity android:name=".activity.AboutActivity" />
-        <activity android:name=".activity.AddBankCardActivity" />
-        <activity android:name=".activity.BankCardActivity" />
-        <activity android:name=".activity.BindPhoneActivity" />
-        <activity android:name=".activity.SetJyPsdActivity" />
-        <activity android:name=".activity.SetLoginPsdActivity" />
-        <activity android:name=".activity.SafeActivity" />
-        <activity android:name=".activity.SetNameActivity" />
-        <activity android:name=".activity.UserInfoActivity" />
-        <activity android:name=".activity.MsgDetailActivity" />
-        <activity android:name=".activity.ProxyCenterActivity" />
-        <activity android:name=".activity.ProxyExplainActivity" />
-        <activity android:name=".activity.SubDealHistoryActivity" />
-        <activity android:name=".activity.SubManageActivity" />
-        <activity android:name=".activity.TeamReportActivity" />
-        <activity android:name=".activity.SubOpenAccountActivity" />
+        <activity android:name="com.ys.monitor.activity.ReSetLoginPsdActivity" />
+        <activity android:name="com.ys.monitor.activity.RegistActivity" />
+        <activity android:name="com.ys.monitor.activity.UpdateInfoActivity" />
+        <activity android:name="com.ys.monitor.activity.AboutActivity" />
+        <activity android:name="com.ys.monitor.activity.SetLoginPsdActivity" />
+        <activity android:name="com.ys.monitor.activity.UserInfoActivity" />
+        <activity android:name="com.ys.monitor.activity.MsgDetailActivity" />
+        <activity android:name="com.ys.monitor.activity.KefuActivity" />
+        <activity android:name="com.ys.monitor.activity.SetActivity" />
+        <activity android:name="com.ys.monitor.activity.FireListActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.ys.zy.fileprovider"
+            android:authorities="com.ys.monitor.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -67,21 +47,21 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.WelcomeActivity">
+        <activity android:name="com.ys.monitor.activity.MainActivity" />
+        <activity android:name="com.ys.monitor.activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name="com.ys.monitor.activity.LoginActivity" />
         <activity
-            android:name=".fast3.activity.Fast3Activity"
+            android:name="com.ys.monitor.fast3.activity.Fast3Activity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".winner.activity.WinnerActivity" />
-        <activity android:name=".ttz.activity.TtzActivity" />
-        <activity android:name=".web.CommonWebviewActivity" />
+        <activity android:name="com.ys.monitor.winner.activity.WinnerActivity" />
+        <activity android:name="com.ys.monitor.ttz.activity.TtzActivity" />
+        <activity android:name="com.ys.monitor.web.CommonWebviewActivity" />
     </application>
 
 </manifest>

@@ -5,60 +5,31 @@
     android:background="#f7f7f7"
     android:orientation="vertical">
 
-    <RelativeLayout
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingRight="8dp">
+        android:layout_height="44dp"
+        android:background="#0D87F8"
+        android:gravity="center"
+        android:text="通知"
+        android:textColor="#ffffffff"
+        android:textSize="18sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="系统公告"
-            android:textColor="@color/main_color"
-            android:textSize="16sp" />
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:id="@+id/iv_kf"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:scaleType="fitXY"
-            />
-    </RelativeLayout>
-
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ededed">
 
-        <FrameLayout
+        <ListView
+            android:id="@+id/lv_"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.ys.monitor.ui.NoNetView
-                android:id="@+id/nnv_"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
-
-            <com.ys.monitor.ui.BlankView
-                android:id="@+id/bv_"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <ListView
-                android:id="@+id/lv_"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:divider="#d8d8d8"
-                android:dividerHeight="0.5dp"
-                android:scrollbars="none"
-                android:visibility="gone" />
-        </FrameLayout>
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:divider="#d8d8d8"
+            android:dividerHeight="0dp"
+            android:scrollbars="none" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

@@ -10,33 +10,9 @@
     <com.ys.monitor.ui.TitleView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="44dp" />
+        android:layout_height="44dp"
+        android:layout_marginBottom="7dp" />
 
-    <ImageView
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/about_logo" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="缙云山国家级森林防火预警监测"
-        android:textColor="#ff000000"
-        android:textSize="17sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp"
-        android:text="智慧平台"
-        android:textColor="#ff000000"
-        android:textSize="17sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,6 +21,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/ll_updatePsd"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center_vertical"
@@ -56,17 +33,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="版本号"
+                android:text="修改密码"
                 android:textColor="#ff000000"
                 android:textSize="17sp" />
 
-            <TextView
-                android:id="@+id/tv_versionName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="V1.0"
-                android:textColor="#ffbbbbbb"
-                android:textSize="14sp" />
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/my_more" />
         </LinearLayout>
 
         <View
@@ -76,7 +51,7 @@
             android:background="#e5e5e5" />
 
         <LinearLayout
-            android:id="@+id/ll_update"
+            android:id="@+id/ll_deletePhoto"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center_vertical"
@@ -88,18 +63,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="版本更新"
+                android:text="删除照片"
                 android:textColor="#ff000000"
                 android:textSize="17sp" />
 
-            <TextView
-                android:id="@+id/tv_isNew"
-                android:layout_width="84dp"
-                android:layout_height="20dp"
-                android:text="已是最新版本"
-                android:textColor="#ffbbbbbb"
-                android:textSize="14sp" />
-
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/my_more" />
         </LinearLayout>
 
         <View
@@ -107,7 +79,9 @@
             android:layout_height="0.5dp"
             android:layout_marginLeft="15dp"
             android:background="#e5e5e5" />
+
         <LinearLayout
+            android:id="@+id/ll_clear"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center_vertical"
@@ -119,17 +93,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="版权所有"
+                android:text="清除缓存"
                 android:textColor="#ff000000"
                 android:textSize="17sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="重庆缙云山国家级自然保护区管理局"
+                android:layout_marginRight="5dp"
+                android:text="50M"
                 android:textColor="#ffbbbbbb"
-                android:textSize="14sp"
-                />
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/my_more" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

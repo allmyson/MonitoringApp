@@ -32,7 +32,7 @@ public class UpdateInfoActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        setBarColor("#ededed");
+        setBarColor("#ffffff");
         titleView.setText("更新版本");
         versionCode = SystemUtil.VersionCode(mContext);
         versionName = SystemUtil.VersionName(mContext);
@@ -53,11 +53,11 @@ public class UpdateInfoActivity extends BaseActivity {
                     int serverVersion = StringUtil.StringToInt(appInfo.data.versionNum);
                     if (serverVersion > versionCode) {
                         //有更新
-                        hasTV.setText("已有新版本：Version " + StringUtil.valueOf(appInfo.data.versionName));
+                        hasTV.setText("已有新版本：V" + StringUtil.valueOf(appInfo.data.versionName));
                         btn.setVisibility(View.VISIBLE);
                     } else {
                         //无更新
-                        hasTV.setText("已是最新版本：Version " + versionName);
+                        hasTV.setText("已是最新版本：V" + versionName);
                         btn.setVisibility(View.GONE);
                     }
                     downloadUrl = StringUtil.valueOf(appInfo.data.downloadUrl);

@@ -61,11 +61,11 @@ public class MainActivity extends BaseActivity {
                         .selectTextColor);
                 ((ImageView) tab.getCustomView().findViewById(R.id.iv)).setImageResource(list.get(tab.getPosition())
                         .selectIconId);
-//                if(tab.getPosition()==3){
-//                    setBarColor("#ffffff");
-//                }else {
-//                    setBarColor("#f7f7f7");
-//                }
+                if (tab.getPosition() == 2) {
+                    setBarColor("#0D87F8");
+                } else {
+                    setTransparent();
+                }
             }
 
             @Override
@@ -92,7 +92,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void getData() {
-        new UpdateManager(mContext,false).checkUpdate();
+        new UpdateManager(mContext, false).checkUpdate();
     }
 
     @Override

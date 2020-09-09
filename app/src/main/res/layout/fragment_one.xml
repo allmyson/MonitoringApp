@@ -246,8 +246,8 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="47.52dp"
+                            android:layout_height="47.8dp"
                             android:scaleType="fitXY"
                             android:src="@mipmap/ic_hqsb" />
                     </LinearLayout>
@@ -285,8 +285,8 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="45.5dp"
+                            android:layout_height="47.84dp"
                             android:scaleType="fitXY"
                             android:src="@mipmap/ic_rcxh" />
                     </LinearLayout>
@@ -332,8 +332,8 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="42.58dp"
+                            android:layout_height="48.14dp"
                             android:scaleType="fitXY"
                             android:src="@mipmap/ic_zycj" />
                     </LinearLayout>
@@ -371,8 +371,8 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="40.77dp"
+                            android:layout_height="47.56dp"
                             android:scaleType="fitXY"
                             android:src="@mipmap/ic_spck" />
                     </LinearLayout>
@@ -418,8 +418,8 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="41.19dp"
+                            android:layout_height="47.43dp"
                             android:scaleType="fitXY"
                             android:src="@mipmap/ic_txl" />
                     </LinearLayout>
