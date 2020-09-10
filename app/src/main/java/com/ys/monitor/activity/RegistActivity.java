@@ -1,6 +1,5 @@
 package com.ys.monitor.activity;
 
-import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
@@ -9,15 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.google.gson.Gson;
-import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.base.BaseActivity;
-import com.ys.monitor.bean.BaseBean;
-import com.ys.monitor.http.HttpListener;
-import com.ys.monitor.util.HttpUtil;
 import com.ys.monitor.util.StringUtil;
-import com.ys.monitor.util.YS;
 
 public class RegistActivity extends BaseActivity implements View.OnFocusChangeListener {
     private EditText userET, psdET, rePsdET, yzmET, yqmET;
@@ -196,29 +189,29 @@ public class RegistActivity extends BaseActivity implements View.OnFocusChangeLi
                     String psd = psdET.getText().toString().trim();
                     String yzm = yzmET.getText().toString().trim();
                     String yqm = yqmET.getText().toString().trim();
-                    HttpUtil.regist(mContext, user, psd, yqm, yzm, new HttpListener<String>() {
-                        @Override
-                        public void onSucceed(int what, Response<String> response) {
-                            BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
-                            if (baseBean != null) {
-                                if (YS.SUCCESE.equals(baseBean.code)) {
-                                    finish();
-                                } else {
-                                    //注册失败刷新验证码
-                                    getYzm();
-                                }
-                                show(baseBean.msg);
-                            } else {
-                                show(YS.HTTP_TIP);
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailed(int what, Response<String> response) {
-
-                        }
-                    });
+//                    HttpUtil.regist(mContext, user, psd, yqm, yzm, new HttpListener<String>() {
+//                        @Override
+//                        public void onSucceed(int what, Response<String> response) {
+//                            BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+//                            if (baseBean != null) {
+//                                if (YS.SUCCESE.equals(baseBean.code)) {
+//                                    finish();
+//                                } else {
+//                                    //注册失败刷新验证码
+//                                    getYzm();
+//                                }
+//                                show(baseBean.msg);
+//                            } else {
+//                                show(YS.HTTP_TIP);
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onFailed(int what, Response<String> response) {
+//
+//                        }
+//                    });
                 }
                 break;
         }
@@ -293,19 +286,19 @@ public class RegistActivity extends BaseActivity implements View.OnFocusChangeLi
     }
 
     private void getYzm() {
-        HttpUtil.getYzmImage(mContext, new HttpListener<Bitmap>() {
-            @Override
-            public void onSucceed(int what, Response<Bitmap> response) {
-                Bitmap bitmap = response.get();
-                if (bitmap != null) {
-                    yzmIV.setImageBitmap(bitmap);
-                }
-            }
-
-            @Override
-            public void onFailed(int what, Response<Bitmap> response) {
-
-            }
-        });
+//        HttpUtil.getYzmImage(mContext, new HttpListener<Bitmap>() {
+//            @Override
+//            public void onSucceed(int what, Response<Bitmap> response) {
+//                Bitmap bitmap = response.get();
+//                if (bitmap != null) {
+//                    yzmIV.setImageBitmap(bitmap);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(int what, Response<Bitmap> response) {
+//
+//            }
+//        });
     }
 }

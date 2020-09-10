@@ -36,6 +36,14 @@
         <activity android:name="com.ys.monitor.activity.KefuActivity" />
         <activity android:name="com.ys.monitor.activity.SetActivity" />
         <activity android:name="com.ys.monitor.activity.FireListActivity" />
+        <activity android:name="com.ys.monitor.activity.FireDetailActivity" />
+        <activity android:name="com.ys.monitor.activity.PhotoActivity" />
+        <activity android:name="com.ys.monitor.activity.ShowPicDetailActivity" />
+        <activity android:name="com.ys.monitor.activity.YjtzActivity" />
+        <activity android:name="com.ys.monitor.activity.YjtzDetailActivity" />
+        <activity android:name="com.ys.monitor.activity.TaskListActivity" />
+        <activity android:name="com.ys.monitor.activity.TaskDetailActivity" />
+        <activity android:name="com.ys.monitor.activity.AddFireActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

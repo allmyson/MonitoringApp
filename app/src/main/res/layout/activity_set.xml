@@ -20,65 +20,65 @@
         android:background="#ffffff"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/ll_updatePsd"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/ll_updatePsd"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:paddingLeft="15dp"-->
+<!--            android:paddingRight="15dp">-->
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="修改密码"
-                android:textColor="#ff000000"
-                android:textSize="17sp" />
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="修改密码"-->
+<!--                android:textColor="#ff000000"-->
+<!--                android:textSize="17sp" />-->
 
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:scaleType="fitXY"
-                android:src="@mipmap/my_more" />
-        </LinearLayout>
+<!--            <ImageView-->
+<!--                android:layout_width="22dp"-->
+<!--                android:layout_height="22dp"-->
+<!--                android:scaleType="fitXY"-->
+<!--                android:src="@mipmap/my_more" />-->
+<!--        </LinearLayout>-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="15dp"
-            android:background="#e5e5e5" />
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0.5dp"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:background="#e5e5e5" />-->
 
-        <LinearLayout
-            android:id="@+id/ll_deletePhoto"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/ll_deletePhoto"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:paddingLeft="15dp"-->
+<!--            android:paddingRight="15dp">-->
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="删除照片"
-                android:textColor="#ff000000"
-                android:textSize="17sp" />
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="删除照片"-->
+<!--                android:textColor="#ff000000"-->
+<!--                android:textSize="17sp" />-->
 
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:scaleType="fitXY"
-                android:src="@mipmap/my_more" />
-        </LinearLayout>
+<!--            <ImageView-->
+<!--                android:layout_width="22dp"-->
+<!--                android:layout_height="22dp"-->
+<!--                android:scaleType="fitXY"-->
+<!--                android:src="@mipmap/my_more" />-->
+<!--        </LinearLayout>-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="15dp"
-            android:background="#e5e5e5" />
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0.5dp"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:background="#e5e5e5" />-->
 
         <LinearLayout
             android:id="@+id/ll_clear"

@@ -11,11 +11,14 @@ import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberUtils;
 
 import com.yongchun.library.view.ImageSelectorActivity;
+import com.ys.monitor.activity.ShowPicDetailActivity;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.SystemUtil;
 import com.ys.monitor.util.ToastUtil;
 import com.ys.monitor.util.YS;
 import com.ys.monitor.web.CommonWebviewActivity;
+
+import java.util.List;
 
 /**
  * @author lh
@@ -44,9 +47,11 @@ public class FunctionApi {
      * @param enablePreview 预览
      * @param enableCrop    剪切
      */
-    public static void takePicture(Context mContext, int max, int mode, boolean showCamera, boolean enablePreview,
+    public static void takePicture(Context mContext, int max, int mode, boolean showCamera,
+                                   boolean enablePreview,
                                    boolean enableCrop) {
-        if ((ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+        if ((ActivityCompat.checkSelfPermission(mContext,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) ||
                 (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager
                         .PERMISSION_GRANTED)) {
@@ -56,7 +61,8 @@ public class FunctionApi {
             return;
         }
         ImageSelectorActivity.AUTHORITY = SystemUtil.PackgeName(mContext) + FunctionApi.AUTHORITY;
-        ImageSelectorActivity.start((Activity) mContext, max, mode, showCamera, enablePreview, enableCrop);
+        ImageSelectorActivity.start((Activity) mContext, max, mode, showCamera, enablePreview,
+                enableCrop);
     }
 
     /**
@@ -67,19 +73,24 @@ public class FunctionApi {
      * @param enablePreview 预览
      * @param enableCrop    剪切
      */
-    public static void takePicture(Fragment mContext, int max, int mode, boolean showCamera, boolean enablePreview,
+    public static void takePicture(Fragment mContext, int max, int mode, boolean showCamera,
+                                   boolean enablePreview,
                                    boolean enableCrop) {
-        if ((ActivityCompat.checkSelfPermission(mContext.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+        if ((ActivityCompat.checkSelfPermission(mContext.getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) ||
-                (ActivityCompat.checkSelfPermission(mContext.getActivity(), Manifest.permission.CAMERA) !=
+                (ActivityCompat.checkSelfPermission(mContext.getActivity(),
+                        Manifest.permission.CAMERA) !=
                         PackageManager
                                 .PERMISSION_GRANTED)) {
             ToastUtil.show(mContext.getActivity(), "请开启相关权限");
-            ActivityCompat.requestPermissions(mContext.getActivity(), new String[]{Manifest.permission
+            ActivityCompat.requestPermissions(mContext.getActivity(),
+                    new String[]{Manifest.permission
                     .WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
             return;
         }
-        ImageSelectorActivity.AUTHORITY = SystemUtil.PackgeName(mContext.getActivity()) + FunctionApi.AUTHORITY;
+        ImageSelectorActivity.AUTHORITY =
+                SystemUtil.PackgeName(mContext.getActivity()) + FunctionApi.AUTHORITY;
         ImageSelectorActivity.start(mContext, max, mode, showCamera, enablePreview, enableCrop);
     }
 
@@ -153,4 +164,41 @@ public class FunctionApi {
         }
     }
 
+    /**
+     * 查看大图
+     *
+     * @param mContext
+     * @param path
+     * @param position
+     */
+    public static void LargerImage(Context mContext, List<String> path, int position) {
+        if (path != null && path.size() > 0) {
+            String[] strs1 = path.toArray(new String[path.size()]);
+            LargerImage(mContext, strs1, position);
+        }
+    }
+
+
+    /**
+     * 查看大图
+     *
+     * @param mContext
+     * @param path
+     * @param position
+     */
+    public static void LargerImage(Context mContext, String[] path, int position) {
+        if (path != null && path.length > 0) {
+            Intent intent = new Intent();
+            intent.putExtra("imageUrl", path);
+            if (position < path.length) {
+                intent.putExtra("position", position);
+            } else {
+                intent.putExtra("position", 0);
+            }
+            intent.setClass(mContext, ShowPicDetailActivity.class);
+            mContext.startActivity(intent);
+        } else {
+            ToastUtil.show(mContext, "暂无图片");
+        }
+    }
 }

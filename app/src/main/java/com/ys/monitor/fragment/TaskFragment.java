@@ -8,30 +8,23 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
-import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
-import com.ys.monitor.activity.FireDetailActivity;
-import com.ys.monitor.adapter.FireAdapter;
+import com.ys.monitor.activity.TaskDetailActivity;
+import com.ys.monitor.adapter.TaskAdapter;
 import com.ys.monitor.base.BaseFragment;
-import com.ys.monitor.bean.FireBean;
-import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.BlankView;
 import com.ys.monitor.ui.NoNetView;
-import com.ys.monitor.util.HttpUtil;
-import com.ys.monitor.util.NetWorkUtil;
-import com.ys.monitor.util.YS;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FireFragment extends BaseFragment implements NoNetView.ClickListener,
+public class TaskFragment extends BaseFragment implements NoNetView.ClickListener,
         SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView lv;
     private List<Object> list;
-    private FireAdapter adapter;
+    private TaskAdapter adapter;
     private String userId;
     private NoNetView noNetView;
     private BlankView blankView;
@@ -49,9 +42,9 @@ public class FireFragment extends BaseFragment implements NoNetView.ClickListene
     }
 
     public static Fragment newInstance(int type) {
-        FireFragment fireFragment = new FireFragment();
-        fireFragment.setType(type);
-        return new FireFragment();
+        TaskFragment taskFragment = new TaskFragment();
+        taskFragment.setType(type);
+        return new TaskFragment();
     }
 
     @Override
@@ -69,13 +62,13 @@ public class FireFragment extends BaseFragment implements NoNetView.ClickListene
         list.add(null);
         list.add(null);
         list.add(null);
-        adapter = new FireAdapter(mContext, list, R.layout.item_fire);
+        adapter = new TaskAdapter(mContext, list, R.layout.item_task);
         lv.setAdapter(adapter);
         userId = UserSP.getUserId(mContext);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(mContext, FireDetailActivity.class));
+                startActivity(new Intent(mContext, TaskDetailActivity.class));
             }
         });
     }
@@ -83,40 +76,40 @@ public class FireFragment extends BaseFragment implements NoNetView.ClickListene
 
     @Override
     public void getData() {
-        if (NetWorkUtil.isNetworkAvailable(mContext)) {
-            noNetView.setVisibility(View.GONE);
-            dataLL.setVisibility(View.VISIBLE);
-            HttpUtil.getFireList(mContext, userId, new HttpListener<String>() {
-                @Override
-                public void onSucceed(int what, Response<String> response) {
-                    list.clear();
-                    FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
-                    if (fireBean != null) {
-                        if (YS.SUCCESE.equals(fireBean.code) && fireBean.data != null && fireBean
-                        .data.rows != null && fireBean.data.rows.size() > 0) {
-                            list.addAll(fireBean.data.rows);
-                        }
-                    } else {
-                        show(YS.HTTP_TIP);
-                    }
-                    adapter.refresh(list);
-                    if (adapter.getCount() > 0) {
-                        blankView.setVisibility(View.GONE);
-                    } else {
-                        blankView.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onFailed(int what, Response<String> response) {
-                    blankView.setVisibility(View.GONE);
-                }
-            });
-        } else {
-            noNetView.setVisibility(View.VISIBLE);
-            blankView.setVisibility(View.GONE);
-            dataLL.setVisibility(View.GONE);
-        }
+//        if (NetWorkUtil.isNetworkAvailable(mContext)) {
+//            noNetView.setVisibility(View.GONE);
+//            dataLL.setVisibility(View.VISIBLE);
+//            HttpUtil.getMyJYJL(mContext, userId, new HttpListener<String>() {
+//                @Override
+//                public void onSucceed(int what, Response<String> response) {
+//                    list.clear();
+//                    MyJYBB myJybb = new Gson().fromJson(response.get(), MyJYBB.class);
+//                    if (myJybb != null) {
+//                        if (YS.SUCCESE.equals(myJybb.code) && myJybb.data != null && myJybb
+//                        .data.data != null && myJybb.data.data.size() > 0) {
+//                            list.addAll(myJybb.data.data);
+//                        }
+//                    } else {
+//                        show(YS.HTTP_TIP);
+//                    }
+//                    adapter.refresh(list);
+//                    if (adapter.getCount() > 0) {
+//                        blankView.setVisibility(View.GONE);
+//                    } else {
+//                        blankView.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailed(int what, Response<String> response) {
+//                    blankView.setVisibility(View.GONE);
+//                }
+//            });
+//        } else {
+//            noNetView.setVisibility(View.VISIBLE);
+//            blankView.setVisibility(View.GONE);
+//            dataLL.setVisibility(View.GONE);
+//        }
     }
 
 

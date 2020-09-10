@@ -7,19 +7,11 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
-import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.base.BaseActivity;
-import com.ys.monitor.bean.BaseBean;
-import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
-import com.ys.monitor.util.ActivityUtil;
-import com.ys.monitor.util.HttpUtil;
 import com.ys.monitor.util.KeyBoardUtils;
-import com.ys.monitor.util.SPUtil;
 import com.ys.monitor.util.StringUtil;
-import com.ys.monitor.util.YS;
 
 public class ReSetLoginPsdActivity extends BaseActivity implements TextWatcher, View.OnFocusChangeListener {
     private EditText newPsdET, reNewPsdET;
@@ -62,27 +54,27 @@ public class ReSetLoginPsdActivity extends BaseActivity implements TextWatcher, 
     private void updatePsd() {
         KeyBoardUtils.closeKeybord(newPsdET, mContext);
         KeyBoardUtils.closeKeybord(reNewPsdET, mContext);
-        HttpUtil.findLoginPsd(mContext, phone, newPsdET.getText().toString().trim(), yzm, new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-                BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
-                if (baseBean != null) {
-                    if (YS.SUCCESE.equals(baseBean.code)) {
-                        SPUtil.clear(mContext);
-                        ActivityUtil.finish();
-                        startActivity(new Intent(mContext, LoginActivity.class));
-                    }
-                    show(baseBean.msg);
-                } else {
-                    show(YS.HTTP_TIP);
-                }
-            }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-
-            }
-        });
+//        HttpUtil.findLoginPsd(mContext, phone, newPsdET.getText().toString().trim(), yzm, new HttpListener<String>() {
+//            @Override
+//            public void onSucceed(int what, Response<String> response) {
+//                BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+//                if (baseBean != null) {
+//                    if (YS.SUCCESE.equals(baseBean.code)) {
+//                        SPUtil.clear(mContext);
+//                        ActivityUtil.finish();
+//                        startActivity(new Intent(mContext, LoginActivity.class));
+//                    }
+//                    show(baseBean.msg);
+//                } else {
+//                    show(YS.HTTP_TIP);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(int what, Response<String> response) {
+//
+//            }
+//        });
     }
 
     @Override

@@ -129,20 +129,6 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
         }
     }
 
-    private void getUser() {
-        final String loginName = userET.getText().toString().trim();
-        HttpUtil.getInfoByLoginName(mContext, loginName, new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-
-            }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-
-            }
-        });
-    }
 
     private boolean isCanLogin() {
         String user = userET.getText().toString().trim();

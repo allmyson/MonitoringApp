@@ -1,5 +1,6 @@
 package com.ys.monitor.fragment;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ImageView;
@@ -7,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ys.monitor.R;
+import com.ys.monitor.activity.AddFireActivity;
 import com.ys.monitor.base.BaseFragment;
 
 /**
@@ -16,9 +18,10 @@ import com.ys.monitor.base.BaseFragment;
  * @description -------------------------------------------------------
  * @date 2018/10/23 17:09
  */
-public class OneFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class OneFragment extends BaseFragment implements View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout swipeRefreshLayout;
-    private TextView wdTV,tianqiTV,aqiTV,qixiangTV,msgTV;
+    private TextView wdTV, tianqiTV, aqiTV, qixiangTV, msgTV;
     private ImageView tianqiIV;
     private LinearLayout msgLL;
 
@@ -35,6 +38,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_hqsb:
+                startActivity(new Intent(mContext, AddFireActivity.class));
                 break;
             case R.id.ll_rcxh:
                 break;
@@ -55,7 +59,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener, S
         wdTV = getView(R.id.tv_wd);
         tianqiTV = getView(R.id.tv_tianqi);
         aqiTV = getView(R.id.tv_aqi);
-        qixiangTV=getView(R.id.tv_qixiang);
+        qixiangTV = getView(R.id.tv_qixiang);
         msgTV = getView(R.id.tv_msg);
         tianqiIV = getView(R.id.iv_tianqi);
         msgLL = getView(R.id.ll_msg);

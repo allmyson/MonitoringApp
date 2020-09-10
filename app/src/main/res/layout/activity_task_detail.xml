@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <com.ys.monitor.ui.TitleView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="44dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="#f4f5f9"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="13dp"
+                    android:layout_marginRight="5dp"
+                    android:background="#0d87f8" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="任务内容"
+                    android:textColor="#ff4f5053"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="1"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="9dp"
+                android:paddingBottom="10dp"
+                android:text="堰塘湾(莲池村)云台"
+                android:textColor="#ffbbbbbb"
+                android:textSize="16sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="#f4f5f9"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="13dp"
+                    android:layout_marginRight="5dp"
+                    android:background="#0d87f8" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="图片上传"
+                    android:textColor="#ff4f5053"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <com.ys.monitor.ui.MyGridView
+                android:id="@+id/gv_image"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="5dp"
+                android:horizontalSpacing="3dp"
+                android:numColumns="4"
+                android:scrollbars="none"
+                android:verticalSpacing="5dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="#0D87F8"
+        android:gravity="center"
+        android:text="提  交"
+        android:textColor="#ffffffff"
+        android:textSize="18sp" />
+</LinearLayout>

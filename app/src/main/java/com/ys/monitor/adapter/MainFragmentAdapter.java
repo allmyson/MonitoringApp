@@ -62,8 +62,8 @@ public class MainFragmentAdapter extends FragmentPagerAdapter {
         img.setImageResource(list.get(position).unSelectIconId);
         ViewGroup.LayoutParams layoutParams = img.getLayoutParams();
         if(position==0||position==3){
-            layoutParams.width = DensityUtil.dp2px(context,27);
-            layoutParams.height = DensityUtil.dp2px(context,27);
+            layoutParams.width = DensityUtil.dp2px(context,22);
+            layoutParams.height = DensityUtil.dp2px(context,22);
             img.setLayoutParams(layoutParams);
         }else if(position==1){
             layoutParams.width = DensityUtil.dp2px(context,23.64f);

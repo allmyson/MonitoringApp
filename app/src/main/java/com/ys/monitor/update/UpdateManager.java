@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.Headers;
 import com.yanzhenjie.nohttp.Logger;
 import com.yanzhenjie.nohttp.download.DownloadListener;
@@ -31,19 +30,14 @@ import com.yanzhenjie.nohttp.error.StorageSpaceNotEnoughError;
 import com.yanzhenjie.nohttp.error.TimeoutError;
 import com.yanzhenjie.nohttp.error.URLError;
 import com.yanzhenjie.nohttp.error.UnKnownHostError;
-import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.api.FunctionApi;
-import com.ys.monitor.bean.AppInfo;
 import com.ys.monitor.http.BaseHttp;
-import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.util.Constant;
-import com.ys.monitor.util.HttpUtil;
 import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.SystemUtil;
 import com.ys.monitor.util.ToastUtil;
-import com.ys.monitor.util.YS;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -106,30 +100,30 @@ public class UpdateManager implements View.OnClickListener {
      * 检查更新
      */
     public void checkUpdate() {
-        HttpUtil.getAppVersion(mContext, new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-                AppInfo appInfo = new Gson().fromJson(response.get(), AppInfo.class);
-                if (appInfo != null && YS.SUCCESE.equals(appInfo.code) && appInfo.data != null) {
-                    int serverVersion = StringUtil.StringToInt(appInfo.data.versionNum);
-                    downLoadUrl = StringUtil.valueOf(appInfo.data.downloadUrl);
-                    compareVersionCode(versionCode,
-                            serverVersion,
-                            isForceUpdate,
-                            StringUtil.valueOf(appInfo.data.versionName),
-                            StringUtil.valueOf(appInfo.data.versionRemark));
-                } else {
-                    if (showToast) {
-                        ToastUtil.show(mContext, "当前已是最新版本", 1);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-
-            }
-        });
+//        HttpUtil.getAppVersion(mContext, new HttpListener<String>() {
+//            @Override
+//            public void onSucceed(int what, Response<String> response) {
+//                AppInfo appInfo = new Gson().fromJson(response.get(), AppInfo.class);
+//                if (appInfo != null && YS.SUCCESE.equals(appInfo.code) && appInfo.data != null) {
+//                    int serverVersion = StringUtil.StringToInt(appInfo.data.versionNum);
+//                    downLoadUrl = StringUtil.valueOf(appInfo.data.downloadUrl);
+//                    compareVersionCode(versionCode,
+//                            serverVersion,
+//                            isForceUpdate,
+//                            StringUtil.valueOf(appInfo.data.versionName),
+//                            StringUtil.valueOf(appInfo.data.versionRemark));
+//                } else {
+//                    if (showToast) {
+//                        ToastUtil.show(mContext, "当前已是最新版本", 1);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(int what, Response<String> response) {
+//
+//            }
+//        });
     }
 
 

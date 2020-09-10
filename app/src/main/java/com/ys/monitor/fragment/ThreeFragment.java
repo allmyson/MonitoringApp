@@ -9,6 +9,8 @@ import android.widget.ListView;
 
 import com.ys.monitor.R;
 import com.ys.monitor.activity.FireListActivity;
+import com.ys.monitor.activity.TaskListActivity;
+import com.ys.monitor.activity.YjtzActivity;
 import com.ys.monitor.adapter.NoticeAdapter;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseFragment;
@@ -76,6 +78,12 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                 switch (position) {
                     case 0:
                         startActivity(new Intent(mContext, FireListActivity.class));
+                        break;
+                    case 1:
+                        startActivity(new Intent(mContext, YjtzActivity.class));
+                        break;
+                    case 2:
+                        startActivity(new Intent(mContext, TaskListActivity.class));
                         break;
                 }
             }

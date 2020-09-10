@@ -6,13 +6,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.ys.monitor.R;
 import com.ys.monitor.activity.AboutActivity;
 import com.ys.monitor.activity.KefuActivity;
 import com.ys.monitor.activity.SetActivity;
 import com.ys.monitor.activity.UserInfoActivity;
-import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.LoginBean;
 import com.ys.monitor.sp.UserSP;
@@ -86,7 +84,8 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
             userNameTV.setText(StringUtil.valueOf(loginBean.data.trueName));
             orgTV.setText(StringUtil.valueOf(loginBean.data.dutyName));
             if (!StringUtil.isBlank(loginBean.data.icon)) {
-                Glide.with(mContext).load(FunctionApi.getImagePath(loginBean.data.icon)).into(headIV);
+                YS.showRoundImage(mContext,loginBean.data.icon,headIV);
+//                Glide.with(mContext).load(FunctionApi.getImagePath(loginBean.data.icon)).into(headIV);
             }else {
                 YS.showRoundImage(mContext,YS.testImageUrl,headIV);
             }

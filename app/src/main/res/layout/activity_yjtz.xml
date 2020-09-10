@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F5F9"
+    android:orientation="vertical">
+
+    <com.ys.monitor.ui.TitleView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="44dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="#f4f5f9" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#F4F5F9">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.ys.monitor.ui.NoNetView
+                android:id="@+id/nnv_"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <com.ys.monitor.ui.BlankView
+                android:id="@+id/bv_"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                android:paddingLeft="15dp">
+
+                <ListView
+                    android:id="@+id/lv_"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff"
+                    android:divider="#DDDDDD"
+                    android:dividerHeight="0.5dp"
+                    android:scrollbars="none" />
+            </LinearLayout>
+        </FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

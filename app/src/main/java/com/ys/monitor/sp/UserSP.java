@@ -15,10 +15,10 @@ import com.ys.monitor.util.StringUtil;
  * @date 2018/12/3 11:15
  */
 public class UserSP {
-    public static final String KEY_INFO = "upsoft_userinfo";
-    public static final String KEY_USERNAME = "upsoft_username";
-    public static final String KEY_PASSWORD = "upsoft_password";
-    public static final String KEY_USER = "user";
+    public static final String KEY_INFO = "jys_userinfo";
+    public static final String KEY_USERNAME = "jys_username";
+    public static final String KEY_PASSWORD = "jys_password";
+    public static final String KEY_USER = "jys_user";
 
     //是否登录
     public static boolean isLogin(Context context) {

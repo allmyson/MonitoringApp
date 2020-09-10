@@ -8,24 +8,25 @@ import com.ys.monitor.adapter.CommonFragmentAdapter;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.TabBean;
 import com.ys.monitor.fragment.FireFragment;
+import com.ys.monitor.fragment.TaskFragment;
 import com.ys.monitor.ui.LhViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FireListActivity extends BaseActivity {
+public class TaskListActivity extends BaseActivity {
     private TabLayout tabLayout;
     private LhViewPager vp;
     private CommonFragmentAdapter mAdapter;
     @Override
     public int getLayoutId() {
-        return R.layout.activity_fire;
+        return R.layout.activity_task;
     }
 
     @Override
     public void initView() {
         setBarColor("#ffffff");
-        titleView.setText("火情核查");
+        titleView.setText("任务通知");
         tabLayout = getView(R.id.tl_);
         vp = getView(R.id.vp_);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
@@ -46,8 +47,8 @@ public class FireListActivity extends BaseActivity {
 
     private List<TabBean> getList() {
         List<TabBean> list = new ArrayList<>();
-        list.add(new TabBean("待处理", FireFragment.newInstance(FireFragment.TYPE_UNDO)));
-        list.add(new TabBean("已完成", FireFragment.newInstance(FireFragment.TYPE_FINISH)));
+        list.add(new TabBean("待处理", TaskFragment.newInstance(FireFragment.TYPE_UNDO)));
+        list.add(new TabBean("已完成", TaskFragment.newInstance(FireFragment.TYPE_FINISH)));
         return list;
     }
 
