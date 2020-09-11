@@ -55,7 +55,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="64dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:gravity="right"
@@ -64,12 +64,13 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_type"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="堰塘湾(莲池村)云台"
+                    android:text=""
                     android:textColor="#ffbbbbbb"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -89,25 +90,25 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="64dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:gravity="right"
-                    android:text="小班号"
+                    android:text="名称"
                     android:textColor="#ff303030"
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="冉家岚垭10社5小班"
+                    android:text=""
                     android:textColor="#ffbbbbbb"
                     android:textSize="16sp" />
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -123,7 +124,41 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="64dp"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right"
+                    android:text="描述"
+                    android:textColor="#ff303030"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_descrip"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="#ffbbbbbb"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:background="#f4f5f9" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:gravity="right"
@@ -132,13 +167,14 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_address"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="堰塘湾(莲池村)云台"
+                    android:text=""
                     android:textColor="#ffbbbbbb"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -158,22 +194,23 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="64dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:gravity="right"
-                    android:text="报警时间"
+                    android:text="报警人"
                     android:textColor="#ff303030"
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_warnPerson"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="2020-06-15 12:30:22"
+                    android:text=""
                     android:textColor="#ffbbbbbb"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -183,7 +220,76 @@
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="15dp"
                 android:background="#f4f5f9" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right"
+                    android:text="报警人电话"
+                    android:textColor="#ff303030"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_warnerPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="#ffbbbbbb"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:background="#f4f5f9" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right"
+                    android:text="报警时间"
+                    android:textColor="#ff303030"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="#ffbbbbbb"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:background="#f4f5f9" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
@@ -250,7 +356,7 @@
 
 
                 <TextView
-                    android:layout_width="64dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:gravity="right"
@@ -259,6 +365,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_result"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -277,6 +384,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_xcqk"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="#f4f5f9"
@@ -297,28 +405,29 @@
                     android:textColor="#ff4f5053"
                     android:textSize="16sp" />
             </LinearLayout>
+
             <com.ys.monitor.ui.MyGridView
                 android:id="@+id/gv_image"
                 android:layout_width="290dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="15dp"
+                android:layout_marginBottom="5dp"
                 android:horizontalSpacing="3dp"
                 android:numColumns="4"
                 android:scrollbars="none"
-                android:verticalSpacing="5dp"
-                />
+                android:verticalSpacing="5dp" />
+
             <TextView
+                android:id="@+id/tv_commit"
                 android:layout_width="match_parent"
                 android:layout_height="49dp"
-                android:gravity="center"
                 android:background="#0D87F8"
+                android:gravity="center"
                 android:text="提  交"
                 android:textColor="#ffffffff"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>
 

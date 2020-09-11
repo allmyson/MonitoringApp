@@ -21,6 +21,39 @@ import java.util.Date;
  * @date 2018/11/26 17:53
  */
 public class YS {
+
+    public static final String source = "40289fa573e690820173e6a6ceaa0006";//报警类型编码
+
+    //火情状态码
+    public static class FireStatus {
+        //待处理
+        public static final String Status_DCL = "4028819073e0c45d0173e0c930910001";
+        //核实中
+        public static final String Status_HSZ = "4028819073e0c45d0173e0c9529f0002";
+        //误报
+        public static final String Status_WB = "4028819073e0c45d0173e0c96f850003";
+        //野外用火
+        public static final String Status_YWYH = "4028819073e0c45d0173e0c98e000004";
+        //发生火灾
+        public static final String Status_FSHZ = "4028819073e0c45d0173e0c9ae070005";
+        //已扑灭
+        public static final String Status_YPM = "4028819073e0c45d0173e0c9c9170006";
+    }
+    //文件业务类型
+    public static class FileType {
+        //火情信息
+        public static final String FILE_FIRE = "warn";
+        //巡护记录
+        public static final String FILE_XH = "patrol";
+        //扑救信息
+        public static final String FILE_PJ = "scene";
+        //资源
+        public static final String FILE_ZY = "resources";
+        //头像
+        public static final String FILE_TX = "icon";
+    }
+
+
     public static final String testImageUrl = "https://bkimg.cdn.bcebos" +
             ".com/pic/b219ebc4b74543a9a8a81e741d178a82b80114d2";
     public static final String kefuPhone = "023-67026768";
@@ -52,6 +85,12 @@ public class YS {
     public static final String LOGIN = IP + "/receive/phoneLogin.mo";
     //火情列表
     public static final String FIRE_LIST = IP + "/send/queryMonitorWarnInfoPage.mo";
+    //上传文件
+    public static final String UPLOAD_FILE = IP + "/receive/uploadFile.mo";
+    //添加火情
+    public static final String ADD_FIRE = IP + "/receive/addMonitorWarnInfo.mo";
+    //火情核查
+    public static final String UPDATE_FIRE = IP + "/receive/updateMonitorWarnInfoByNo.mo";
     //basebean == null 的时候的提示语
     public static final String HTTP_TIP = "服务器错误！";
 

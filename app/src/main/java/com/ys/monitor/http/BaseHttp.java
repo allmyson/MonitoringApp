@@ -180,7 +180,7 @@ public class BaseHttp {
         L.e("url=" + url);
         L.e("params=" + postJson);
         Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
-        request.setContentType("application/json");
+//        request.setContentType("application/json");
         List<Binary> binaries = new ArrayList<>();
         if (files != null && files.size() > 0) {
             Binary binary = null;
@@ -197,7 +197,8 @@ public class BaseHttp {
         if (token != null && !"".equals(token)) {
             request.addHeader("Cookie", token);
         }
-        request(context, request, callback);
+//        request(context, request, callback);
+        request((Activity) context, 0, request, callback, false, true);
     }
 
 

@@ -12,7 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.ys.monitor.bean.KVBean;
+
 import java.util.Calendar;
+import java.util.List;
 
 public class DialogUtil {
     /**
@@ -194,6 +197,26 @@ public class DialogUtil {
 //        newFragment.show(ft, mDialogTag);//Can not perform this action after onSaveInstanceState
         ft.add(newFragment, mDialogTag);
         ft.commitAllowingStateLoss();
+        return newFragment;
+    }
+
+    /**
+     * 描述：创建列表对话框
+     *
+     * @param context the context
+     */
+    public static ListDialogFragment showListFragment(Context context, List<KVBean> beanList, ListDialogFragment
+            .ItemClickListener listener) {
+        FragmentActivity activity = (FragmentActivity) context;
+        removeDialog(activity);
+        ListDialogFragment newFragment = ListDialogFragment.newInstance(android.app.DialogFragment.STYLE_NO_TITLE, android.R.style
+                .Theme_Holo_Light_Dialog);
+        newFragment.setBeanList(beanList);
+        newFragment.setItemClickListener(listener);
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        // 指定一个过渡动画
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        newFragment.show(ft, mDialogTag);
         return newFragment;
     }
 }
