@@ -98,6 +98,12 @@ public class YS {
     public static final String TASK_LIST = IP + "/send/queryPlanPage.mo";
     //更新任务
     public static final String UPDATE_TASK = IP + "/receive/updatePatrolPlanByNo.mo";
+    //资源分类接口
+    public static final String RESOURCE_TYPE_LIST = IP + "/send/querySourceTypePage.mo";
+    //资源详情
+    public static final String RESOURCE_DETAIL = IP + "/send/querySourceByNo.mo";
+    //查询字段
+    public static final String RESOURCE_ZIDUAN = IP + "/send/querySourceExt.mo";
     //basebean == null 的时候的提示语
     public static final String HTTP_TIP = "服务器错误！";
 

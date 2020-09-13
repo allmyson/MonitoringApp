@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ys.monitor.R;
 import com.ys.monitor.activity.AddFireActivity;
+import com.ys.monitor.activity.ResoureActivity;
 import com.ys.monitor.base.BaseFragment;
 
 /**
@@ -43,6 +44,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
             case R.id.ll_rcxh:
                 break;
             case R.id.ll_zycj:
+                startActivity(new Intent(mContext, ResoureActivity.class));
                 break;
             case R.id.ll_spck:
                 break;

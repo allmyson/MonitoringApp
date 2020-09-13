@@ -148,6 +148,18 @@ public class DateUtil {
             return sb;
         }
     }
+    public static String getLongDate3(long time) {
+        if (time == 0) {
+            return "";
+        } else {
+            Date dat = new Date(time);
+            GregorianCalendar gc = new GregorianCalendar();
+            gc.setTime(dat);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String sb = format.format(gc.getTime());
+            return sb;
+        }
+    }
 
 
     public static String changeTimeToYMD(String s) {
