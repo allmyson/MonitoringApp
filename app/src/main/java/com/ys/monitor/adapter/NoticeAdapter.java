@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.ys.monitor.R;
 import com.ys.monitor.bean.Msg;
+import com.ys.monitor.util.DateUtil;
 import com.ys.monitor.util.StringUtil;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class NoticeAdapter extends CommonAdapter<Msg> {
 
     @Override
     public void convert(ViewHolder helper, Msg item, int position) {
-        helper.setText(R.id.tv_time, item.time);
+        helper.setText(R.id.tv_time, getTime(item.time));
         helper.setText(R.id.tv_title, StringUtil.valueOf(item.title));
         helper.setText(R.id.tv_content, StringUtil.valueOf(item.content));
         helper.setImageResource(R.id.iv_, item.drawableId);
@@ -28,6 +29,20 @@ public class NoticeAdapter extends CommonAdapter<Msg> {
             numTV.setVisibility(View.GONE);
         } else {
             numTV.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public String getTime(long time) {
+        if (time == 0) {
+            return "";
+        } else {
+            if (DateUtil.isToday(time)) {
+                return DateUtil.getLongHM(time);
+//                return DateUtil.changeTimeToYMDHMS(StringUtil.valueOf(time));
+            } else {
+                return DateUtil.changeTimeToYMD(StringUtil.valueOf(time));
+
+            }
         }
     }
 }

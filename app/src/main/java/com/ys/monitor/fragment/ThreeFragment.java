@@ -7,6 +7,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.activity.FireListActivity;
 import com.ys.monitor.activity.TaskListActivity;
@@ -14,8 +16,17 @@ import com.ys.monitor.activity.YjtzActivity;
 import com.ys.monitor.adapter.NoticeAdapter;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseFragment;
+import com.ys.monitor.bean.FireBean;
 import com.ys.monitor.bean.Msg;
+import com.ys.monitor.bean.TaskBean;
+import com.ys.monitor.bean.YjtzBean;
+import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.NoNetView;
+import com.ys.monitor.util.HttpUtil;
+import com.ys.monitor.util.L;
+import com.ys.monitor.util.StringUtil;
+import com.ys.monitor.util.YS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +44,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
     private ListView listView;
     private List<Msg> list;
     private NoticeAdapter adapter;
+    private String userId;
 
     public static ThreeFragment newInstance() {
         return new ThreeFragment();
@@ -92,24 +104,100 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     @Override
     protected void getData() {
-//            HttpUtil.selectMsg(mContext, new HttpListener<String>() {
-//                @Override
-//                public void onSucceed(int what, Response<String> response) {
-//                    list.clear();
-//                    MsgBean msgBean = new Gson().fromJson(response.get(), MsgBean.class);
-//                    if (msgBean != null && msgBean.data != null&& msgBean.data.data != null &&
-//                    msgBean.data.data.size() > 0) {
-//                        list.addAll(msgBean.data.data);
-//                    }
-//                    adapter.refresh(list);
-//                    swipeRefreshLayout.setRefreshing(false);
-//                }
-//
-//                @Override
-//                public void onFailed(int what, Response<String> response) {
-//                    swipeRefreshLayout.setRefreshing(false);
-//                }
-//            });
+        userId = UserSP.getUserId(mContext);
+        HttpUtil.getFireListWithNoDialog(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                try {
+                    FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
+                    if (fireBean != null && fireBean.data != null && fireBean.data.rows != null && fireBean.data.rows.size() > 0) {
+                        List<FireBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
+                        for (FireBean.DataBean.RowsBean rowsBean1 : fireBean.data.rows) {
+                            if (YS.FireStatus.Status_DCL.equals(rowsBean1.status)) {
+                                rowsBeanList.add(rowsBean1);
+                            }
+                        }
+                        if (rowsBeanList.size() > 0) {
+                            if (rowsBeanList.get(0) != null) {
+                                String data = "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
+                                Msg msg = new Msg(R.mipmap.notice_fire_check, rowsBeanList.size(), "火情核查", data, rowsBeanList.get(0).createTime);
+                                list.set(0, msg);
+                                L.e(msg.toString());
+                                adapter.refresh(list);
+                            }
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+
+        HttpUtil.getYjtzListWithNoDialog(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                try {
+                    YjtzBean yjtzBean = new Gson().fromJson(response.get(), YjtzBean.class);
+                    if (yjtzBean != null && yjtzBean.data != null && yjtzBean.data.rows != null && yjtzBean.data.rows.size() > 0) {
+                        if (yjtzBean.data.rows.get(0) != null) {
+                            String data = "[" + yjtzBean.data.rows.size() + "条]" + StringUtil.valueOf(yjtzBean.data.rows.get(0).title);
+                            Msg msg = new Msg(R.mipmap.notice_warning, yjtzBean.data.rows.size(), "预警通知", data, yjtzBean.data.rows.get(0).createTime);
+                            list.set(1, msg);
+                            L.e(msg.toString());
+                            adapter.refresh(list);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+
+        HttpUtil.getTaskListWithNoDialog(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                try {
+                    TaskBean taskBean = new Gson().fromJson(response.get(), TaskBean.class);
+                    if (taskBean != null && taskBean.data != null && taskBean.data.rows != null && taskBean.data.rows.size() > 0) {
+                        List<TaskBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
+                        for (TaskBean.DataBean.RowsBean rowsBean : taskBean.data.rows) {
+                            if (rowsBean != null && rowsBean.isFinish == 0) {
+                                rowsBeanList.add(rowsBean);
+                            }
+                        }
+
+                        if (rowsBeanList.size() > 0) {
+                            String data = "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
+                            Msg msg = new Msg(R.mipmap.notice_task, rowsBeanList.size(), "任务通知", data, rowsBeanList.get(0).createTime);
+                            list.set(2, msg);
+                            L.e(msg.toString());
+                            adapter.refresh(list);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
     @Override

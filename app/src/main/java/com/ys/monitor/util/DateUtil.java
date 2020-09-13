@@ -83,6 +83,19 @@ public class DateUtil {
         }
     }
 
+    public static String getLongHM(long time) {
+        if (time == 0) {
+            return "";
+        } else {
+            Date dat = new Date(time);
+            GregorianCalendar gc = new GregorianCalendar();
+            gc.setTime(dat);
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+            String sb = format.format(gc.getTime());
+            return sb;
+        }
+    }
+
     /**
      * 获取时间戳
      *
@@ -137,20 +150,20 @@ public class DateUtil {
     }
 
 
-    public static String changeTimeToYMD(String time) {
-        SimpleDateFormat formatter = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        Date date = null;
-        try {
-            date = formatter.parse(time);
-        } catch (Exception e) {
-            e.printStackTrace();
-            date = new Date();
+    public static String changeTimeToYMD(String s) {
+        long time = StringUtil.StringToLong(s);
+        if (time == 0) {
+            return "";
+        } else {
+            Date dat = new Date(time);
+            GregorianCalendar gc = new GregorianCalendar();
+            gc.setTime(dat);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String sb = format.format(gc.getTime());
+            return sb;
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String res = simpleDateFormat.format(date);
-        return res;
     }
+
     public static String changeTimeToHMS(String time) {
         SimpleDateFormat formatter = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
@@ -165,19 +178,9 @@ public class DateUtil {
         String res = simpleDateFormat.format(date);
         return res;
     }
+
     public static String changeTimeToYMDHMS(String time) {
-        SimpleDateFormat formatter = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        Date date = null;
-        try {
-            date = formatter.parse(time);
-        } catch (Exception e) {
-            e.printStackTrace();
-            date = new Date();
-        }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String res = simpleDateFormat.format(date);
-        return res;
+       return getLongDate2(StringUtil.StringToLong(time));
     }
 
     public static long changeTimeToLong(String time) {
@@ -320,7 +323,7 @@ public class DateUtil {
 
     /*
      * 将时间戳转换为时间
-	 */
+     */
     public static String longToYMD(long s) {
         String res;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -359,6 +362,7 @@ public class DateUtil {
         str = str + " 23:59:59";
         return dateToStamp(str);
     }
+
     public static String getCurrentDayStartStr() {
         long current = System.currentTimeMillis();
         String str = longToYMD(current);
@@ -372,16 +376,51 @@ public class DateUtil {
         str = str + " 23:59:59";
         return str;
     }
+
     /**
-     *
      * @param str 2018-12-05
      * @return
      */
-    public static long getWhichDayStart(String str){
-        return dateToStamp(str+" 00:00:00");
+    public static long getWhichDayStart(String str) {
+        return dateToStamp(str + " 00:00:00");
     }
 
-    public static long getWhichDayEnd(String str){
-        return dateToStamp(str+" 23:59:59");
+    public static long getWhichDayEnd(String str) {
+        return dateToStamp(str + " 23:59:59");
     }
+
+
+    //判断选择的日期是否是本周
+    public static boolean isThisWeek(long time) {
+        Calendar calendar = Calendar.getInstance();
+        int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        calendar.setTime(new Date(time));
+        int paramWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        if (paramWeek == currentWeek) {
+            return true;
+        }
+        return false;
+    }
+
+    //判断选择的日期是否是今天
+    public static boolean isToday(long time) {
+        return isThisTime(time, "yyyy-MM-dd");
+    }
+
+    //判断选择的日期是否是本月
+    public static boolean isThisMonth(long time) {
+        return isThisTime(time, "yyyy-MM");
+    }
+
+    private static boolean isThisTime(long time, String pattern) {
+        Date date = new Date(time);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        String param = sdf.format(date);//参数时间
+        String now = sdf.format(new Date());//当前时间
+        if (param.equals(now)) {
+            return true;
+        }
+        return false;
+    }
+
 }

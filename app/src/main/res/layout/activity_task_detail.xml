@@ -46,16 +46,18 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <TextView
+            <EditText
+                android:id="@+id/et_content"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="300dp"
                 android:lineSpacingMultiplier="1.2"
                 android:maxLines="1"
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
+                android:background="@null"
+                android:gravity="left"
                 android:paddingRight="9dp"
                 android:paddingBottom="10dp"
-                android:text="堰塘湾(莲池村)云台"
                 android:textColor="#ffbbbbbb"
                 android:textSize="16sp" />
 
@@ -64,6 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="#f4f5f9"
+                android:visibility="gone"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="15dp">
@@ -84,6 +87,7 @@
 
             <com.ys.monitor.ui.MyGridView
                 android:id="@+id/gv_image"
+                android:visibility="gone"
                 android:layout_width="290dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -98,6 +102,7 @@
     </ScrollView>
 
     <TextView
+        android:id="@+id/tv_commit"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:background="#0D87F8"
