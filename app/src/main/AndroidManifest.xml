@@ -44,6 +44,7 @@
         <activity android:name="com.ys.monitor.activity.TaskListActivity" />
         <activity android:name="com.ys.monitor.activity.TaskDetailActivity" />
         <activity android:name="com.ys.monitor.activity.AddFireActivity" />
+        <activity android:name="com.ys.monitor.activity.ResoureActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

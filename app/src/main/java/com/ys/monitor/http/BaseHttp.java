@@ -160,6 +160,11 @@ public class BaseHttp {
 //        request(context, request, callback);
         postJson((Activity) context, url, postJson, callback);
     }
+
+    public void postSimpleJsonWithNoDialog(Context context, String url, String postJson, HttpListener<String> callback) {
+        postJson((Activity) context, url, postJson, callback, false);
+    }
+
     public void postSimpleJson2(Context context, String url, String postJson, HttpListener<String> callback) {
         L.e("url=" + url);
         L.e("params=" + postJson);

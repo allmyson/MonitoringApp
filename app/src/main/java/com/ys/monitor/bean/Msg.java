@@ -17,12 +17,12 @@ public class Msg {
     public int num;
     public String title;
     public String content;
-    public String time;
+    public long time;
 
     public Msg() {
     }
 
-    public Msg(int drawableId, int num, String title, String content, String time) {
+    public Msg(int drawableId, int num, String title, String content, long time) {
         this.drawableId = drawableId;
         this.num = num;
         this.title = title;
@@ -32,15 +32,25 @@ public class Msg {
 
     public static List<Msg> getDefaultMsgList() {
         List<Msg> list = new ArrayList<>();
-        Msg msg1 = new Msg(R.mipmap.notice_fire_check, 1, "火情核查", "[8条] 大渡口区建胜镇四民村四社附近发生火灾", "16" +
-                ":30");
-        Msg msg2 = new Msg(R.mipmap.notice_warning, 0, "预警通知", "[124条] 森林火险气象等级预报（20219）", "16:30");
-        Msg msg3 = new Msg(R.mipmap.notice_task, 1, "任务通知", "[36条] 待处理", "16:30");
-        Msg msg4 = new Msg(R.mipmap.notice_command_center, 1, "指挥中心", "", "16:30");
+        Msg msg1 = new Msg(R.mipmap.notice_fire_check, 0, "火情核查", "", 0);
+        Msg msg2 = new Msg(R.mipmap.notice_warning, 0, "预警通知", "", 0);
+        Msg msg3 = new Msg(R.mipmap.notice_task, 0, "任务通知", "", 0);
+        Msg msg4 = new Msg(R.mipmap.notice_command_center, 0, "指挥中心", "", 0);
         list.add(msg1);
         list.add(msg2);
         list.add(msg3);
         list.add(msg4);
         return list;
+    }
+
+    @Override
+    public String toString() {
+        return "Msg{" +
+                "drawableId=" + drawableId +
+                ", num=" + num +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", time=" + time +
+                '}';
     }
 }

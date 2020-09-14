@@ -23,6 +23,7 @@ import com.ys.monitor.bean.FireBean;
 import com.ys.monitor.bean.KVBean;
 import com.ys.monitor.dialog.DialogUtil;
 import com.ys.monitor.dialog.ListDialogFragment;
+import com.ys.monitor.fragment.FireFragment;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.HorizontalListView;
@@ -52,7 +53,6 @@ public class FireDetailActivity extends BaseActivity {
     private LinearLayout xcqkLL;
     private KVBean kvBean;
     private String userId;
-
     @Override
     public int getLayoutId() {
         return R.layout.activity_fire_detail;
@@ -108,6 +108,7 @@ public class FireDetailActivity extends BaseActivity {
         });
         userId = UserSP.getUserId(mContext);
     }
+
 
     @Override
     public void getData() {
@@ -247,13 +248,14 @@ public class FireDetailActivity extends BaseActivity {
         map.put("imgUrl", rowsBean.imgUrl + fileUrls);
         String data = new Gson().toJson(map);
         L.e("data=" + data);
-        HttpUtil.addFire(mContext, userId, data, new HttpListener<String>() {
+        HttpUtil.updateFire(mContext, userId, data, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 try {
                     BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
                     if (baseBean != null && YS.SUCCESE.equals(baseBean.code)) {
                         show("提交成功!");
+                        FireFragment.isRefresh = true;
                         finish();
                     } else {
                         show("提交失败!");

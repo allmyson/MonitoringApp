@@ -12,7 +12,45 @@
         android:layout_width="match_parent"
         android:layout_height="44dp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:text="资源类型"
+            android:textColor="#ff303030"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_type"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="请选择"
+            android:textColor="#BBBBBB"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/my_more" />
+    </LinearLayout>
+
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -20,8 +58,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#ffffff"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
@@ -41,32 +78,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="任务内容"
+                    android:text="基本信息"
                     android:textColor="#ff4f5053"
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/et_content"
+            <LinearLayout
+                android:id="@+id/ll_base"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:lineSpacingMultiplier="1.2"
-                android:maxLines="1"
-                android:paddingLeft="15dp"
-                android:paddingTop="10dp"
-                android:background="@null"
-                android:gravity="left"
-                android:paddingRight="9dp"
-                android:paddingBottom="10dp"
-                android:textColor="#ffbbbbbb"
-                android:textSize="16sp" />
-
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="#f4f5f9"
-                android:visibility="gone"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="15dp">
@@ -80,24 +106,22 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="图片上传"
+                    android:text="扩展信息"
                     android:textColor="#ff4f5053"
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <com.ys.monitor.ui.MyGridView
-                android:id="@+id/gv_image"
-                android:visibility="gone"
-                android:layout_width="290dp"
+            <LinearLayout
+                android:id="@+id/ll_ext"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="5dp"
-                android:horizontalSpacing="3dp"
-                android:numColumns="4"
-                android:scrollbars="none"
-                android:verticalSpacing="5dp" />
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/ll_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
         </LinearLayout>
     </ScrollView>
 

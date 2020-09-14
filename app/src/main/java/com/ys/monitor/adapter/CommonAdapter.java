@@ -67,6 +67,13 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
                 position);
     }
 
+    public List<T> getmDatas() {
+        return mDatas;
+    }
+
+    public void setmDatas(List<T> mDatas) {
+        this.mDatas = mDatas;
+    }
 }
 
 

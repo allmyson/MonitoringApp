@@ -49,6 +49,9 @@ public class FireFragment extends BaseFragment implements NoNetView.ClickListene
         this.type = type;
     }
 
+
+    public static boolean isRefresh = false;
+
     public static Fragment newInstance(int type) {
         FireFragment fireFragment = new FireFragment();
         fireFragment.setType(type);
@@ -76,7 +79,7 @@ public class FireFragment extends BaseFragment implements NoNetView.ClickListene
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FireBean.DataBean.RowsBean bean = adapter.getItem(position);
                 String json = new Gson().toJson(bean);
-                FireDetailActivity.intentToDetail(mContext,json);
+                FireDetailActivity.intentToDetail(mContext, json);
             }
         });
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -100,6 +103,14 @@ public class FireFragment extends BaseFragment implements NoNetView.ClickListene
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isRefresh) {
+            isRefresh = false;
+            getData();
+        }
+    }
 
     @Override
     public void getData() {

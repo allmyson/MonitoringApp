@@ -21,7 +21,7 @@ import java.util.Date;
  * @date 2018/11/26 17:53
  */
 public class YS {
-
+    public static final String DEFAULT_CHAT_PSD = "123456";//默认聊天账号密码
     public static final String source = "40289fa573e690820173e6a6ceaa0006";//报警类型编码
 
     //火情状态码
@@ -39,6 +39,7 @@ public class YS {
         //已扑灭
         public static final String Status_YPM = "4028819073e0c45d0173e0c9c9170006";
     }
+
     //文件业务类型
     public static class FileType {
         //火情信息
@@ -91,6 +92,18 @@ public class YS {
     public static final String ADD_FIRE = IP + "/receive/addMonitorWarnInfo.mo";
     //火情核查
     public static final String UPDATE_FIRE = IP + "/receive/updateMonitorWarnInfoByNo.mo";
+    //预警通知列表
+    public static final String YJTZ_LIST = IP + "/send/queryWarningReleasePage.mo";
+    //任务列表
+    public static final String TASK_LIST = IP + "/send/queryPlanPage.mo";
+    //更新任务
+    public static final String UPDATE_TASK = IP + "/receive/updatePatrolPlanByNo.mo";
+    //资源分类接口
+    public static final String RESOURCE_TYPE_LIST = IP + "/send/querySourceTypePage.mo";
+    //资源详情
+    public static final String RESOURCE_DETAIL = IP + "/send/querySourceByNo.mo";
+    //查询字段
+    public static final String RESOURCE_ZIDUAN = IP + "/send/querySourceExt.mo";
     //basebean == null 的时候的提示语
     public static final String HTTP_TIP = "服务器错误！";
 

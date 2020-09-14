@@ -1,25 +1,46 @@
 package com.ys.monitor.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
 import com.ys.monitor.adapter.GridAdapter;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
+import com.ys.monitor.bean.BaseBean;
+import com.ys.monitor.bean.TaskBean;
+import com.ys.monitor.fragment.TaskFragment;
+import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.MyGridView;
+import com.ys.monitor.util.HttpUtil;
+import com.ys.monitor.util.L;
+import com.ys.monitor.util.StringUtil;
+import com.ys.monitor.util.YS;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TaskDetailActivity extends BaseActivity {
     public static final int REQUEST_DELETE_CODE = 1001;
     private MyGridView myGridView;
     private GridAdapter mAdapter;
     private ArrayList<String> list;
+    private EditText contentET;
+    private TextView commitTV;
+    private TaskBean.DataBean.RowsBean rowsBean;
+    private String userId;
 
     @Override
     public int getLayoutId() {
@@ -28,6 +49,10 @@ public class TaskDetailActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        contentET = getView(R.id.et_content);
+        commitTV = getView(R.id.tv_commit);
+        commitTV.setOnClickListener(this);
+        commitTV.setVisibility(View.GONE);
         list = new ArrayList<>();
         setBarColor("#ffffff");
         titleView.setText("任务详情");
@@ -48,14 +73,41 @@ public class TaskDetailActivity extends BaseActivity {
         });
     }
 
+    public static void intentToDetail(Context context, String json) {
+        Intent intent = new Intent(context, TaskDetailActivity.class);
+        intent.putExtra("data", json);
+        context.startActivity(intent);
+    }
+
     @Override
     public void getData() {
-
+        userId = UserSP.getUserId(mContext);
+        String json = getIntent().getStringExtra("data");
+        if (StringUtil.isGoodJson(json)) {
+            rowsBean = new Gson().fromJson(json, TaskBean.DataBean.RowsBean.class);
+            if (rowsBean != null) {
+                if (rowsBean.isFinish == 0) {
+                    //未完成
+                    commitTV.setVisibility(View.VISIBLE);
+                } else if (rowsBean.isFinish == 1) {
+                    //已完成
+                    contentET.setText(StringUtil.valueOf(rowsBean.content));
+                    contentET.setSelection(contentET.length());//将光标移至文字末尾
+                    contentET.setFocusable(false);
+                    commitTV.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tv_commit:
+                if (isCanCommit()) {
+                    commit();
+                }
+                break;
         }
     }
 
@@ -86,4 +138,44 @@ public class TaskDetailActivity extends BaseActivity {
             }
         }
     }
+
+    private boolean isCanCommit() {
+        if (contentET.getText().length() > 0) {
+            return true;
+        }
+        show("请填写任务内容!");
+        return false;
+    }
+
+    private void commit() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("isFinish", 1);
+        map.put("recNo", rowsBean.recNo);
+        map.put("content", contentET.getText().toString().trim());
+        String data = new Gson().toJson(map);
+        L.e("data=" + data);
+        HttpUtil.updateTask(mContext, userId, data, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                try {
+                    BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                    if (baseBean != null && YS.SUCCESE.equals(baseBean.code)) {
+                        show(StringUtil.valueOf(baseBean.msg));
+                        TaskFragment.isRefresh = true;
+                        finish();
+                    } else {
+                        show("任务汇报失败!");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
 }
