@@ -12,6 +12,7 @@ import com.yanzhenjie.nohttp.download.DownloadListener;
 import com.yanzhenjie.nohttp.download.DownloadRequest;
 import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.RequestQueue;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.yanzhenjie.nohttp.rest.StringRequest;
 import com.ys.monitor.sp.CookieSP;
 import com.ys.monitor.util.L;
@@ -65,18 +66,22 @@ public class BaseHttp {
      * @param isLoading 实现显示加载框。
      * @param <T>       想请求到的数据类型。
      */
-    public <T> void request(Activity activity, int what, Request<T> request, HttpListener<T> callback, boolean
+    public <T> void request(Activity activity, int what, Request<T> request,
+                            HttpListener<T> callback, boolean
             canCancel, boolean isLoading) {
         request.setCancelSign(object);
 //        request.addHeader("Cookie", "PHPSESSID=" + UserSP.getCookie(mContext));
-        mQueue.add(what, request, new HttpResponseListener<>(activity, request, callback, canCancel, isLoading));
+        mQueue.add(what, request, new HttpResponseListener<>(activity, request, callback,
+                canCancel, isLoading));
     }
 
-    public <T> void request(int what, Request<T> request, HttpListener<T> callback, boolean canCancel, boolean
+    public <T> void request(int what, Request<T> request, HttpListener<T> callback,
+                            boolean canCancel, boolean
             isLoading, Context context) {
         request.setCancelSign(object);
 //        request.addHeader("Cookie", "PHPSESSID=" + UserSP.getCookie(mContext));
-        mQueue.add(what, request, new HttpResponseListener<>((Activity) context, request, callback, canCancel,
+        mQueue.add(what, request, new HttpResponseListener<>((Activity) context, request,
+                callback, canCancel,
                 isLoading));
 
     }
@@ -85,7 +90,8 @@ public class BaseHttp {
         request(0, request, callback, false, true, context);
     }
 
-    public <T> void request(int what, Request<T> request, HttpListener<T> callback, Context context) {
+    public <T> void request(int what, Request<T> request, HttpListener<T> callback,
+                            Context context) {
         request(what, request, callback, false, true, context);
     }
 
@@ -93,11 +99,13 @@ public class BaseHttp {
         request(activity, 0, request, callback, false, true);
     }
 
-    public <T> void request(Activity activity, int what, Request<T> request, HttpListener<T> callback) {
+    public <T> void request(Activity activity, int what, Request<T> request,
+                            HttpListener<T> callback) {
         request(activity, what, request, callback, false, true);
     }
 
-    public void postJson(Activity activity, int what, String url, String postJson, HttpListener<String> callback,
+    public void postJson(Activity activity, int what, String url, String postJson,
+                         HttpListener<String> callback,
                          boolean canCancel,
                          boolean isLoading) {
         L.e("url=" + url);
@@ -111,11 +119,13 @@ public class BaseHttp {
         request(activity, what, request, callback, canCancel, isLoading);
     }
 
-    public void postJson(Activity activity, String url, String postJson, HttpListener<String> callback) {
+    public void postJson(Activity activity, String url, String postJson,
+                         HttpListener<String> callback) {
         postJson(activity, url, postJson, callback, true);
     }
 
-    public void postJson(Activity activity, String url, String postJson, HttpListener<String> callback, boolean
+    public void postJson(Activity activity, String url, String postJson,
+                         HttpListener<String> callback, boolean
             isShowDialog) {
         postJson(activity, 0, url, postJson, callback, false, isShowDialog);
     }
@@ -136,7 +146,8 @@ public class BaseHttp {
     }
 
 
-    public <T> void request(Context context, int what, Request<T> request, HttpListener<T> callback) {
+    public <T> void request(Context context, int what, Request<T> request,
+                            HttpListener<T> callback) {
         request.setCancelSign(object);
         mQueue.add(what, request, new SimpleResponseListener<T>(context, request, callback));
     }
@@ -145,7 +156,8 @@ public class BaseHttp {
         request(context, 0, request, callback);
     }
 
-    public void postSimpleJson(Context context, String url, String postJson, HttpListener<String> callback) {
+    public void postSimpleJson(Context context, String url, String postJson,
+                               HttpListener<String> callback) {
 //        L.e("url=" + url);
 //        L.e("params=" + postJson);
 //        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
@@ -161,11 +173,13 @@ public class BaseHttp {
         postJson((Activity) context, url, postJson, callback);
     }
 
-    public void postSimpleJsonWithNoDialog(Context context, String url, String postJson, HttpListener<String> callback) {
+    public void postSimpleJsonWithNoDialog(Context context, String url, String postJson,
+                                           HttpListener<String> callback) {
         postJson((Activity) context, url, postJson, callback, false);
     }
 
-    public void postSimpleJson2(Context context, String url, String postJson, HttpListener<String> callback) {
+    public void postSimpleJson2(Context context, String url, String postJson,
+                                HttpListener<String> callback) {
         L.e("url=" + url);
         L.e("params=" + postJson);
         Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
@@ -180,7 +194,8 @@ public class BaseHttp {
         request(context, request, callback);
     }
 
-    public void postSimpleJson(Context context, String url, String postJson, List<String> files, HttpListener<String>
+    public void postSimpleJson(Context context, String url, String postJson, List<String> files,
+                               HttpListener<String>
             callback) {
         L.e("url=" + url);
         L.e("params=" + postJson);
@@ -215,7 +230,8 @@ public class BaseHttp {
      * @param fileMap
      * @param callback
      */
-    public void postFile(Context context, String url, Map<String, File> fileMap, HttpListener<String> callback) {
+    public void postFile(Context context, String url, Map<String, File> fileMap,
+                         HttpListener<String> callback) {
         Request<String> request = new StringRequest(url, RequestMethod.POST);
         if (fileMap != null) {
             for (String key : fileMap.keySet()) {
@@ -310,7 +326,8 @@ public class BaseHttp {
      * @param fileName
      * @param downloadListener
      */
-    public void downloadFile(Context context, String url, String savaPath, String fileName, DownloadListener
+    public void downloadFile(Context context, String url, String savaPath, String fileName,
+                             DownloadListener
             downloadListener) {
         downloadRequest = NoHttp.createDownloadRequest(
                 url, savaPath, fileName, true, true);
@@ -328,5 +345,33 @@ public class BaseHttp {
         if (downloadRequest != null) {
             downloadRequest.cancel();
         }
+    }
+
+    //同步上传文件
+    public Response<String> postFileSync(Context context, String url, String postJson,
+                                         List<String> files) {
+        L.e("url=" + url);
+        L.e("params=" + postJson);
+        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
+//        request.setContentType("application/json");
+        List<Binary> binaries = new ArrayList<>();
+        if (files != null && files.size() > 0) {
+            Binary binary = null;
+            for (String path : files) {
+                binary = new FileBinary(new File(path));
+                binaries.add(binary);
+            }
+        }
+        request.add("file", binaries);
+        if (!StringUtil.isBlank(postJson)) {
+            request.setDefineRequestBodyForJson(postJson);
+        }
+        String token = CookieSP.getCookie(context);
+        if (token != null && !"".equals(token)) {
+            request.addHeader("Cookie", token);
+        }
+//        request(context, request, callback);
+        Response<String> response = NoHttp.startRequestSync(request);
+        return response;
     }
 }

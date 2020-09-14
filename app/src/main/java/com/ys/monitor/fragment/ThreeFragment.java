@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
+import com.ys.monitor.activity.AddHelpActivity;
 import com.ys.monitor.activity.FireListActivity;
 import com.ys.monitor.activity.TaskListActivity;
 import com.ys.monitor.activity.YjtzActivity;
@@ -97,6 +98,9 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                     case 2:
                         startActivity(new Intent(mContext, TaskListActivity.class));
                         break;
+                    case 3:
+                        startActivity(new Intent(mContext, AddHelpActivity.class));
+                        break;
                 }
             }
         });
@@ -119,8 +123,10 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         }
                         if (rowsBeanList.size() > 0) {
                             if (rowsBeanList.get(0) != null) {
-                                String data = "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
-                                Msg msg = new Msg(R.mipmap.notice_fire_check, rowsBeanList.size(), "火情核查", data, rowsBeanList.get(0).createTime);
+                                String data =
+                                        "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
+                                Msg msg = new Msg(R.mipmap.notice_fire_check, rowsBeanList.size()
+                                        , "火情核查", data, rowsBeanList.get(0).createTime);
                                 list.set(0, msg);
                                 L.e(msg.toString());
                                 adapter.refresh(list);
@@ -147,8 +153,10 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                     YjtzBean yjtzBean = new Gson().fromJson(response.get(), YjtzBean.class);
                     if (yjtzBean != null && yjtzBean.data != null && yjtzBean.data.rows != null && yjtzBean.data.rows.size() > 0) {
                         if (yjtzBean.data.rows.get(0) != null) {
-                            String data = "[" + yjtzBean.data.rows.size() + "条]" + StringUtil.valueOf(yjtzBean.data.rows.get(0).title);
-                            Msg msg = new Msg(R.mipmap.notice_warning, yjtzBean.data.rows.size(), "预警通知", data, yjtzBean.data.rows.get(0).createTime);
+                            String data =
+                                    "[" + yjtzBean.data.rows.size() + "条]" + StringUtil.valueOf(yjtzBean.data.rows.get(0).title);
+                            Msg msg = new Msg(R.mipmap.notice_warning, yjtzBean.data.rows.size(),
+                                    "预警通知", data, yjtzBean.data.rows.get(0).createTime);
                             list.set(1, msg);
                             L.e(msg.toString());
                             adapter.refresh(list);
@@ -180,8 +188,10 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         }
 
                         if (rowsBeanList.size() > 0) {
-                            String data = "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
-                            Msg msg = new Msg(R.mipmap.notice_task, rowsBeanList.size(), "任务通知", data, rowsBeanList.get(0).createTime);
+                            String data =
+                                    "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
+                            Msg msg = new Msg(R.mipmap.notice_task, rowsBeanList.size(), "任务通知",
+                                    data, rowsBeanList.get(0).createTime);
                             list.set(2, msg);
                             L.e(msg.toString());
                             adapter.refresh(list);

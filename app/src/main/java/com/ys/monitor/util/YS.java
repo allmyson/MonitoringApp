@@ -104,6 +104,10 @@ public class YS {
     public static final String RESOURCE_DETAIL = IP + "/send/querySourceByNo.mo";
     //查询字段
     public static final String RESOURCE_ZIDUAN = IP + "/send/querySourceExt.mo";
+    //新增资源
+    public static final String ADD_RESOURCE = IP + "/receive/addSource.mo";
+    //设备信息
+    public static final String VIDEO_LIST = IP + "/send/queryDeviceInfo.mo?";
     //basebean == null 的时候的提示语
     public static final String HTTP_TIP = "服务器错误！";
 

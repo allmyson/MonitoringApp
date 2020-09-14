@@ -45,6 +45,12 @@
         <activity android:name="com.ys.monitor.activity.TaskDetailActivity" />
         <activity android:name="com.ys.monitor.activity.AddFireActivity" />
         <activity android:name="com.ys.monitor.activity.ResoureActivity" />
+        <activity android:name="com.ys.monitor.activity.VideoListActivity" />
+        <activity
+            android:name="com.ys.monitor.activity.AddHelpActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -65,12 +71,15 @@
             </intent-filter>
         </activity>
         <activity android:name="com.ys.monitor.activity.LoginActivity" />
-        <activity
-            android:name="com.ys.monitor.fast3.activity.Fast3Activity"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name="com.ys.monitor.winner.activity.WinnerActivity" />
-        <activity android:name="com.ys.monitor.ttz.activity.TtzActivity" />
         <activity android:name="com.ys.monitor.web.CommonWebviewActivity" />
+
+
+        <activity
+            android:name=".chat.activity.FullImageActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
     </application>
 
 </manifest>

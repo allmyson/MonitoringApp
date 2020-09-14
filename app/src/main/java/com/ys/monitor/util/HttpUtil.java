@@ -2,9 +2,11 @@ package com.ys.monitor.util;
 
 import android.content.Context;
 
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.http.BaseHttp;
 import com.ys.monitor.http.HttpListener;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -74,7 +76,7 @@ public class HttpUtil {
         BaseHttp.getInstance().postSimpleJsonWithNoDialog(context, url, "", httpListener);
     }
 
-    //上传文件
+    //异步上传文件
     public static void uploadFile(Context context, String userId, String fileType,
                                   List<String> filePath, HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
@@ -86,7 +88,19 @@ public class HttpUtil {
                 YS.UPLOAD_FILE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&type=" + fileType;
         BaseHttp.getInstance().postSimpleJson(context, url, "", filePath, httpListener);
     }
-
+    //同步上传文件
+    public static Response<String> uploadFile(Context context, String userId, String fileType,
+                                      List<String> filePath) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.UPLOAD_FILE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&type=" + fileType;
+        Response<String> response = BaseHttp.getInstance().postFileSync(context, url, "", filePath);
+        return response;
+    }
     //添加火情
     public static void addFire(Context context, String userId, String data,
                                HttpListener<String> httpListener) {
@@ -124,12 +138,6 @@ public class HttpUtil {
         String url =
                 YS.YJTZ_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&page=1&limit=100&source=1";
-//        String url =
-//                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&page=1&limit=100";
-
-//        url="http://219.153.13.225:8085/send/queryMonitorWarnInfoPage
-//        .mo?timeStamp=1597817109&token=d186b23cdbb8cb0353e5e1e0e8667d47&userID
-//        =402880905e31cb26015e31cb5d290000&page=1&limit=15&source=40289fa573e69082";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -144,12 +152,6 @@ public class HttpUtil {
         String url =
                 YS.YJTZ_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&page=1&limit=100&source=1";
-//        String url =
-//                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&page=1&limit=100";
-
-//        url="http://219.153.13.225:8085/send/queryMonitorWarnInfoPage
-//        .mo?timeStamp=1597817109&token=d186b23cdbb8cb0353e5e1e0e8667d47&userID
-//        =402880905e31cb26015e31cb5d290000&page=1&limit=15&source=40289fa573e69082";
         BaseHttp.getInstance().postSimpleJsonWithNoDialog(context, url, "", httpListener);
     }
 
@@ -165,12 +167,6 @@ public class HttpUtil {
         String url =
                 YS.TASK_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&page=1&limit=100&type=4028819073d76f4d0173d7aa84d50008";
-//        String url =
-//                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&page=1&limit=100";
-
-//        url="http://219.153.13.225:8085/send/queryMonitorWarnInfoPage
-//        .mo?timeStamp=1597817109&token=d186b23cdbb8cb0353e5e1e0e8667d47&userID
-//        =402880905e31cb26015e31cb5d290000&page=1&limit=15&source=40289fa573e69082";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -185,12 +181,6 @@ public class HttpUtil {
         String url =
                 YS.TASK_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&page=1&limit=100&type=4028819073d76f4d0173d7aa84d50008";
-//        String url =
-//                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&page=1&limit=100";
-
-//        url="http://219.153.13.225:8085/send/queryMonitorWarnInfoPage
-//        .mo?timeStamp=1597817109&token=d186b23cdbb8cb0353e5e1e0e8667d47&userID
-//        =402880905e31cb26015e31cb5d290000&page=1&limit=15&source=40289fa573e69082";
         BaseHttp.getInstance().postSimpleJsonWithNoDialog(context, url, "", httpListener);
     }
 
@@ -248,4 +238,39 @@ public class HttpUtil {
                         userId + "&elementNo=" + id;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
+
+    //资源上报
+    public static void addResource(Context context, String userId, String data, HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String dataCode;
+        try {
+             dataCode =  URLEncoder.encode(data,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            dataCode =  URLEncoder.encode(data);
+            e.printStackTrace();
+        }
+        String url =
+                YS.ADD_RESOURCE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&data=" + dataCode;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+
+    //获取设备列表
+    public static void getVideoList(Context context, String userId,
+                                   HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.VIDEO_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                        userId + "&page=1&limit=100";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
 }
