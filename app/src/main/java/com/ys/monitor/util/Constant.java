@@ -40,7 +40,7 @@ public class Constant {
 
 
     public static void buildFile() {
-        DIR_PATH = Environment.getExternalStorageDirectory() + "/ysgame" + (StringUtil.isBlank
+        DIR_PATH = Environment.getExternalStorageDirectory() + "/jys" + (StringUtil.isBlank
                 (PROJECT_NAME) ? "" : "/" + StringUtil.valueOf(PROJECT_NAME));
         DOWNLOAD_PATH = DIR_PATH + "/download";//文件下载保存地址
         WEEX_PATH = DIR_PATH + "/weex";//weex相关文件地址

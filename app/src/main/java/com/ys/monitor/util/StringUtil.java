@@ -1,7 +1,10 @@
 package com.ys.monitor.util;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -77,7 +80,8 @@ public class StringUtil {
      * @param clazz 泛型V的类型
      * @param methodName 方法名
      */
-    public static <K, V> void listGroup2Map(List<V> list, Map<K, List<V>> map, Class<V> clazz, String methodName) {
+    public static <K, V> void listGroup2Map(List<V> list, Map<K, List<V>> map, Class<V> clazz,
+                                            String methodName) {
         // 入参非法行校验
         if (null == list || null == map || null == clazz || StringUtil.isBlank(methodName)) {
             L.e("CommonUtils.listGroup2Map 入参错误，list：" + list + " ；map：" + map
@@ -187,6 +191,7 @@ public class StringUtil {
         double f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         return f1;
     }
+
     public static double StringToDouble(String data) {
         return StringToDoubleTwo(data);
     }
@@ -255,7 +260,9 @@ public class StringUtil {
 // 注意此处的判断intent.resolveActivity()可以返回显示该Intent的Activity对应的组件名
 // 官方解释 : Name of the component implementing an activity that can display the intent
         if (intent.resolveActivity(context.getPackageManager()) != null) {
-            final ComponentName componentName = intent.resolveActivity(context.getPackageManager()); // 打印Log   ComponentName到底是什么 L.d("componentName = " + componentName.getClassName());
+            final ComponentName componentName =
+                    intent.resolveActivity(context.getPackageManager()); // 打印Log
+            // ComponentName到底是什么 L.d("componentName = " + componentName.getClassName());
             context.startActivity(Intent.createChooser(intent, "请选择浏览器"));
         } else {
             Toast.makeText(context.getApplicationContext(), "请下载浏览器", Toast.LENGTH_SHORT).show();
@@ -265,12 +272,9 @@ public class StringUtil {
     /**
      * 对字符串处理:将指定位置到指定位置的字符以星号代替
      *
-     * @param content
-     *            传入的字符串
-     * @param begin
-     *            开始位置
-     * @param end
-     *            结束位置
+     * @param content 传入的字符串
+     * @param begin   开始位置
+     * @param end     结束位置
      * @return
      */
     public static String getStarString(String content, int begin, int end) {
@@ -293,10 +297,10 @@ public class StringUtil {
     }
 
 
-    public static String changeToX(String text){
+    public static String changeToX(String text) {
         String str = "";
-        if(!isBlank(text)){
-            for(int i = 0;i<text.length();i++){
+        if (!isBlank(text)) {
+            for (int i = 0; i < text.length(); i++) {
                 str += "*";
             }
         }
@@ -309,9 +313,9 @@ public class StringUtil {
     }
 
 
-
     public static boolean isPhone(String phone) {
-        String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
+        String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|" +
+                "(18[0-9])|(19[8|9]))\\d{8}$";
         if (phone.length() != 11) {
             return false;
         } else {
@@ -325,5 +329,13 @@ public class StringUtil {
     public static boolean isInteger(String str) {
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
+    }
+
+    //取视频第一帧
+    public static Bitmap getVideoThumb(String path) {
+        MediaMetadataRetriever media = new MediaMetadataRetriever();
+        media.setDataSource(path);
+        return media.getFrameAtTime();
+
     }
 }

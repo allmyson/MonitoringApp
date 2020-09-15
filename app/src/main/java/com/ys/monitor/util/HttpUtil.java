@@ -45,9 +45,10 @@ public class HttpUtil {
         String token = Md5Util.getMD5(YS.token + timeStamp);
         String url =
                 YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
-                        userId + "&page=1&limit=100&source=" + YS.SOURSE;
+                        userId + "&page=1&limit=100";
 //        String url =
-//                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&page=1&limit=100";
+//                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+//                userId + "&page=1&limit=100";
 
 //        url="http://219.153.13.225:8085/send/queryMonitorWarnInfoPage
 //        .mo?timeStamp=1597817109&token=d186b23cdbb8cb0353e5e1e0e8667d47&userID
@@ -66,9 +67,10 @@ public class HttpUtil {
         String token = Md5Util.getMD5(YS.token + timeStamp);
         String url =
                 YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
-                        userId + "&page=1&limit=100&source=" + YS.SOURSE;
+                        userId + "&page=1&limit=100";
 //        String url =
-//                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&page=1&limit=100";
+//                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+//                userId + "&page=1&limit=100";
 
 //        url="http://219.153.13.225:8085/send/queryMonitorWarnInfoPage
 //        .mo?timeStamp=1597817109&token=d186b23cdbb8cb0353e5e1e0e8667d47&userID
@@ -88,9 +90,24 @@ public class HttpUtil {
                 YS.UPLOAD_FILE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&type=" + fileType;
         BaseHttp.getInstance().postSimpleJson(context, url, "", filePath, httpListener);
     }
+
+    //异步上传文件
+    public static void uploadFileWithNoDialog(Context context, String userId, String fileType,
+                                              List<String> filePath,
+                                              HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.UPLOAD_FILE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&type=" + fileType;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", filePath, httpListener, false);
+    }
+
     //同步上传文件
     public static Response<String> uploadFile(Context context, String userId, String fileType,
-                                      List<String> filePath) {
+                                              List<String> filePath) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
@@ -101,6 +118,7 @@ public class HttpUtil {
         Response<String> response = BaseHttp.getInstance().postFileSync(context, url, "", filePath);
         return response;
     }
+
     //添加火情
     public static void addFire(Context context, String userId, String data,
                                HttpListener<String> httpListener) {
@@ -115,7 +133,8 @@ public class HttpUtil {
     }
 
     //火情核查
-    public static void updateFire(Context context, String userId, String data, HttpListener<String> httpListener) {
+    public static void updateFire(Context context, String userId, String data,
+                                  HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
@@ -185,14 +204,15 @@ public class HttpUtil {
     }
 
     //任务处理
-    public static void updateTask(Context context, String userId, String data, HttpListener<String> httpListener) {
+    public static void updateTask(Context context, String userId, String recNo,
+                                  HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
         }
         String token = Md5Util.getMD5(YS.token + timeStamp);
         String url =
-                YS.UPDATE_TASK + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&data=" + URLEncoder.encode(data);
+                YS.UPDATE_TASK + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&recNo=" + recNo;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -221,7 +241,8 @@ public class HttpUtil {
         String token = Md5Util.getMD5(YS.token + timeStamp);
         String url =
                 YS.RESOURCE_DETAIL + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
-                        userId + "&elementNo=4028819073c3b2580173c3bb5f850001&recNo=40289fba74673c6b0174674ef8570035";
+                        userId + "&elementNo=4028819073c3b2580173c3bb5f850001&recNo" +
+                        "=40289fba74673c6b0174674ef8570035";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -240,7 +261,8 @@ public class HttpUtil {
     }
 
     //资源上报
-    public static void addResource(Context context, String userId, String data, HttpListener<String> httpListener) {
+    public static void addResource(Context context, String userId, String data,
+                                   HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
@@ -248,9 +270,9 @@ public class HttpUtil {
         String token = Md5Util.getMD5(YS.token + timeStamp);
         String dataCode;
         try {
-             dataCode =  URLEncoder.encode(data,"UTF-8");
+            dataCode = URLEncoder.encode(data, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            dataCode =  URLEncoder.encode(data);
+            dataCode = URLEncoder.encode(data);
             e.printStackTrace();
         }
         String url =
@@ -261,7 +283,7 @@ public class HttpUtil {
 
     //获取设备列表
     public static void getVideoList(Context context, String userId,
-                                   HttpListener<String> httpListener) {
+                                    HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
@@ -273,4 +295,23 @@ public class HttpUtil {
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
+    //上传扑救信息
+    public static void addHelpMsgWithNoDialog(Context context, String userId, String data,
+                                              HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String dataCode;
+        try {
+            dataCode = URLEncoder.encode(data, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            dataCode = URLEncoder.encode(data);
+            e.printStackTrace();
+        }
+        String url =
+                YS.ADD_HELP_MSG + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&data=" + dataCode;
+        BaseHttp.getInstance().postSimpleJsonWithNoDialog(context, url, "", httpListener);
+    }
 }

@@ -107,7 +107,9 @@ public class YS {
     //新增资源
     public static final String ADD_RESOURCE = IP + "/receive/addSource.mo";
     //设备信息
-    public static final String VIDEO_LIST = IP + "/send/queryDeviceInfo.mo?";
+    public static final String VIDEO_LIST = IP + "/send/queryDeviceInfo.mo";
+    //上传扑救信息
+    public static final String ADD_HELP_MSG = IP + "/receive/addSceneInfo.mo";
     //basebean == null 的时候的提示语
     public static final String HTTP_TIP = "服务器错误！";
 

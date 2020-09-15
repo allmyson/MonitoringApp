@@ -111,6 +111,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         void onImageClick(View view, int position);
 
+        void onVideoClick(View view, int position);
+
         void onVoiceClick(ImageView imageView, int position);
 
         void onFileClick(View view, int position);

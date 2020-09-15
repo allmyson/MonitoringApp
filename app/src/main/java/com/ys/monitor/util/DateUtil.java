@@ -197,7 +197,7 @@ public class DateUtil {
 
     public static long changeTimeToLong(String time) {
         SimpleDateFormat formatter = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                "yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
             date = formatter.parse(time);

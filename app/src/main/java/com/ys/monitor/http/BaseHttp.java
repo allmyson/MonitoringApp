@@ -197,6 +197,12 @@ public class BaseHttp {
     public void postSimpleJson(Context context, String url, String postJson, List<String> files,
                                HttpListener<String>
             callback) {
+        postSimpleJson(context,url,postJson,files,callback,true);
+    }
+
+    public void postSimpleJson(Context context, String url, String postJson, List<String> files,
+                               HttpListener<String>
+                                       callback,boolean isLoading) {
         L.e("url=" + url);
         L.e("params=" + postJson);
         Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
@@ -218,10 +224,8 @@ public class BaseHttp {
             request.addHeader("Cookie", token);
         }
 //        request(context, request, callback);
-        request((Activity) context, 0, request, callback, false, true);
+        request((Activity) context, 0, request, callback, false, isLoading);
     }
-
-
     /**
      * 上传文件 多key
      *

@@ -18,9 +18,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.chat.base.BaseFragment;
@@ -28,10 +30,14 @@ import com.ys.monitor.chat.entity.MessageInfo;
 import com.ys.monitor.chat.util.Constants;
 import com.ys.monitor.chat.util.FileUtils;
 import com.ys.monitor.chat.util.PhotoUtils;
+import com.ys.monitor.util.Constant;
+import com.ys.monitor.util.L;
+import com.ys.monitor.util.StringUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 /**
@@ -54,14 +60,20 @@ public class ChatFunctionFragment extends BaseFragment {
     private int output_Y = 480;
     //    private File output;
 //    private Uri imageUri;
-    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
-    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
+    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo" +
+            ".jpg");
+    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() +
+            "/crop_photo.jpg");
     private Uri imageUri;
     private Uri cropImageUri;
     TextView tvCapture, tvAlbum, tvContact, tvCloud, tvFile, tvLocation;
+    private LinearLayout photoLL, cameraLL, voiceLL, videoLL;
+    private String currentVideoName;
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_chat_function, container, false);
             findViewByIds(rootView);
@@ -71,89 +83,113 @@ public class ChatFunctionFragment extends BaseFragment {
     }
 
     private void findViewByIds(View rootView) {
-        tvCapture = (TextView) rootView.findViewById(R.id.chat_function_capture);
-        tvAlbum = (TextView) rootView.findViewById(R.id.chat_function_album);
-        tvContact = (TextView) rootView.findViewById(R.id.chat_function_contact);
-        tvCloud = (TextView) rootView.findViewById(R.id.chat_function_cloud);
-        tvFile = (TextView) rootView.findViewById(R.id.chat_function_file);
-        tvLocation = (TextView) rootView.findViewById(R.id.chat_function_location);
+//        tvCapture = (TextView) rootView.findViewById(R.id.chat_function_capture);
+//        tvAlbum = (TextView) rootView.findViewById(R.id.chat_function_album);
+//        tvContact = (TextView) rootView.findViewById(R.id.chat_function_contact);
+//        tvCloud = (TextView) rootView.findViewById(R.id.chat_function_cloud);
+//        tvFile = (TextView) rootView.findViewById(R.id.chat_function_file);
+//        tvLocation = (TextView) rootView.findViewById(R.id.chat_function_location);
+        photoLL = (LinearLayout) rootView.findViewById(R.id.ll_photo);
+        cameraLL = (LinearLayout) rootView.findViewById(R.id.ll_camera);
+        voiceLL = (LinearLayout) rootView.findViewById(R.id.ll_voice);
+        videoLL = (LinearLayout) rootView.findViewById(R.id.ll_video);
     }
 
     private void autoObtainCameraPermission() {
 
         if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                || ContextCompat.checkSelfPermission(mActivity,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.CAMERA)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+                    Manifest.permission.CAMERA)) {
                 Toast.makeText(mActivity, "您已拒绝过一次", Toast.LENGTH_SHORT).show();
             }
-            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERACODE);
+            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERACODE);
         } else {//有权限直接调用系统相机拍照
             imageUri = Uri.fromFile(fileUri);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                imageUri = FileProvider.getUriForFile(mActivity, FunctionApi.getAuthority(mActivity), fileUri);//通过FileProvider创建一个content类型的Uri
+                imageUri = FileProvider.getUriForFile(mActivity,
+                        FunctionApi.getAuthority(mActivity), fileUri);//通过FileProvider创建一个content
+            // 类型的Uri
             PhotoUtils.takePicture(this, imageUri, CODE_TAKE_PHOTO);
         }
     }
 
+    public static final int CAMERA = 888;
+
     public void setItemClick() {
-        tvCapture.setOnClickListener(new View.OnClickListener() {
+        photoLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                autoObtainCameraPermission();
+                FunctionApi.takePicture(ChatFunctionFragment.this, 1, 2, true, false, false);
             }
         });
-        tvAlbum.setOnClickListener(new View.OnClickListener() {
+        cameraLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            MY_PERMISSIONS_REQUEST_WRITE_STORAGE_CODE);
-
-                } else {
-                    choosePhoto();
-                }
+                currentVideoName = StringUtil.getNowTimeStr(3);
+                FunctionApi.startVideo(ChatFunctionFragment.this, CAMERA, currentVideoName);
             }
         });
+//        tvCapture.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                autoObtainCameraPermission();
+//            }
+//        });
+//        tvAlbum.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ContextCompat.checkSelfPermission(getActivity(),
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                        != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(getActivity(),
+//                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                            MY_PERMISSIONS_REQUEST_WRITE_STORAGE_CODE);
+//
+//                } else {
+//                    choosePhoto();
+//                }
+//            }
+//        });
 
-        tvFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            MY_PERMISSIONS_REQUEST_WRITE_STORAGE_CODE);
-                } else {
-                    chooseFile();
-                }
-            }
-        });
+//        tvFile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ContextCompat.checkSelfPermission(getActivity(),
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                        != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(getActivity(),
+//                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                            MY_PERMISSIONS_REQUEST_WRITE_STORAGE_CODE);
+//                } else {
+//                    chooseFile();
+//                }
+//            }
+//        });
 
-        tvCloud.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        tvLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        tvContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showContact();
-            }
-        });
+//        tvCloud.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+//
+//        tvLocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+//
+//        tvContact.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showContact();
+//            }
+//        });
     }
 
     private void showContact() {
@@ -174,7 +210,8 @@ public class ChatFunctionFragment extends BaseFragment {
     private void takePhoto() {
         imageUri = Uri.fromFile(fileUri);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            imageUri = FileProvider.getUriForFile(mActivity, FunctionApi.getAuthority(mActivity), fileUri);
+            imageUri = FileProvider.getUriForFile(mActivity, FunctionApi.getAuthority(mActivity),
+                    fileUri);
             PhotoUtils.takePicture(this, imageUri, CODE_TAKE_PHOTO);
         }
     }
@@ -252,14 +289,36 @@ public class ChatFunctionFragment extends BaseFragment {
                     Log.d(Constants.TAG, "失败");
                 }
                 break;
-
+            case ImageSelectorActivity.REQUEST_IMAGE://相册图片选取返回
+                if (res == Activity.RESULT_OK) {
+                    ArrayList<String> images =
+                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
+                                    .REQUEST_OUTPUT);
+                    if (images != null && images.size() > 0) {
+                        MessageInfo messageInfo = new MessageInfo();
+                        messageInfo.setFilepath(images.get(0));
+                        messageInfo.setFileType(Constants.CHAT_FILE_TYPE_IMAGE);
+                        EventBus.getDefault().post(messageInfo);
+                    }
+                }
+                break;
+            case CAMERA:
+                if (res == Activity.RESULT_OK) {
+                    L.e("视频录制成功");
+                    MessageInfo messageInfo = new MessageInfo();
+                    messageInfo.setFilepath(Constant.VIDEO_PATH + "/" + currentVideoName);
+                    messageInfo.setFileType(Constants.CHAT_FILE_TYPE_VIDEO);
+                    EventBus.getDefault().post(messageInfo);
+                }
+                break;
             default:
                 break;
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_CALL_PHONE:
@@ -293,7 +352,8 @@ public class ChatFunctionFragment extends BaseFragment {
         //TODO upload file、image、voice then return url;
         String res = null;
         String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().getContentResolver().query(contentUri, proj, null, null, null);
+        Cursor cursor = getActivity().getContentResolver().query(contentUri, proj, null, null,
+                null);
         if (cursor.moveToFirst()) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             res = cursor.getString(column_index);

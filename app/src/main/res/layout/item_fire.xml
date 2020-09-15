@@ -19,7 +19,6 @@
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="堰塘湾(莲池村)高空双光谱高清云台"
             android:textColor="#ff343434"
             android:textSize="17sp" />
 
@@ -47,7 +46,6 @@
                 android:paddingTop="2dp"
                 android:paddingRight="7dp"
                 android:paddingBottom="2dp"
-                android:text="云台报警"
                 android:textColor="#fff6692a"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -73,7 +71,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="冉家岚垭10社5小班"
                 android:textColor="#ffbbbbbb"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -98,7 +95,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="2020-06-15 12:30:22"
                 android:textColor="#ffbbbbbb"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -111,7 +107,6 @@
         android:layout_gravity="right"
         android:layout_marginTop="52.5dp"
         android:layout_marginRight="18dp"
-        android:text="误报"
         android:textColor="#ff0d87f8"
         android:textSize="17sp" />
 </FrameLayout>

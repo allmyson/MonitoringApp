@@ -128,13 +128,13 @@ public class FireFragment extends BaseFragment implements NoNetView.ClickListene
                                     .data.rows != null && fireBean.data.rows.size() > 0) {
                                 if (type == TYPE_UNDO) {
                                     for (FireBean.DataBean.RowsBean bean : fireBean.data.rows) {
-                                        if (YS.FireStatus.Status_DCL.equals(bean.status)) {
+                                        if (YS.FireStatus.Status_DCL.equals(bean.status)||YS.FireStatus.Status_HSZ.equals(bean.status)) {
                                             list.add(bean);
                                         }
                                     }
                                 } else {
                                     for (FireBean.DataBean.RowsBean bean : fireBean.data.rows) {
-                                        if (!YS.FireStatus.Status_DCL.equals(bean.status)) {
+                                        if (!YS.FireStatus.Status_DCL.equals(bean.status)&&!YS.FireStatus.Status_HSZ.equals(bean.status)) {
                                             list.add(bean);
                                         }
                                     }

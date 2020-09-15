@@ -117,7 +117,7 @@ public class FireDetailActivity extends BaseActivity {
         if (StringUtil.isGoodJson(data)) {
             rowsBean = new Gson().fromJson(data, FireBean.DataBean.RowsBean.class);
             if (rowsBean != null) {
-                if (YS.FireStatus.Status_DCL.equals(rowsBean.status)) {
+                if (YS.FireStatus.Status_DCL.equals(rowsBean.status)||YS.FireStatus.Status_HSZ.equals(rowsBean.status)) {
                     xcqkLL.setVisibility(View.VISIBLE);
                     commitTV.setVisibility(View.VISIBLE);
                     myGridView.setVisibility(View.VISIBLE);
@@ -208,7 +208,7 @@ public class FireDetailActivity extends BaseActivity {
     }
 
     private boolean isCanCommit() {
-        if (kvBean != null && !YS.FireStatus.Status_DCL.equals(kvBean.id)) {
+        if (kvBean != null && !YS.FireStatus.Status_DCL.equals(kvBean.id)&&!YS.FireStatus.Status_HSZ.equals(kvBean.id)) {
             return true;
         }
         show(" 请选择核查结果！");

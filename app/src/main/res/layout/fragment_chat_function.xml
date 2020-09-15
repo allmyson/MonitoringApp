@@ -2,37 +2,168 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="40dp"
-    android:orientation="vertical">
+    android:background="#f6f6f6"
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_photo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rect_cornor_chat">
+
+                <ImageView
+                    android:layout_width="24.51dp"
+                    android:layout_height="22dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/notice_center_photo" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="照片"
+                android:textColor="#ffbbbbbb"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_camera"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rect_cornor_chat">
+
+                <ImageView
+                    android:layout_width="25.71dp"
+                    android:layout_height="22dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/notice_center_video" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="拍摄视频"
+                android:textColor="#ffbbbbbb"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_voice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rect_cornor_chat">
+
+                <ImageView
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/notice_center_phonecall" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="语音通话"
+                android:textColor="#ffbbbbbb"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_video"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rect_cornor_chat">
+
+                <ImageView
+                    android:layout_width="28.43dp"
+                    android:layout_height="15.67dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/notice_center_videocall" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="视频通话"
+                android:textColor="#ffbbbbbb"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/chat_function_album"
             style="@style/text_function_item"
-            android:drawablePadding="5dp"
             android:drawableTop="@mipmap/icon_album"
+            android:drawablePadding="5dp"
             android:gravity="center"
             android:text="相册" />
 
         <TextView
             android:id="@+id/chat_function_capture"
             style="@style/text_function_item"
-            android:drawablePadding="5dp"
             android:drawableTop="@mipmap/icon_capture"
+            android:drawablePadding="5dp"
             android:gravity="center"
             android:text="拍照" />
 
         <TextView
             android:id="@+id/chat_function_contact"
             style="@style/text_function_item"
-            android:drawablePadding="5dp"
             android:drawableTop="@mipmap/icon_im_contact"
+            android:drawablePadding="5dp"
             android:gravity="center"
             android:text="联系人" />
 
@@ -40,8 +171,8 @@
         <TextView
             android:id="@+id/chat_function_location"
             style="@style/text_function_item"
-            android:drawablePadding="5dp"
             android:drawableTop="@mipmap/icon_im_location"
+            android:drawablePadding="5dp"
             android:gravity="center"
             android:text="位置" />
     </LinearLayout>
@@ -57,16 +188,16 @@
         <TextView
             android:id="@+id/chat_function_file"
             style="@style/text_function_item"
-            android:drawablePadding="5dp"
             android:drawableTop="@mipmap/icon_im_file"
+            android:drawablePadding="5dp"
             android:gravity="center"
             android:text="文件" />
 
         <TextView
             android:id="@+id/chat_function_cloud"
             style="@style/text_function_item"
-            android:drawablePadding="5dp"
             android:drawableTop="@mipmap/icon_cloud"
+            android:drawablePadding="5dp"
             android:gravity="center"
             android:text="我的资料" />
 

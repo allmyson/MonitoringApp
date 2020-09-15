@@ -25,6 +25,7 @@ import com.ys.monitor.chat.util.Utils;
 import com.ys.monitor.chat.widget.BubbleImageView;
 import com.ys.monitor.chat.widget.BubbleLinearLayout;
 import com.ys.monitor.chat.widget.GifTextView;
+import com.ys.monitor.util.StringUtil;
 
 /**
  * 作者：Rance on 2016/11/29 10:47
@@ -60,6 +61,10 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
     private RelativeLayout.LayoutParams layoutParams;
     private Context mContext;
 
+    private RelativeLayout videoRL;
+    private BubbleImageView videoIV;
+
+
     public ChatSendViewHolder(ViewGroup parent, ChatAdapter.onItemClickListener onItemClickListener, Handler handler) {
         super(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_send, parent, false));
         findViewByIds(itemView);
@@ -92,6 +97,9 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
         tvLinkSubject = (TextView) itemView.findViewById(R.id.tv_link_subject);
         tvLinkText = (TextView) itemView.findViewById(R.id.tv_link_text);
         ivLinkPicture = (ImageView) itemView.findViewById(R.id.iv_link_picture);
+
+        videoRL = (RelativeLayout) itemView.findViewById(R.id.chat_item_layout_video);
+        videoIV = (BubbleImageView) itemView.findViewById(R.id.chat_item_video);
     }
 
 
@@ -108,6 +116,7 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
         switch (data.getFileType()) {
             case Constants.CHAT_FILE_TYPE_TEXT:
                 chatItemContentText.setSpanText(handler, data.getContent(), true);
+                videoRL.setVisibility(View.GONE);
                 chatItemVoice.setVisibility(View.GONE);
                 chatItemVoiceTime.setVisibility(View.GONE);
                 chatItemContentImage.setVisibility(View.GONE);
@@ -130,6 +139,7 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
                 chatItemLayoutContent.setLayoutParams(layoutParams);
                 break;
             case Constants.CHAT_FILE_TYPE_IMAGE:
+                videoRL.setVisibility(View.GONE);
                 chatItemVoice.setVisibility(View.GONE);
                 chatItemLayoutContent.setVisibility(View.GONE);
                 chatItemVoiceTime.setVisibility(View.GONE);
@@ -145,6 +155,7 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
                 chatItemLayoutContent.setLayoutParams(layoutParams);
                 break;
             case Constants.CHAT_FILE_TYPE_VOICE:
+                videoRL.setVisibility(View.GONE);
                 chatItemVoice.setVisibility(View.VISIBLE);
                 chatItemLayoutContent.setVisibility(View.VISIBLE);
                 chatItemContentText.setVisibility(View.GONE);
@@ -160,6 +171,7 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
                 chatItemLayoutContent.setLayoutParams(layoutParams);
                 break;
             case Constants.CHAT_FILE_TYPE_FILE:
+                videoRL.setVisibility(View.GONE);
                 chatItemVoice.setVisibility(View.GONE);
                 chatItemContentText.setVisibility(View.GONE);
                 chatItemContentImage.setVisibility(View.GONE);
@@ -197,6 +209,7 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
                 }
                 break;
             case Constants.CHAT_FILE_TYPE_CONTACT:
+                videoRL.setVisibility(View.GONE);
                 chatItemVoice.setVisibility(View.GONE);
                 chatItemContentText.setVisibility(View.GONE);
                 chatItemContentImage.setVisibility(View.GONE);
@@ -212,6 +225,7 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
                 tvContactPhone.setText(imContact.getPhonenumber());
                 break;
             case Constants.CHAT_FILE_TYPE_LINK:
+                videoRL.setVisibility(View.GONE);
                 chatItemVoice.setVisibility(View.GONE);
                 chatItemContentText.setVisibility(View.GONE);
                 chatItemContentImage.setVisibility(View.GONE);
@@ -226,6 +240,23 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
                 tvLinkSubject.setText(link.getSubject());
                 tvLinkText.setText(link.getText());
                 Glide.with(mContext).load(link.getStream()).into(ivLinkPicture);
+                break;
+            case Constants.CHAT_FILE_TYPE_VIDEO:
+                chatItemContentImage.setVisibility(View.GONE);
+                chatItemVoice.setVisibility(View.GONE);
+                chatItemLayoutContent.setVisibility(View.GONE);
+                chatItemVoiceTime.setVisibility(View.GONE);
+                chatItemContentText.setVisibility(View.GONE);
+                chatItemLayoutFile.setVisibility(View.GONE);
+                chatItemLayoutContact.setVisibility(View.GONE);
+                chatItemLayoutLink.setVisibility(View.GONE);
+
+                videoRL.setVisibility(View.VISIBLE);
+//                Glide.with(mContext).load(StringUtil.getVideoThumb(data.getFilepath())).into(videoIV);
+                videoIV.setImageBitmap(StringUtil.getVideoThumb(data.getFilepath()));
+                layoutParams.width = Utils.dp2px(mContext, 120);
+                layoutParams.height = Utils.dp2px(mContext, 48);
+                chatItemLayoutContent.setLayoutParams(layoutParams);
                 break;
         }
         switch (data.getSendState()) {
@@ -301,6 +332,12 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
             @Override
             public void onClick(View v) {
                 onItemClickListener.onLinkClick(v, (Integer) itemView.getTag());
+            }
+        });
+        videoRL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onVideoClick(v, (Integer) itemView.getTag());
             }
         });
     }

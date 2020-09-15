@@ -5,7 +5,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,10 +16,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
+import com.ys.monitor.bean.BaseBean;
+import com.ys.monitor.bean.FileUploadBean;
 import com.ys.monitor.chat.activity.FullImageActivity;
 import com.ys.monitor.chat.adapter.ChatAdapter;
 import com.ys.monitor.chat.adapter.CommonFragmentPagerAdapter;
@@ -36,6 +40,12 @@ import com.ys.monitor.chat.widget.ChatContextMenu;
 import com.ys.monitor.chat.widget.EmotionInputDetector;
 import com.ys.monitor.chat.widget.NoScrollViewPager;
 import com.ys.monitor.chat.widget.StateButton;
+import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.UserSP;
+import com.ys.monitor.util.HttpUtil;
+import com.ys.monitor.util.L;
+import com.ys.monitor.util.StringUtil;
+import com.ys.monitor.util.YS;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,7 +53,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AddHelpActivity extends BaseActivity {
     RecyclerView chatList;
@@ -73,6 +85,8 @@ public class AddHelpActivity extends BaseActivity {
     int res = 0;
     AnimationDrawable animationDrawable = null;
     private ImageView animView;
+    private String userId;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_add_help;
@@ -80,12 +94,13 @@ public class AddHelpActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        setBarColor2("#ffffff",true);
+        setBarColor2("#ffffff", true);
 //        setBarColor("#ffffff");
         titleView.setText("指挥中心");
         findViewByIds();
         EventBus.getDefault().register(this);
         initWidget();
+        userId = UserSP.getUserId(mContext);
     }
 
     @Override
@@ -101,6 +116,7 @@ public class AddHelpActivity extends BaseActivity {
                 break;
         }
     }
+
     private void findViewByIds() {
         chatList = (RecyclerView) findViewById(R.id.chat_list);
         emotionVoice = (ImageView) findViewById(R.id.emotion_voice);
@@ -135,7 +151,8 @@ public class AddHelpActivity extends BaseActivity {
                 .bindToVoiceText(voiceText)
                 .build();
 
-        GlobalOnItemClickManagerUtils globalOnItemClickListener = GlobalOnItemClickManagerUtils.getInstance(this);
+        GlobalOnItemClickManagerUtils globalOnItemClickListener =
+                GlobalOnItemClickManagerUtils.getInstance(this);
         globalOnItemClickListener.attachToEditText(editText);
 
         chatAdapter = new ChatAdapter(messageInfos);
@@ -169,10 +186,12 @@ public class AddHelpActivity extends BaseActivity {
         chatAdapter.addItemClickListener(itemClickListener);
         LoadData();
     }
+
     /**
      * item点击事件
      */
-    private ChatAdapter.onItemClickListener itemClickListener = new ChatAdapter.onItemClickListener() {
+    private ChatAdapter.onItemClickListener itemClickListener =
+            new ChatAdapter.onItemClickListener() {
         @Override
         public void onHeaderClick(int position) {
             Toast.makeText(mContext, "onHeaderClick", Toast.LENGTH_SHORT).show();
@@ -191,6 +210,13 @@ public class AddHelpActivity extends BaseActivity {
             EventBus.getDefault().postSticky(fullImageInfo);
             startActivity(new Intent(mContext, FullImageActivity.class));
             overridePendingTransition(0, 0);
+        }
+
+        @Override
+        public void onVideoClick(View view, int position) {
+            L.e(messageInfos.get(position).getFilepath());
+//            ToastUtil.show(mContext,messageInfos.get(position).getFilepath());
+            FunctionApi.playVideo(mContext, messageInfos.get(position).getFilepath());
         }
 
         @Override
@@ -213,7 +239,8 @@ public class AddHelpActivity extends BaseActivity {
             animView.setImageResource(animationRes);
             animationDrawable = (AnimationDrawable) imageView.getDrawable();
             animationDrawable.start();
-            MediaManager.playSound(messageInfos.get(position).getFilepath(), new MediaPlayer.OnCompletionListener() {
+            MediaManager.playSound(messageInfos.get(position).getFilepath(),
+                    new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     animView.setImageResource(res);
@@ -229,7 +256,8 @@ public class AddHelpActivity extends BaseActivity {
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             File file = new File(messageInfo.getFilepath());
-            Uri fileUri = FileProvider.getUriForFile(mContext, FunctionApi.getAuthority(mContext), file);
+            Uri fileUri = FileProvider.getUriForFile(mContext, FunctionApi.getAuthority(mContext)
+                    , file);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
@@ -249,7 +277,8 @@ public class AddHelpActivity extends BaseActivity {
         @Override
         public void onLongClickImage(View view, int position) {
 
-            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),messageInfos.get(position));
+            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),
+                    messageInfos.get(position));
 //            chatContextMenu.setAnimationStyle();
             chatContextMenu.showOnAnchor(view, RelativePopupWindow.VerticalPosition.ABOVE,
                     RelativePopupWindow.HorizontalPosition.CENTER);
@@ -258,28 +287,32 @@ public class AddHelpActivity extends BaseActivity {
 
         @Override
         public void onLongClickText(View view, int position) {
-            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),messageInfos.get(position));
+            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),
+                    messageInfos.get(position));
             chatContextMenu.showOnAnchor(view, RelativePopupWindow.VerticalPosition.ABOVE,
                     RelativePopupWindow.HorizontalPosition.CENTER);
         }
 
         @Override
         public void onLongClickItem(View view, int position) {
-            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),messageInfos.get(position));
+            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),
+                    messageInfos.get(position));
             chatContextMenu.showOnAnchor(view, RelativePopupWindow.VerticalPosition.ABOVE,
                     RelativePopupWindow.HorizontalPosition.CENTER);
         }
 
         @Override
         public void onLongClickFile(View view, int position) {
-            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),messageInfos.get(position));
+            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),
+                    messageInfos.get(position));
             chatContextMenu.showOnAnchor(view, RelativePopupWindow.VerticalPosition.ABOVE,
                     RelativePopupWindow.HorizontalPosition.CENTER);
         }
 
         @Override
         public void onLongClickLink(View view, int position) {
-            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),messageInfos.get(position));
+            ChatContextMenu chatContextMenu = new ChatContextMenu(view.getContext(),
+                    messageInfos.get(position));
             chatContextMenu.showOnAnchor(view, RelativePopupWindow.VerticalPosition.ABOVE,
                     RelativePopupWindow.HorizontalPosition.CENTER);
         }
@@ -305,14 +338,17 @@ public class AddHelpActivity extends BaseActivity {
         messageInfo1.setFileType(Constants.CHAT_FILE_TYPE_VOICE);
         messageInfo1.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
         messageInfo1.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
-        messageInfo1.setHeader("http://img.dongqiudi.com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
+        messageInfo1.setHeader("http://img.dongqiudi" +
+                ".com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
         messageInfos.add(messageInfo1);
 
         MessageInfo messageInfo2 = new MessageInfo();
-        messageInfo2.setFilepath("http://img4.imgtn.bdimg.com/it/u=1800788429,176707229&fm=21&gp=0.jpg");
+        messageInfo2.setFilepath("http://img4.imgtn.bdimg.com/it/u=1800788429," +
+                "176707229&fm=21&gp=0.jpg");
         messageInfo2.setFileType(Constants.CHAT_FILE_TYPE_IMAGE);
         messageInfo2.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-        messageInfo2.setHeader("http://img0.imgtn.bdimg.com/it/u=401967138,750679164&fm=26&gp=0.jpg");
+        messageInfo2.setHeader("http://img0.imgtn.bdimg.com/it/u=401967138,750679164&fm=26&gp=0" +
+                ".jpg");
         messageInfos.add(messageInfo2);
 
         MessageInfo messageInfo3 = new MessageInfo();
@@ -320,39 +356,135 @@ public class AddHelpActivity extends BaseActivity {
         messageInfo3.setFileType(Constants.CHAT_FILE_TYPE_TEXT);
         messageInfo3.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
         messageInfo3.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
-        messageInfo3.setHeader("http://img.dongqiudi.com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
+        messageInfo3.setHeader("http://img.dongqiudi" +
+                ".com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
         messageInfos.add(messageInfo3);
 
         chatAdapter.addAll(messageInfos);
     }
-
+    private Map<String, Object> map;
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageEventBus(final MessageInfo messageInfo) {
-        messageInfo.setHeader("http://img.dongqiudi.com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
+        messageInfo.setHeader("http://img.dongqiudi" +
+                ".com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
         messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
         messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
         messageInfos.add(messageInfo);
         chatAdapter.notifyItemInserted(messageInfos.size() - 1);
 //        chatAdapter.add(messageInfo);
         chatList.scrollToPosition(chatAdapter.getItemCount() - 1);
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                messageInfo.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
-                chatAdapter.notifyDataSetChanged();
+        map = new HashMap<>();
+        map.put("warnInfoNo", "");
+        map.put("fireTitle", "");
+        int reportingType = 0;
+        String content = "";
+        if (Constants.CHAT_FILE_TYPE_TEXT.equals(messageInfo.getFileType())) {
+            reportingType = 0;
+            map.put("reportingType", reportingType);
+            map.put("content", StringUtil.valueOf(messageInfo.getContent()));
+            String json = new Gson().toJson(map);
+            HttpUtil.addHelpMsgWithNoDialog(mContext, userId, json, new HttpListener<String>() {
+                @Override
+                public void onSucceed(int what, Response<String> response) {
+                    try {
+                        BaseBean baseBean = new Gson().fromJson(response.get(),BaseBean.class);
+                        if(baseBean!=null&&YS.SUCCESE.equals(baseBean.code)){
+                            messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                            chatAdapter.notifyDataSetChanged();
+                        }else {
+                            messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                            chatAdapter.notifyDataSetChanged();
+                        }
+                    } catch (JsonSyntaxException e) {
+                        e.printStackTrace();
+                        messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                        chatAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onFailed(int what, Response<String> response) {
+                    messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                    chatAdapter.notifyDataSetChanged();
+                }
+            });
+        } else if (Constants.CHAT_FILE_TYPE_IMAGE.equals(messageInfo.getFileType()) || Constants.CHAT_FILE_TYPE_VIDEO.equals(messageInfo.getFileType())) {
+            if (Constants.CHAT_FILE_TYPE_IMAGE.equals(messageInfo.getFileType())) {
+                reportingType = 1;
+            } else if (Constants.CHAT_FILE_TYPE_VIDEO.equals(messageInfo.getFileType())) {
+                reportingType = 2;
             }
-        }, 2000);
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                MessageInfo message = new MessageInfo();
-                message.setContent("这是模拟消息回复");
-                message.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-                message.setFileType(Constants.CHAT_FILE_TYPE_TEXT);
-                message.setHeader("http://img0.imgtn.bdimg.com/it/u=401967138,750679164&fm=26&gp=0.jpg");
-                messageInfos.add(message);
-                chatAdapter.notifyItemInserted(messageInfos.size() - 1);
-                chatList.scrollToPosition(chatAdapter.getItemCount() - 1);
-            }
-        }, 3000);
+            map.put("reportingType", reportingType);
+            List<String> fileList = new ArrayList<>();
+            fileList.add(messageInfo.getFilepath());
+            HttpUtil.uploadFileWithNoDialog(mContext, userId, YS.FileType.FILE_PJ, fileList,
+                    new HttpListener<String>() {
+                @Override
+                public void onSucceed(int what, Response<String> response) {
+                    try {
+                        FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
+                                FileUploadBean.class);
+                        if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) && fileUploadBean.data != null) {
+                            map.put("content", fileUploadBean.data.url);
+                            String json = new Gson().toJson(map);
+                            HttpUtil.addHelpMsgWithNoDialog(mContext, userId, json, new HttpListener<String>() {
+                                @Override
+                                public void onSucceed(int what, Response<String> response) {
+                                    BaseBean baseBean = new Gson().fromJson(response.get(),BaseBean.class);
+                                    if(baseBean!=null&&YS.SUCCESE.equals(baseBean.code)){
+                                        messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                                        chatAdapter.notifyDataSetChanged();
+                                    }else {
+                                        messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                                        chatAdapter.notifyDataSetChanged();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailed(int what, Response<String> response) {
+                                    messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                                    chatAdapter.notifyDataSetChanged();
+                                }
+                            });
+
+                        } else {
+                            L.e("附件上传失败!");
+                            messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                            chatAdapter.notifyDataSetChanged();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                        chatAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onFailed(int what, Response<String> response) {
+                    messageInfo.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+                    chatAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+//        new Handler().postDelayed(new Runnable() {
+//            public void run() {
+//                messageInfo.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
+//                chatAdapter.notifyDataSetChanged();
+//            }
+//        }, 2000);
+//        new Handler().postDelayed(new Runnable() {
+//            public void run() {
+//                MessageInfo message = new MessageInfo();
+//                message.setContent("这是模拟消息回复");
+//                message.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+//                message.setFileType(Constants.CHAT_FILE_TYPE_TEXT);
+//                message.setHeader("http://img0.imgtn.bdimg.com/it/u=401967138," +
+//                        "750679164&fm=26&gp=0.jpg");
+//                messageInfos.add(message);
+//                chatAdapter.notifyItemInserted(messageInfos.size() - 1);
+//                chatList.scrollToPosition(chatAdapter.getItemCount() - 1);
+//            }
+//        }, 3000);
     }
 
     @Override

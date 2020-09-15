@@ -19,7 +19,7 @@ public class TipFragment extends LhDialogFragment {
     private ClickListener clickListener;
     private TextView cancelTV, sureTV, contentTV;
     private String content;
-    private String title = "投注确认";
+    private String title = "提示";
     private String sureText = "确定";
     private TextView titleTV;
     public static TipFragment newInstance(int style, int theme) {
@@ -59,6 +59,7 @@ public class TipFragment extends LhDialogFragment {
         sureTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DialogUtil.removeDialog(getContext());
                 if (clickListener != null) {
                     clickListener.sure();
                 }

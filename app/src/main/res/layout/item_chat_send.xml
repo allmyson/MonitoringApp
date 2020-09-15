@@ -41,6 +41,36 @@
                 app:arrowPosition="15dp"
                 app:arrowWidth="10dp" />
 
+            <RelativeLayout
+                android:id="@+id/chat_item_layout_video"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginLeft="58dp"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <com.ys.monitor.chat.widget.BubbleImageView
+                    android:id="@+id/chat_item_video"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    app:angle="6dp"
+                    app:arrowHeight="8dp"
+                    app:arrowLocation="right"
+                    app:arrowPosition="15dp"
+                    app:arrowWidth="10dp" />
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/video_play" />
+            </RelativeLayout>
+
             <com.ys.monitor.chat.widget.BubbleLinearLayout
                 android:id="@+id/chat_item_layout_content"
                 android:layout_width="wrap_content"

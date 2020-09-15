@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
@@ -24,13 +23,10 @@ import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.MyGridView;
 import com.ys.monitor.util.HttpUtil;
-import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.YS;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TaskDetailActivity extends BaseActivity {
     public static final int REQUEST_DELETE_CODE = 1001;
@@ -148,13 +144,7 @@ public class TaskDetailActivity extends BaseActivity {
     }
 
     private void commit() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("isFinish", 1);
-        map.put("recNo", rowsBean.recNo);
-        map.put("content", contentET.getText().toString().trim());
-        String data = new Gson().toJson(map);
-        L.e("data=" + data);
-        HttpUtil.updateTask(mContext, userId, data, new HttpListener<String>() {
+        HttpUtil.updateTask(mContext, userId, rowsBean.recNo, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 try {

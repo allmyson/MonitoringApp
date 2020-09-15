@@ -2,22 +2,30 @@ package com.ys.monitor.api;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.telephony.PhoneNumberUtils;
 
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.activity.ShowPicDetailActivity;
 import com.ys.monitor.sp.UserSP;
+import com.ys.monitor.util.AppUtil;
+import com.ys.monitor.util.Constant;
 import com.ys.monitor.util.SystemUtil;
 import com.ys.monitor.util.ToastUtil;
 import com.ys.monitor.util.YS;
 import com.ys.monitor.web.CommonWebviewActivity;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -201,4 +209,89 @@ public class FunctionApi {
             ToastUtil.show(mContext, "暂无图片");
         }
     }
+
+
+    /**
+     * @return void
+     * @author 董杰科
+     * @version 1.0
+     * @Description: 开始录像
+     * @time： 2016/11/7
+     */
+    public static void startVideo(Activity activity, int i,String filaName) {
+        String status = Environment.getExternalStorageState();
+        if (status.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                File dir = new File(Constant.VIDEO_PATH);
+                if (!dir.exists())
+                    dir.mkdirs();
+//                File f = new File(dir, StringUtil.getNowTimeStr(3));
+                File f = new File(dir, filaName);
+                Uri u = null;
+                String authority = AppUtil.getPackageName(activity) + FunctionApi.AUTHORITY;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//android-7.0
+                    u = FileProvider.getUriForFile(activity, authority, f);
+                } else {
+                    u = Uri.fromFile(f);
+                }
+                Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);//相机辨识度
+                mIntent.putExtra(MediaStore.EXTRA_OUTPUT, u);
+                activity.startActivityForResult(mIntent, i);
+            } catch (ActivityNotFoundException e) {
+                ToastUtil.show(activity, "没有找到储存目录");
+            }
+        } else {
+            ToastUtil.show(activity, "没有储存卡");
+        }
+    }
+    public static void startVideo(Fragment fragment, int i,String filaName) {
+        String status = Environment.getExternalStorageState();
+        if (status.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                File dir = new File(Constant.VIDEO_PATH);
+                if (!dir.exists())
+                    dir.mkdirs();
+                File f = new File(dir, filaName);
+//                File f = new File(dir, StringUtil.getNowTimeStr(3));
+                Uri u = null;
+                String authority = AppUtil.getPackageName(fragment.getActivity()) + FunctionApi.AUTHORITY;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//android-7.0
+                    u = FileProvider.getUriForFile(fragment.getActivity(), authority, f);
+                } else {
+                    u = Uri.fromFile(f);
+                }
+                Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);//相机辨识度
+                mIntent.putExtra(MediaStore.EXTRA_OUTPUT, u);
+                fragment.startActivityForResult(mIntent, i);
+            } catch (ActivityNotFoundException e) {
+                ToastUtil.show(fragment.getActivity(), "没有找到储存目录");
+            }
+        } else {
+            ToastUtil.show(fragment.getActivity(), "没有储存卡");
+        }
+    }
+
+    /**
+     * @return void
+     * @author 董杰科
+     * @version 1.0
+     * @Description: 播放本地视频
+     * @time： 2016/11/7
+     */
+    public static void playVideo(Context mContext, String path) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            String authority = AppUtil.getPackageName(mContext) + FunctionApi.AUTHORITY;
+            Uri u = FileProvider.getUriForFile(mContext, authority, new File(path));
+            intent.setDataAndType(u, "video/*");
+        } else {
+            intent.setDataAndType(Uri.parse("file://" + path), "video/*");
+        }
+        intent.putExtra("videoUrl", "file://" + path);
+        mContext.startActivity(intent);
+    }
+
 }

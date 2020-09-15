@@ -117,7 +117,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                     if (fireBean != null && fireBean.data != null && fireBean.data.rows != null && fireBean.data.rows.size() > 0) {
                         List<FireBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
                         for (FireBean.DataBean.RowsBean rowsBean1 : fireBean.data.rows) {
-                            if (YS.FireStatus.Status_DCL.equals(rowsBean1.status)) {
+                            if (YS.FireStatus.Status_DCL.equals(rowsBean1.status)||YS.FireStatus.Status_HSZ.equals(rowsBean1.status)) {
                                 rowsBeanList.add(rowsBean1);
                             }
                         }

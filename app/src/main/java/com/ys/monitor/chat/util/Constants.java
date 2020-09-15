@@ -19,6 +19,7 @@ public class Constants {
     public static final String CHAT_FILE_TYPE_TEXT = "text";
     public static final String CHAT_FILE_TYPE_FILE = "file";
     public static final String CHAT_FILE_TYPE_IMAGE = "image";
+    public static final String CHAT_FILE_TYPE_VIDEO = "video";
     public static final String CHAT_FILE_TYPE_VOICE = "voice";
     public static final String CHAT_FILE_TYPE_CONTACT = "contact";
     public static final String CHAT_FILE_TYPE_LINK = "LINK";
