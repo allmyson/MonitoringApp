@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.ys.monitor.R;
 import com.ys.monitor.activity.AddFireActivity;
+import com.ys.monitor.activity.AddXHActivity;
+import com.ys.monitor.activity.ContactActivity;
 import com.ys.monitor.activity.ResoureActivity;
 import com.ys.monitor.activity.VideoListActivity;
 import com.ys.monitor.base.BaseFragment;
@@ -43,6 +45,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
                 startActivity(new Intent(mContext, AddFireActivity.class));
                 break;
             case R.id.ll_rcxh:
+                startActivity(new Intent(mContext, AddXHActivity.class));
                 break;
             case R.id.ll_zycj:
                 startActivity(new Intent(mContext, ResoureActivity.class));
@@ -51,6 +54,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
                 startActivity(new Intent(mContext, VideoListActivity.class));
                 break;
             case R.id.ll_txl:
+                startActivity(new Intent(mContext, ContactActivity.class));
                 break;
         }
     }

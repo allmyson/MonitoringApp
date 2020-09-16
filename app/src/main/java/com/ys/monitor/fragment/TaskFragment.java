@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
+import com.ys.monitor.activity.AddXHActivity;
 import com.ys.monitor.activity.ResoureActivity;
 import com.ys.monitor.activity.TaskDetailActivity;
 import com.ys.monitor.adapter.TaskAdapter;
@@ -85,7 +86,7 @@ public class TaskFragment extends BaseFragment implements NoNetView.ClickListene
                     if ("资源采集".equals(rowsBean.typeName)) {
                         startActivity(new Intent(mContext, ResoureActivity.class));
                     } else if ("日常巡护".equals(rowsBean.typeName)) {
-
+                        AddXHActivity.intentToXH(mContext,rowsBean.recNo,rowsBean.name);
                     } else {
                         //其他任务
                         TaskDetailActivity.intentToDetail(mContext, json);

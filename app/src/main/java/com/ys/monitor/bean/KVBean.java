@@ -35,4 +35,13 @@ public class KVBean {
         list.add(new KVBean(YS.FireStatus.Status_YPM, "已扑灭"));
         return list;
     }
+
+    //巡护状态
+    public static List<KVBean> getXHStatusList() {
+        List<KVBean> list = new ArrayList<>();
+        list.add(new KVBean( "0", "存在隐患"));
+        list.add(new KVBean( "1", "正常"));
+        list.add(new KVBean( "2", "预警"));
+        return list;
+    }
 }

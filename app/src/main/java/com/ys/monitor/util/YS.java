@@ -110,6 +110,12 @@ public class YS {
     public static final String VIDEO_LIST = IP + "/send/queryDeviceInfo.mo";
     //上传扑救信息
     public static final String ADD_HELP_MSG = IP + "/receive/addSceneInfo.mo";
+    //添加日常巡护
+    public static final String ADD_XH = IP + "/receive/addPlatrl.mo";
+    //组织机构
+    public static final String ORG_LIST = IP + "/send/queryDept.mo";
+    //用户信息
+    public static final String USER_LIST = IP + "/send/queryAddressBook.mo";
     //basebean == null 的时候的提示语
     public static final String HTTP_TIP = "服务器错误！";
 

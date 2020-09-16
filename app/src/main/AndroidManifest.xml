@@ -46,6 +46,8 @@
         <activity android:name="com.ys.monitor.activity.AddFireActivity" />
         <activity android:name="com.ys.monitor.activity.ResoureActivity" />
         <activity android:name="com.ys.monitor.activity.VideoListActivity" />
+        <activity android:name="com.ys.monitor.activity.AddXHActivity" />
+        <activity android:name="com.ys.monitor.activity.ContactActivity" />
         <activity
             android:name="com.ys.monitor.activity.AddHelpActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"

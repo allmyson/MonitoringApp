@@ -314,4 +314,46 @@ public class HttpUtil {
                 YS.ADD_HELP_MSG + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&data=" + dataCode;
         BaseHttp.getInstance().postSimpleJsonWithNoDialog(context, url, "", httpListener);
     }
+
+    //添加巡护
+    public static void addXH(Context context, String userId, String data,
+                               HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.ADD_XH + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&data=" + URLEncoder.encode(data);
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //获取机构列表
+    public static void getOrgList(Context context, String userId,
+                                    HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.ORG_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                        userId + "&page=1&limit=100";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+
+    //获取用户列表
+    public static void getUserList(Context context, String userId,
+                                  HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.USER_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                        userId + "&page=1&limit=1000";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
 }

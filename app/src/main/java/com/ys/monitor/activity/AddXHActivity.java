@@ -1,11 +1,13 @@
 package com.ys.monitor.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -17,6 +19,10 @@ import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.BaseBean;
 import com.ys.monitor.bean.FileUploadBean;
+import com.ys.monitor.bean.KVBean;
+import com.ys.monitor.bean.LoginBean;
+import com.ys.monitor.dialog.DialogUtil;
+import com.ys.monitor.dialog.ListDialogFragment;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.MyGridView;
@@ -30,31 +36,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddFireActivity extends BaseActivity {
+public class AddXHActivity extends BaseActivity {
     public static final int REQUEST_DELETE_CODE = 1001;
     private MyGridView myGridView;
     private GridAdapter mAdapter;
     private ArrayList<String> list;
     private String userId;
-    private TextView commitTV;
-    private EditText nameET, descripET;
-    private TextView addressTV;
+    private EditText descripET, wayET;
+    private TextView statusTV, taskTV, nameTV, addressTV, commitTV;
+    private String patrolPersonNo, patrolPlanName;
+    private LinearLayout taskLL;
+    private KVBean kvBean;
+    private LoginBean loginBean;
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_fire_add;
+        return R.layout.activity_xh_add;
     }
 
     @Override
     public void initView() {
-        nameET = getView(R.id.et_name);
+        taskLL = getView(R.id.ll_task);
+        statusTV = getView(R.id.tv_status);
+        statusTV.setOnClickListener(this);
+        taskTV = getView(R.id.tv_task);
+        nameTV = getView(R.id.tv_name);
         descripET = getView(R.id.et_description);
+        wayET = getView(R.id.et_way);
         addressTV = getView(R.id.tv_address);
         commitTV = getView(R.id.tv_commit);
         commitTV.setOnClickListener(this);
         list = new ArrayList<>();
         setBarColor("#ffffff");
-        titleView.setText("火情上报");
+        titleView.setText("日常巡护");
         myGridView = getView(R.id.gv_image);
         myGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         mAdapter = new GridAdapter(mContext, list, R.layout.item_grid_image);
@@ -71,18 +85,42 @@ public class AddFireActivity extends BaseActivity {
             }
         });
         userId = UserSP.getUserId(mContext);
+        loginBean = UserSP.getLoginBean(mContext);
+        if (loginBean != null && loginBean.data != null) {
+            nameTV.setText(loginBean.data.trueName);
+        }
     }
 
     @Override
     public void getData() {
-
+        patrolPersonNo = getIntent().getStringExtra("patrolPersonNo");
+        patrolPlanName = getIntent().getStringExtra("patrolPlanName");
+        L.e(patrolPersonNo + "---" + patrolPlanName);
+        if (StringUtil.isBlank(patrolPersonNo)) {
+            taskLL.setVisibility(View.GONE);
+        } else {
+            taskTV.setText(patrolPlanName);
+            taskLL.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_commit:
-                commitFile();
+                if (isCanCommit()) {
+                    commitFile();
+                }
+                break;
+            case R.id.tv_status:
+                DialogUtil.showListFragment(mContext, KVBean.getXHStatusList(),
+                        new ListDialogFragment.ItemClickListener() {
+                            @Override
+                            public void clickResult(KVBean listBean) {
+                                kvBean = listBean;
+                                statusTV.setText(kvBean.name);
+                            }
+                        });
                 break;
         }
     }
@@ -117,18 +155,18 @@ public class AddFireActivity extends BaseActivity {
 
     private void commitFile() {
         if (list == null || list.size() == 0) {
-            addFire("");
+            addXH("");
             return;
         }
         //上传附件
-        HttpUtil.uploadFile(mContext, userId, YS.FileType.FILE_FIRE, list,
+        HttpUtil.uploadFile(mContext, userId, YS.FileType.FILE_XH, list,
                 new HttpListener<String>() {
                     @Override
                     public void onSucceed(int what, Response<String> response) {
                         FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
                                 FileUploadBean.class);
                         if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) && fileUploadBean.data != null) {
-                            addFire(fileUploadBean.data.url);
+                            addXH(fileUploadBean.data.url);
                         } else {
                             show("附件上传失败!");
                         }
@@ -141,9 +179,9 @@ public class AddFireActivity extends BaseActivity {
                 });
     }
 
-    private void addFire(String fileUrls) {
+    private void addXH(String fileUrls) {
         Map<String, Object> map = new HashMap<>();
-        map.put("name", nameET.getText().toString());
+        map.put("name", nameTV.getText().toString());
         map.put("warnDesc", descripET.getText().toString());
         map.put("source", YS.source);
         map.put("siteSplicing", "尖顶坡");
@@ -155,7 +193,7 @@ public class AddFireActivity extends BaseActivity {
         map.put("videoUrl", "");
         String data = new Gson().toJson(map);
         L.e("data=" + data);
-        HttpUtil.addFire(mContext, userId, data, new HttpListener<String>() {
+        HttpUtil.addXH(mContext, userId, data, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 try {
@@ -176,5 +214,32 @@ public class AddFireActivity extends BaseActivity {
 
             }
         });
+    }
+
+    public static void intentToXH(Context context, String taskNo, String taskName) {
+        Intent intent = new Intent(context, AddXHActivity.class);
+        intent.putExtra("patrolPersonNo", taskNo);
+        intent.putExtra("patrolPlanName", taskName);
+        context.startActivity(intent);
+    }
+
+    private boolean isCanCommit() {
+        boolean isCan = true;
+        if ("请选择".equals(statusTV.getText().toString())) {
+            show("请选择巡护状态");
+            isCan = false;
+        } else if (StringUtil.isBlank(addressTV.getText().toString())) {
+            show("请选择位置");
+            isCan = false;
+        } else if (StringUtil.isBlank(wayET.getText().toString())) {
+            show("请填写路线");
+            isCan = false;
+        } else if ("存在隐患".equals(statusTV.getText().toString()) || "预警".equals(statusTV.getText().toString())) {
+            if (StringUtil.isBlank(descripET.getText().toString())) {
+                show("请填写详细描述");
+                isCan = false;
+            }
+        }
+        return isCan;
     }
 }
