@@ -52,16 +52,26 @@ dependencies {
     implementation rootProject.ext.dependencies.okhttp
     implementation rootProject.ext.dependencies.multidex
     implementation rootProject.ext.dependencies.permisson
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:0.5'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
     implementation project(':imageSelect')
     implementation project(':qrcode')
     implementation project(':convenientbanner')
-    implementation 'com.android.support:support-v4:25.3.1'
+//    implementation 'com.android.support:support-v4:25.3.1'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.labo.kaji:relativepopupwindow:0.3.1'
+//    implementation 'com.huamai:poc-sdk:2.2.0-dev4'
+    implementation 'com.huamai:poc-sdk:2.2.0-dev5'
 
 //    implementation files('src/main/jniLibs/photoview_library-1.2.2.jar')
+//    configurations.all {
+//        resolutionStrategy.eachDependency {
+//            DependencyResolveDetails details ->
+//                def requested = details.requested
+//                if (requested.group == 'com.android.support') {
+//                    if (!requested.name.startsWith("multidex")) {
+//                        details.useVersion '28.0.0'
+//                    }
+//                }
+//        }
+//    }
 }
