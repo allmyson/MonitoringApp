@@ -2,7 +2,6 @@ package com.ys.monitor.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -16,9 +15,10 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.appcompat.BuildConfig;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.ys.monitor.BuildConfig;
 
 import java.io.File;
 import java.util.UUID;
