@@ -13,6 +13,7 @@
         android:layout_height="44dp" />
 
     <EditText
+        android:id="@+id/et_search"
         android:layout_width="match_parent"
         android:layout_height="34dp"
         android:layout_marginLeft="15dp"
@@ -29,16 +30,41 @@
         android:layout_height="1dp"
         android:background="#F4F5F9" />
 
-    <ExpandableListView
-        android:id="@+id/list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:childDivider="#F4F5F9"
-        android:divider="#F4F5F9"
-        android:dividerHeight="1dp"
-        android:gravity="center"
-        android:groupIndicator="@null"
-        android:listSelector="#00000000"
-        android:scrollbars="none" />
+        android:layout_height="match_parent">
+
+        <com.ys.monitor.ui.NoNetView
+            android:id="@+id/nnv_"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <com.ys.monitor.ui.BlankView
+            android:id="@+id/bv_"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="vertical">
+
+            <ExpandableListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:childDivider="#F4F5F9"
+                android:divider="#F4F5F9"
+                android:dividerHeight="1dp"
+                android:gravity="center"
+                android:groupIndicator="@null"
+                android:listSelector="#00000000"
+                android:scrollbars="none" />
+        </LinearLayout>
+    </FrameLayout>
+
 </LinearLayout>

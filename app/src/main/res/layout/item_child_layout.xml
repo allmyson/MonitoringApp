@@ -28,20 +28,20 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
             android:singleLine="true"
-            android:text="于敏"
             android:textColor="#ff000000"
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/tv_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="14472985724"
             android:textColor="#ffbbbbbb"
             android:textSize="13sp" />
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/iv_msg"
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_marginRight="14dp"
@@ -49,6 +49,7 @@
         android:src="@mipmap/home_addressbook_message" />
 
     <ImageView
+        android:id="@+id/iv_phone"
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_marginRight="15dp"
