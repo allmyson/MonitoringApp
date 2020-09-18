@@ -221,6 +221,7 @@ public class AddHelpActivity extends BaseActivity {
 
         @Override
         public void onVoiceClick(final ImageView imageView, final int position) {
+            show("点了声音");
             if (animView != null) {
                 animView.setImageResource(res);
                 animView = null;

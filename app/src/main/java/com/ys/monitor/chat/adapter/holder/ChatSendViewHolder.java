@@ -65,8 +65,11 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
     private BubbleImageView videoIV;
 
 
-    public ChatSendViewHolder(ViewGroup parent, ChatAdapter.onItemClickListener onItemClickListener, Handler handler) {
-        super(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_send, parent, false));
+    public ChatSendViewHolder(ViewGroup parent,
+                              ChatAdapter.onItemClickListener onItemClickListener,
+                              Handler handler) {
+        super(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_send, parent,
+                false));
         findViewByIds(itemView);
         setItemLongClick();
         setItemClick();
@@ -82,15 +85,18 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
         chatItemContentText = (GifTextView) itemView.findViewById(R.id.chat_item_content_text);
         chatItemFail = (ImageView) itemView.findViewById(R.id.chat_item_fail);
         chatItemProgress = (ProgressBar) itemView.findViewById(R.id.chat_item_progress);
-        chatItemContentImage = (BubbleImageView) itemView.findViewById(R.id.chat_item_content_image);
+        chatItemContentImage =
+                (BubbleImageView) itemView.findViewById(R.id.chat_item_content_image);
         chatItemVoice = (ImageView) itemView.findViewById(R.id.chat_item_voice);
-        chatItemLayoutContent = (BubbleLinearLayout) itemView.findViewById(R.id.chat_item_layout_content);
+        chatItemLayoutContent =
+                (BubbleLinearLayout) itemView.findViewById(R.id.chat_item_layout_content);
         chatItemVoiceTime = (TextView) itemView.findViewById(R.id.chat_item_voice_time);
         chatItemLayoutFile = (BubbleLinearLayout) itemView.findViewById(R.id.chat_item_layout_file);
         ivFileType = (ImageView) itemView.findViewById(R.id.iv_file_type);
         tvFileName = (TextView) itemView.findViewById(R.id.tv_file_name);
         tvFileSize = (TextView) itemView.findViewById(R.id.tv_file_size);
-        chatItemLayoutContact = (BubbleLinearLayout) itemView.findViewById(R.id.chat_item_layout_contact);
+        chatItemLayoutContact =
+                (BubbleLinearLayout) itemView.findViewById(R.id.chat_item_layout_contact);
         tvContactSurname = (TextView) itemView.findViewById(R.id.tv_contact_surname);
         tvContactPhone = (TextView) itemView.findViewById(R.id.tv_contact_phone);
         chatItemLayoutLink = (BubbleLinearLayout) itemView.findViewById(R.id.chat_item_layout_link);
@@ -130,7 +136,7 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
                 paint.setColor(ContextCompat.getColor(mContext, R.color.chat_send_text));
                 // 计算textview在屏幕上占多宽
                 int len = (int) paint.measureText(chatItemContentText.getText().toString().trim());
-                if (len < Utils.dp2px(mContext, 200)){
+                if (len < Utils.dp2px(mContext, 200)) {
                     layoutParams.width = len + Utils.dp2px(mContext, 30);
                 } else {
                     layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -252,7 +258,8 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
                 chatItemLayoutLink.setVisibility(View.GONE);
 
                 videoRL.setVisibility(View.VISIBLE);
-//                Glide.with(mContext).load(StringUtil.getVideoThumb(data.getFilepath())).into(videoIV);
+//                Glide.with(mContext).load(StringUtil.getVideoThumb(data.getFilepath())).into
+//                (videoIV);
                 videoIV.setImageBitmap(StringUtil.getVideoThumb(data.getFilepath()));
                 layoutParams.width = Utils.dp2px(mContext, 120);
                 layoutParams.height = Utils.dp2px(mContext, 48);
@@ -314,10 +321,12 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
             }
         });
 
-        chatItemLayoutFile.setOnClickListener(new View.OnClickListener() {
+        chatItemLayoutContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onVoiceClick(chatItemVoice, (Integer) itemView.getTag());
+                if (chatItemVoice.getVisibility() == View.VISIBLE) {
+                    onItemClickListener.onVoiceClick(chatItemVoice, (Integer) itemView.getTag());
+                }
             }
         });
 

@@ -33,8 +33,8 @@
                 android:id="@+id/chat_item_content_image"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
                 android:layout_marginLeft="58dp"
+                android:scaleType="centerCrop"
                 android:visibility="gone"
                 app:angle="6dp"
                 app:arrowHeight="8dp"
@@ -77,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="58dp"
-                android:gravity="center"
+                android:gravity="right|center_vertical"
                 android:minHeight="48dp"
                 android:orientation="horizontal"
                 android:visibility="gone"
@@ -95,6 +95,13 @@
                     android:paddingLeft="5dp"
                     android:visibility="gone" />
 
+                <TextView
+                    android:id="@+id/chat_item_voice_time"
+                    style="@style/text_body"
+                    android:layout_marginRight="2dp"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone" />
+
                 <ImageView
                     android:id="@+id/chat_item_voice"
                     android:layout_width="18dp"
@@ -103,6 +110,7 @@
                     android:scaleType="fitCenter"
                     android:src="@mipmap/icon_voice_right3"
                     android:visibility="gone" />
+
             </com.ys.monitor.chat.widget.BubbleLinearLayout>
 
             <com.ys.monitor.chat.widget.BubbleLinearLayout
@@ -301,13 +309,6 @@
             </com.ys.monitor.chat.widget.BubbleLinearLayout>
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/chat_item_voice_time"
-            style="@style/text_body"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="-48dp"
-            android:layout_toLeftOf="@+id/chat_item_layout"
-            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/chat_item_fail"
@@ -315,7 +316,7 @@
             android:layout_height="18dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="-48dp"
-            android:layout_toLeftOf="@+id/chat_item_voice_time"
+            android:layout_toLeftOf="@+id/chat_item_layout"
             android:focusable="false"
             android:src="@drawable/msg_state_fail_resend"
             android:visibility="gone" />
@@ -327,7 +328,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="-48dp"
-            android:layout_toLeftOf="@+id/chat_item_voice_time"
+            android:layout_toLeftOf="@+id/chat_item_layout"
             android:visibility="gone" />
     </RelativeLayout>
 

@@ -2,9 +2,10 @@ package com.ys.monitor.chat.util;
 
 import android.content.Context;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+
+import com.ys.monitor.util.Constant;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +33,8 @@ public class AudioRecorderUtils {
     public AudioRecorderUtils() {
 
         //默认保存路径为/sdcard/record/下
-        this(Environment.getExternalStorageDirectory() + "/cadyd/record/");
+//        this(Environment.getExternalStorageDirectory() + "/cadyd/record/");
+        this(Constant.AUDIO_PATH + "/");
     }
 
     public AudioRecorderUtils(String filePath) {
