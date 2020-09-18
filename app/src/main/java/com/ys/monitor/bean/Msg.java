@@ -1,5 +1,7 @@
 package com.ys.monitor.bean;
 
+import com.huamai.poc.greendao.ChatMessage;
+import com.huamai.poc.greendao.MessageDialogue;
 import com.ys.monitor.R;
 
 import java.util.ArrayList;
@@ -18,7 +20,8 @@ public class Msg {
     public String title;
     public String content;
     public long time;
-
+    public MessageDialogue messageDialogue;
+    public ChatMessage chatMessage;
     public Msg() {
     }
 

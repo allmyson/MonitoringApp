@@ -53,7 +53,9 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="FuymWlITcg62QTGrNmFsTi7OI7jMIVT2" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.ys.monitor.fileprovider"

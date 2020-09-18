@@ -6,14 +6,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.huamai.poc.PocEngineFactory;
 import com.ys.monitor.R;
 import com.ys.monitor.activity.AboutActivity;
 import com.ys.monitor.activity.KefuActivity;
+import com.ys.monitor.activity.LoginActivity;
 import com.ys.monitor.activity.SetActivity;
 import com.ys.monitor.activity.UserInfoActivity;
 import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.LoginBean;
 import com.ys.monitor.sp.UserSP;
+import com.ys.monitor.util.ActivityUtil;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.YS;
 
@@ -25,12 +28,14 @@ import com.ys.monitor.util.YS;
  * @description -------------------------------------------------------
  * @date 2018/10/23 17:09
  */
-public class FourFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class FourFragment extends BaseFragment implements View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
     private ImageView headIV;
     private SwipeRefreshLayout srl;
     private String userId;
     private TextView userNameTV, orgTV;
     private LoginBean loginBean;
+
     public static FourFragment newInstance() {
         return new FourFragment();
     }
@@ -56,7 +61,7 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
                 startActivity(new Intent(mContext, SetActivity.class));
                 break;
             case R.id.tv_exit:
-//                startActivity(new Intent(mContext, TXActivity.class));
+                exit();
                 break;
         }
     }
@@ -84,10 +89,11 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
             userNameTV.setText(StringUtil.valueOf(loginBean.data.trueName));
             orgTV.setText(StringUtil.valueOf(loginBean.data.dutyName));
             if (!StringUtil.isBlank(loginBean.data.icon)) {
-                YS.showRoundImage(mContext,loginBean.data.icon,headIV);
-//                Glide.with(mContext).load(FunctionApi.getImagePath(loginBean.data.icon)).into(headIV);
-            }else {
-                YS.showRoundImage(mContext,YS.testImageUrl,headIV);
+                YS.showRoundImage(mContext, loginBean.data.icon, headIV);
+//                Glide.with(mContext).load(FunctionApi.getImagePath(loginBean.data.icon)).into
+//                (headIV);
+            } else {
+                YS.showRoundImage(mContext, YS.testImageUrl, headIV);
             }
         }
     }
@@ -108,7 +114,8 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
 //                    userNameTV.setText("账号:" + StringUtil.valueOf(user.data.loginName));
 //                    yueTV.setText(StringUtil.StringToDoubleStr(user.data.balance));
 //                    if (!StringUtil.isBlank(user.data.consumerImg)) {
-//                        Glide.with(mContext).load(FunctionApi.getImagePath(user.data.consumerImg)).into(headIV);
+//                        Glide.with(mContext).load(FunctionApi.getImagePath(user.data
+//                        .consumerImg)).into(headIV);
 //                    }
 //                    UserSP.saveUser(mContext, response.get());
 //                }
@@ -127,4 +134,11 @@ public class FourFragment extends BaseFragment implements View.OnClickListener, 
         return R.layout.fragment_four;
     }
 
+
+    private void exit() {
+        UserSP.clear(mContext);
+        ActivityUtil.finish();
+        PocEngineFactory.get().logout();
+        startActivity(new Intent(mContext, LoginActivity.class));
+    }
 }

@@ -9,6 +9,10 @@ android {
         versionCode 27
         versionName "1.26"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+        multiDexEnabled true
     }
     signingConfigs {
         release {
@@ -38,10 +42,21 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.dependencies.appcompat
     implementation rootProject.ext.dependencies.cardview
     implementation rootProject.ext.dependencies.design
@@ -52,6 +67,7 @@ dependencies {
     implementation rootProject.ext.dependencies.okhttp
     implementation rootProject.ext.dependencies.multidex
     implementation rootProject.ext.dependencies.permisson
+    implementation files('src\\main\\jniLibs\\BaiduLBS_Android.jar')
     testImplementation 'junit:junit:4.12'
     implementation project(':imageSelect')
     implementation project(':qrcode')
@@ -59,8 +75,10 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.labo.kaji:relativepopupwindow:0.3.1'
-    implementation 'com.huamai:poc-sdk:2.2.0-dev4'
-//    implementation 'com.huamai:poc-sdk:2.2.0-dev5'
+    implementation 'com.huamai:poc-sdk:2.2.0-dev4'//minSDK>=19
+//    implementation 'com.huamai:poc-sdk:2.2.0-dev5'//minSDK>=21
+//    implementation files('libs/BaiduLBS_Android.jar')
+
 
 //    implementation files('src/main/jniLibs/photoview_library-1.2.2.jar')
     configurations.all {
@@ -70,6 +88,8 @@ dependencies {
                 if (requested.group == 'com.android.support') {
                     if (!requested.name.startsWith("multidex")) {
                         details.useVersion '28.0.0'
+                    }else {
+                        details.useVersion '1.0.3'
                     }
                 }
         }

@@ -1,6 +1,8 @@
 package com.ys.monitor.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AbsListView;
@@ -8,6 +10,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.huamai.poc.IPocEngineEventHandler;
+import com.huamai.poc.PocEngine;
+import com.huamai.poc.PocEngineFactory;
+import com.huamai.poc.chat.ChatMessageCategory;
+import com.huamai.poc.greendao.ChatMessage;
+import com.huamai.poc.greendao.MessageDialogue;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.activity.AddHelpActivity;
@@ -46,6 +54,10 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
     private List<Msg> list;
     private NoticeAdapter adapter;
     private String userId;
+    PocEngine pocEngine = PocEngineFactory.get();
+    ArrayList<MessageDialogue> messageDialogueArray = new ArrayList<>(20);
+    private List<Msg> topList;
+    private List<Msg> chatList;
 
     public static ThreeFragment newInstance() {
         return new ThreeFragment();
@@ -58,12 +70,15 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     @Override
     protected void init() {
+        topList = new ArrayList<>();
+        chatList = new ArrayList<>();
         swipeRefreshLayout = getView(R.id.srl_);
         listView = getView(R.id.lv_);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_color));
         list = new ArrayList<>();
-        list.addAll(Msg.getDefaultMsgList());
+        topList.addAll(Msg.getDefaultMsgList());
+        list.addAll(topList);
         adapter = new NoticeAdapter(mContext, list, R.layout.item_notice);
         listView.setAdapter(adapter);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -104,6 +119,9 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                 }
             }
         });
+        messageDialogueArray.clear();
+        messageDialogueArray.addAll(PocEngineFactory.get().getAllConversation());
+        refreshChat();
     }
 
     @Override
@@ -117,7 +135,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                     if (fireBean != null && fireBean.data != null && fireBean.data.rows != null && fireBean.data.rows.size() > 0) {
                         List<FireBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
                         for (FireBean.DataBean.RowsBean rowsBean1 : fireBean.data.rows) {
-                            if (YS.FireStatus.Status_DCL.equals(rowsBean1.status)||YS.FireStatus.Status_HSZ.equals(rowsBean1.status)) {
+                            if (YS.FireStatus.Status_DCL.equals(rowsBean1.status) || YS.FireStatus.Status_HSZ.equals(rowsBean1.status)) {
                                 rowsBeanList.add(rowsBean1);
                             }
                         }
@@ -125,8 +143,10 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                             if (rowsBeanList.get(0) != null) {
                                 String data =
                                         "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
-                                Msg msg = new Msg(R.mipmap.notice_fire_check, rowsBeanList.size()
+                                Msg msg = new Msg(R.mipmap.notice_fire_check,
+                                        rowsBeanList.size()
                                         , "火情核查", data, rowsBeanList.get(0).createTime);
+                                topList.set(0, msg);
                                 list.set(0, msg);
                                 L.e(msg.toString());
                                 adapter.refresh(list);
@@ -155,8 +175,10 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         if (yjtzBean.data.rows.get(0) != null) {
                             String data =
                                     "[" + yjtzBean.data.rows.size() + "条]" + StringUtil.valueOf(yjtzBean.data.rows.get(0).title);
-                            Msg msg = new Msg(R.mipmap.notice_warning, yjtzBean.data.rows.size(),
+                            Msg msg = new Msg(R.mipmap.notice_warning,
+                                    yjtzBean.data.rows.size(),
                                     "预警通知", data, yjtzBean.data.rows.get(0).createTime);
+                            topList.set(1, msg);
                             list.set(1, msg);
                             L.e(msg.toString());
                             adapter.refresh(list);
@@ -192,6 +214,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                                     "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
                             Msg msg = new Msg(R.mipmap.notice_task, rowsBeanList.size(), "任务通知",
                                     data, rowsBeanList.get(0).createTime);
+                            topList.set(2, msg);
                             list.set(2, msg);
                             L.e(msg.toString());
                             adapter.refresh(list);
@@ -226,5 +249,87 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
         if (v.getId() == R.id.iv_kf) {
             FunctionApi.contactKF(mContext);
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        PocEngineFactory.get().addEventHandler(mPocEventHandler);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        PocEngineFactory.get().removeEventHandler(mPocEventHandler);
+    }
+
+    private final IPocEngineEventHandler mPocEventHandler = new IPocEngineEventHandler() {
+        @Override
+        public void onNewConversationCreated(MessageDialogue messageDialogue) {
+            messageDialogueArray.clear();
+            messageDialogueArray.addAll(PocEngineFactory.get().getAllConversation());
+            refreshChat();
+        }
+    };
+
+    public void addNewConversation(MessageDialogue messageDialogue) {
+        for (MessageDialogue dialogue : messageDialogueArray) {
+            if (dialogue.getChat_id() == messageDialogue.getChat_id()) {
+                messageDialogueArray.remove(dialogue);
+                break;
+            }
+        }
+        messageDialogueArray.add(0, messageDialogue);
+        refreshChat();
+    }
+
+    private void refreshChat() {
+        chatList.clear();
+        L.e("chat", "messageDialogueArray.size() = " + messageDialogueArray.size());
+        if (messageDialogueArray.size() > 0) {
+            for (MessageDialogue messageDialogue : messageDialogueArray) {
+                ChatMessage lastMessage =
+                        pocEngine.getLastConversationMessage(messageDialogue.getChat_id());
+                int drawableId = R.mipmap.ic_users_offline;
+                if (!messageDialogue.getIsGroup()) {
+                    drawableId = R.mipmap.ic_users_offline;
+                } else {
+                    drawableId = R.mipmap.re_default_custom_group;
+                }
+                String content = "";
+                if (lastMessage != null) {
+                    switch (lastMessage.getCategory()) {
+                        case ChatMessageCategory.TEXT:
+                            content = lastMessage.getText();
+                            break;
+                        case ChatMessageCategory.AUDIO:
+                            content = "[语音呼叫]";
+                            break;
+                        case ChatMessageCategory.VIDEO:
+                            content = "[视频呼叫]";
+                            break;
+                        case ChatMessageCategory.IMAGE:
+                            content = "[图片]";
+                            break;
+                        case ChatMessageCategory.AUDIO_FILE:
+                        case ChatMessageCategory.PTT_AUDIO_FILE:
+                            content = "[语音]";
+                            break;
+                        default:
+                            content = "[未知消息]";
+                            break;
+                    }
+                }
+                Msg msg = new Msg(drawableId, messageDialogue.getUnread(),
+                        messageDialogue.getName(), content, messageDialogue.getUpdate_time());
+                msg.messageDialogue = messageDialogue;
+                msg.chatMessage = lastMessage;
+                chatList.add(msg);
+            }
+        }
+        list.clear();
+        list.addAll(topList);
+        list.addAll(chatList);
+        adapter.refresh(list);
     }
 }

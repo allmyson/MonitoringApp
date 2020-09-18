@@ -77,10 +77,37 @@ public class UserSP {
         return result;
     }
 
+
+    //是否云集群用户
+    public static boolean isSoftPhone(Context context){
+        String result = "";
+        LoginBean loginBean = getLoginBean(context);
+        if (loginBean != null && loginBean.data != null) {
+            result = loginBean.data.isSoftPhone;
+        }
+        if("1".equals(result)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    //云集群编号
+    public static String getSoftPhoneId(Context context){
+        String result = "";
+        LoginBean loginBean = getLoginBean(context);
+        if (loginBean != null && loginBean.data != null) {
+            result = loginBean.data.softPhoneId;
+        }
+        return result;
+    }
+
     public static void clear(Context context) {
         SPUtil.remove(context, KEY_INFO);
         SPUtil.remove(context, KEY_USERNAME);
         SPUtil.remove(context, KEY_PASSWORD);
         SPUtil.remove(context, KEY_USER);
     }
+
+
+
 }
