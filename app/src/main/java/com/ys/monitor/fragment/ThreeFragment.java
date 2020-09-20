@@ -16,9 +16,11 @@ import com.huamai.poc.PocEngineFactory;
 import com.huamai.poc.chat.ChatMessageCategory;
 import com.huamai.poc.greendao.ChatMessage;
 import com.huamai.poc.greendao.MessageDialogue;
+import com.huamai.poc.greendao.User;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.activity.AddHelpActivity;
+import com.ys.monitor.activity.ChatActivity;
 import com.ys.monitor.activity.FireListActivity;
 import com.ys.monitor.activity.TaskListActivity;
 import com.ys.monitor.activity.YjtzActivity;
@@ -69,6 +71,14 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter.getCount() > 0) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     protected void init() {
         topList = new ArrayList<>();
         chatList = new ArrayList<>();
@@ -114,18 +124,38 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         startActivity(new Intent(mContext, TaskListActivity.class));
                         break;
                     case 3:
-                        startActivity(new Intent(mContext, AddHelpActivity.class));
+//                        startActivity(new Intent(mContext, AddHelpActivity.class));
+                        User user = PocEngineFactory.get().getUser("1111031");
+                        MessageDialogue md = PocEngineFactory.get().createMessageDialogueIfNeed(user);
+                        ChatActivity.intentToChat(mContext, md.getChat_id());
+                        break;
+                    default:
+                        if (PocEngineFactory.get().hasServiceConnected()) {
+                            MessageDialogue dialogue = adapter.getItem(position).messageDialogue;
+                            dialogue.setUnread(0);
+                            try {
+                                PocEngineFactory.get().markConversationAsRead(dialogue.getChat_id());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            list.get(position).num = 0;
+                            adapter.refresh(list);
+                            ChatActivity.intentToChat(mContext, dialogue.getChat_id());
+                        }
                         break;
                 }
             }
         });
-        messageDialogueArray.clear();
-        messageDialogueArray.addAll(PocEngineFactory.get().getAllConversation());
-        refreshChat();
+//        messageDialogueArray.clear();
+//        messageDialogueArray.addAll(PocEngineFactory.get().getAllConversation());
+//        refreshChat();
     }
 
     @Override
     protected void getData() {
+        messageDialogueArray.clear();
+        messageDialogueArray.addAll(PocEngineFactory.get().getAllConversation());
+        refreshChat();
         userId = UserSP.getUserId(mContext);
         HttpUtil.getFireListWithNoDialog(mContext, userId, new HttpListener<String>() {
             @Override
@@ -162,7 +192,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -192,6 +222,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
 
             @Override
             public void onFailed(int what, Response<String> response) {
+                swipeRefreshLayout.setRefreshing(false);
 
             }
         });
@@ -228,7 +259,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -304,6 +335,9 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                             break;
                         case ChatMessageCategory.AUDIO:
                             content = "[语音呼叫]";
+                            break;
+                        case ChatMessageCategory.VIDEO_FILE:
+                            content = "[视频]";
                             break;
                         case ChatMessageCategory.VIDEO:
                             content = "[视频呼叫]";

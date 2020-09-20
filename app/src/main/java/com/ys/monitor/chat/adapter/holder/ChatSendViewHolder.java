@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.huamai.poc.PocEngineFactory;
 import com.ys.monitor.R;
 import com.ys.monitor.chat.adapter.ChatAdapter;
 import com.ys.monitor.chat.entity.IMContact;
@@ -25,6 +26,7 @@ import com.ys.monitor.chat.util.Utils;
 import com.ys.monitor.chat.widget.BubbleImageView;
 import com.ys.monitor.chat.widget.BubbleLinearLayout;
 import com.ys.monitor.chat.widget.GifTextView;
+import com.ys.monitor.util.DateUtil;
 import com.ys.monitor.util.StringUtil;
 
 /**
@@ -111,7 +113,7 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
 
     @Override
     public void setData(MessageInfo data) {
-        chatItemDate.setText(data.getTime() != null ? data.getTime() : "");
+        chatItemDate.setText(DateUtil.changeTimeToYMD(StringUtil.valueOf(data.getTime())));
         Glide.with(mContext).load(data.getHeader()).placeholder(R.mipmap.bg_default_head2).error(R.mipmap.bg_default_head2).into(chatItemHeader);
         chatItemHeader.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,7 +262,14 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
                 videoRL.setVisibility(View.VISIBLE);
 //                Glide.with(mContext).load(StringUtil.getVideoThumb(data.getFilepath())).into
 //                (videoIV);
-                videoIV.setImageBitmap(StringUtil.getVideoThumb(data.getFilepath()));
+                String path = data.getFilepath();
+                if(!StringUtil.isBlank(path)) {
+                    if(path.startsWith("http://")||path.startsWith("https//")){
+                        videoIV.setImageBitmap(StringUtil.getNetVideoBitmap(data.getFilepath()));
+                    }else {
+                        videoIV.setImageBitmap(StringUtil.getVideoThumb(data.getFilepath()));
+                    }
+                }
                 layoutParams.width = Utils.dp2px(mContext, 120);
                 layoutParams.height = Utils.dp2px(mContext, 48);
                 chatItemLayoutContent.setLayoutParams(layoutParams);

@@ -133,6 +133,22 @@ public class ChatFunctionFragment extends BaseFragment {
                 FunctionApi.startVideo(ChatFunctionFragment.this, CAMERA, currentVideoName);
             }
         });
+        voiceLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clickListener!=null){
+                    clickListener.clickVoice();
+                }
+            }
+        });
+        videoLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clickListener!=null){
+                    clickListener.clickVideo();
+                }
+            }
+        });
 //        tvCapture.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -360,5 +376,19 @@ public class ChatFunctionFragment extends BaseFragment {
         }
         cursor.close();
         return res;
+    }
+    private ClickListener clickListener;
+
+    public ClickListener getClickListener() {
+        return clickListener;
+    }
+
+    public void setClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+    public interface ClickListener{
+        void clickVoice();
+        void clickVideo();
     }
 }

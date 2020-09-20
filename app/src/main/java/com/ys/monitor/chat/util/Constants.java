@@ -23,4 +23,9 @@ public class Constants {
     public static final String CHAT_FILE_TYPE_VOICE = "voice";
     public static final String CHAT_FILE_TYPE_CONTACT = "contact";
     public static final String CHAT_FILE_TYPE_LINK = "LINK";
+    public static final String CHAT_FILE_TYPE_YYTH = "yyth";//语音通话
+    public static final String CHAT_FILE_TYPE_SPTH = "spth";//视频通话
+    public static final String CHAT_FILE_TYPE_NONE = "none";//未知
+
+
 }

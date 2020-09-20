@@ -23,6 +23,7 @@ import com.yanzhenjie.nohttp.InitializationConfig;
 import com.yanzhenjie.nohttp.Logger;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.cookie.DBCookieStore;
+import com.ys.monitor.activity.AvActivity;
 import com.ys.monitor.http.CookieListener;
 import com.ys.monitor.util.Constant;
 import com.ys.monitor.util.L;
@@ -135,7 +136,7 @@ public class App extends PocApplication {
         @Override
         public String getBaseDir() {
             //TODO 返回一个缓存根目录路径，需要创建
-            return null;
+            return Constant.DOWNLOAD_PATH;
         }
 
         @Override
@@ -291,20 +292,20 @@ public class App extends PocApplication {
 
         @Override
         public void onIncoming(IncomingInfo incomingInfo) {
-//            L.d("onIncoming-> sessionId=" + incomingInfo.sessionId + " type=" + incomingInfo
-//            .sessionType + " uid=" +
-//                    incomingInfo.callerId + " name=" + incomingInfo.callerName + " level=" +
-//                    incomingInfo.level +
-//                    " extra=" + incomingInfo.extra);
-//            Intent intent = new Intent(App.this, AvActivity.class);
-//            intent.putExtra("sessionId", incomingInfo.sessionId);
-//            intent.putExtra("callerId", incomingInfo.callerId);
-//            intent.putExtra("callerName", incomingInfo.callerName);
-//            intent.putExtra("type", incomingInfo.sessionType);
-//            intent.putExtra("extra", incomingInfo.extra);
-//            intent.putExtra("isIncomingCall", true);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            App.this.startActivity(intent);
+            L.d("onIncoming-> sessionId=" + incomingInfo.sessionId + " type=" + incomingInfo
+            .sessionType + " uid=" +
+                    incomingInfo.callerId + " name=" + incomingInfo.callerName + " level=" +
+                    incomingInfo.level +
+                    " extra=" + incomingInfo.extra);
+            Intent intent = new Intent(App.this, AvActivity.class);
+            intent.putExtra("sessionId", incomingInfo.sessionId);
+            intent.putExtra("callerId", incomingInfo.callerId);
+            intent.putExtra("callerName", incomingInfo.callerName);
+            intent.putExtra("type", incomingInfo.sessionType);
+            intent.putExtra("extra", incomingInfo.extra);
+            intent.putExtra("isIncomingCall", true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            App.this.startActivity(intent);
         }
 
         @Override

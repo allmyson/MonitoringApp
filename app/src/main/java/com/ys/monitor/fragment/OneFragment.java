@@ -1,12 +1,19 @@
 package com.ys.monitor.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.activity.AddFireActivity;
 import com.ys.monitor.activity.AddXHActivity;
@@ -14,6 +21,11 @@ import com.ys.monitor.activity.ContactActivity;
 import com.ys.monitor.activity.ResoureActivity;
 import com.ys.monitor.activity.VideoListActivity;
 import com.ys.monitor.base.BaseFragment;
+import com.ys.monitor.bean.WeatherBean;
+import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.util.GlideRoundTransform;
+import com.ys.monitor.util.HttpUtil;
+import com.ys.monitor.util.StringUtil;
 
 /**
  * @author lh
@@ -91,6 +103,35 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
 ////                swipeRefreshLayout.setRefreshing(false);
 //            }
 //        });
+        HttpUtil.getWeather(mContext, 105, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                try {
+                    WeatherBean weatherBean = new Gson().fromJson(response.get(), WeatherBean.class);
+                    if (weatherBean != null && "1".equals(weatherBean.success) && weatherBean.result != null) {
+                        WeatherBean.ResultBean resultBean = weatherBean.result;
+                        wdTV.setText(StringUtil.valueOf(resultBean.temperature_curr));
+                        tianqiTV.setText(StringUtil.valueOf(resultBean.weather_curr));
+                        aqiTV.setText(StringUtil.valueOf(resultBean.aqi) + StringUtil.getLevelByAqi(StringUtil.StringToInt(resultBean.aqi)));
+                        aqiTV.setTextColor(Color.parseColor(StringUtil.getColorByAqi(StringUtil.StringToInt(resultBean.aqi))));
+                        aqiTV.setBackgroundResource(StringUtil.getDrawableIdByAqi(StringUtil.StringToInt(resultBean.aqi)));
+                        qixiangTV.setText(StringUtil.valueOf(resultBean.wind) + StringUtil.valueOf(resultBean.winp)+"\t\t湿度"+StringUtil.valueOf(resultBean.humidity));
+    //                    Glide.with(mContext)
+    //                            .load(StringUtil.valueOf(resultBean.weather_icon))
+    //                            .asGif()
+    //                            .into(tianqiIV);
+                    }
+                } catch (JsonSyntaxException e) {
+                    e.printStackTrace();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override

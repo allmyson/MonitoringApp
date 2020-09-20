@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.android.minSdkVersion
@@ -25,10 +24,9 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
-    implementation rootProject.ext.dependencies.appcompat
-    implementation rootProject.ext.dependencies.recyclerview
-    implementation rootProject.ext.dependencies.glide
-    implementation rootProject.ext.dependencies.photoview
-    implementation rootProject.ext.dependencies.simplecropview
+    api rootProject.ext.dependencies.appcompat
+    api rootProject.ext.dependencies.recyclerview
+    api rootProject.ext.dependencies.glide
+    api rootProject.ext.dependencies.photoview
+    api rootProject.ext.dependencies.simplecropview
 }

@@ -1,19 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
+//    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.ys.monitor"
-        minSdkVersion rootProject.ext.android.minSdkVersion
-        targetSdkVersion rootProject.ext.android.targetSdkVersion
+//        minSdkVersion rootProject.ext.android.minSdkVersion
+////        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        minSdkVersion 19
+        targetSdkVersion 23//target只能是23
         versionCode 27
         versionName "1.26"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
+//            abiFilters "armeabi"
             abiFilters "armeabi-v7a"
         }
         multiDexEnabled true
     }
+//    useLibrary 'org.apache.http.legacy'
     signingConfigs {
         release {
             keyAlias 'ys.jks'
@@ -70,9 +75,9 @@ dependencies {
     implementation files('src\\main\\jniLibs\\BaiduLBS_Android.jar')
     testImplementation 'junit:junit:4.12'
     implementation project(':imageSelect')
-    implementation project(':qrcode')
-    implementation project(':convenientbanner')
-    implementation 'com.android.support:support-v4:28.0.0'
+//    implementation project(':qrcode')
+//    implementation project(':convenientbanner')
+    implementation 'com.android.support:support-v4:23.0.3'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.labo.kaji:relativepopupwindow:0.3.1'
     implementation 'com.huamai:poc-sdk:2.2.0-dev4'//minSDK>=19
@@ -88,6 +93,7 @@ dependencies {
                 if (requested.group == 'com.android.support') {
                     if (!requested.name.startsWith("multidex")) {
                         details.useVersion '28.0.0'
+//                        details.useVersion '23.0.3'
                     }else {
                         details.useVersion '1.0.3'
                     }

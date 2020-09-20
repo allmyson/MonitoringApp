@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.ys.monitor.bean.LoginBean;
+import com.ys.monitor.util.L;
 import com.ys.monitor.util.SPUtil;
 import com.ys.monitor.util.StringUtil;
 
@@ -61,6 +62,7 @@ public class UserSP {
     public static LoginBean getLoginBean(Context context) {
         LoginBean infoBean = null;
         String json = getLoginInfo(context);
+        L.e("json=" + json);
         if (!StringUtil.isBlank(json)) {
             infoBean = new Gson().fromJson(json, LoginBean.class);
         }
@@ -79,20 +81,21 @@ public class UserSP {
 
 
     //是否云集群用户
-    public static boolean isSoftPhone(Context context){
+    public static boolean isSoftPhone(Context context) {
         String result = "";
         LoginBean loginBean = getLoginBean(context);
         if (loginBean != null && loginBean.data != null) {
             result = loginBean.data.isSoftPhone;
         }
-        if("1".equals(result)){
+        if ("1".equals(result)) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
+
     //云集群编号
-    public static String getSoftPhoneId(Context context){
+    public static String getSoftPhoneId(Context context) {
         String result = "";
         LoginBean loginBean = getLoginBean(context);
         if (loginBean != null && loginBean.data != null) {
@@ -107,7 +110,6 @@ public class UserSP {
         SPUtil.remove(context, KEY_PASSWORD);
         SPUtil.remove(context, KEY_USER);
     }
-
 
 
 }

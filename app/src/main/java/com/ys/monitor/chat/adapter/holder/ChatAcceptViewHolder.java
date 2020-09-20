@@ -23,6 +23,8 @@ import com.ys.monitor.chat.util.Utils;
 import com.ys.monitor.chat.widget.BubbleImageView;
 import com.ys.monitor.chat.widget.BubbleLinearLayout;
 import com.ys.monitor.chat.widget.GifTextView;
+import com.ys.monitor.util.DateUtil;
+import com.ys.monitor.util.StringUtil;
 
 /**
  * 作者：Rance on 2016/11/29 10:47
@@ -90,7 +92,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<MessageInfo> {
 
     @Override
     public void setData(MessageInfo data) {
-        chatItemDate.setText(data.getTime() != null ? data.getTime() : "");
+        chatItemDate.setText(DateUtil.changeTimeToYMD(StringUtil.valueOf(data.getTime())));
         Glide.with(mContext).load(data.getHeader()).placeholder(R.mipmap.notice_command_center).error(R.mipmap.notice_command_center).into(chatItemHeader);
         chatItemHeader.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +100,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<MessageInfo> {
                 onItemClickListener.onHeaderClick((Integer) itemView.getTag());
             }
         });
+
         switch (data.getFileType()) {
             case Constants.CHAT_FILE_TYPE_TEXT:
                 chatItemContentText.setSpanText(handler, data.getContent(), true);
@@ -267,13 +270,14 @@ public class ChatAcceptViewHolder extends BaseViewHolder<MessageInfo> {
             }
         });
 
-        chatItemLayoutFile.setOnClickListener(new View.OnClickListener() {
+        chatItemLayoutContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onVoiceClick(chatItemVoice, (Integer) itemView.getTag());
+                if (chatItemVoice.getVisibility() == View.VISIBLE) {
+                    onItemClickListener.onVoiceClick(chatItemVoice, (Integer) itemView.getTag());
+                }
             }
         });
-
         chatItemLayoutFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

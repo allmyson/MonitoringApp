@@ -17,6 +17,7 @@ import android.telephony.PhoneNumberUtils;
 
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.activity.ShowPicDetailActivity;
+import com.ys.monitor.activity.VideoActivity;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.AppUtil;
 import com.ys.monitor.util.Constant;
@@ -292,6 +293,11 @@ public class FunctionApi {
         }
         intent.putExtra("videoUrl", "file://" + path);
         mContext.startActivity(intent);
+    }
+
+    //播放在线和本地视频
+    public static void playVideo2(Context mContext, String path){
+        VideoActivity.playVideo(mContext,path);
     }
 
 }

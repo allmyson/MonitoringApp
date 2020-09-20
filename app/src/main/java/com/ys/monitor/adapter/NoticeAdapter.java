@@ -24,11 +24,15 @@ public class NoticeAdapter extends CommonAdapter<Msg> {
         helper.setImageResource(R.id.iv_, item.drawableId);
         int num = item.num;
         TextView numTV = helper.getView(R.id.tv_num);
-        numTV.setText("" + num);
         if (num == 0) {
             numTV.setVisibility(View.GONE);
         } else {
             numTV.setVisibility(View.VISIBLE);
+        }
+        if (num > 99) {
+            numTV.setText("99+");
+        } else {
+            numTV.setText("" + num);
         }
     }
 

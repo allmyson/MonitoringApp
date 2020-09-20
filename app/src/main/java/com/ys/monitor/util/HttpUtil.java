@@ -8,6 +8,7 @@ import com.ys.monitor.http.HttpListener;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -317,7 +318,7 @@ public class HttpUtil {
 
     //添加巡护
     public static void addXH(Context context, String userId, String data,
-                               HttpListener<String> httpListener) {
+                             HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
@@ -330,7 +331,7 @@ public class HttpUtil {
 
     //获取机构列表
     public static void getOrgList(Context context, String userId,
-                                    HttpListener<String> httpListener) {
+                                  HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
@@ -345,7 +346,7 @@ public class HttpUtil {
 
     //获取用户列表
     public static void getUserList(Context context, String userId,
-                                  HttpListener<String> httpListener) {
+                                   HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
@@ -355,5 +356,12 @@ public class HttpUtil {
                 YS.USER_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&page=1&limit=1000";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //获取天气  105 是重庆 111是北碚  北碚没得AQI
+    public static void getWeather(Context context, int weaid, HttpListener<String> httpListener) {
+        String url = YS.WEATHER + "&weaid=" + weaid;
+        BaseHttp.getInstance().simpleGet(context, url, httpListener);
+
     }
 }

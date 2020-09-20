@@ -177,40 +177,4 @@
             android:text="位置" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-
-        <TextView
-            android:id="@+id/chat_function_file"
-            style="@style/text_function_item"
-            android:drawableTop="@mipmap/icon_im_file"
-            android:drawablePadding="5dp"
-            android:gravity="center"
-            android:text="文件" />
-
-        <TextView
-            android:id="@+id/chat_function_cloud"
-            style="@style/text_function_item"
-            android:drawableTop="@mipmap/icon_cloud"
-            android:drawablePadding="5dp"
-            android:gravity="center"
-            android:text="我的资料" />
-
-        <TextView
-            android:id="@+id/chat_blank_one"
-            style="@style/text_function_item"
-            android:drawablePadding="5dp"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/chat_blank_two"
-            style="@style/text_function_item"
-            android:drawablePadding="5dp"
-            android:gravity="center" />
-    </LinearLayout>
 </LinearLayout>

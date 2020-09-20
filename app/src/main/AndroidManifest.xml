@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ys.monitor">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,6 +28,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <activity android:name="com.ys.monitor.activity.ReSetLoginPsdActivity" />
         <activity android:name="com.ys.monitor.activity.RegistActivity" />
         <activity android:name="com.ys.monitor.activity.UpdateInfoActivity" />
@@ -49,10 +56,19 @@
         <activity android:name="com.ys.monitor.activity.AddXHActivity" />
         <activity android:name="com.ys.monitor.activity.ContactActivity" />
         <activity
+            android:name="com.ys.monitor.activity.VideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.ys.monitor.activity.AddHelpActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name="com.ys.monitor.activity.ChatActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="FuymWlITcg62QTGrNmFsTi7OI7jMIVT2" />
@@ -84,6 +100,10 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".activity.AvActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
     </application>
 
 </manifest>

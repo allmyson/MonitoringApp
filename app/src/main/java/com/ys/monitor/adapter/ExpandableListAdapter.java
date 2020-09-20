@@ -8,7 +8,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.huamai.poc.PocEngineFactory;
+import com.huamai.poc.greendao.MessageDialogue;
+import com.huamai.poc.greendao.User;
 import com.ys.monitor.R;
+import com.ys.monitor.activity.ChatActivity;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.bean.KVBean;
 import com.ys.monitor.bean.UserList;
@@ -178,7 +182,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         msgIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                User user = PocEngineFactory.get().getUser("1111029");
+                MessageDialogue md = PocEngineFactory.get().createMessageDialogueIfNeed(user);
+                ChatActivity.intentToChat(context, md.getChat_id());
             }
         });
         final String phone =

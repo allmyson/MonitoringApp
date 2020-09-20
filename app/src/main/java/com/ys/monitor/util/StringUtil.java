@@ -12,12 +12,14 @@ import android.widget.Toast;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.ys.monitor.R;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -337,5 +339,79 @@ public class StringUtil {
         media.setDataSource(path);
         return media.getFrameAtTime();
 
+    }
+
+    //获取网络图片第一帧
+    public static Bitmap getNetVideoBitmap(String videoUrl) {
+        L.e("videoUrl");
+        Bitmap bitmap = null;
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            //根据url获取缩略图
+            retriever.setDataSource(videoUrl, new HashMap());
+            //获得第一帧图片
+            bitmap = retriever.getFrameAtTime();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } finally {
+            retriever.release();
+        }
+        return bitmap;
+    }
+
+    public static String getLevelByAqi(int aqi){
+        String level = "优";
+        if(aqi<=50){
+            level = "优";
+        }else if(aqi<=100){
+            level = "良";
+        }else if(aqi<=150){
+            level = "轻度污染";
+        }else if(aqi<=200){
+            level = "中度污染";
+        }else if(aqi<=300){
+            level = "重度污染";
+        }else {
+            level = "严重污染";
+        }
+        return level;
+    }
+
+    public static String getColorByAqi(int aqi){
+        String level = "#00bb00";
+        if(aqi<=50){
+            level = "#00bb00";
+        }else if(aqi<=100){
+            level = "#ffff00";
+        }else if(aqi<=150){
+            level = "#ff9900";
+        }else if(aqi<=200){
+            level = "#ff0000";
+        }else if(aqi<=300){
+            level = "#800080";
+        }else {
+            level = "#800000";
+        }
+        return level;
+    }
+
+
+    public static int getDrawableIdByAqi(int aqi){
+        int level = R.drawable.rect_cornor_aqi1;
+        if(aqi<=50){
+            level = R.drawable.rect_cornor_aqi1;
+        }else if(aqi<=100){
+            level = R.drawable.rect_cornor_aqi2;
+        }else if(aqi<=150){
+            level = R.drawable.rect_cornor_aqi3;
+        }else if(aqi<=200){
+            level = R.drawable.rect_cornor_aqi4;
+        }else if(aqi<=300){
+            level = R.drawable.rect_cornor_aqi5;
+        }else {
+            level = R.drawable.rect_cornor_aqi6;
+        }
+        return level;
     }
 }

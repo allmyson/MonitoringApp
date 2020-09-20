@@ -94,6 +94,11 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_login:
+//                if (true) {
+//                    startActivity(new Intent(mContext, MainActivity.class));
+//                    finish();
+//                    return;
+//                }
                 KeyBoardUtils.closeKeybord(userET, mContext);
                 KeyBoardUtils.closeKeybord(psdET, mContext);
                 if (isCanLogin()) {

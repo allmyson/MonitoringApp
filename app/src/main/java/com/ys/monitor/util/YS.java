@@ -116,6 +116,10 @@ public class YS {
     public static final String ORG_LIST = IP + "/send/queryDept.mo";
     //用户信息
     public static final String USER_LIST = IP + "/send/queryAddressBook.mo";
+
+
+    //天气
+    public static final String WEATHER = "http://api.k780.com:88/?app=weather.today&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json";
     //basebean == null 的时候的提示语
     public static final String HTTP_TIP = "服务器错误！";
 

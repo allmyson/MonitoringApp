@@ -94,6 +94,7 @@ public class AddHelpActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        messageInfos = new ArrayList<>();
         setBarColor2("#ffffff", true);
 //        setBarColor("#ffffff");
         titleView.setText("指挥中心");
@@ -184,7 +185,7 @@ public class AddHelpActivity extends BaseActivity {
             }
         });
         chatAdapter.addItemClickListener(itemClickListener);
-        LoadData();
+//        LoadData();
     }
 
     /**
@@ -324,7 +325,7 @@ public class AddHelpActivity extends BaseActivity {
      * 构造聊天数据
      */
     private void LoadData() {
-        messageInfos = new ArrayList<>();
+//        messageInfos = new ArrayList<>();
 
         MessageInfo messageInfo = new MessageInfo();
         messageInfo.setContent("你好，欢迎使用Rance的聊天界面框架");

@@ -22,7 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentLeft="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerInside" />
 
         <com.ys.monitor.chat.widget.BubbleImageView
             android:id="@+id/chat_item_content_image"
