@@ -123,6 +123,7 @@ public class App extends PocApplication {
                 configure.ip = "123.57.92.107";
                 configure.port = "6050";
                 configure.httpPort = "80";
+                configure.gpsMode = IPocEngineEventHandler.GpsMode.NET_AND_GPS;
             }
             return configure;
         }

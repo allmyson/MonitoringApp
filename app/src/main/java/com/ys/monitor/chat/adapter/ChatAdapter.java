@@ -140,6 +140,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         void onLongClickFile(View view, int position);
 
         void onLongClickLink(View view, int position);
+
+        void reSend(View view, int position);
     }
 
 
@@ -147,14 +149,16 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         boolean hasUpdated = false;
         int count = mRecyclerView.getChildCount();
         for (int i = 0; i < count; i++) {
-            BaseViewHolder holder = (BaseViewHolder) mRecyclerView.getChildViewHolder(mRecyclerView.getChildAt(i));
+            BaseViewHolder holder =
+                    (BaseViewHolder) mRecyclerView.getChildViewHolder(mRecyclerView.getChildAt(i));
             int position = (int) holder.itemView.getTag();
-            if (position > messageInfoList.size() -1) {
+            if (position > messageInfoList.size() - 1) {
                 continue;
             }
             MessageInfo hitMessage = messageInfoList.get(position);
             if (chatMessage.getId().equals(hitMessage.getMsgId())) {
-                int sip_status = chatMessage.getSip_status() == null ? ChatMessageStatus.Sip.UNKNOW : chatMessage.getSip_status();
+                int sip_status = chatMessage.getSip_status() == null ?
+                        ChatMessageStatus.Sip.UNKNOW : chatMessage.getSip_status();
                 switch (sip_status) {
                     case ChatMessageStatus.Sip.UNKNOW:
                     case ChatMessageStatus.Sip.FAILED:
@@ -176,7 +180,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         if (!hasUpdated) {
             for (MessageInfo message : messageInfoList) {
                 if (message.getMsgId().equals(chatMessage.getId())) {
-                    int sip_status = chatMessage.getSip_status() == null ? ChatMessageStatus.Sip.UNKNOW : chatMessage.getSip_status();
+                    int sip_status = chatMessage.getSip_status() == null ?
+                            ChatMessageStatus.Sip.UNKNOW : chatMessage.getSip_status();
                     switch (sip_status) {
                         case ChatMessageStatus.Sip.UNKNOW:
                         case ChatMessageStatus.Sip.FAILED:
@@ -202,10 +207,11 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             return 0;
         }
     }
+
     public void updateAll(ArrayList<ChatMessage> messages) {
         messageInfoList.clear();
         List<MessageInfo> list = new ArrayList<>();
-        for(ChatMessage chatMessage:messages){
+        for (ChatMessage chatMessage : messages) {
             MessageInfo messageInfo = MessageInfo.getMessageInfo(chatMessage);
             list.add(messageInfo);
         }
@@ -229,12 +235,13 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         /*for (ChatMessage message : mMessageList) {
             mLogger.d("message " + message.getText() + " " + message.getTime_stamp());
         }
-        mLogger.d("add ===> " + messages.get(0).getText() + " " + messages.get(0).getTime_stamp());*/
+        mLogger.d("add ===> " + messages.get(0).getText() + " " + messages.get(0).getTime_stamp()
+        );*/
         if (messages.size() > 0) {
             // 查找插入位置
             int insertIndex = hitInsertIndex(messageInfoList, messages.get(0).getTime_stamp());
             List<MessageInfo> list = new ArrayList<>();
-            for(ChatMessage chatMessage:messages){
+            for (ChatMessage chatMessage : messages) {
                 MessageInfo messageInfo = MessageInfo.getMessageInfo(chatMessage);
                 list.add(messageInfo);
             }
@@ -266,7 +273,9 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 long midValue = list.get(mid).getTime();
                 long lSideValue = list.get(mid - 1).getTime();
                 long rSideValue = list.get(mid + 1).getTime();
-                //System.out.println("target=" + target + "====== mid.index=" + mid + " lSideValue=" + lSideValue + " midValue=" + midValue + " rSideValue=" + rSideValue + " ======");
+                //System.out.println("target=" + target + "====== mid.index=" + mid + "
+                // lSideValue=" + lSideValue + " midValue=" + midValue + " rSideValue=" +
+                // rSideValue + " ======");
                 if (midValue == target) { //命中
                     index = mid + 1;
                     //System.out.println("hit mid");

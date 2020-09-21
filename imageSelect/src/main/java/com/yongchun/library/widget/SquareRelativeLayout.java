@@ -30,7 +30,7 @@ public class SquareRelativeLayout extends RelativeLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // Set a square layout.
+        // Set a square fragment_exit.
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
     }
 

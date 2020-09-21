@@ -1,1 +1,1 @@
-include ':app', ':imageSelect', ':qrcode'
+include ':app', ':imageSelect', ':qrcode', ':convenientbanner'

@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.huamai.poc.PocEngineFactory;
 import com.ys.monitor.R;
 import com.ys.monitor.chat.adapter.ChatAdapter;
 import com.ys.monitor.chat.entity.IMContact;
@@ -263,10 +262,10 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
 //                Glide.with(mContext).load(StringUtil.getVideoThumb(data.getFilepath())).into
 //                (videoIV);
                 String path = data.getFilepath();
-                if(!StringUtil.isBlank(path)) {
-                    if(path.startsWith("http://")||path.startsWith("https//")){
+                if (!StringUtil.isBlank(path)) {
+                    if (path.startsWith("http://") || path.startsWith("https//")) {
                         videoIV.setImageBitmap(StringUtil.getNetVideoBitmap(data.getFilepath()));
-                    }else {
+                    } else {
                         videoIV.setImageBitmap(StringUtil.getVideoThumb(data.getFilepath()));
                     }
                 }
@@ -323,6 +322,12 @@ public class ChatSendViewHolder extends BaseViewHolder<MessageInfo> {
     }
 
     public void setItemClick() {
+        chatItemFail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemClickListener.reSend(chatItemFail, (Integer) itemView.getTag());
+            }
+        });
         chatItemContentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

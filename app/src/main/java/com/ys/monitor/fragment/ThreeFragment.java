@@ -16,7 +16,6 @@ import com.huamai.poc.PocEngineFactory;
 import com.huamai.poc.chat.ChatMessageCategory;
 import com.huamai.poc.greendao.ChatMessage;
 import com.huamai.poc.greendao.MessageDialogue;
-import com.huamai.poc.greendao.User;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.activity.AddHelpActivity;
@@ -124,10 +123,10 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         startActivity(new Intent(mContext, TaskListActivity.class));
                         break;
                     case 3:
-//                        startActivity(new Intent(mContext, AddHelpActivity.class));
-                        User user = PocEngineFactory.get().getUser("1111031");
-                        MessageDialogue md = PocEngineFactory.get().createMessageDialogueIfNeed(user);
-                        ChatActivity.intentToChat(mContext, md.getChat_id());
+                        startActivity(new Intent(mContext, AddHelpActivity.class));
+//                        User user = PocEngineFactory.get().getUser("1111031");
+//                        MessageDialogue md = PocEngineFactory.get().createMessageDialogueIfNeed(user);
+//                        ChatActivity.intentToChat(mContext, md.getChat_id());
                         break;
                     default:
                         if (PocEngineFactory.get().hasServiceConnected()) {

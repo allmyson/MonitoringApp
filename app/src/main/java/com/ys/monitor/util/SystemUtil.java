@@ -1,5 +1,6 @@
 package com.ys.monitor.util;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -7,7 +8,10 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import java.lang.reflect.Method;
@@ -141,11 +145,28 @@ public class SystemUtil {
      * 获得imei号
      */
     public static String IMEI(Context context) {
-        String imei = "NO Search";
+        String imei = "";
         TelephonyManager telephonyManager = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            L.e("Manifest.permission.READ_PHONE_STATE权限不足");
+            return imei;
+        }
+        L.e("Manifest.permission.READ_PHONE_STATE权限足");
         imei = telephonyManager.getDeviceId();
-        return imei;
+        //android10
+        if(TextUtils.isEmpty(imei)){
+            imei = Settings.System.getString(
+                    context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        }
+        return  imei;
     }
 
     /**

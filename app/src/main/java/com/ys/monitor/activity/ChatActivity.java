@@ -17,25 +17,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.huamai.poc.IPocEngineEventHandler;
 import com.huamai.poc.PocEngineFactory;
-import com.huamai.poc.chat.ChatMessageCategory;
-import com.huamai.poc.chat.ChatMessageStatus;
 import com.huamai.poc.chat.ChatUtil;
 import com.huamai.poc.greendao.ChatMessage;
 import com.huamai.poc.greendao.MessageDialogue;
 import com.huamai.poc.greendao.User;
 import com.huamai.poc.media.MediaRecordFunc;
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow;
-import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
-import com.ys.monitor.bean.BaseBean;
-import com.ys.monitor.bean.FileUploadBean;
-import com.ys.monitor.bean.Msg;
 import com.ys.monitor.chat.activity.FullImageActivity;
 import com.ys.monitor.chat.adapter.ChatAdapter;
 import com.ys.monitor.chat.adapter.CommonFragmentPagerAdapter;
@@ -51,12 +43,8 @@ import com.ys.monitor.chat.widget.ChatContextMenu;
 import com.ys.monitor.chat.widget.EmotionInputDetector;
 import com.ys.monitor.chat.widget.NoScrollViewPager;
 import com.ys.monitor.chat.widget.StateButton;
-import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
-import com.ys.monitor.util.HttpUtil;
 import com.ys.monitor.util.L;
-import com.ys.monitor.util.StringUtil;
-import com.ys.monitor.util.YS;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,9 +52,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ChatActivity extends BaseActivity implements ChatFunctionFragment.ClickListener {
     public static final String EXTRAS_CHAT_ID = "extras_chat_id";
@@ -354,6 +340,11 @@ public class ChatActivity extends BaseActivity implements ChatFunctionFragment.C
                             messageInfos.get(position));
                     chatContextMenu.showOnAnchor(view, RelativePopupWindow.VerticalPosition.ABOVE,
                             RelativePopupWindow.HorizontalPosition.CENTER);
+                }
+
+                @Override
+                public void reSend(View view, int position) {
+                    show("重发" + position);
                 }
             };
 
