@@ -21,6 +21,7 @@ import java.util.Date;
  * @date 2018/11/26 17:53
  */
 public class YS {
+    public static final String WEATHER_KEY = "aaf89d788a514c2b80408d9a3574003d";//和风天气
     public static final String DEFAULT_CHAT_PSD = "123456";//默认聊天账号密码
     public static final String source = "40289fa573e690820173e6a6ceaa0006";//报警类型编码
 
@@ -119,7 +120,13 @@ public class YS {
 
 
     //天气
-    public static final String WEATHER = "http://api.k780.com:88/?app=weather.today&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json";
+    public static final String WEATHER = "http://api.k780.com:88/?app=weather" +
+            ".today&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json";
+
+    public static final String HF_WEATHER = "https://free-api.heweather" +
+            ".net/s6/weather/now?location=101040800&key=" + WEATHER_KEY;
+    public static final String HF_AQI = "https://free-api.heweather" +
+            ".net/s6/air/now?location=101040100&key=" + WEATHER_KEY;
     //basebean == null 的时候的提示语
     public static final String HTTP_TIP = "服务器错误！";
 

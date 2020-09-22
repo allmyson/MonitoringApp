@@ -8,7 +8,6 @@ import com.ys.monitor.http.HttpListener;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -361,6 +360,20 @@ public class HttpUtil {
     //获取天气  105 是重庆 111是北碚  北碚没得AQI
     public static void getWeather(Context context, int weaid, HttpListener<String> httpListener) {
         String url = YS.WEATHER + "&weaid=" + weaid;
+        BaseHttp.getInstance().simpleGet(context, url, httpListener);
+
+    }
+
+    //获取天气    北碚101040800
+    public static void getHFWeather(Context context, HttpListener<String> httpListener) {
+        String url = YS.HF_WEATHER;
+        BaseHttp.getInstance().simpleGet(context, url, httpListener);
+
+    }
+
+    //获取天气    重庆101040100
+    public static void getHFAQI(Context context, HttpListener<String> httpListener) {
+        String url = YS.HF_AQI;
         BaseHttp.getInstance().simpleGet(context, url, httpListener);
 
     }

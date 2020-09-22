@@ -59,6 +59,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
     ArrayList<MessageDialogue> messageDialogueArray = new ArrayList<>(20);
     private List<Msg> topList;
     private List<Msg> chatList;
+    private List<FireBean.DataBean.RowsBean> fireList;//发生火灾的火情数据
 
     public static ThreeFragment newInstance() {
         return new ThreeFragment();
@@ -79,6 +80,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     @Override
     protected void init() {
+        fireList = new ArrayList<>();
         topList = new ArrayList<>();
         chatList = new ArrayList<>();
         swipeRefreshLayout = getView(R.id.srl_);
@@ -123,9 +125,15 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         startActivity(new Intent(mContext, TaskListActivity.class));
                         break;
                     case 3:
-                        startActivity(new Intent(mContext, AddHelpActivity.class));
+                        if (fireList.size() == 0) {
+                            show("暂无火情,无需上报扑救信息");
+                            return;
+                        }
+                        String json = new Gson().toJson(fireList);
+                        AddHelpActivity.intentToHelp(mContext, json);
 //                        User user = PocEngineFactory.get().getUser("1111031");
-//                        MessageDialogue md = PocEngineFactory.get().createMessageDialogueIfNeed(user);
+//                        MessageDialogue md = PocEngineFactory.get().createMessageDialogueIfNeed
+//                        (user);
 //                        ChatActivity.intentToChat(mContext, md.getChat_id());
                         break;
                     default:
@@ -159,6 +167,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
         HttpUtil.getFireListWithNoDialog(mContext, userId, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
+                fireList.clear();
                 try {
                     FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
                     if (fireBean != null && fireBean.data != null && fireBean.data.rows != null && fireBean.data.rows.size() > 0) {
@@ -166,6 +175,9 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         for (FireBean.DataBean.RowsBean rowsBean1 : fireBean.data.rows) {
                             if (YS.FireStatus.Status_DCL.equals(rowsBean1.status) || YS.FireStatus.Status_HSZ.equals(rowsBean1.status)) {
                                 rowsBeanList.add(rowsBean1);
+                            }
+                            if (YS.FireStatus.Status_FSHZ.equals(rowsBean1.status)) {
+                                fireList.add(rowsBean1);
                             }
                         }
                         if (rowsBeanList.size() > 0) {

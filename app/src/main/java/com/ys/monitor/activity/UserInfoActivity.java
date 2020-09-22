@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
 import com.ys.monitor.api.FunctionApi;
@@ -51,11 +50,12 @@ public class UserInfoActivity extends BaseActivity {
         if (user != null && user.data != null) {
             usernameTV.setText(StringUtil.valueOf(user.data.trueName));
             phoneTV.setText(StringUtil.valueOf(user.data.mobilePhoneNumber));
-            orgTV.setText(StringUtil.StringToDoubleStr(user.data.dutyName));
+            orgTV.setText(StringUtil.valueOf(user.data.deptName));
             if (!StringUtil.isBlank(user.data.icon)) {
-                Glide.with(mContext).load(FunctionApi.getImagePath(user.data.icon)).into(headIV);
+//                Glide.with(mContext).load(FunctionApi.getImagePath(user.data.icon)).into(headIV);
+                YS.showRoundImage(mContext,FunctionApi.getImagePath(user.data.icon),headIV);
             }else {
-                YS.showRoundImage(mContext,YS.testImageUrl,headIV);
+//                YS.showRoundImage(mContext,YS.testImageUrl,headIV);
             }
         }
     }

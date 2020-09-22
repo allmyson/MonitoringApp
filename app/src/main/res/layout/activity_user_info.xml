@@ -81,7 +81,6 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="宋秀英"
             android:textColor="#ffbbbbbb"
             android:textSize="14sp" />
 
@@ -116,7 +115,6 @@
             android:id="@+id/tv_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="179****2684"
             android:textColor="#ffbbbbbb"
             android:textSize="14sp" />
 
@@ -151,7 +149,6 @@
             android:id="@+id/tv_org"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="179****2684"
             android:textColor="#ffbbbbbb"
             android:textSize="14sp" />
 

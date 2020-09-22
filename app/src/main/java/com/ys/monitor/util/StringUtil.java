@@ -3,7 +3,9 @@ package com.ys.monitor.util;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -14,6 +16,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.ys.monitor.R;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -360,58 +364,72 @@ public class StringUtil {
         return bitmap;
     }
 
-    public static String getLevelByAqi(int aqi){
+    public static String getLevelByAqi(int aqi) {
         String level = "优";
-        if(aqi<=50){
+        if (aqi <= 50) {
             level = "优";
-        }else if(aqi<=100){
+        } else if (aqi <= 100) {
             level = "良";
-        }else if(aqi<=150){
+        } else if (aqi <= 150) {
             level = "轻度污染";
-        }else if(aqi<=200){
+        } else if (aqi <= 200) {
             level = "中度污染";
-        }else if(aqi<=300){
+        } else if (aqi <= 300) {
             level = "重度污染";
-        }else {
+        } else {
             level = "严重污染";
         }
         return level;
     }
 
-    public static String getColorByAqi(int aqi){
+    public static String getColorByAqi(int aqi) {
         String level = "#00bb00";
-        if(aqi<=50){
+        if (aqi <= 50) {
             level = "#00bb00";
-        }else if(aqi<=100){
+        } else if (aqi <= 100) {
             level = "#ffff00";
-        }else if(aqi<=150){
+        } else if (aqi <= 150) {
             level = "#ff9900";
-        }else if(aqi<=200){
+        } else if (aqi <= 200) {
             level = "#ff0000";
-        }else if(aqi<=300){
+        } else if (aqi <= 300) {
             level = "#800080";
-        }else {
+        } else {
             level = "#800000";
         }
         return level;
     }
 
 
-    public static int getDrawableIdByAqi(int aqi){
+    public static int getDrawableIdByAqi(int aqi) {
         int level = R.drawable.rect_cornor_aqi1;
-        if(aqi<=50){
+        if (aqi <= 50) {
             level = R.drawable.rect_cornor_aqi1;
-        }else if(aqi<=100){
+        } else if (aqi <= 100) {
             level = R.drawable.rect_cornor_aqi2;
-        }else if(aqi<=150){
+        } else if (aqi <= 150) {
             level = R.drawable.rect_cornor_aqi3;
-        }else if(aqi<=200){
+        } else if (aqi <= 200) {
             level = R.drawable.rect_cornor_aqi4;
-        }else if(aqi<=300){
+        } else if (aqi <= 300) {
             level = R.drawable.rect_cornor_aqi5;
-        }else {
+        } else {
             level = R.drawable.rect_cornor_aqi6;
         }
         return level;
+    }
+
+    //getImageFromAssetsFile("weather/100.png")
+    public static Bitmap getImageFromAssetsFile(Context context, String fileName) {
+        Bitmap image = null;
+        AssetManager am = context.getResources().getAssets();
+        try {
+            InputStream is = am.open(fileName);
+            image = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
 }

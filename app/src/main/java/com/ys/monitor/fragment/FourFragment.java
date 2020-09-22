@@ -11,6 +11,7 @@ import com.ys.monitor.R;
 import com.ys.monitor.activity.AboutActivity;
 import com.ys.monitor.activity.KefuActivity;
 import com.ys.monitor.activity.LoginActivity;
+import com.ys.monitor.activity.RtspVideoActivity;
 import com.ys.monitor.activity.SetActivity;
 import com.ys.monitor.activity.UserInfoActivity;
 import com.ys.monitor.base.BaseFragment;
@@ -61,7 +62,8 @@ public class FourFragment extends BaseFragment implements View.OnClickListener,
                 startActivity(new Intent(mContext, SetActivity.class));
                 break;
             case R.id.tv_exit:
-                exit();
+//                exit();
+                RtspVideoActivity.playRtspVideo(mContext,"rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov");
                 break;
         }
     }
@@ -93,7 +95,7 @@ public class FourFragment extends BaseFragment implements View.OnClickListener,
 //                Glide.with(mContext).load(FunctionApi.getImagePath(loginBean.data.icon)).into
 //                (headIV);
             } else {
-                YS.showRoundImage(mContext, YS.testImageUrl, headIV);
+//                YS.showRoundImage(mContext, YS.testImageUrl, headIV);
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.ys.monitor.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
@@ -585,34 +586,44 @@ public class AddHelpActivity extends BaseActivity {
     private List<FireBean.DataBean.RowsBean> fireList;
 
     private void getFire() {
-        HttpUtil.getFireListWithNoDialog(mContext, userId, new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-                fireList.clear();
-                try {
-                    FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
-                    if (fireBean != null) {
-                        if (YS.SUCCESE.equals(fireBean.code) && fireBean.data != null && fireBean
-                                .data.rows != null && fireBean.data.rows.size() > 0) {
-                            for (FireBean.DataBean.RowsBean bean : fireBean.data.rows) {
-                                if (YS.FireStatus.Status_DCL.equals(bean.status) || YS.FireStatus.Status_HSZ.equals(bean.status)) {
-                                    fireList.add(bean);
-                                }
-                            }
-                        }
-                    } else {
-                        show(YS.HTTP_TIP);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-//                rowsBean = getNearFireBean();
+        fireList.clear();
+        String json = getIntent().getStringExtra("fire");
+        if (StringUtil.isGoodJson(json)) {
+            List<FireBean.DataBean.RowsBean> ll = new Gson().fromJson(json,
+                    new TypeToken<List<FireBean.DataBean.RowsBean>>() {
+            }.getType());
+            if (ll != null && ll.size() > 0) {
+                fireList.addAll(ll);
             }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-            }
-        });
+        }
+//        HttpUtil.getFireListWithNoDialog(mContext, userId, new HttpListener<String>() {
+//            @Override
+//            public void onSucceed(int what, Response<String> response) {
+//                fireList.clear();
+//                try {
+//                    FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
+//                    if (fireBean != null) {
+//                        if (YS.SUCCESE.equals(fireBean.code) && fireBean.data != null && fireBean
+//                                .data.rows != null && fireBean.data.rows.size() > 0) {
+//                            for (FireBean.DataBean.RowsBean bean : fireBean.data.rows) {
+//                                if (YS.FireStatus.Status_FSHZ.equals(bean.status)) {
+//                                    fireList.add(bean);
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        show(YS.HTTP_TIP);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+////                rowsBean = getNearFireBean();
+//            }
+//
+//            @Override
+//            public void onFailed(int what, Response<String> response) {
+//            }
+//        });
     }
 
     private FireBean.DataBean.RowsBean getNearFireBean() {
@@ -638,6 +649,13 @@ public class AddHelpActivity extends BaseActivity {
             return bean;
         }
         return null;
+    }
+
+
+    public static void intentToHelp(Context context, String json) {
+        Intent intent = new Intent(context, AddHelpActivity.class);
+        intent.putExtra("fire", json);
+        context.startActivity(intent);
     }
 
 }

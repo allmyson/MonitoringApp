@@ -59,6 +59,9 @@
             android:name="com.ys.monitor.activity.VideoActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.ys.monitor.activity.RtspVideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.ys.monitor.activity.AddHelpActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait"
