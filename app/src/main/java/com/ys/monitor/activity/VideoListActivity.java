@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
@@ -17,7 +18,6 @@ import com.ys.monitor.bean.VideoBean;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.BlankView;
-import com.ys.monitor.ui.MyGridView;
 import com.ys.monitor.ui.NoNetView;
 import com.ys.monitor.util.HttpUtil;
 import com.ys.monitor.util.NetWorkUtil;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class VideoListActivity extends BaseActivity implements NoNetView.ClickListener,
         SwipeRefreshLayout.OnRefreshListener {
-    private MyGridView myGridView;
+    private GridView myGridView;
     private VideoListAdapter videoListAdapter;
     private List<VideoBean.DataBean.RowsBean> list;
     private String userId;
@@ -62,7 +62,7 @@ public class VideoListActivity extends BaseActivity implements NoNetView.ClickLi
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                show("hahaha");
+                getVideoUrl(videoListAdapter.getItem(position).recNo);
             }
         });
         myGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -141,5 +141,19 @@ public class VideoListActivity extends BaseActivity implements NoNetView.ClickLi
     @Override
     public void onRefresh() {
         getData();
+    }
+
+    private void getVideoUrl(String recNo){
+        HttpUtil.getVideoUrl(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 }

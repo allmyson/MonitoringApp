@@ -117,6 +117,8 @@ public class YS {
     public static final String ORG_LIST = IP + "/send/queryDept.mo";
     //用户信息
     public static final String USER_LIST = IP + "/send/queryAddressBook.mo";
+    //获取视频流
+    public static final String RTSP = IP + "/send/queryDeviceInfoByNo.mo";
 
 
     //天气

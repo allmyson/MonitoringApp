@@ -39,7 +39,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <com.ys.monitor.ui.MyGridView
+                <GridView
                     android:id="@+id/gv_video"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
