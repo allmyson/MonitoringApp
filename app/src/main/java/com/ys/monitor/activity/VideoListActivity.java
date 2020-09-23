@@ -15,12 +15,15 @@ import com.ys.monitor.R;
 import com.ys.monitor.adapter.VideoListAdapter;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.VideoBean;
+import com.ys.monitor.bean.VideoUrl;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.BlankView;
 import com.ys.monitor.ui.NoNetView;
 import com.ys.monitor.util.HttpUtil;
+import com.ys.monitor.util.L;
 import com.ys.monitor.util.NetWorkUtil;
+import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.YS;
 
 import java.util.ArrayList;
@@ -143,11 +146,22 @@ public class VideoListActivity extends BaseActivity implements NoNetView.ClickLi
         getData();
     }
 
-    private void getVideoUrl(String recNo){
+    private void getVideoUrl(String recNo) {
         HttpUtil.getVideoUrl(mContext, userId, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
-
+                VideoUrl videoUrl = new Gson().fromJson(response.get(), VideoUrl.class);
+                if (videoUrl != null && YS.SUCCESE.equals(videoUrl.code) && videoUrl.data != null && videoUrl.data.size() > 0) {
+                    VideoUrl.DataBeanX dataBean = videoUrl.data.get(0);
+                    if (dataBean != null && dataBean.data != null) {
+                        L.e("rtsp=" + dataBean.data.url);
+                        if (!StringUtil.isBlank(dataBean.data.url)) {
+                            RtspVideoActivity.playRtspVideo(mContext, dataBean.data.url);
+                        }
+                    }
+                } else {
+                    show("获取视频流地址失败！");
+                }
             }
 
             @Override

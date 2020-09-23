@@ -11,16 +11,13 @@ import java.util.List;
  */
 public class VideoBean {
 
+
     /**
-     * data : {"total":1,"rows":[{"accessUrl":"","agency":"","altitude":"","createTime":null,
-     * "createUserNo":"","description":"","devName":"红外探测器16","devNo":"1111111","end_time":"",
-     * "factory":"","imgUrl":"","installationTime":null,"investigationAddr":"","isDelete":"0",
-     * "latitude":"","longitude":"","modelNo":"","recNo":"40288ae96705bda4016705bf07d00007",
-     * "responseDeptNo":"","smallClassNo":"","smallPlaceName":"","start_time":"","status":"0",
-     * "t_InstallationTime":"","type":"40289fa573e141640173e14ea2da0005","typeName":"",
-     * "warranty":""}],"footer":null}
+     * data : {"total":48,"rows":[{"imgUrl":"","modelNo":"DS-2CD268XYZUV-555","status":"-1   ",
+     * "investigationAddr":"三角花园----高清点","devName":"气象采集设备3","factory":"海康威视","type":"气象采集设备",
+     * "recNo":"40289fa574203e8301742052c0bc0050"}],"footer":null}
      * code : 200
-     * msg : 设备信息成功!
+     * msg : 设备信息获取成功!
      */
 
     public DataBean data;
@@ -29,14 +26,10 @@ public class VideoBean {
 
     public static class DataBean {
         /**
-         * total : 1
-         * rows : [{"accessUrl":"","agency":"","altitude":"","createTime":null,"createUserNo":"",
-         * "description":"","devName":"红外探测器16","devNo":"1111111","end_time":"","factory":"",
-         * "imgUrl":"","installationTime":null,"investigationAddr":"","isDelete":"0",
-         * "latitude":"","longitude":"","modelNo":"","recNo":"40288ae96705bda4016705bf07d00007",
-         * "responseDeptNo":"","smallClassNo":"","smallPlaceName":"","start_time":"",
-         * "status":"0","t_InstallationTime":"","type":"40289fa573e141640173e14ea2da0005",
-         * "typeName":"","warranty":""}]
+         * total : 48
+         * rows : [{"imgUrl":"","modelNo":"DS-2CD268XYZUV-555","status":"-1   ",
+         * "investigationAddr":"三角花园----高清点","devName":"气象采集设备3","factory":"海康威视",
+         * "type":"气象采集设备","recNo":"40289fa574203e8301742052c0bc0050"}]
          * footer : null
          */
 
@@ -46,62 +39,24 @@ public class VideoBean {
 
         public static class RowsBean {
             /**
-             * accessUrl :
-             * agency :
-             * altitude :
-             * createTime : null
-             * createUserNo :
-             * description :
-             * devName : 红外探测器16
-             * devNo : 1111111
-             * end_time :
-             * factory :
              * imgUrl :
-             * installationTime : null
-             * investigationAddr :
-             * isDelete : 0
-             * latitude :
-             * longitude :
-             * modelNo :
-             * recNo : 40288ae96705bda4016705bf07d00007
-             * responseDeptNo :
-             * smallClassNo :
-             * smallPlaceName :
-             * start_time :
-             * status : 0
-             * t_InstallationTime :
-             * type : 40289fa573e141640173e14ea2da0005
-             * typeName :
-             * warranty :
+             * modelNo : DS-2CD268XYZUV-555
+             * status : -1
+             * investigationAddr : 三角花园----高清点
+             * devName : 气象采集设备3
+             * factory : 海康威视
+             * type : 气象采集设备
+             * recNo : 40289fa574203e8301742052c0bc0050
              */
 
-            public String accessUrl;
-            public String agency;
-            public String altitude;
-            public Object createTime;
-            public String createUserNo;
-            public String description;
-            public String devName;
-            public String devNo;
-            public String end_time;
-            public String factory;
             public String imgUrl;
-            public Object installationTime;
-            public String investigationAddr;
-            public String isDelete;
-            public String latitude;
-            public String longitude;
             public String modelNo;
-            public String recNo;
-            public String responseDeptNo;
-            public String smallClassNo;
-            public String smallPlaceName;
-            public String start_time;
             public String status;
-            public String t_InstallationTime;
+            public String investigationAddr;
+            public String devName;
+            public String factory;
             public String type;
-            public String typeName;
-            public String warranty;
+            public String recNo;
         }
     }
 }
