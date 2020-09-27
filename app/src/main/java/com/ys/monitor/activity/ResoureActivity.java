@@ -146,14 +146,26 @@ public class ResoureActivity extends BaseActivity {
                             ResourceZDBean.class);
                     if (resourceZDBean != null && YS.SUCCESE.equals(resourceZDBean.code)) {
                         if (resourceZDBean.data.ElementBasic != null) {
+                            boolean hasImg = false;
                             Class cls = resourceZDBean.data.ElementBasic.getClass();
                             Field[] fields = cls.getDeclaredFields();
                             for (int i = 0; i < fields.length; i++) {
                                 Field f = fields[i];
                                 f.setAccessible(true);
                                 L.e("属性名:" + f.getName() + " 属性值:" + f.get(resourceZDBean.data.ElementBasic));
-                                addBaseView(StringUtil.valueOf(f.getName()),
-                                        StringUtil.valueOf(f.get(resourceZDBean.data.ElementBasic)));
+                                if (!"imgUrl".equals(f.getName())) {
+                                    addBaseView(StringUtil.valueOf(f.getName()),
+                                            StringUtil.valueOf(f.get(resourceZDBean.data.ElementBasic)));
+                                } else {
+                                    hasImg = true;
+                                }
+                            }
+                            if (hasImg) {
+                                ResourceZDBean.DataBean.BaseElementExtBean baseElementExtBean =
+                                        new ResourceZDBean.DataBean.BaseElementExtBean();
+                                baseElementExtBean.dataName = "imgUrl";
+                                baseElementExtBean.name = "图片";
+                                addImgView(baseElementExtBean);
                             }
                         }
 
@@ -243,7 +255,7 @@ public class ResoureActivity extends BaseActivity {
                                               int dayOfMonth) {
                             String monthStr = (month + 1) > 9 ? String.valueOf((month + 1)) :
                                     "0" + String.valueOf((month
-                                    + 1));
+                                            + 1));
                             String dayStr = dayOfMonth > 9 ? String.valueOf(dayOfMonth) :
                                     "0" + String.valueOf(dayOfMonth);
                             final String result = year + "-" + monthStr + "-" + dayStr;
@@ -251,17 +263,18 @@ public class ResoureActivity extends BaseActivity {
 //                            valueET.setText(result);
                             DialogUtil.showDateDialogSF(mContext,
                                     new TimePickerDialog.OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                    String hourOfDayStr = hourOfDay > 9 ?
-                                            String.valueOf(hourOfDay) :
-                                            "0" + String.valueOf(hourOfDay);
-                                    String minuteStr = minute > 9 ? String.valueOf(minute) :
-                                            "0" + String.valueOf(minute);
-                                    String time = hourOfDayStr + ":" + minuteStr;
-                                    valueET.setText(result + " " + time);
-                                }
-                            });
+                                        @Override
+                                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                                              int minute) {
+                                            String hourOfDayStr = hourOfDay > 9 ?
+                                                    String.valueOf(hourOfDay) :
+                                                    "0" + String.valueOf(hourOfDay);
+                                            String minuteStr = minute > 9 ? String.valueOf(minute) :
+                                                    "0" + String.valueOf(minute);
+                                            String time = hourOfDayStr + ":" + minuteStr;
+                                            valueET.setText(result + " " + time);
+                                        }
+                                    });
                         }
                     });
                 }
@@ -414,7 +427,7 @@ public class ResoureActivity extends BaseActivity {
     private void addResource() {
         waitDialog.show();
         resultMap.clear();
-        resultMap.put("elementType",currentKVBean.id);
+        resultMap.put("elementType", currentKVBean.id);
         L.e("参数齐全,可以提交");
         int baseCount = baseLL.getChildCount();
         for (int i = 0; i < baseCount; i++) {
