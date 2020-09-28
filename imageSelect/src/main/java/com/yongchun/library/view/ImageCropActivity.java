@@ -1,7 +1,6 @@
 package com.yongchun.library.view;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -106,8 +105,8 @@ public class ImageCropActivity extends AppCompatActivity {
         doneText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressDialog.show(
-                        ImageCropActivity.this, null, getString(R.string.save_ing), true, false);
+//                ProgressDialog.show(
+//                        ImageCropActivity.this, null, getString(R.string.save_ing), true, false);
                 saveUri = Uri.fromFile(FileUtils.createCropFile(ImageCropActivity.this));
                 saveOutput(cropImageView.getCroppedBitmap());
             }

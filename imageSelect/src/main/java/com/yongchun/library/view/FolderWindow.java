@@ -38,7 +38,7 @@ public class FolderWindow extends PopupWindow {
         this.setContentView(window);
         this.setWidth(ScreenUtils.getScreenWidth(context));
         this.setHeight(ScreenUtils.getScreenHeight(context) - ScreenUtils.dip2px(context, 96));
-        this.setAnimationStyle(R.style.WindowStyle);
+//        this.setAnimationStyle(R.style.WindowStyle);
         this.setFocusable(true);
         this.setOutsideTouchable(true);
         this.update();

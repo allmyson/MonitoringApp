@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -55,6 +56,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
 
     public static void startPreview(Activity context, List<LocalMedia> images, List<LocalMedia> selectImages, int maxSelectNum, int position) {
+        Log.e("1111","11111111111111111111");
         Intent intent = new Intent(context, ImagePreviewActivity.class);
         intent.putExtra(EXTRA_PREVIEW_LIST, (ArrayList) images);
         intent.putExtra(EXTRA_PREVIEW_SELECT_LIST, (ArrayList) selectImages);
@@ -66,7 +68,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_image_preview);
         initView();
         registerListener();
@@ -121,10 +123,13 @@ public class ImagePreviewActivity extends AppCompatActivity {
                 onDoneClick(false);
             }
         });
+        Log.e("==","xxxxxxxxxxxxxxx");
         checkboxSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("000000000",selectImages.size()+"====2222=====");
                 boolean isChecked = checkboxSelect.isChecked();
+                Log.e("zzzzz",selectImages.size()+"====2222====="+isChecked);
                 if (selectImages.size() >= maxSelectNum && isChecked) {
                     Toast.makeText(ImagePreviewActivity.this, getString(R.string.message_max_num, maxSelectNum), Toast.LENGTH_LONG).show();
                     checkboxSelect.setChecked(false);

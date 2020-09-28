@@ -74,66 +74,66 @@ public class LocalMediaLoader {
                 ArrayList<LocalMediaFolder> imageFolders = new ArrayList<LocalMediaFolder>();
                 LocalMediaFolder allImageFolder = new LocalMediaFolder();
                 List<LocalMedia> allImages = new ArrayList<LocalMedia>();
+                if(!data.isClosed()) {
+                    while (data != null && data.moveToNext()) {
+                        // 获取图片的路径
+                        String path = data.getString(data
+                                .getColumnIndex(MediaStore.Images.Media.DATA));
+                        File file = new File(path);
+                        if (!file.exists())
+                            continue;
+                        // 获取该图片的目录路径名
+                        File parentFile = file.getParentFile();
+                        if (parentFile == null || !parentFile.exists())
+                            continue;
 
-                while (data != null && data.moveToNext()) {
-                    // 获取图片的路径
-                    String path = data.getString(data
-                            .getColumnIndex(MediaStore.Images.Media.DATA));
-                    File file = new File(path);
-                    if (!file.exists())
-                        continue;
-                    // 获取该图片的目录路径名
-                    File parentFile = file.getParentFile();
-                    if (parentFile == null || !parentFile.exists())
-                        continue;
-
-                    String dirPath = parentFile.getAbsolutePath();
-                    // 利用一个HashSet防止多次扫描同一个文件夹
-                    if (mDirPaths.contains(dirPath)) {
-                        continue;
-                    } else {
-                        mDirPaths.add(dirPath);
-                    }
-
-                    if (parentFile.list() == null)
-                        continue;
-                    LocalMediaFolder localMediaFolder = getImageFolder(path, imageFolders);
-
-                    File[] files = parentFile.listFiles(new FilenameFilter() {
-                        @Override
-                        public boolean accept(File dir, String filename) {
-                            if (filename.endsWith(".jpg")
-                                    || filename.endsWith(".png")
-                                    || filename.endsWith(".jpeg"))
-                                return true;
-                            return false;
+                        String dirPath = parentFile.getAbsolutePath();
+                        // 利用一个HashSet防止多次扫描同一个文件夹
+                        if (mDirPaths.contains(dirPath)) {
+                            continue;
+                        } else {
+                            mDirPaths.add(dirPath);
                         }
-                    });
-                    ArrayList<LocalMedia> images = new ArrayList<>();
-                    for (int i = 0; i < files.length; i++) {
-                        File f = files[i];
-                        LocalMedia localMedia = new LocalMedia(f.getAbsolutePath());
-                        allImages.add(localMedia);
-                        images.add(localMedia);
-                    }
-                    if (images.size() > 0) {
-                        localMediaFolder.setImages(images);
-                        localMediaFolder.setImageNum(localMediaFolder.getImages().size());
-                        imageFolders.add(localMediaFolder);
-                    }
-                }
 
-                allImageFolder.setImages(allImages);
-                allImageFolder.setImageNum(allImageFolder.getImages().size());
-                /**update by lh**/
-                if (allImages.size() > 0) {
-                    allImageFolder.setFirstImagePath(allImages.get(0).getPath());
+                        if (parentFile.list() == null)
+                            continue;
+                        LocalMediaFolder localMediaFolder = getImageFolder(path, imageFolders);
+
+                        File[] files = parentFile.listFiles(new FilenameFilter() {
+                            @Override
+                            public boolean accept(File dir, String filename) {
+                                if (filename.endsWith(".jpg")
+                                        || filename.endsWith(".png")
+                                        || filename.endsWith(".jpeg"))
+                                    return true;
+                                return false;
+                            }
+                        });
+                        ArrayList<LocalMedia> images = new ArrayList<>();
+                        for (int i = 0; i < files.length; i++) {
+                            File f = files[i];
+                            LocalMedia localMedia = new LocalMedia(f.getAbsolutePath());
+                            allImages.add(localMedia);
+                            images.add(localMedia);
+                        }
+                        if (images.size() > 0) {
+                            localMediaFolder.setImages(images);
+                            localMediaFolder.setImageNum(localMediaFolder.getImages().size());
+                            imageFolders.add(localMediaFolder);
+                        }
+                    }
+
+                    allImageFolder.setImages(allImages);
+                    allImageFolder.setImageNum(allImageFolder.getImages().size());
+                    if (allImages.size() > 0) {
+                        allImageFolder.setFirstImagePath(allImages.get(0).getPath());
+                    }
+                    allImageFolder.setName(activity.getString(com.yongchun.library.R.string.all_image));
+                    imageFolders.add(allImageFolder);
+                    sortFolder(imageFolders);
+                    imageLoadListener.loadComplete(imageFolders);
+                    if (data != null) data.close();
                 }
-                allImageFolder.setName(activity.getString(com.yongchun.library.R.string.all_image));
-                imageFolders.add(allImageFolder);
-                sortFolder(imageFolders);
-                imageLoadListener.loadComplete(imageFolders);
-                if (data != null) data.close();
             }
 
             @Override

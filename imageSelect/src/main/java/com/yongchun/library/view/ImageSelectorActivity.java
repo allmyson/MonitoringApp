@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,7 +35,7 @@ import java.util.List;
  * Created by dee on 15/11/19.
  */
 public class ImageSelectorActivity extends AppCompatActivity {
-    public static String AUTHORITY = "";
+    public static String AUTHORITY = "com.ys.monitor.fileprovider";
     public final static int REQUEST_IMAGE = 66;
     public final static int REQUEST_CAMERA = 67;
 
@@ -83,7 +84,10 @@ public class ImageSelectorActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_ENABLE_CROP, enableCrop);
         activity.startActivityForResult(intent, REQUEST_IMAGE);
     }
+    public static void close(Activity activity) {
 
+        activity.finish();
+    }
     public static void start(Fragment activity, int maxSelectNum, int mode, boolean isShow, boolean enablePreview,
                              boolean enableCrop) {
         Intent intent = new Intent(activity.getActivity(), ImageSelectorActivity.class);
@@ -118,7 +122,6 @@ public class ImageSelectorActivity extends AppCompatActivity {
         registerListener();
         new LocalMediaLoader(this, LocalMediaLoader.TYPE_IMAGE).loadAllImage(new LocalMediaLoader
                 .LocalMediaLoadListener() {
-
             @Override
             public void loadComplete(List<LocalMediaFolder> folders) {
                 folderWindow.bindFolder(folders);
@@ -139,7 +142,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
         doneText.setVisibility(selectMode == MODE_MULTIPLE ? View.VISIBLE : View.GONE);
 
         previewText = (TextView) findViewById(R.id.preview_text);
-        previewText.setVisibility(enablePreview ? View.VISIBLE : View.GONE);
+//        previewText.setVisibility(enablePreview ? View.VISIBLE : View.GONE);
 
         folderLayout = (LinearLayout) findViewById(R.id.folder_layout);
         folderName = (TextView) findViewById(R.id.folder_name);
@@ -229,6 +232,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("===",resultCode+"==汇金这里吗=="+requestCode);
         if (resultCode == RESULT_OK) {
             // on take photo success
             if (requestCode == REQUEST_CAMERA) {
@@ -255,6 +259,8 @@ public class ImageSelectorActivity extends AppCompatActivity {
                 String path = data.getStringExtra(ImageCropActivity.OUTPUT_PATH);
                 onSelectDone(path);
             }
+        }else{
+            close(this);
         }
     }
 
@@ -286,8 +292,8 @@ public class ImageSelectorActivity extends AppCompatActivity {
     }
 
     public void startPreview(List<LocalMedia> previewImages, int position) {
-        ImagePreviewActivity.startPreview(this, previewImages, imageAdapter.getSelectedImages(), maxSelectNum,
-                position);
+//        ImagePreviewActivity.startPreview(this, previewImages, imageAdapter.getSelectedImages(), maxSelectNum,
+//                position);
     }
 
     public void startCrop(String path) {

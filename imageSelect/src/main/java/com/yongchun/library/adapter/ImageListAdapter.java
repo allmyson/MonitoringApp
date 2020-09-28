@@ -122,6 +122,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     if ((selectMode == ImageSelectorActivity.MODE_SINGLE || enablePreview) && imageSelectChangedListener != null) {
                         imageSelectChangedListener.onPictureClick(image, showCamera ? position - 1 : position);
+
                     } else {
                         changeCheckboxState(contentHolder, image);
                     }
