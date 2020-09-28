@@ -16,7 +16,9 @@ import com.ys.monitor.activity.ChatActivity;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.bean.KVBean;
 import com.ys.monitor.bean.UserList;
+import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.StringUtil;
+import com.ys.monitor.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +170,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
      * 对一级标签下的二级标签进行设置
      */
     @Override
-    public View getChildView(int groupPosition, final int childPosition,
+    public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         convertView = (LinearLayout) LinearLayout.inflate(context,
                 R.layout.item_child_layout, null);
@@ -182,9 +184,24 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         msgIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = PocEngineFactory.get().getUser("1111029");
-                MessageDialogue md = PocEngineFactory.get().createMessageDialogueIfNeed(user);
-                ChatActivity.intentToChat(context, md.getChat_id());
+                if (UserSP.isSoftPhone(context)) {
+                    if ("1".equals(childList.get(groupPosition).get(childPosition).isSoftPhone)) {
+                        if (!StringUtil.isBlank(childList.get(groupPosition).get(childPosition).softPhoneId)) {
+//                        User user = PocEngineFactory.get().getUser("1111029");
+                            User user =
+                                    PocEngineFactory.get().getUser(childList.get(groupPosition).get(childPosition).softPhoneId);
+                            MessageDialogue md =
+                                    PocEngineFactory.get().createMessageDialogueIfNeed(user);
+                            ChatActivity.intentToChat(context, md.getChat_id());
+                        } else {
+                            ToastUtil.show(context, "该用户对应的云集讯账号为空");
+                        }
+                    } else {
+                        ToastUtil.show(context, "该用户不是云集讯用户");
+                    }
+                } else {
+                    ToastUtil.show(context, "当前登录用户不是云集讯用户");
+                }
             }
         });
         final String phone =

@@ -163,5 +163,12 @@ public class Constant {
     public static class Action {
         public static final String ACTION_SESSION_INVALID = "com.upsoft.sdk.action.sessionReceiver";
     }
-
+    /**
+     * 获取本项目的缓存文件根目录
+     *
+     * @return
+     */
+    public static String getProjectRoot() {
+        return DIR_PATH;
+    }
 }

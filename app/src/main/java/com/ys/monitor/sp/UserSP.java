@@ -20,6 +20,7 @@ public class UserSP {
     public static final String KEY_USERNAME = "jys_username";
     public static final String KEY_PASSWORD = "jys_password";
     public static final String KEY_USER = "jys_user";
+    public static final String KEY_ICON = "jys_icon";
 
     //是否登录
     public static boolean isLogin(Context context) {
@@ -111,5 +112,13 @@ public class UserSP {
         SPUtil.remove(context, KEY_USER);
     }
 
+    public static void saveIcon(Context context, String username) {
+        SPUtil.put(context, KEY_ICON, username);
+    }
+
+
+    public static String getIcon(Context context) {
+        return (String) SPUtil.get(context, KEY_ICON, "");
+    }
 
 }

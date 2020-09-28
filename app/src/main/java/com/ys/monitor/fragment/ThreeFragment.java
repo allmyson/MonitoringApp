@@ -31,6 +31,7 @@ import com.ys.monitor.bean.Msg;
 import com.ys.monitor.bean.TaskBean;
 import com.ys.monitor.bean.YjtzBean;
 import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.MsgSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.NoNetView;
 import com.ys.monitor.util.HttpUtil;
@@ -88,7 +89,8 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_color));
         list = new ArrayList<>();
-        topList.addAll(Msg.getDefaultMsgList());
+//        topList.addAll(Msg.getDefaultMsgList());
+        topList.addAll(MsgSP.getTopList(mContext));
         list.addAll(topList);
         adapter = new NoticeAdapter(mContext, list, R.layout.item_notice);
         listView.setAdapter(adapter);
@@ -191,6 +193,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                                 list.set(0, msg);
                                 L.e(msg.toString());
                                 adapter.refresh(list);
+                                MsgSP.saveMsg(mContext,topList);
                             }
                         }
 
@@ -223,6 +226,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                             list.set(1, msg);
                             L.e(msg.toString());
                             adapter.refresh(list);
+                            MsgSP.saveMsg(mContext,topList);
                         }
                     }
                 } catch (Exception e) {
@@ -260,6 +264,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                             list.set(2, msg);
                             L.e(msg.toString());
                             adapter.refresh(list);
+                            MsgSP.saveMsg(mContext,topList);
                         }
                     }
                 } catch (Exception e) {

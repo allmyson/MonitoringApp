@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
@@ -15,6 +14,7 @@ import com.ys.monitor.adapter.ExpandableListAdapter;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.UserList;
 import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.ContactSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.BlankView;
 import com.ys.monitor.ui.NoNetView;
@@ -121,9 +121,9 @@ public class ContactActivity extends BaseActivity implements NoNetView.ClickList
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                Toast.makeText(mContext,
-                        adapter.getChild(groupPosition, childPosition).trueName,
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext,
+//                        adapter.getChild(groupPosition, childPosition).trueName,
+//                        Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -158,6 +158,7 @@ public class ContactActivity extends BaseActivity implements NoNetView.ClickList
                         } else {
                             blankView.setVisibility(View.VISIBLE);
                         }
+                        ContactSP.saveContact(mContext,response.get());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -169,9 +170,9 @@ public class ContactActivity extends BaseActivity implements NoNetView.ClickList
                 }
             });
         } else {
-            noNetView.setVisibility(View.VISIBLE);
-            blankView.setVisibility(View.GONE);
-            dataLL.setVisibility(View.GONE);
+//            noNetView.setVisibility(View.VISIBLE);
+//            blankView.setVisibility(View.GONE);
+//            dataLL.setVisibility(View.GONE);
         }
     }
 
@@ -184,6 +185,27 @@ public class ContactActivity extends BaseActivity implements NoNetView.ClickList
     private void initModle() {
         adapter = new ExpandableListAdapter(this, map);
         expandableListView.setAdapter(adapter);
+        allList.clear();
+        allMap.clear();
+        map.clear();
+        String json = ContactSP.getContactStr(mContext);
+        UserList userList = new Gson().fromJson(json, UserList.class);
+        if (userList != null && YS.SUCCESE.equals(userList.code) && userList.data != null && userList.data.rows != null && userList.data.rows.size() > 0) {
+            Map<String, List<UserList.DataBean.RowsBean>> data =
+                    UserList.groupList(userList.data.rows);
+            allList.addAll(userList.data.rows);
+            allMap.putAll(data);
+            map.putAll(data);
+        } else {
+            show(YS.HTTP_TIP);
+        }
+        adapter.refresh(map);
+        expandGroupFirst();
+        if (adapter.getGroupCount() > 0) {
+            blankView.setVisibility(View.GONE);
+        } else {
+            blankView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

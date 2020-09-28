@@ -11,13 +11,13 @@ import com.ys.monitor.R;
 import com.ys.monitor.activity.AboutActivity;
 import com.ys.monitor.activity.KefuActivity;
 import com.ys.monitor.activity.LoginActivity;
-import com.ys.monitor.activity.RtspVideoActivity;
 import com.ys.monitor.activity.SetActivity;
 import com.ys.monitor.activity.UserInfoActivity;
 import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.LoginBean;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.ActivityUtil;
+import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.YS;
 
@@ -62,8 +62,9 @@ public class FourFragment extends BaseFragment implements View.OnClickListener,
                 startActivity(new Intent(mContext, SetActivity.class));
                 break;
             case R.id.tv_exit:
-//                exit();
-                RtspVideoActivity.playRtspVideo(mContext,"rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov");
+                exit();
+//                RtspVideoActivity.playRtspVideo(mContext, "rtsp://wowzaec2demo.streamlock" +
+//                        ".net/vod/mp4:BigBuckBunny_115k.mov");
                 break;
         }
     }
@@ -90,6 +91,11 @@ public class FourFragment extends BaseFragment implements View.OnClickListener,
         if (loginBean != null && loginBean.data != null) {
             userNameTV.setText(StringUtil.valueOf(loginBean.data.trueName));
             orgTV.setText(StringUtil.valueOf(loginBean.data.dutyName));
+            String icon = UserSP.getIcon(mContext);
+            if (!StringUtil.isBlank(icon)) {
+                YS.showRoundImage(mContext, YS.IP + icon, headIV);
+                return;
+            }
             if (!StringUtil.isBlank(loginBean.data.icon)) {
                 YS.showRoundImage(mContext, loginBean.data.icon, headIV);
 //                Glide.with(mContext).load(FunctionApi.getImagePath(loginBean.data.icon)).into
@@ -107,6 +113,13 @@ public class FourFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void getPhoto() {
+        String icon = UserSP.getIcon(mContext);
+        L.e("icon=" + icon);
+        if (!StringUtil.isBlank(icon)) {
+//            YS.showRoundImage(mContext, icon, headIV);
+            YS.showRoundImage(mContext, YS.IP + icon, headIV);
+        }
+        srl.setRefreshing(false);
 //        HttpUtil.getUserInfoById(mContext, userId, new HttpListener<String>() {
 //            @Override
 //            public void onSucceed(int what, Response<String> response) {

@@ -16,9 +16,11 @@ import com.ys.monitor.adapter.MainFragmentAdapter;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.MainBean;
 import com.ys.monitor.fragment.ThreeFragment;
+import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.LhViewPager;
 import com.ys.monitor.update.UpdateManager;
 import com.ys.monitor.util.L;
+import com.ys.monitor.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,14 +130,24 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private void loginChat(){
-        if (!PocEngineFactory.get().hasServiceConnected()) {
-            L.e("chat","未连接开始登陆...");
-            PocEngineFactory.get().addEventHandler(iPocEngineEventHandler);
-            PocEngineFactory.get().login("1111031", "13579");
+    private void loginChat() {
+        if (UserSP.isSoftPhone(mContext)) {
+            String softPhoneId = UserSP.getSoftPhoneId(mContext);
+            if (!StringUtil.isBlank(softPhoneId)) {
+                if (!PocEngineFactory.get().hasServiceConnected()) {
+                    L.e("chat", "未连接开始登陆...");
+                    PocEngineFactory.get().addEventHandler(iPocEngineEventHandler);
+                    PocEngineFactory.get().login(softPhoneId, "13579");
+//                    PocEngineFactory.get().login("1111031", "13579");
 //            PocEngineFactory.get().login("1111029", "13579");
-        }else{
-            L.e("chat","已登陆...");
+                } else {
+                    L.e("chat", "已登陆...");
+                }
+            }else {
+                L.e("softPhoneId为空");
+            }
+        }else {
+            L.e("当前用户不是云集讯用户");
         }
     }
 
@@ -146,35 +158,36 @@ public class MainActivity extends BaseActivity {
         public void onLoginStepProgress(int progress, String msg) {
             if (progress == LoginProgress.PRO_LOGIN_SUCCESS) {
                 PocEngineFactory.get().removeEventHandler(iPocEngineEventHandler);
-                L.e("chat","Login success " + msg);
+                L.e("chat", "Login success " + msg);
             } else if (progress == LoginProgress.PRO_BINDING_ACCOUNT_FAILED) {
-                L.e("chat","Login failed " + msg);
+                L.e("chat", "Login failed " + msg);
             } else if (progress == LoginProgress.PRO_BINDING_ACCOUNT_NOT_EXIST) {
-                L.e("chat","Login failed " + msg);
+                L.e("chat", "Login failed " + msg);
             } else if (progress == LoginProgress.PRO_BINDING_ACCOUNT_NOT_ACTIVE) {
-                L.e("chat","Login failed " + msg);
+                L.e("chat", "Login failed " + msg);
             } else if (progress == LoginProgress.PRO_LOGIN_FAILED) {
-                L.e("chat","Login failed " + msg);
+                L.e("chat", "Login failed " + msg);
             }
         }
+
         @Override
         public void onServiceConnected() {
-            L.e("chat","服务已连接");
+            L.e("chat", "服务已连接");
         }
 
         @Override
         public void onServiceConnecting() {
-            L.e("chat","服务连接中......");
+            L.e("chat", "服务连接中......");
         }
 
         @Override
         public void onServiceConnectFailed(int reason) {
-            L.e("chat","服务连接失败" + reason);
+            L.e("chat", "服务连接失败" + reason);
         }
 
         @Override
         public void onServiceDisconnected(int reason) {
-            L.e("chat","服务断开连接,reason: " + reason);
+            L.e("chat", "服务断开连接,reason: " + reason);
         }
 
         @Override

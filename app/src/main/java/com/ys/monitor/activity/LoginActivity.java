@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.base.BaseActivity;
-import com.ys.monitor.bean.BaseBean;
+import com.ys.monitor.bean.LoginBean;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.HttpUtil;
@@ -107,11 +107,16 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
                     HttpUtil.login(mContext, user, psd, new HttpListener<String>() {
                         @Override
                         public void onSucceed(int what, Response<String> response) {
-                            BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
+                            LoginBean baseBean = new Gson().fromJson(response.get(),
+                                    LoginBean.class);
                             if (baseBean != null) {
                                 if (YS.SUCCESE.equals(baseBean.code)) {
                                     //登录成功
                                     UserSP.saveLoginInfo(mContext, response.get());
+                                    if (baseBean.data != null) {
+                                        UserSP.saveIcon(mContext,
+                                                StringUtil.valueOf(baseBean.data.icon));
+                                    }
                                     startActivity(new Intent(mContext, MainActivity.class));
                                     finish();
                                 }

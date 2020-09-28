@@ -334,5 +334,37 @@ public class FileUtil {
                 .nextInt(10) + ".png";
         return name;
     }
-
+    /**
+     * 调用此方法自动计算指定文件或指定文件夹的大小
+     *
+     * @param filePath 文件路径
+     * @return 计算好的带B、KB、MB、GB的字符串
+     */
+    public static String getAutoFileOrFilesSize(String filePath) {
+        File file = new File(filePath);
+        long blockSize = 0;
+        try {
+            if (file.isDirectory()) {
+                blockSize = getFileSizes(file);
+            } else {
+                blockSize = getFileSize(file);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            L.e("lh", "获取文件大小失败!");
+        }
+        return FormetFileSize(blockSize);
+    }
+    public static void deleteFile2(File file) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File f = files[i];
+                deleteFile2(f);
+            }
+//            file.delete();//如要保留文件夹，只删除文件，请注释这行
+        } else if (file.exists()) {
+            file.delete();
+        }
+    }
 }

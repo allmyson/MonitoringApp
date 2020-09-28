@@ -1,6 +1,5 @@
 package com.ys.monitor.activity;
 
-import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,9 +11,9 @@ import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.adapter.YjtzAdapter;
 import com.ys.monitor.base.BaseActivity;
-import com.ys.monitor.bean.FireBean;
 import com.ys.monitor.bean.YjtzBean;
 import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.MsgSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.BlankView;
 import com.ys.monitor.ui.NoNetView;
@@ -56,6 +55,7 @@ public class YjtzActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         noNetView.setClickListener(this);
         lv = getView(R.id.lv_);
         list = new ArrayList<>();
+        list.addAll(MsgSP.getYJList(mContext));
         adapter = new YjtzAdapter(mContext, list, R.layout.item_yjtz);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,6 +94,7 @@ public class YjtzActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                         } else {
                             blankView.setVisibility(View.VISIBLE);
                         }
+                        MsgSP.saveYJTZ(mContext,list);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -107,9 +108,9 @@ public class YjtzActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 }
             });
         } else {
-            noNetView.setVisibility(View.VISIBLE);
-            blankView.setVisibility(View.GONE);
-            dataLL.setVisibility(View.GONE);
+//            noNetView.setVisibility(View.VISIBLE);
+//            blankView.setVisibility(View.GONE);
+//            dataLL.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
         }
     }

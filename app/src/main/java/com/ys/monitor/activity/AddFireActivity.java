@@ -34,6 +34,7 @@ import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.BaseBean;
 import com.ys.monitor.bean.FileUploadBean;
 import com.ys.monitor.bean.GPSBean;
+import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.MyGridView;
@@ -65,7 +66,7 @@ public class AddFireActivity extends BaseActivity {
     private PocEngine pocEngine;
     private GeoCoder mCoder;
     private String currentVideoName;
-
+    private WaitDialog waitDialog;
     @Override
     public int getLayoutId() {
         return R.layout.activity_fire_add;
@@ -73,6 +74,7 @@ public class AddFireActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        waitDialog = new WaitDialog(mContext);
         nameET = getView(R.id.et_name);
         descripET = getView(R.id.et_description);
         addressTV = getView(R.id.tv_address);
@@ -254,6 +256,7 @@ public class AddFireActivity extends BaseActivity {
             addFire("", "");
             return;
         }
+        waitDialog.show();
         new Thread() {
             @Override
             public void run() {
@@ -359,12 +362,15 @@ public class AddFireActivity extends BaseActivity {
             switch (msg.what) {
                 case UPLOAD_IMAGE_FAIL:
                     show("图片上传失败");
+                    waitDialog.dismiss();
                     break;
                 case UPLOAD_VIDEO_FAIL:
                     show("视频上传失败");
+                    waitDialog.dismiss();
                     break;
                 case UPLOAD_SUCC:
                     L.e("附件上传成功");
+                    waitDialog.dismiss();
                     addFire(imageUrls, videoUrls);
                     break;
             }
