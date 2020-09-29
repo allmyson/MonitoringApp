@@ -48,6 +48,7 @@ public class MainActivity extends BaseActivity {
         mainFragmentAdapter = new MainFragmentAdapter(getSupportFragmentManager(), mContext, list);
         mViewPager.setAdapter(mainFragmentAdapter);
         mViewPager.setOffscreenPageLimit(5);
+        mViewPager.setNoScroll(true);
         mTabLayout.setupWithViewPager(mViewPager);
         for (int i = 0; i < mainFragmentAdapter.getCount(); i++) {
             TabLayout.Tab tab = mTabLayout.getTabAt(i);//获得每一个tab

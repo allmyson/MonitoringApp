@@ -1,1 +1,2 @@
+include ':arcgistool'
 include ':app', ':imageSelect', ':qrcode', ':convenientbanner'

@@ -3,6 +3,7 @@ apply from: "config.gradle"
 buildscript {
     
     repositories {
+        maven {url 'https://esri.bintray.com/arcgis'}
         maven{ url 'https://maven.aliyun.com/repository/google'}
         maven{ url 'https://maven.aliyun.com/repository/gradle-plugin'}
         maven{ url 'https://maven.aliyun.com/repository/public'}
@@ -26,6 +27,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven {url 'https://esri.bintray.com/arcgis'}
         maven{ url 'https://maven.aliyun.com/repository/google'}
         maven{ url 'https://maven.aliyun.com/repository/gradle-plugin'}
         maven{ url 'https://maven.aliyun.com/repository/public'}
