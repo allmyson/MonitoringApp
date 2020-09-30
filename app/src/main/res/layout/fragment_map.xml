@@ -11,6 +11,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cn.sddman.arcgistool.view.ArcGisZoomView
+            android:id="@+id/arcgis_zoom_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="80dp" />
+
+        <cn.sddman.arcgistool.view.MeasureToolView
+            android:id="@+id/measure_tool"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/arcgis_zoom_btn"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="5dp"
+            app:is_horizontal="false" />
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="54dp"
+            android:layout_marginTop="30dp"
             android:layout_marginRight="15dp"
             android:background="@drawable/rect_cornor_map_search"
             android:gravity="center_vertical"
@@ -45,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
@@ -55,8 +77,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/rect_cornor_map_search"
                 android:horizontalSpacing="10dp"
                 android:numColumns="3"
+                android:paddingTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:paddingBottom="10dp"
                 android:verticalSpacing="10dp" />
 
             <LinearLayout
@@ -73,26 +99,4 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <cn.sddman.arcgistool.view.ArcGisZoomView
-            android:id="@+id/arcgis_zoom_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="80dp" />
-
-        <cn.sddman.arcgistool.view.MeasureToolView
-            android:id="@+id/measure_tool"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/arcgis_zoom_btn"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="5dp"
-            app:is_horizontal="false" />
-    </RelativeLayout>
 </FrameLayout>

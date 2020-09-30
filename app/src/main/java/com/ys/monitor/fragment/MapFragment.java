@@ -3,15 +3,28 @@ package com.ys.monitor.fragment;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.data.Feature;
+import com.esri.arcgisruntime.data.FeatureCollection;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
+import com.esri.arcgisruntime.layers.FeatureCollectionLayer;
+import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.ys.monitor.R;
+import com.ys.monitor.adapter.LayerAdapter;
 import com.ys.monitor.base.BaseFragment;
+import com.ys.monitor.bean.LayerBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.sddman.arcgistool.common.Variable;
 import cn.sddman.arcgistool.entity.DrawEntity;
@@ -34,13 +47,44 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     private ArcGisZoomView zoomBtn;
     private ArcgisToolManager arcgisToolManager;
     private MeasureToolView measureToolView;
+    private GridView layerGV;
+    private LayerAdapter layerAdapter;
+    private List<LayerBean> layerBeanList;
+    private ImageView layerIV;
+
+    private FeatureLayer featureLayer_gsmm;
 
     public static MapFragment newInstance() {
         return new MapFragment();
     }
 
+    private boolean isShowLayer;
+
     @Override
     protected void init() {
+        layerIV = getView(R.id.iv_layer);
+        layerIV.setOnClickListener(this);
+        layerGV = getView(R.id.gv_layer);
+        layerBeanList = new ArrayList<>();
+        layerBeanList.addAll(LayerBean.getDefaultLayers());
+        layerAdapter = new LayerAdapter(mContext, layerBeanList, R.layout.item_layer);
+        layerGV.setAdapter(layerAdapter);
+        layerGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                layerAdapter.selectPosition(i);
+                if (layerAdapter.isSelect(i)) {
+                    show("选中");
+                    if (!mMapView.getMap().getOperationalLayers().contains(featureLayer_gsmm))
+                        mMapView.getMap().getOperationalLayers().add(featureLayer_gsmm);
+                } else {
+                    show("取消选中");
+                    if (mMapView.getMap().getOperationalLayers().contains(featureLayer_gsmm))
+                        mMapView.getMap().getOperationalLayers().remove(featureLayer_gsmm);
+                }
+            }
+        });
+        layerGV.setVisibility(View.INVISIBLE);
         // get a reference to the map view
         mMapView = getView(R.id.mapView);
         // create new Tiled Layer from service url
@@ -173,11 +217,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                         Toast.makeText(getActivity(), "zoom out", Toast.LENGTH_SHORT).show();
                     }
                 });
+        initLayer();
     }
 
     @Override
     protected void getData() {
-
+//        addLayer();
     }
 
     @Override
@@ -187,7 +232,16 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.iv_layer:
+                isShowLayer = !isShowLayer;
+                if (isShowLayer) {
+                    layerGV.setVisibility(View.VISIBLE);
+                } else {
+                    layerGV.setVisibility(View.INVISIBLE);
+                }
+                break;
+        }
     }
 
     @Override
@@ -206,5 +260,42 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         mMapView.dispose();
+    }
+
+    private void addLayer() {
+        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("http://gis.cqzhly" +
+                ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8/FeatureServer" +
+                "/0");
+        FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
+        mMapView.getMap().getOperationalLayers().add(featureLayer);
+    }
+
+    private void removeLayer() {
+        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("http://gis.cqzhly" +
+                ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8/FeatureServer" +
+                "/0");
+        FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
+        mMapView.getMap().getOperationalLayers().remove(featureLayer);
+    }
+
+    private void createFeatureCollection() {
+        if (mMapView != null) {
+            FeatureCollection featureCollection = new FeatureCollection();
+            FeatureCollectionLayer featureCollectionLayer =
+                    new FeatureCollectionLayer(featureCollection);
+            mMapView.getMap().getOperationalLayers().add(featureCollectionLayer);
+            createPointTable(featureCollection);
+        }
+    }
+
+    private void createPointTable(FeatureCollection featureCollection) {
+        List<Feature> features = new ArrayList<>();
+    }
+
+    private void initLayer() {
+        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("http://gis.cqzhly" +
+                ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8/FeatureServer" +
+                "/0");
+        featureLayer_gsmm = new FeatureLayer(serviceFeatureTable);
     }
 }

@@ -79,6 +79,7 @@ public class AddXHActivity extends BaseActivity {
     private String gis_wd;
     private String currentVideoName;
     private WaitDialog waitDialog;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_xh_add;
@@ -264,7 +265,8 @@ public class AddXHActivity extends BaseActivity {
 //                    public void onSucceed(int what, Response<String> response) {
 //                        FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
 //                                FileUploadBean.class);
-//                        if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) && fileUploadBean.data != null) {
+//                        if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) &&
+//                        fileUploadBean.data != null) {
 //                            addXH(fileUploadBean.data.url);
 //                        } else {
 //                            show("附件上传失败!");
@@ -283,6 +285,7 @@ public class AddXHActivity extends BaseActivity {
         double[] gps = GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(gis_wd),
                 StringUtil.StringToDouble(gis_jd));
         map.put("name", nameTV.getText().toString());
+        map.put("patrolStatus", kvBean.id);
         map.put("warnDesc", descripET.getText().toString());
         map.put("source", YS.source);
         map.put("siteSplicing", addressTV.getText().toString());

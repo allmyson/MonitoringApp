@@ -31,7 +31,6 @@ public class MainActivity extends BaseActivity {
     private LhViewPager mViewPager;
     private MainFragmentAdapter mainFragmentAdapter;
     private List<MainBean> list;
-
     @Override
     public int getLayoutId() {
         return R.layout.activity_main;
