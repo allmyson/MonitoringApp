@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ys.monitor.bean.Msg;
 import com.ys.monitor.bean.YjtzBean;
+import com.ys.monitor.util.L;
 import com.ys.monitor.util.SPUtil;
 import com.ys.monitor.util.StringUtil;
 
@@ -20,6 +21,8 @@ import java.util.List;
  * @date 2020/9/28 14:42
  */
 public class MsgSP {
+    public static final String KEY_HELP = "jys_help";//指挥中心信息
+    public static final String KEY_FIRST_MSG = "jys_first_msg";//首页第一条预警通知
     public static final String KEY_MSG = "jys_fragment_msg";//火情、预警、任务通知、指挥中心
     public static final String KEY_MSG_DETAIL = "jys_msg_detail";//预警通知
 
@@ -66,7 +69,7 @@ public class MsgSP {
 
 
     //缓存预警通知
-    public static void saveYJTZ(Context context,List<YjtzBean.DataBean.RowsBean> list){
+    public static void saveYJTZ(Context context, List<YjtzBean.DataBean.RowsBean> list) {
         if (list == null) {
             return;
         }
@@ -85,5 +88,26 @@ public class MsgSP {
             list = new ArrayList<>();
         }
         return list;
+    }
+
+
+    public static void saveFirstMsg(Context context, String json) {
+        SPUtil.put(context, KEY_FIRST_MSG, json);
+    }
+
+
+    public static String getFirstMsg(Context context) {
+        return (String) SPUtil.get(context, KEY_FIRST_MSG, "");
+    }
+
+
+    public static void saveHelpMsg(Context context, String json) {
+        L.e("存入的help信息:" + json);
+        SPUtil.put(context, KEY_HELP, json);
+    }
+
+
+    public static String getHelpMsg(Context context) {
+        return (String) SPUtil.get(context, KEY_HELP, "");
     }
 }

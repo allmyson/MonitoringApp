@@ -18,11 +18,17 @@ import com.ys.monitor.activity.AddXHActivity;
 import com.ys.monitor.activity.ContactActivity;
 import com.ys.monitor.activity.ResoureActivity;
 import com.ys.monitor.activity.VideoListActivity;
+import com.ys.monitor.activity.YjtzDetailActivity;
 import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.HFAqi;
 import com.ys.monitor.bean.HFWeather;
+import com.ys.monitor.bean.Msg;
+import com.ys.monitor.bean.YjtzBean;
 import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.MsgSP;
+import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.HttpUtil;
+import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
 
 /**
@@ -38,6 +44,8 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
     private TextView wdTV, tianqiTV, aqiTV, qixiangTV, msgTV;
     private ImageView tianqiIV;
     private LinearLayout msgLL;
+    private String userId;
+    private YjtzBean.DataBean.RowsBean currentYjtz;
 
     public static OneFragment newInstance() {
         return new OneFragment();
@@ -66,6 +74,13 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
             case R.id.ll_txl:
                 startActivity(new Intent(mContext, ContactActivity.class));
                 break;
+            case R.id.ll_msg:
+                if (currentYjtz != null) {
+                    YjtzDetailActivity.intentToDetail(mContext, new Gson().toJson(currentYjtz));
+                } else {
+                    show("暂无预警通知");
+                }
+                break;
         }
     }
 
@@ -81,11 +96,20 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
         msgTV = getView(R.id.tv_msg);
         tianqiIV = getView(R.id.iv_tianqi);
         msgLL = getView(R.id.ll_msg);
+        msgLL.setOnClickListener(this);
         getView(R.id.ll_hqsb).setOnClickListener(this);
         getView(R.id.ll_rcxh).setOnClickListener(this);
         getView(R.id.ll_zycj).setOnClickListener(this);
         getView(R.id.ll_spck).setOnClickListener(this);
         getView(R.id.ll_txl).setOnClickListener(this);
+        userId = UserSP.getUserId(mContext);
+        String json = MsgSP.getFirstMsg(mContext);
+        if (StringUtil.isGoodJson(json)) {
+            currentYjtz = new Gson().fromJson(json, YjtzBean.DataBean.RowsBean.class);
+            if (currentYjtz != null) {
+                msgTV.setText(StringUtil.valueOf(currentYjtz.content));
+            }
+        }
     }
 
     @Override
@@ -126,6 +150,32 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
 //                swipeRefreshLayout.setRefreshing(false);
 //            }
 //        });
+        HttpUtil.getYjtzListWithNoDialog(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                try {
+                    YjtzBean yjtzBean = new Gson().fromJson(response.get(), YjtzBean.class);
+                    if (yjtzBean != null && yjtzBean.data != null && yjtzBean.data.rows != null && yjtzBean.data.rows.size() > 0) {
+                        if (yjtzBean.data.rows.get(0) != null) {
+                            currentYjtz = yjtzBean.data.rows.get(0);
+                            msgTV.setText(StringUtil.valueOf(currentYjtz.content));
+                            MsgSP.saveFirstMsg(mContext, new Gson().toJson(currentYjtz));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                swipeRefreshLayout.setRefreshing(false);
+
+            }
+        });
+
+
         HttpUtil.getHFWeather(mContext, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

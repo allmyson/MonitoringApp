@@ -2,6 +2,7 @@ package com.ys.monitor.activity;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -64,6 +65,25 @@ public class YjtzActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 YjtzBean.DataBean.RowsBean rowsBean = adapter.getItem(position);
                 String json = new Gson().toJson(rowsBean);
                 YjtzDetailActivity.intentToDetail(mContext, json);
+            }
+        });
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
+                View firstView = view.getChildAt(firstVisibleItem);
+                if (firstVisibleItem == 0 && (firstView == null || firstView.getTop() == 0)) {
+                    /*上滑到listView的顶部时，下拉刷新组件可见*/
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    /*不是listView的顶部时，下拉刷新组件不可见*/
+                    swipeRefreshLayout.setEnabled(false);
+                }
             }
         });
         userId = UserSP.getUserId(mContext);

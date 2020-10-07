@@ -309,4 +309,12 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         messageInfoList.remove(position);
         notifyItemRemoved(position);
     }
+
+    public List<MessageInfo> getMessageInfoList() {
+        return messageInfoList;
+    }
+
+    public void setMessageInfoList(List<MessageInfo> messageInfoList) {
+        this.messageInfoList = messageInfoList;
+    }
 }

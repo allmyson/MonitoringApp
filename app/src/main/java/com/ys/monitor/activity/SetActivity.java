@@ -69,6 +69,8 @@ public class SetActivity extends BaseActivity {
                 FileUtil.deleteFile2(new File(Constant.getProjectRoot()));
 //                Constant.buildFile();
                 SPUtil.deleteKey(mContext, MsgSP.KEY_MSG);
+                SPUtil.deleteKey(mContext, MsgSP.KEY_FIRST_MSG);
+                SPUtil.deleteKey(mContext, MsgSP.KEY_HELP);
                 SPUtil.deleteKey(mContext, MsgSP.KEY_MSG_DETAIL);
                 SPUtil.deleteKey(mContext, ContactSP.KEY_CONTACT);
                 //指挥中心的数据也要删

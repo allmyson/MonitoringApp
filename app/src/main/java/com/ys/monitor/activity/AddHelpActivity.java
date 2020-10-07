@@ -50,6 +50,7 @@ import com.ys.monitor.chat.widget.EmotionInputDetector;
 import com.ys.monitor.chat.widget.NoScrollViewPager;
 import com.ys.monitor.chat.widget.StateButton;
 import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.MsgSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.GPSUtil;
 import com.ys.monitor.util.HttpUtil;
@@ -100,7 +101,7 @@ public class AddHelpActivity extends BaseActivity {
     private String number;
     private double gis_jd = 0;
     private double gis_wd = 0;
-
+    private String myIcon;
     @Override
     public int getLayoutId() {
         return R.layout.activity_add_help;
@@ -116,7 +117,9 @@ public class AddHelpActivity extends BaseActivity {
         findViewByIds();
         EventBus.getDefault().register(this);
         initWidget();
+        loadData();
         userId = UserSP.getUserId(mContext);
+        myIcon = YS.IP + UserSP.getIcon(mContext);
         pocEngine = PocEngineFactory.get();
         getAddress();
         getFire();
@@ -348,45 +351,55 @@ public class AddHelpActivity extends BaseActivity {
     /**
      * 构造聊天数据
      */
-    private void LoadData() {
+    private void loadData() {
 //        messageInfos = new ArrayList<>();
+        messageInfos.clear();
+        String json = MsgSP.getHelpMsg(mContext);
+        L.e(json);
+        if (StringUtil.isGoodJson(json)) {
+            List<MessageInfo> list = new Gson().fromJson(json, new TypeToken<List<MessageInfo>>() {
+            }.getType());
+            if (list != null && list.size() > 0) {
+                messageInfos.addAll(list);
+//                chatAdapter.addAll(messageInfos);
+            }
+        }
+//        MessageInfo messageInfo = new MessageInfo();
+//        messageInfo.setContent("你好，欢迎使用Rance的聊天界面框架");
+//        messageInfo.setFileType(Constants.CHAT_FILE_TYPE_TEXT);
+//        messageInfo.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+//        messageInfo.setHeader("");
+//        messageInfos.add(messageInfo);
+//
+//        MessageInfo messageInfo1 = new MessageInfo();
+//        messageInfo1.setFilepath("http://www.trueme.net/bb_midi/welcome.wav");
+//        messageInfo1.setVoiceTime(3000);
+//        messageInfo1.setFileType(Constants.CHAT_FILE_TYPE_VOICE);
+//        messageInfo1.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
+//        messageInfo1.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
+//        messageInfo1.setHeader("http://img.dongqiudi" +
+//                ".com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
+//        messageInfos.add(messageInfo1);
+//
+//        MessageInfo messageInfo2 = new MessageInfo();
+//        messageInfo2.setFilepath("http://img4.imgtn.bdimg.com/it/u=1800788429," +
+//                "176707229&fm=21&gp=0.jpg");
+//        messageInfo2.setFileType(Constants.CHAT_FILE_TYPE_IMAGE);
+//        messageInfo2.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+//        messageInfo2.setHeader("http://img0.imgtn.bdimg.com/it/u=401967138,750679164&fm=26&gp=0" +
+//                ".jpg");
+//        messageInfos.add(messageInfo2);
+//
+//        MessageInfo messageInfo3 = new MessageInfo();
+//        messageInfo3.setContent("[微笑][色][色][色]");
+//        messageInfo3.setFileType(Constants.CHAT_FILE_TYPE_TEXT);
+//        messageInfo3.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
+//        messageInfo3.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+//        messageInfo3.setHeader("http://img.dongqiudi" +
+//                ".com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
+//        messageInfos.add(messageInfo3);
 
-        MessageInfo messageInfo = new MessageInfo();
-        messageInfo.setContent("你好，欢迎使用Rance的聊天界面框架");
-        messageInfo.setFileType(Constants.CHAT_FILE_TYPE_TEXT);
-        messageInfo.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-        messageInfo.setHeader("");
-        messageInfos.add(messageInfo);
-
-        MessageInfo messageInfo1 = new MessageInfo();
-        messageInfo1.setFilepath("http://www.trueme.net/bb_midi/welcome.wav");
-        messageInfo1.setVoiceTime(3000);
-        messageInfo1.setFileType(Constants.CHAT_FILE_TYPE_VOICE);
-        messageInfo1.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
-        messageInfo1.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
-        messageInfo1.setHeader("http://img.dongqiudi" +
-                ".com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
-        messageInfos.add(messageInfo1);
-
-        MessageInfo messageInfo2 = new MessageInfo();
-        messageInfo2.setFilepath("http://img4.imgtn.bdimg.com/it/u=1800788429," +
-                "176707229&fm=21&gp=0.jpg");
-        messageInfo2.setFileType(Constants.CHAT_FILE_TYPE_IMAGE);
-        messageInfo2.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-        messageInfo2.setHeader("http://img0.imgtn.bdimg.com/it/u=401967138,750679164&fm=26&gp=0" +
-                ".jpg");
-        messageInfos.add(messageInfo2);
-
-        MessageInfo messageInfo3 = new MessageInfo();
-        messageInfo3.setContent("[微笑][色][色][色]");
-        messageInfo3.setFileType(Constants.CHAT_FILE_TYPE_TEXT);
-        messageInfo3.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
-        messageInfo3.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
-        messageInfo3.setHeader("http://img.dongqiudi" +
-                ".com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
-        messageInfos.add(messageInfo3);
-
-        chatAdapter.addAll(messageInfos);
+//        chatAdapter.addAll(messageInfos);
     }
 
     private Map<String, Object> map;
@@ -394,8 +407,7 @@ public class AddHelpActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageEventBus(final MessageInfo messageInfo) {
-        messageInfo.setHeader("http://img.dongqiudi" +
-                ".com/uploads/avatar/2014/10/20/8MCTb0WBFG_thumb_1413805282863.jpg");
+        messageInfo.setHeader(myIcon);
         messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
         messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
         messageInfos.add(messageInfo);
@@ -512,19 +524,11 @@ public class AddHelpActivity extends BaseActivity {
 //                chatAdapter.notifyDataSetChanged();
 //            }
 //        }, 2000);
-//        new Handler().postDelayed(new Runnable() {
-//            public void run() {
-//                MessageInfo message = new MessageInfo();
-//                message.setContent("这是模拟消息回复");
-//                message.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-//                message.setFileType(Constants.CHAT_FILE_TYPE_TEXT);
-//                message.setHeader("http://img0.imgtn.bdimg.com/it/u=401967138," +
-//                        "750679164&fm=26&gp=0.jpg");
-//                messageInfos.add(message);
-//                chatAdapter.notifyItemInserted(messageInfos.size() - 1);
-//                chatList.scrollToPosition(chatAdapter.getItemCount() - 1);
-//            }
-//        }, 3000);
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                MsgSP.saveHelpMsg(mContext, new Gson().toJson(chatAdapter.getMessageInfoList()));
+            }
+        }, 3000);
     }
 
     @Override
@@ -591,7 +595,7 @@ public class AddHelpActivity extends BaseActivity {
         if (StringUtil.isGoodJson(json)) {
             List<FireBean.DataBean.RowsBean> ll = new Gson().fromJson(json,
                     new TypeToken<List<FireBean.DataBean.RowsBean>>() {
-            }.getType());
+                    }.getType());
             if (ll != null && ll.size() > 0) {
                 fireList.addAll(ll);
             }
