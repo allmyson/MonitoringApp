@@ -80,6 +80,10 @@ public class YjtzDetailActivity extends BaseActivity {
 
     private void addImage(String url) {
         ImageView imageView = new ImageView(mContext);
+        imageView.setAdjustViewBounds(true);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);//两
+        imageView.setLayoutParams(params);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(mContext).load(url).into(imageView);
         imageLL.addView(imageView);

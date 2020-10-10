@@ -16,6 +16,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.huamai.poc.IPocEngineEventHandler;
+import com.huamai.poc.PocEngine;
+import com.huamai.poc.PocEngineFactory;
+import com.huamai.poc.greendao.User;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
@@ -24,6 +29,7 @@ import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.BaseBean;
 import com.ys.monitor.bean.FileUploadBean;
+import com.ys.monitor.bean.GPSBean;
 import com.ys.monitor.bean.KVBean;
 import com.ys.monitor.bean.ResourceBean;
 import com.ys.monitor.bean.ResourceZDBean;
@@ -35,6 +41,7 @@ import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.LastInputEditText;
 import com.ys.monitor.ui.MyGridView;
 import com.ys.monitor.util.DateUtil;
+import com.ys.monitor.util.GPSUtil;
 import com.ys.monitor.util.HttpUtil;
 import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
@@ -55,6 +62,10 @@ public class ResoureActivity extends BaseActivity {
     private TextView commitTV;
     private List<ResourceBean.DataBean.RowsBean> rowsBeanList;
     private ResourceBean.DataBean.RowsBean currentRowsBean;
+    private PocEngine pocEngine;
+    private String number;
+    private String gis_jd;
+    private String gis_wd;
 
     @Override
     public int getLayoutId() {
@@ -76,10 +87,12 @@ public class ResoureActivity extends BaseActivity {
         imgLL = getView(R.id.ll_img);
         commitTV = getView(R.id.tv_commit);
         commitTV.setOnClickListener(this);
+        pocEngine = PocEngineFactory.get();
     }
 
     @Override
     public void getData() {
+        getLocation();
         userId = UserSP.getUserId(mContext);
         //获取资源类型
         HttpUtil.getResourceTypeList(mContext, userId, new HttpListener<String>() {
@@ -109,6 +122,48 @@ public class ResoureActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private void getLocation() {
+        if (pocEngine.hasServiceConnected()) {
+            if (!pocEngine.isDisableInternalGpsFunc()) {
+                User user = pocEngine.getCurrentUser();
+                number = "" + user.getNumber();
+                L.e("user=" + user.toString());
+                List<User> list = new ArrayList<>();
+                list.add(user);
+                pocEngine.getUserGPS(list, new IPocEngineEventHandler.Callback<String>() {
+                    @Override
+                    public void onResponse(final String json) {
+                        //回调在子线程
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                L.e("json=" + json);
+                                if (StringUtil.isGoodJson(json)) {
+                                    List<GPSBean> ll = new Gson().fromJson(json,
+                                            new TypeToken<List<GPSBean>>() {
+                                            }.getType());
+                                    if (ll != null && ll.size() > 0) {
+                                        for (GPSBean gpsBean : ll) {
+                                            if (number.equals(gpsBean.exten)) {
+                                                gis_jd = gpsBean.gis_jd;
+                                                gis_wd = gpsBean.gis_wd;
+//                                                geoAddress(StringUtil.StringToDouble(gis_wd),
+//                                                        StringUtil.StringToDouble(gis_jd));
+//                                                addressTV.setText(gis_jd + "-" + gis_wd);
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -206,8 +261,20 @@ public class ResoureActivity extends BaseActivity {
         if (name != null && name.contains("时间")) {
             valueET.setText(DateUtil.getLongDate3(System.currentTimeMillis()));
         }
+        if ("areaCode".equals(id)) {
+            valueET.setText("areaCode");
+        }
+        if ("agency".equals(id)) {
+            valueET.setText("agency");
+        }
+        if ("investigationAddr".equals(id)) {
+            valueET.setText("investigationAddr");
+        }
         if ("createUserNo".equals(id)) {
             valueET.setText(userId);
+        }
+        if ("recNo".equals(id)) {
+            valueET.setText(StringUtil.getUUID());
         }
         if (currentRowsBean != null) {
             if ("resourcetype".equals(id)) {
@@ -216,6 +283,12 @@ public class ResoureActivity extends BaseActivity {
             } else if ("resourcetypeName".equals(id)) {
                 valueET.setText(StringUtil.valueOf(currentRowsBean.resourcetypeName));
             }
+        }
+        if ("areaCode".equals(id) || "agency".equals(id) || "investigationAddr".equals(id) ||
+                "createUserNo".equals(id) || "recNo".equals(id) || "resourcetype".equals(id)) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
         }
         baseLL.addView(view);
     }
@@ -428,14 +501,22 @@ public class ResoureActivity extends BaseActivity {
         waitDialog.show();
         resultMap.clear();
         resultMap.put("elementType", currentKVBean.id);
+        double[] gps = GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(gis_wd),
+                StringUtil.StringToDouble(gis_jd));
+        resultMap.put("latitude", "" + gps[0]);
+        resultMap.put("longitude", "" + gps[1]);
         L.e("参数齐全,可以提交");
         int baseCount = baseLL.getChildCount();
         for (int i = 0; i < baseCount; i++) {
             View view = baseLL.getChildAt(i);
             TextView idTV = (TextView) view.findViewById(R.id.tv_id);
             LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
+            String id = idTV.getText().toString();
             String value = valueET.getText().toString();
-            resultMap.put(idTV.getText().toString(), value);
+            if ("areaCode".equals(id) || "agency".equals(id) || "investigationAddr".equals(id)) {
+                value = "";
+            }
+            resultMap.put(id, value);
         }
         int extCount = extLL.getChildCount();
         for (int j = 0; j < extCount; j++) {

@@ -1,5 +1,8 @@
 package com.ys.monitor.fragment;
 
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -8,16 +11,23 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureCollection;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureCollectionLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.GeoElement;
+import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.esri.arcgisruntime.symbology.SimpleRenderer;
 import com.ys.monitor.R;
 import com.ys.monitor.adapter.LayerAdapter;
 import com.ys.monitor.base.BaseFragment;
@@ -25,6 +35,8 @@ import com.ys.monitor.bean.LayerBean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import cn.sddman.arcgistool.common.Variable;
 import cn.sddman.arcgistool.entity.DrawEntity;
@@ -103,8 +115,20 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                 .setMapClickCallBack(new MapViewOnTouchListener() {
                     @Override
                     public boolean onSingleTapUp(MotionEvent e) {
+//                        if (!mMapView.isLoaded()) {
+//                            return;
+//                        }
                         //Toast.makeText(MainActivity2.this,"onSingleTapUp2",Toast.LENGTH_SHORT)
                         // .show();
+                        android.graphics.Point screenPoint =
+                                new android.graphics.Point(Math.round(e.getX()),
+                                        Math.round(e.getY()));
+                        Point clickPoint = mMapView.screenToLocation(screenPoint);
+                        if (clickPoint == null) {
+                            return super.onSingleTapUp(e);
+                        }
+                        onSingleTapFeatureLayer(screenPoint, featureLayer_gsmm, false);
+//
                         return super.onSingleTapUp(e);
                     }
 
@@ -297,5 +321,100 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                 ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8/FeatureServer" +
                 "/0");
         featureLayer_gsmm = new FeatureLayer(serviceFeatureTable);
+        SimpleMarkerSymbol simpleMarkerSymbol =
+                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 10);
+        PictureMarkerSymbol pictureMarkerSymbol =
+                new PictureMarkerSymbol((BitmapDrawable) getResources().getDrawable(R.mipmap.maker_gsmm));
+        featureLayer_gsmm.setRenderer(new SimpleRenderer(pictureMarkerSymbol));
+    }
+
+
+    private void onSingleTapFeatureLayer(
+            android.graphics.Point clickPoint, FeatureLayer layer, boolean isSentiveLayer) {
+//        QueryParameters queryParameters = new QueryParameters();
+//        queryParameters.setGeometry(clickPoint);
+//        queryParameters.setReturnGeometry(true);
+//        FeatureTable mTable = layer.getFeatureTable();//得到查询属性表
+//                        final ListenableFuture<IdentifyLayerResult> featureQueryResult
+//                                = mMapView.identifyLayerAsync(featureLayer_gsmm,screenPoint,0,
+//                                false);
+
+//        final ListenableFuture<FeatureQueryResult> featureQueryResult
+//                = mTable.queryFeaturesAsync(queryParameters);
+//        featureQueryResult.addDoneListener(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+////                    FeatureQueryResult featureResul = featureQueryResult.get();
+////                    for (Object element : featureResul) {
+////                        if (element instanceof Feature) {
+////                            Feature mFeatureGrafic = (Feature) element;
+////                            Map<String, Object> mQuerryString =
+////                                    mFeatureGrafic.getAttributes();
+////                            for (String key : mQuerryString.keySet()) {
+////                                L.e(key + "===" +
+////                                        String.valueOf(mQuerryString.get(key)));
+////                            }
+////                        }
+////                    }
+//                    FeatureQueryResult featureResul = featureQueryResult.get();
+//                    for (Object element : featureResul) {
+//                        if (element instanceof Feature) {
+//                            Feature mFeatureGrafic = (Feature) element;
+//                            Map<String, Object> mQuerryString = mFeatureGrafic.getAttributes();
+//                            for(String key : mQuerryString.keySet()){
+//                                L.e(key + "===" +
+//                                        String.valueOf(mQuerryString.get(key)));
+//                            }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+        final ListenableFuture<List<IdentifyLayerResult>> listListenableFuture =
+                mMapView.identifyLayersAsync(clickPoint, 0, false, 1);
+        listListenableFuture.addDoneListener(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean mBoolean = false;
+                    List<IdentifyLayerResult> identifyLayerResults = listListenableFuture.get();
+                    int i = 0;
+                    int d = identifyLayerResults.size();
+//                    if(d==1){
+                    for (IdentifyLayerResult identifyLayerResult : identifyLayerResults) {
+
+
+                        for (final GeoElement geoElement : identifyLayerResult.getElements()) {
+                            if (geoElement == null) {
+                                continue;
+                            }
+                            Map<String, Object> attributes = geoElement.getAttributes();
+                            Map<String, Object> map = attributes;
+                            for (Map.Entry<String, Object> m : map.entrySet()) {
+                                Log.e("aaa", m.getKey() + "--------" + m.getValue());
+                            }
+                            Log.e("aaa", attributes.size() + "");
+
+                        }
+                    }
+//                    }else if (d>1){
+//                        mBoolean=true;
+//
+//                        int o=0;
+//                        for (IdentifyLayerResult identifyLayerResult : identifyLayerResults) {
+//
+//                        }
+//                    }
+
+                } catch (InterruptedException e) {
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 }

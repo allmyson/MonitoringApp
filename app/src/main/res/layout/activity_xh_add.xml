@@ -138,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:gravity="right"
-                    android:text="护  林  员"
+                    android:text="护林员"
                     android:textColor="#ff303030"
                     android:textSize="16sp" />
 
@@ -174,7 +174,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:gravity="right"
-                    android:text="描        述"
+                    android:text="描述"
                     android:textColor="#ff303030"
                     android:textSize="16sp" />
 
@@ -210,7 +210,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:gravity="right"
-                    android:text="位        置"
+                    android:text="位置"
                     android:textColor="#ff303030"
                     android:textSize="16sp" />
 
@@ -246,7 +246,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:gravity="right"
-                    android:text="路        线"
+                    android:text="路线"
                     android:textColor="#ff303030"
                     android:textSize="16sp" />
 
