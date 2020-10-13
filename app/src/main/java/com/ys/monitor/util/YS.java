@@ -133,6 +133,8 @@ public class YS {
     public static final String HTTP_TIP = "服务器错误！";
 
 
+    //MAP SERVER
+    public static final String MAP_SEARVER = "http://gis.cqzhly.cn:9080/arcgis/rest/services/2020/%E7%BC%99%E4%BA%91%E5%B1%B1%E5%8D%AB%E6%98%9F%E5%9C%B0%E5%9B%BE/MapServer";
     public static GlideUrl getGlideUrl(Context context, String url) {
         return new GlideUrl(url, new LazyHeaders.Builder().addHeader("Cookie",
                 CookieSP.getCookie(context)).build());

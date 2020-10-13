@@ -295,6 +295,7 @@ public class AddXHActivity extends BaseActivity {
                 DateUtil.changeTimeToYMDHMS(StringUtil.valueOf(System.currentTimeMillis())));
         map.put("imgUrl", imageUrls);
         map.put("videoUrl", videoUrls);
+        map.put("way", wayET.getText().toString());
         String data = new Gson().toJson(map);
         L.e("data=" + data);
         HttpUtil.addXH(mContext, userId, data, new HttpListener<String>() {

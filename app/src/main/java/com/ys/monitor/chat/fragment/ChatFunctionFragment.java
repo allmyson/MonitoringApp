@@ -69,6 +69,7 @@ public class ChatFunctionFragment extends BaseFragment {
     TextView tvCapture, tvAlbum, tvContact, tvCloud, tvFile, tvLocation;
     private LinearLayout photoLL, cameraLL, voiceLL, videoLL;
     private String currentVideoName;
+    private boolean isHide = false;//隐藏语音和视频通话
 
     @Nullable
     @Override
@@ -93,6 +94,8 @@ public class ChatFunctionFragment extends BaseFragment {
         cameraLL = (LinearLayout) rootView.findViewById(R.id.ll_camera);
         voiceLL = (LinearLayout) rootView.findViewById(R.id.ll_voice);
         videoLL = (LinearLayout) rootView.findViewById(R.id.ll_video);
+        setGone();
+
     }
 
     private void autoObtainCameraPermission() {
@@ -136,7 +139,7 @@ public class ChatFunctionFragment extends BaseFragment {
         voiceLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(clickListener!=null){
+                if (clickListener != null) {
                     clickListener.clickVoice();
                 }
             }
@@ -144,7 +147,7 @@ public class ChatFunctionFragment extends BaseFragment {
         videoLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(clickListener!=null){
+                if (clickListener != null) {
                     clickListener.clickVideo();
                 }
             }
@@ -377,6 +380,7 @@ public class ChatFunctionFragment extends BaseFragment {
         cursor.close();
         return res;
     }
+
     private ClickListener clickListener;
 
     public ClickListener getClickListener() {
@@ -387,8 +391,27 @@ public class ChatFunctionFragment extends BaseFragment {
         this.clickListener = clickListener;
     }
 
-    public interface ClickListener{
+    public interface ClickListener {
         void clickVoice();
+
         void clickVideo();
+    }
+
+    public void setGone() {
+        if(isHide) {
+            voiceLL.setVisibility(View.GONE);
+            videoLL.setVisibility(View.GONE);
+        }else {
+            voiceLL.setVisibility(View.VISIBLE);
+            videoLL.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public boolean isHide() {
+        return isHide;
+    }
+
+    public void setHide(boolean hide) {
+        isHide = hide;
     }
 }

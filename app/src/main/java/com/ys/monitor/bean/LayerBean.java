@@ -15,18 +15,6 @@ public class LayerBean {
     public static List<LayerBean> getDefaultLayers() {
         List<LayerBean> list = new ArrayList<>();
         list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
         return list;
     }
 }

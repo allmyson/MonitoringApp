@@ -25,13 +25,16 @@ import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.cookie.DBCookieStore;
 import com.ys.monitor.activity.AvActivity;
 import com.ys.monitor.http.CookieListener;
+import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.util.Constant;
 import com.ys.monitor.util.L;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lh
@@ -134,58 +137,58 @@ public class App extends PocApplication {
      */
     private final IPocEngineEventHandler.CacheFileSupplier cacheFileSupplier =
             new IPocEngineEventHandler.CacheFileSupplier() {
-        @Override
-        public String getBaseDir() {
-            //TODO 返回一个缓存根目录路径，需要创建
-            return Constant.DOWNLOAD_PATH;
-        }
+                @Override
+                public String getBaseDir() {
+                    //TODO 返回一个缓存根目录路径，需要创建
+                    return Constant.DOWNLOAD_PATH;
+                }
 
-        @Override
-        public String getFileNameExpansion() {
-            //TODO 返回扩展文件名，即 用户id + ????? + .格式 中问号这一段，缺省时，会按照日期的格式
-            return null;
-        }
+                @Override
+                public String getFileNameExpansion() {
+                    //TODO 返回扩展文件名，即 用户id + ????? + .格式 中问号这一段，缺省时，会按照日期的格式
+                    return null;
+                }
 
-        /**
-         * 每需要缓存一个文件时，会调用一次这个接口，根据后缀返回相应的全路径，路径要创建好
-         * @param fileFormat 文件后缀
-         * @return
-         */
-        @Override
-        public String getFullCacheFilePath(String fileFormat) {
-            String baseCache;
-            if (fileFormat.contains("3pg") || fileFormat.contains("mp4")) {
-                baseCache = UnionUtils.getVideoCachePath();
-            } else if (fileFormat.contains("jpg") || fileFormat.contains("png")) {
-                baseCache = UnionUtils.getPicCachePath();
-            } else if (fileFormat.contains("raw") || fileFormat.contains("wav")
-                    || fileFormat.contains("amr") || fileFormat.contains("mp3")) {
-                baseCache = UnionUtils.getAudioFileCachePath();
-            } else {
-                baseCache = UnionUtils.getBaseCachePath();
-            }
+                /**
+                 * 每需要缓存一个文件时，会调用一次这个接口，根据后缀返回相应的全路径，路径要创建好
+                 * @param fileFormat 文件后缀
+                 * @return
+                 */
+                @Override
+                public String getFullCacheFilePath(String fileFormat) {
+                    String baseCache;
+                    if (fileFormat.contains("3pg") || fileFormat.contains("mp4")) {
+                        baseCache = UnionUtils.getVideoCachePath();
+                    } else if (fileFormat.contains("jpg") || fileFormat.contains("png")) {
+                        baseCache = UnionUtils.getPicCachePath();
+                    } else if (fileFormat.contains("raw") || fileFormat.contains("wav")
+                            || fileFormat.contains("amr") || fileFormat.contains("mp3")) {
+                        baseCache = UnionUtils.getAudioFileCachePath();
+                    } else {
+                        baseCache = UnionUtils.getBaseCachePath();
+                    }
 
 
-            Date date = new Date();
-            String ymd = new SimpleDateFormat("yyyyMMdd").format(date);
-            String saveDir = baseCache + File.separator + ymd;
-            File dir = new File(saveDir);
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
-            StringBuilder builder = new StringBuilder();
-            builder.append(PocApplication.sUserNumber);
-            builder.append("_");
-            builder.append(ymd);
-            builder.append("_");
-            builder.append("test");
-            builder.append(fileFormat);
-            String fileName = builder.toString();
+                    Date date = new Date();
+                    String ymd = new SimpleDateFormat("yyyyMMdd").format(date);
+                    String saveDir = baseCache + File.separator + ymd;
+                    File dir = new File(saveDir);
+                    if (!dir.exists()) {
+                        dir.mkdir();
+                    }
+                    StringBuilder builder = new StringBuilder();
+                    builder.append(PocApplication.sUserNumber);
+                    builder.append("_");
+                    builder.append(ymd);
+                    builder.append("_");
+                    builder.append("test");
+                    builder.append(fileFormat);
+                    String fileName = builder.toString();
 
-            String path = new File(saveDir, fileName).getPath();
-            return path;
-        }
-    };
+                    String path = new File(saveDir, fileName).getPath();
+                    return path;
+                }
+            };
 
 
     /**
@@ -194,22 +197,22 @@ public class App extends PocApplication {
      */
     private final IPocEngineEventHandler.BroadcastHotKeyActionSupplier hotKeyActionSupplier =
             new IPocEngineEventHandler.BroadcastHotKeyActionSupplier() {
-        @Override
-        public String[] getPttDownActions() {
-            return new String[]{
-                    "phone1.test.ptt.down",
-                    "phone2.test.ptt.down"
-            };
-        }
+                @Override
+                public String[] getPttDownActions() {
+                    return new String[]{
+                            "phone1.test.ptt.down",
+                            "phone2.test.ptt.down"
+                    };
+                }
 
-        @Override
-        public String[] getPttUpActions() {
-            return new String[]{
-                    "phone1.test.ptt.up",
-                    "phone2.test.ptt.up"
+                @Override
+                public String[] getPttUpActions() {
+                    return new String[]{
+                            "phone1.test.ptt.up",
+                            "phone2.test.ptt.up"
+                    };
+                }
             };
-        }
-    };
 
     private final IPocEngineEventHandler pocEventHandler = new IPocEngineEventHandler() {
 
@@ -294,7 +297,7 @@ public class App extends PocApplication {
         @Override
         public void onIncoming(IncomingInfo incomingInfo) {
             L.d("onIncoming-> sessionId=" + incomingInfo.sessionId + " type=" + incomingInfo
-            .sessionType + " uid=" +
+                    .sessionType + " uid=" +
                     incomingInfo.callerId + " name=" + incomingInfo.callerName + " level=" +
                     incomingInfo.level +
                     " extra=" + incomingInfo.extra);
@@ -333,8 +336,11 @@ public class App extends PocApplication {
 
         @Override
         public void onReceiveLocation(double latitude, double longitude, String address) {
-            Toast.makeText(getApplicationContext(), "坐标变化(" + latitude + "," + longitude + ")",
-                    Toast.LENGTH_SHORT).show();
+            L.e("latitude=" + latitude + "--lon=" + longitude + "--addr=" + address);
+//            Toast.makeText(getApplicationContext(),
+//                    "坐标变化(" + latitude + "," + longitude + "," + address + ")",
+//                    Toast.LENGTH_SHORT).show();
+            LocationSP.saveLocation(App.getContext(),latitude,longitude,address);
         }
 
 

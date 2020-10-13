@@ -142,6 +142,7 @@ public class AddHelpActivity extends BaseActivity {
     private void findViewByIds() {
         chatList = (RecyclerView) findViewById(R.id.chat_list);
         emotionVoice = (ImageView) findViewById(R.id.emotion_voice);
+        emotionVoice.setVisibility(View.GONE);
         editText = (EditText) findViewById(R.id.edit_text);
         voiceText = (TextView) findViewById(R.id.voice_text);
         emotionButton = (ImageView) findViewById(R.id.emotion_button);
@@ -156,6 +157,7 @@ public class AddHelpActivity extends BaseActivity {
         chatEmotionFragment = new ChatEmotionFragment();
         fragments.add(chatEmotionFragment);
         chatFunctionFragment = new ChatFunctionFragment();
+        chatFunctionFragment.setHide(true);
         fragments.add(chatFunctionFragment);
         adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(adapter);

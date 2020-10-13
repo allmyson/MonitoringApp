@@ -149,6 +149,11 @@ public class ResoureActivity extends BaseActivity {
                                             if (number.equals(gpsBean.exten)) {
                                                 gis_jd = gpsBean.gis_jd;
                                                 gis_wd = gpsBean.gis_wd;
+                                                double[] gps =
+                                                        GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(gis_wd),
+                                                        StringUtil.StringToDouble(gis_jd));
+                                                gis_wd = StringUtil.valueOf(gps[0]);
+                                                gis_jd = StringUtil.valueOf(gps[1]);
 //                                                geoAddress(StringUtil.StringToDouble(gis_wd),
 //                                                        StringUtil.StringToDouble(gis_jd));
 //                                                addressTV.setText(gis_jd + "-" + gis_wd);
@@ -317,6 +322,12 @@ public class ResoureActivity extends BaseActivity {
         idTV.setText(StringUtil.valueOf(bean.dataName));
         nameTV.setText(StringUtil.valueOf(bean.name));
         typeTV.setText(StringUtil.valueOf(bean.datatype));
+        if ("longitude".equals(bean.dataName)) {
+            valueET.setText(gis_jd);
+        }
+        if ("latitude".equals(bean.dataName)) {
+            valueET.setText(gis_wd);
+        }
         if ("datetime".equals(bean.datatype)) {
             valueET.setFocusable(false);
             valueET.setOnClickListener(new View.OnClickListener() {
@@ -352,6 +363,11 @@ public class ResoureActivity extends BaseActivity {
                     });
                 }
             });
+        }
+        if ("longitude".equals(bean.dataName) || "latitude".equals(bean.dataName)) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
         }
         extLL.addView(view);
     }
@@ -501,10 +517,10 @@ public class ResoureActivity extends BaseActivity {
         waitDialog.show();
         resultMap.clear();
         resultMap.put("elementType", currentKVBean.id);
-        double[] gps = GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(gis_wd),
-                StringUtil.StringToDouble(gis_jd));
-        resultMap.put("latitude", "" + gps[0]);
-        resultMap.put("longitude", "" + gps[1]);
+//        double[] gps = GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(gis_wd),
+//                StringUtil.StringToDouble(gis_jd));
+//        resultMap.put("latitude", "" + gps[0]);
+//        resultMap.put("longitude", "" + gps[1]);
         L.e("参数齐全,可以提交");
         int baseCount = baseLL.getChildCount();
         for (int i = 0; i < baseCount; i++) {
@@ -611,4 +627,6 @@ public class ResoureActivity extends BaseActivity {
             }
         });
     }
+
+
 }
