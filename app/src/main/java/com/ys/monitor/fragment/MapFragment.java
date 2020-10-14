@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -45,6 +46,7 @@ import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
+import com.google.gson.Gson;
 import com.huamai.poc.IPocEngineEventHandler;
 import com.huamai.poc.PocEngine;
 import com.huamai.poc.PocEngineFactory;
@@ -52,11 +54,13 @@ import com.ys.monitor.R;
 import com.ys.monitor.adapter.DataAdapter;
 import com.ys.monitor.adapter.LayerAdapter;
 import com.ys.monitor.base.BaseFragment;
+import com.ys.monitor.bean.GjBean;
 import com.ys.monitor.bean.LayerBean;
 import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.util.GPSUtil;
 import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
+import com.ys.monitor.util.TimeUtil;
 import com.ys.monitor.util.ToastUtil;
 import com.ys.monitor.util.YS;
 
@@ -91,7 +95,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     private GridView layerGV;
     private LayerAdapter layerAdapter;
     private List<LayerBean> layerBeanList;
-    private ImageView layerIV, gjIV;
+    private ImageView layerIV, gjIV, playGj;
 
     private FeatureLayer featureLayer_gsmm;
 
@@ -110,6 +114,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
         layerIV.setOnClickListener(this);
         gjIV = getView(R.id.iv_gj);
         gjIV.setOnClickListener(this);
+        playGj = getView(R.id.iv_playGj);
+        playGj.setOnClickListener(this);
         layerGV = getView(R.id.gv_layer);
         layerBeanList = new ArrayList<>();
         layerBeanList.addAll(LayerBean.getDefaultLayers());
@@ -143,10 +149,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
         mMapView.setMap(map);
         initTool();
         //定位后就不在北碚了
-//        markLocation();
+        markLocation();
         initLayer();
         createGraphicsOverlay();
-        getGj();
     }
 
     @Override
@@ -177,6 +182,13 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
 //                    createPolylineGraphics();
                 } else {
                     clearGjGraphics();
+                }
+                break;
+            case R.id.iv_playGj:
+                if (isCanPlay) {
+                    playGj();
+                } else {
+                    show("正在播放轨迹");
                 }
                 break;
             case R.id.rl_close:
@@ -624,15 +636,54 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
         mMapView.getGraphicsOverlays().add(gjOverlay);
     }
 
-    private void createPolylineGraphics() {
-        PointCollection polylinePoints = new PointCollection(SpatialReferences.getWgs84());
-        polylinePoints.add(new Point(106.41431823010231, 29.854030543574765));
-        polylinePoints.add(new Point(106.37181760929531, 29.833475430246949));
-        Polyline polyline = new Polyline(polylinePoints);
-        SimpleLineSymbol polylineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,
-                Color.BLUE, 3.0f);
-        Graphic polylineGraphic = new Graphic(polyline, polylineSymbol);
-        gjOverlay.getGraphics().add(polylineGraphic);
+    private void createPolylineGraphics(List<Point> list) {
+        gjOverlay.getGraphics().clear();
+        int size = list.size();
+        if (size == 1) {
+            //画点
+            SimpleMarkerSymbol pointSymbol =
+                    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
+            Graphic pointGraphic = new Graphic(list.get(0), pointSymbol);
+            gjOverlay.getGraphics().add(pointGraphic);
+            mMapView.setViewpointCenterAsync(list.get(0)).addDoneListener(new Runnable() {
+                @Override
+                public void run() {
+                    L.e("平移完成");
+                }
+            });
+        } else {
+            //画线
+            PointCollection polylinePoints = new PointCollection(SpatialReferences.getWgs84());
+            polylinePoints.addAll(list);
+            Polyline polyline = new Polyline(polylinePoints);
+            SimpleLineSymbol polylineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,
+                    Color.BLUE, 3.0f);
+            Graphic polylineGraphic = new Graphic(polyline, polylineSymbol);
+            gjOverlay.getGraphics().add(polylineGraphic);
+            mMapView.setViewpointCenterAsync(list.get(size - 1)).addDoneListener(new Runnable() {
+                @Override
+                public void run() {
+                    L.e("平移完成");
+                }
+            });
+
+//            mMapView.setViewpointGeometryAsync(gjOverlay.getExtent(),50).addDoneListener(new
+//            Runnable() {
+//                @Override
+//                public void run() {
+//                    L.e("轨迹平移完成");
+//                }
+//            });
+        }
+//        PointCollection polylinePoints = new PointCollection(SpatialReferences.getWgs84());
+//        polylinePoints.add(new Point(106.41431823010231, 29.854030543574765));
+//        polylinePoints.add(new Point(106.37181760929531, 29.833475430246949));
+//        polylinePoints.add(new Point(106.40042894753793, 29.835975076988291));
+//        Polyline polyline = new Polyline(polylinePoints);
+//        SimpleLineSymbol polylineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,
+//                Color.BLUE, 3.0f);
+//        Graphic polylineGraphic = new Graphic(polyline, polylineSymbol);
+//        gjOverlay.getGraphics().add(polylineGraphic);
     }
 
     private void clearGjGraphics() {
@@ -642,9 +693,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     private PocEngine pocEngine;
 
     private void getGj() {
-        if(pocEngine.hasServiceConnected()) {
-            pocEngine.getGPSTrackList(pocEngine.getCurrentUser().getNumber() + "", "1970-01-01 00:00"
-                    , "2020-10-14 00:00", new IPocEngineEventHandler.Callback<String>() {
+        String beginTime = TimeUtil.getBeginTime();
+        String endTime = TimeUtil.getEndTime();
+        if (pocEngine.hasServiceConnected()) {
+            pocEngine.getGPSTrackList(pocEngine.getCurrentUser().getNumber() + "", beginTime
+                    , endTime, new IPocEngineEventHandler.Callback<String>() {
                         @Override
                         public void onResponse(final String json) {
                             //回调在子线程
@@ -652,14 +705,172 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void run() {
                                     L.e("json=" + json);
-                                    createPolylineGraphics();
+                                    if (StringUtil.isGoodJson(json)) {
+                                        GjBean gjBean = new Gson().fromJson(json, GjBean.class);
+                                        if (gjBean != null && gjBean.track != null && gjBean.track.size() > 0) {
+                                            List<Point> list = new ArrayList<>();
+                                            for (GjBean.TrackBean trackBean : gjBean.track) {
+                                                double[] gps =
+                                                        GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(trackBean.gis_wd),
+                                                                StringUtil.StringToDouble(trackBean.gis_jd));
+                                                Point point = new Point(gps[1], gps[0],
+                                                        SpatialReferences.getWgs84());
+                                                list.add(point);
+                                            }
+                                            createPolylineGraphics(list);
+                                        }
+                                    } else {
+                                        show("暂无轨迹！");
+                                    }
                                 }
                             });
                         }
                     });
-        }else {
+        } else {
             L.e("服务未连接");
             show("服务未连接");
         }
+    }
+
+    //播放轨迹
+    private void playGj() {
+        String beginTime = TimeUtil.getBeginTime();
+        String endTime = TimeUtil.getEndTime();
+        if (pocEngine.hasServiceConnected()) {
+            pocEngine.getGPSTrackList(pocEngine.getCurrentUser().getNumber() + "", beginTime
+                    , endTime, new IPocEngineEventHandler.Callback<String>() {
+                        @Override
+                        public void onResponse(final String json) {
+                            //回调在子线程
+                            new Handler().post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    L.e("json=" + json);
+                                    if (StringUtil.isGoodJson(json)) {
+                                        GjBean gjBean = new Gson().fromJson(json, GjBean.class);
+                                        if (gjBean != null && gjBean.track != null && gjBean.track.size() > 0) {
+                                            List<Point> list = new ArrayList<>();
+//                                            for (GjBean.TrackBean trackBean : gjBean.track) {
+//                                                double[] gps =
+//                                                        GPSUtil.bd09_To_gps84(StringUtil
+//                                                        .StringToDouble(trackBean.gis_wd),
+//                                                                StringUtil.StringToDouble
+//                                                                (trackBean.gis_jd));
+//                                                Point point = new Point(gps[1], gps[0],
+//                                                        SpatialReferences.getWgs84());
+//                                                list.add(point);
+//                                            }
+                                            //测试数据
+                                            list.add(new Point(106.41431823010231,
+                                                    29.854030543574765,
+                                                    SpatialReferences.getWgs84()));
+                                            list.add(new Point(106.37181760929531,
+                                                    29.833475430246949,
+                                                    SpatialReferences.getWgs84()));
+                                            list.add(new Point(106.40042894753793,
+                                                    29.835975076988291,
+                                                    SpatialReferences.getWgs84()));
+                                            list.add(new Point(106.36116413241882,
+                                                    29.818852793721533,
+                                                    SpatialReferences.getWgs84()));
+                                            list.add(new Point(106.36110841042483,
+                                                    29.818837171598261,
+                                                    SpatialReferences.getWgs84()));
+                                            playTodayGj(list);
+                                        }
+                                    } else {
+                                        show("暂无轨迹！");
+                                    }
+                                }
+                            });
+                        }
+                    });
+        } else {
+            L.e("服务未连接");
+            show("服务未连接");
+        }
+    }
+
+    private void playTodayGj(List<Point> list) {
+        clearGjGraphics();
+        isCanPlay = false;
+        show("开始播放轨迹");
+        if (list.size() == 1) {
+            //画点
+            SimpleMarkerSymbol pointSymbol =
+                    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
+            Graphic pointGraphic = new Graphic(list.get(0), pointSymbol);
+            gjOverlay.getGraphics().add(pointGraphic);
+            mMapView.setViewpointCenterAsync(list.get(0));
+            show("轨迹播放完成");
+            isCanPlay = true;
+        } else {
+//            mMapView.setViewpointCenterAsync(list.get(0));
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    while (i < list.size() - 1) {
+                        try {
+                            Thread.sleep(1000);
+                            List<Point> dataList = new ArrayList<>();
+                            dataList.add(list.get(i));
+                            dataList.add(list.get(i + 1));
+                            Message msg = new Message();
+                            msg.obj = dataList;
+                            msg.what = 0;
+                            handler.sendMessage(msg);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            i = 0;
+                        }
+                        i++;
+                    }
+                    if (i >= list.size() - 1) {
+                        i = 0;
+                        handler.sendEmptyMessage(1);
+                    }
+                }
+            }.start();
+        }
+    }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                List<Point> points = (List<Point>) msg.obj;
+                if (points != null && points.size() == 2) {
+//                    show("绘制中");
+                    drawLine(points.get(0), points.get(1));
+//                    mMapView.setViewpointCenterAsync(points.get(1));
+                }
+            }else if(msg.what==1){
+                show("轨迹播放完成");
+                isCanPlay = true;
+            }
+        }
+    };
+    private int i = 0;
+    private boolean isCanPlay = true;
+
+
+    private void drawLine(Point point1, Point point2) {
+        //绘制面板为空，说明重新绘制一个line，在地图和线集合里添加一个新line
+//        PolylineBuilder lineGeometry = new PolylineBuilder(SpatialReferences.getWgs84());
+//        lineGeometry.addPoint(point1);
+//        lineGeometry.addPoint(point2);
+//        SimpleLineSymbol polylineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,
+//                Color.BLUE, 3.0f);
+//        Graphic lineGraphic = new Graphic(lineGeometry.toGeometry(), polylineSymbol);
+//        gjOverlay.getGraphics().add(lineGraphic);
+        PointCollection polylinePoints = new PointCollection(SpatialReferences.getWgs84());
+        polylinePoints.add(point1);
+        polylinePoints.add(point2);
+        Polyline polyline = new Polyline(polylinePoints);
+        SimpleLineSymbol polylineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,
+                Color.BLUE, 3.0f);
+        Graphic polylineGraphic = new Graphic(polyline, polylineSymbol);
+        gjOverlay.getGraphics().add(polylineGraphic);
     }
 }

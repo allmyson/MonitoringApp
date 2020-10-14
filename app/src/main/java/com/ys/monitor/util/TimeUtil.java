@@ -1,5 +1,8 @@
 package com.ys.monitor.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class TimeUtil {
 
     public static String getTime(int second) {
@@ -48,5 +51,19 @@ public class TimeUtil {
             return hour + minute + ":0" + second;
         }
         return hour + minute + ":" + second;
+    }
+
+    public static String getBeginTime() {
+        long timeStamp = System.currentTimeMillis();  //获取当前时间戳
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String sd = sdf.format(new Date(timeStamp));      // 时间戳转换成时间
+        return sd + " 00:00";
+    }
+
+    public static String getEndTime() {
+        long timeStamp = System.currentTimeMillis();  //获取当前时间戳
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String sd = sdf.format(new Date(timeStamp));      // 时间戳转换成时间
+        return sd + " 23:59";
     }
 }
