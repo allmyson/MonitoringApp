@@ -7,11 +7,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
+import com.ys.monitor.bean.BaseBean;
 import com.ys.monitor.bean.FileUploadBean;
 import com.ys.monitor.bean.LoginBean;
 import com.ys.monitor.http.HttpListener;
@@ -21,6 +23,8 @@ import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.YS;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,17 +139,42 @@ public class UserInfoActivity extends BaseActivity {
                 new HttpListener<String>() {
                     @Override
                     public void onSucceed(int what, Response<String> response) {
-                        FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
-                                FileUploadBean.class);
-                        if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) && fileUploadBean.data != null) {
-                            if(!StringUtil.isBlank(fileUploadBean.data.url)) {
-                                String icon = fileUploadBean.data.url.substring(0, fileUploadBean.data.url.length() -1);
-                                UserSP.saveIcon(mContext, icon);
-                                show("头像上传成功");
+                        try {
+                            FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
+                                    FileUploadBean.class);
+                            if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) && fileUploadBean.data != null) {
+                                if(!StringUtil.isBlank(fileUploadBean.data.url)) {
+                                    String icon = fileUploadBean.data.url.substring(0, fileUploadBean.data.url.length() -1);
+                                    UserSP.saveIcon(mContext, icon);
+                                    String data="";
+                                    try {
+                                        data = URLEncoder.encode(icon,"utf-8");
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                    }
+                                    HttpUtil.uploadHeadImg(mContext, userId, data, new HttpListener<String>() {
+                                        @Override
+                                        public void onSucceed(int what, Response<String> response) {
+                                            BaseBean baseBean = new Gson().fromJson(response.get(),BaseBean.class);
+                                            if(baseBean!=null&&YS.SUCCESE.equals(baseBean.code)){
+                                                show("头像上传成功");
+                                            }else {
+                                                show("头像上传失败");
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailed(int what, Response<String> response) {
+
+                                        }
+                                    });
+                                }
+                            } else {
+                                show("头像上传失败,请稍后重试！");
+                                L.e("头像上传失败,请稍后重试！");
                             }
-                        } else {
-                            show("头像上传失败,请稍后重试！");
-                            L.e("头像上传失败,请稍后重试！");
+                        } catch (JsonSyntaxException e) {
+                            e.printStackTrace();
                         }
                     }
 

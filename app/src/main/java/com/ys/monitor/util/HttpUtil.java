@@ -297,7 +297,7 @@ public class HttpUtil {
 
     //获取设备播放地址
     public static void getVideoUrl(Context context, String userId,
-                                    HttpListener<String> httpListener) {
+                                   HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
@@ -392,4 +392,20 @@ public class HttpUtil {
         BaseHttp.getInstance().simpleGet(context, url, httpListener);
 
     }
+
+
+    //更换头像
+    public static void uploadHeadImg(Context context, String userId, String icon,
+                                     HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.UPLOAD_HEAD + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                        userId + "&icon=" + icon;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
 }

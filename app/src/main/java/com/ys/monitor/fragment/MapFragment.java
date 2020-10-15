@@ -1,8 +1,11 @@
 package com.ys.monitor.fragment;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
@@ -28,6 +31,7 @@ import com.esri.arcgisruntime.data.FeatureCollection;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
+import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
@@ -43,6 +47,7 @@ import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
@@ -50,18 +55,26 @@ import com.google.gson.Gson;
 import com.huamai.poc.IPocEngineEventHandler;
 import com.huamai.poc.PocEngine;
 import com.huamai.poc.PocEngineFactory;
+import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.adapter.DataAdapter;
 import com.ys.monitor.adapter.LayerAdapter;
 import com.ys.monitor.base.BaseFragment;
+import com.ys.monitor.bean.FireBean;
 import com.ys.monitor.bean.GjBean;
 import com.ys.monitor.bean.LayerBean;
+import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.LocationSP;
+import com.ys.monitor.sp.UserSP;
+import com.ys.monitor.ui.CustomBaseDialog;
+import com.ys.monitor.ui.ParticleView;
+import com.ys.monitor.util.AnimationUtil;
 import com.ys.monitor.util.GPSUtil;
+import com.ys.monitor.util.HttpUtil;
 import com.ys.monitor.util.L;
+import com.ys.monitor.util.NavigationUtil;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.TimeUtil;
-import com.ys.monitor.util.ToastUtil;
 import com.ys.monitor.util.YS;
 
 import java.io.UnsupportedEncodingException;
@@ -95,9 +108,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     private GridView layerGV;
     private LayerAdapter layerAdapter;
     private List<LayerBean> layerBeanList;
-    private ImageView layerIV, gjIV, playGj;
+    private ImageView layerIV, gjIV, playGj, fireIV;
 
     private FeatureLayer featureLayer_gsmm;
+    private String userId;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -105,49 +119,13 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
 
     private boolean isShowLayer;
     private boolean isShowGj;
+    private boolean isShowFire;
 
     @Override
     protected void init() {
-        pocEngine = PocEngineFactory.get();
-        initPointDetailLayout();
-        layerIV = getView(R.id.iv_layer);
-        layerIV.setOnClickListener(this);
-        gjIV = getView(R.id.iv_gj);
-        gjIV.setOnClickListener(this);
-        playGj = getView(R.id.iv_playGj);
-        playGj.setOnClickListener(this);
-        layerGV = getView(R.id.gv_layer);
-        layerBeanList = new ArrayList<>();
-        layerBeanList.addAll(LayerBean.getDefaultLayers());
-        layerAdapter = new LayerAdapter(mContext, layerBeanList, R.layout.item_layer);
-        layerGV.setAdapter(layerAdapter);
-        layerGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                layerAdapter.selectPosition(i);
-                if (layerAdapter.isSelect(i)) {
-                    show("选中");
-                    if (!mMapView.getMap().getOperationalLayers().contains(featureLayer_gsmm))
-                        mMapView.getMap().getOperationalLayers().add(featureLayer_gsmm);
-                } else {
-                    show("取消选中");
-                    if (mMapView.getMap().getOperationalLayers().contains(featureLayer_gsmm))
-                        mMapView.getMap().getOperationalLayers().remove(featureLayer_gsmm);
-                }
-            }
-        });
-        layerGV.setVisibility(View.INVISIBLE);
-        // get a reference to the map view
-        mMapView = getView(R.id.mapView);
-        // create new Tiled Layer from service url
-        ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer(YS.MAP_SEARVER);
-        // set tiled layer as basemap
-        Basemap basemap = new Basemap(tiledLayerBaseMap);
-        // create a map with the basemap
-        ArcGISMap map = new ArcGISMap(basemap);
-        // set the map to be displayed in this view
-        mMapView.setMap(map);
         initTool();
+        initBase();
+        initPointDetailLayout();
         //定位后就不在北碚了
         markLocation();
         initLayer();
@@ -156,6 +134,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     protected void getData() {
+        userId = UserSP.getUserId(mContext);
 //        addLayer();
     }
 
@@ -191,13 +170,22 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                     show("正在播放轨迹");
                 }
                 break;
+            case R.id.iv_showFire:
+                isShowFire = !isShowFire;
+                if (isShowFire) {
+                    getFire();
+                } else {
+                    removeFire();
+                }
+                break;
             case R.id.rl_close:
-                show("关闭");
-                dataLL.setVisibility(View.GONE);
+//                show("关闭");
+//                dataLL.setVisibility(View.GONE);
+                goneAnimal();
                 break;
             case R.id.ll_navigation:
                 //导航
-                show("导航");
+                goThere();
                 break;
         }
     }
@@ -218,6 +206,41 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         mMapView.dispose();
+    }
+
+    private void initBase() {
+        fireList = new ArrayList<>();
+        pocEngine = PocEngineFactory.get();
+        layerIV = getView(R.id.iv_layer);
+        layerIV.setOnClickListener(this);
+        gjIV = getView(R.id.iv_gj);
+        gjIV.setOnClickListener(this);
+        playGj = getView(R.id.iv_playGj);
+        playGj.setOnClickListener(this);
+        fireIV = getView(R.id.iv_showFire);
+        fireIV.setOnClickListener(this);
+        layerGV = getView(R.id.gv_layer);
+        layerBeanList = new ArrayList<>();
+        layerBeanList.addAll(LayerBean.getDefaultLayers());
+        layerAdapter = new LayerAdapter(mContext, layerBeanList, R.layout.item_layer);
+        layerGV.setAdapter(layerAdapter);
+        layerGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                layerAdapter.selectPosition(i);
+                if (layerAdapter.isSelect(i)) {
+                    show("选中");
+                    if (!mMapView.getMap().getOperationalLayers().contains(featureLayer_gsmm))
+                        mMapView.getMap().getOperationalLayers().add(featureLayer_gsmm);
+                } else {
+                    show("取消选中");
+                    if (mMapView.getMap().getOperationalLayers().contains(featureLayer_gsmm))
+                        mMapView.getMap().getOperationalLayers().remove(featureLayer_gsmm);
+                }
+            }
+        });
+        layerGV.setVisibility(View.INVISIBLE);
+        // get a reference to the map view
     }
 
     private void addLayer() {
@@ -263,6 +286,15 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void initTool() {
+        mMapView = getView(R.id.mapView);
+        // create new Tiled Layer from service url
+        ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer(YS.MAP_SEARVER);
+        // set tiled layer as basemap
+        Basemap basemap = new Basemap(tiledLayerBaseMap);
+        // create a map with the basemap
+        ArcGISMap map = new ArcGISMap(basemap);
+        // set the map to be displayed in this view
+        mMapView.setMap(map);
         arcgisToolManager = new ArcgisToolManager(getActivity(), mMapView);
         measureToolView = getView(R.id.measure_tool);
         arcgisToolManager
@@ -281,7 +313,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                         if (clickPoint == null) {
                             return super.onSingleTapUp(e);
                         }
-                        onSingleTapFeatureLayer(screenPoint, featureLayer_gsmm, false);
+                        onSingleTapFeatureLayer(screenPoint);
                         return super.onSingleTapUp(e);
                     }
 
@@ -397,7 +429,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void onSingleTapFeatureLayer(
-            android.graphics.Point clickPoint, FeatureLayer layer, boolean isSentiveLayer) {
+            android.graphics.Point clickPoint) {
         final ListenableFuture<List<IdentifyLayerResult>> listListenableFuture =
                 mMapView.identifyLayersAsync(clickPoint, 0, false, 1);
         listListenableFuture.addDoneListener(new Runnable() {
@@ -468,7 +500,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
         // 如果有元素被发现则展示识别结果，否则通知用户没有元素被找到
         if (totalCount > 0) {
 //            showAlertDialog(message);
-            ToastUtil.show(mContext, totalCount + "");
+//            ToastUtil.show(mContext, totalCount + "");
+            Log.e("aaa", "totalCount=" + totalCount);
         } else {
 //            Toast.makeText(getActivity(), "No element found", Toast.LENGTH_SHORT).show();
             Log.e("aaa", "No element found.");
@@ -528,11 +561,17 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
 
     private String currentPointLat;
     private String currentPointLon;
+    private String currentLayerName;
+    private Map<String, Object> currentMap;
+    private String currentAddress;
 
     private void showView(String layerName, Map<String, Object> map) {
         dataList.clear();
         dataLL.setVisibility(View.VISIBLE);
+        dataLL.setAnimation(AnimationUtil.moveToViewLocation());
         nameTV.setText(StringUtil.valueOf(layerName));
+        currentLayerName = layerName;
+        currentMap = map;
         currentPointLat = StringUtil.valueOf(map.get("纬度"));
         currentPointLon = StringUtil.valueOf(map.get("经度"));
         Map<String, Object> locationMap = LocationSP.getLocationData(mContext);
@@ -547,6 +586,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
         if ("古树名木1984".equals(layerName)) {
             String address =
                     StringUtil.valueOf(map.get("区县")) + StringUtil.valueOf(map.get("乡镇")) + StringUtil.valueOf(map.get("村名")) + StringUtil.valueOf(map.get("小地名"));
+            currentAddress = address;
             addressTV.setText("\t\t|\t\t" + address);
             dataList.add("树种名:" + StringUtil.valueOf(map.get("树种名")));
             dataList.add("年龄:" + StringUtil.StringToInt(StringUtil.valueOf(map.get("年龄"))) + "岁");
@@ -630,10 +670,17 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
 
 
     private GraphicsOverlay gjOverlay;//轨迹
+    private GraphicsOverlay fireOverlay;//火情
+    private PictureMarkerSymbol fireSymbol;
 
     private void createGraphicsOverlay() {
         gjOverlay = new GraphicsOverlay();
         mMapView.getGraphicsOverlays().add(gjOverlay);
+        fireOverlay = new GraphicsOverlay();
+        mMapView.getGraphicsOverlays().add(fireOverlay);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_fire);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
+        fireSymbol = new PictureMarkerSymbol(bitmapDrawable);
     }
 
     private void createPolylineGraphics(List<Point> list) {
@@ -845,7 +892,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                     drawLine(points.get(0), points.get(1));
 //                    mMapView.setViewpointCenterAsync(points.get(1));
                 }
-            }else if(msg.what==1){
+            } else if (msg.what == 1) {
                 show("轨迹播放完成");
                 isCanPlay = true;
             }
@@ -872,5 +919,157 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                 Color.BLUE, 3.0f);
         Graphic polylineGraphic = new Graphic(polyline, polylineSymbol);
         gjOverlay.getGraphics().add(polylineGraphic);
+    }
+
+    private List<FireBean.DataBean.RowsBean> fireList;
+
+    private void getFire() {
+        HttpUtil.getFireListWithNoDialog(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                fireList.clear();
+                try {
+                    FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
+                    if (fireBean != null && fireBean.data != null && fireBean.data.rows != null && fireBean.data.rows.size() > 0) {
+                        List<FireBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
+                        for (FireBean.DataBean.RowsBean rowsBean1 : fireBean.data.rows) {
+                            if (YS.FireStatus.Status_FSHZ.equals(rowsBean1.status)) {
+                                fireList.add(rowsBean1);
+                            }
+                        }
+                        if (fireList.size() > 0) {
+                            showFire(fireList);
+                        } else {
+                            show("暂无火情");
+                        }
+                    } else {
+                        show("暂无火情");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    show("暂无火情");
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        });
+    }
+
+    private void showFire(List<FireBean.DataBean.RowsBean> list) {
+        for (FireBean.DataBean.RowsBean rowsBean : list) {
+            if (rowsBean != null) {
+                Point point = new Point(StringUtil.StringToDouble(rowsBean.longitude),
+                        StringUtil.StringToDouble(rowsBean.latitude));
+                drawCircle(point);
+            }
+        }
+    }
+
+    private void removeFire() {
+        fireOverlay.getGraphics().clear();
+    }
+
+    /**
+     * 绘制圆
+     */
+    private void drawCircle(Point point) {
+        double radius = 0.005;
+        Point point1 = new Point(106.37487306404074, 29.826253132276292);
+        Point point2 = new Point(106.35709505988916, 29.819586659396862);
+//        double x = (point1.getX() - point2.getX());
+//        double y = (point1.getY() - point2.getY());
+//        radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        L.e("radius=" + radius);
+        mMapView.setViewpointCenterAsync(point1);
+        PointCollection polylinePoints = new PointCollection(SpatialReferences.getWgs84());
+        Point[] points = getPoints(point1, radius);
+        for (Point p : points) {
+            polylinePoints.add(p);
+        }
+        Polygon polygon = new Polygon(polylinePoints);
+//        SimpleMarkerSymbol simpleMarkerSymbol =
+//                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
+//        Graphic pointGraphic = new Graphic(point1, simpleMarkerSymbol);
+        Graphic pointGraphic = new Graphic(point1, fireSymbol);
+        fireOverlay.getGraphics().add(pointGraphic);
+
+        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,
+                Color.parseColor("#FC8145"), 3.0f);
+        SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,
+                Color.parseColor("#33e97676"), lineSymbol);
+        Graphic graphic = new Graphic(polygon, simpleFillSymbol);
+        fireOverlay.getGraphics().add(graphic);
+    }
+
+    /**
+     * 通过中心点和半径计算得出圆形的边线点集合
+     *
+     * @param center
+     * @param radius
+     * @return
+     */
+    private Point[] getPoints(Point center, double radius) {
+        Point[] points = new Point[50];
+        double sin;
+        double cos;
+        double x;
+        double y;
+        for (double i = 0; i < 50; i++) {
+            sin = Math.sin(Math.PI * 2 * i / 50);
+            cos = Math.cos(Math.PI * 2 * i / 50);
+            x = center.getX() + radius * sin;
+            y = center.getY() + radius * cos;
+            points[(int) i] = new Point(x, y);
+        }
+        return points;
+    }
+
+    private void goThere() {
+        final CustomBaseDialog dialog = new CustomBaseDialog(mContext);
+        dialog.setClickListener(new CustomBaseDialog.ClickListener() {
+            @Override
+            public void click(String name) {
+                if ("高德地图".equals(name)) {
+                    navigation(NavigationUtil.TYPE.GAODE);
+                } else if ("百度地图".equals(name)) {
+                    navigation(NavigationUtil.TYPE.BAIDU);
+                }
+            }
+        });
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(true);
+    }
+
+    private void navigation(NavigationUtil.TYPE type) {
+        Map<String, Object> locationMap = LocationSP.getLocationData(mContext);
+        if (locationMap != null) {
+            double lat = (double) locationMap.get("lat");//百度坐标系
+            double lon = (double) locationMap.get("lon");//百度坐标系
+            String address = (String) locationMap.get("address");
+//            double[] gps = GPSUtil.bd09_To_gps84(lat, lon);
+            NavigationUtil.goAddress(mContext, type, lon,
+                    lat, address, StringUtil.StringToDouble(currentPointLon),
+                    StringUtil.StringToDouble(currentPointLat), currentAddress);
+        } else {
+            show("未获取到当前位置");
+        }
+    }
+
+    private void goneAnimal() {
+        ParticleView particleAnimator = new ParticleView(mContext, 2000);//3000为动画持续时间
+        particleAnimator.setOnAnimationListener(new ParticleView.OnAnimationListener() {
+            @Override
+            public void onAnimationStart(View v, Animator animation) {
+                v.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationEnd(View v, Animator animation) {
+
+            }
+        });
+        particleAnimator.boom(dataLL);
     }
 }
