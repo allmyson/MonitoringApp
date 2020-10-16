@@ -92,6 +92,7 @@
         </provider>
 
         <activity android:name="com.ys.monitor.activity.MainActivity" />
+        <activity android:name="com.ys.monitor.activity.Main2Activity" />
         <activity android:name="com.ys.monitor.activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
