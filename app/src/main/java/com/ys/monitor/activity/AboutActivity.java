@@ -1,6 +1,5 @@
 package com.ys.monitor.activity;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,7 +36,7 @@ public class AboutActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_update:
-                startActivity(new Intent(mContext, UpdateInfoActivity.class));
+//                startActivity(new Intent(mContext, UpdateInfoActivity.class));
                 break;
         }
     }

@@ -68,7 +68,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AddHelpActivity extends BaseActivity {
+public class AddHelpActivity extends BaseActivity implements ChatFunctionFragment.ClickListener {
     RecyclerView chatList;
     ImageView emotionVoice;
     EditText editText;
@@ -102,6 +102,7 @@ public class AddHelpActivity extends BaseActivity {
     private double gis_jd = 0;
     private double gis_wd = 0;
     private String myIcon;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_add_help;
@@ -157,7 +158,8 @@ public class AddHelpActivity extends BaseActivity {
         chatEmotionFragment = new ChatEmotionFragment();
         fragments.add(chatEmotionFragment);
         chatFunctionFragment = new ChatFunctionFragment();
-        chatFunctionFragment.setHide(true);
+        chatFunctionFragment.setClickListener(this);
+        chatFunctionFragment.setHide(false);
         fragments.add(chatFunctionFragment);
         adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(adapter);
@@ -664,4 +666,21 @@ public class AddHelpActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    @Override
+    public void clickVoice() {
+        Intent intent = new Intent(mContext.getApplicationContext(), AvActivity.class);
+        intent.putExtra("callerId", "1111002");
+        intent.putExtra("type", IPocEngineEventHandler.SessionType.TYPE_AUDIO_CALL);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.getApplicationContext().startActivity(intent);
+    }
+
+    @Override
+    public void clickVideo() {
+        Intent intent = new Intent(mContext.getApplicationContext(), AvActivity.class);
+        intent.putExtra("callerId", "1111002");
+        intent.putExtra("type", IPocEngineEventHandler.SessionType.TYPE_VIDEO_CALL);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.getApplicationContext().startActivity(intent);
+    }
 }

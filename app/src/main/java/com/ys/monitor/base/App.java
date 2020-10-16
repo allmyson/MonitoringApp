@@ -15,6 +15,7 @@ import com.huamai.poc.PocEngineFactory;
 import com.huamai.poc.chat.ChatMessageCategory;
 import com.huamai.poc.chat.ChatMessageStatus;
 import com.huamai.poc.greendao.ChatMessage;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.unionbroad.app.PocApplication;
 import com.unionbroad.app.eventbus.ChannelChangedEvent;
 import com.unionbroad.app.util.FileDownloadManager;
@@ -32,9 +33,7 @@ import com.ys.monitor.util.L;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author lh
@@ -63,6 +62,7 @@ public class App extends PocApplication {
         Constant.buildFile();
         NoHttp.initialize(InitializationConfig.newBuilder(this).cookieStore(new DBCookieStore(this).setCookieStoreListener(new CookieListener(this))).build());
         Logger.setDebug(true);
+        initBugly();
         initScreenSize();
         /** 防止反复初始化 */
         if (getPackageName() != null && getPackageName().equals(getProcessName(android.os.Process.myPid()))) {
@@ -71,6 +71,10 @@ public class App extends PocApplication {
             //可以在Application中监听，也可以在Service中监听，主要希望全局监听来电和新消息
             PocEngineFactory.get().addEventHandler(pocEventHandler);
         }
+    }
+
+    private void initBugly() {
+        CrashReport.initCrashReport(getApplicationContext(), "4fe346068c", true);
     }
 
     /**
@@ -340,7 +344,7 @@ public class App extends PocApplication {
 //            Toast.makeText(getApplicationContext(),
 //                    "坐标变化(" + latitude + "," + longitude + "," + address + ")",
 //                    Toast.LENGTH_SHORT).show();
-            LocationSP.saveLocation(App.getContext(),latitude,longitude,address);
+            LocationSP.saveLocation(App.getContext(), latitude, longitude, address);
         }
 
 

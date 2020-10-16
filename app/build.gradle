@@ -14,7 +14,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
 //            abiFilters "armeabi"
-            abiFilters "armeabi-v7a"
+//            abiFilters "armeabi-v7a"
+            abiFilters "armeabi-v7a", "x86", "armeabi"
         }
         multiDexEnabled true
     }
@@ -92,8 +93,9 @@ dependencies {
 
 //    implementation files('src/main/jniLibs/photoview_library-1.2.2.jar')
 //    implementation 'com.esri.arcgisruntime:arcgis-android:100.9.0'
-    implementation project(path:':arcgistool')
+    implementation project(path: ':arcgistool')
 
+    implementation 'com.tencent.bugly:crashreport:latest.release'
 
     configurations.all {
         resolutionStrategy.eachDependency {
@@ -103,7 +105,7 @@ dependencies {
                     if (!requested.name.startsWith("multidex")) {
                         details.useVersion '28.0.0'
 //                        details.useVersion '23.0.3'
-                    }else {
+                    } else {
                         details.useVersion '1.0.3'
                     }
                 }

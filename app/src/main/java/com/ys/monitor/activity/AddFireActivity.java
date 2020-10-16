@@ -19,11 +19,8 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-import com.huamai.poc.IPocEngineEventHandler;
 import com.huamai.poc.PocEngine;
 import com.huamai.poc.PocEngineFactory;
-import com.huamai.poc.greendao.User;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
@@ -33,9 +30,9 @@ import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.BaseBean;
 import com.ys.monitor.bean.FileUploadBean;
-import com.ys.monitor.bean.GPSBean;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.MyGridView;
 import com.ys.monitor.util.Constant;
@@ -48,7 +45,6 @@ import com.ys.monitor.util.YS;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AddFireActivity extends BaseActivity {
@@ -67,6 +63,7 @@ public class AddFireActivity extends BaseActivity {
     private GeoCoder mCoder;
     private String currentVideoName;
     private WaitDialog waitDialog;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_fire_add;
@@ -126,44 +123,58 @@ public class AddFireActivity extends BaseActivity {
 
     @Override
     public void getData() {
-        if (pocEngine.hasServiceConnected()) {
-            if (!pocEngine.isDisableInternalGpsFunc()) {
-                User user = pocEngine.getCurrentUser();
-                number = "" + user.getNumber();
-                L.e("user=" + user.toString());
-                List<User> list = new ArrayList<>();
-                list.add(user);
-                pocEngine.getUserGPS(list, new IPocEngineEventHandler.Callback<String>() {
-                    @Override
-                    public void onResponse(final String json) {
-                        //回调在子线程
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                L.e("json=" + json);
-                                if (StringUtil.isGoodJson(json)) {
-                                    List<GPSBean> ll = new Gson().fromJson(json,
-                                            new TypeToken<List<GPSBean>>() {
-                                            }.getType());
-                                    if (ll != null && ll.size() > 0) {
-                                        for (GPSBean gpsBean : ll) {
-                                            if (number.equals(gpsBean.exten)) {
-                                                gis_jd = gpsBean.gis_jd;
-                                                gis_wd = gpsBean.gis_wd;
-                                                geoAddress(StringUtil.StringToDouble(gis_wd),
-                                                        StringUtil.StringToDouble(gis_jd));
-//                                                addressTV.setText(gis_jd + "-" + gis_wd);
-                                                break;
-                                            }
-                                        }
-                                    }
+        getLocation();
+//        if (pocEngine.hasServiceConnected()) {
+//            if (!pocEngine.isDisableInternalGpsFunc()) {
+//                User user = pocEngine.getCurrentUser();
+//                number = "" + user.getNumber();
+//                L.e("user=" + user.toString());
+//                List<User> list = new ArrayList<>();
+//                list.add(user);
+//                pocEngine.getUserGPS(list, new IPocEngineEventHandler.Callback<String>() {
+//                    @Override
+//                    public void onResponse(final String json) {
+//                        //回调在子线程
+//                        new Handler().post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                L.e("json=" + json);
+//                                if (StringUtil.isGoodJson(json)) {
+//                                    List<GPSBean> ll = new Gson().fromJson(json,
+//                                            new TypeToken<List<GPSBean>>() {
+//                                            }.getType());
+//                                    if (ll != null && ll.size() > 0) {
+//                                        for (GPSBean gpsBean : ll) {
+//                                            if (number.equals(gpsBean.exten)) {
+//                                                gis_jd = gpsBean.gis_jd;
+//                                                gis_wd = gpsBean.gis_wd;
+//                                                geoAddress(StringUtil.StringToDouble(gis_wd),
+//                                                        StringUtil.StringToDouble(gis_jd));
+////                                                addressTV.setText(gis_jd + "-" + gis_wd);
+//                                                break;
+//                                            }
+//                                        }
+//                                    }
+//
+//                                }
+//                            }
+//                        });
+//                    }
+//                });
+//            }
+//        }
+    }
 
-                                }
-                            }
-                        });
-                    }
-                });
-            }
+    private void getLocation() {
+        Map<String, Object> locationMap = LocationSP.getLocationData(mContext);
+        if (locationMap != null) {
+            double lat = (double) locationMap.get("lat");
+            double lon = (double) locationMap.get("lon");
+            String address = (String) locationMap.get("address");
+            double[] gps = GPSUtil.bd09_To_gps84(lat, lon);
+            gis_jd = StringUtil.valueOf(gps[1]);
+            gis_wd = StringUtil.valueOf(gps[0]);
+            addressTV.setText(address);
         }
     }
 

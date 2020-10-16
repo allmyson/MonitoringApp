@@ -42,6 +42,7 @@ import com.ys.monitor.dialog.DialogUtil;
 import com.ys.monitor.dialog.ListDialogFragment;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
+import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.MyGridView;
 import com.ys.monitor.util.Constant;
@@ -153,7 +154,8 @@ public class AddXHActivity extends BaseActivity {
             taskTV.setText(patrolPlanName);
             taskLL.setVisibility(View.VISIBLE);
         }
-        getAddress();
+//        getAddress();
+        getLocation();
     }
 
     @Override
@@ -369,7 +371,18 @@ public class AddXHActivity extends BaseActivity {
         }
         return isCan;
     }
-
+    private void getLocation() {
+        Map<String, Object> locationMap = LocationSP.getLocationData(mContext);
+        if (locationMap != null) {
+            double lat = (double) locationMap.get("lat");
+            double lon = (double) locationMap.get("lon");
+            String address = (String) locationMap.get("address");
+            double[] gps = GPSUtil.bd09_To_gps84(lat, lon);
+            gis_jd = StringUtil.valueOf(gps[1]);
+            gis_wd = StringUtil.valueOf(gps[0]);
+            addressTV.setText(address);
+        }
+    }
     private void getAddress() {
         if (pocEngine.hasServiceConnected()) {
             if (!pocEngine.isDisableInternalGpsFunc()) {
