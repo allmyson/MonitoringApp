@@ -3,6 +3,7 @@ package com.ys.monitor.fragment;
 import android.Manifest;
 import android.animation.Animator;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +26,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureCollection;
@@ -57,12 +65,14 @@ import com.huamai.poc.PocEngine;
 import com.huamai.poc.PocEngineFactory;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
+import com.ys.monitor.activity.ResoureActivity;
 import com.ys.monitor.adapter.DataAdapter;
 import com.ys.monitor.adapter.LayerAdapter;
 import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.FireBean;
 import com.ys.monitor.bean.GjBean;
 import com.ys.monitor.bean.LayerBean;
+import com.ys.monitor.dialog.DialogUtil;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.sp.UserSP;
@@ -100,7 +110,8 @@ import cn.sddman.arcgistool.view.MeasureToolView;
  * @description -------------------------------------------------------
  * @date 2020/9/24 10:44
  */
-public class MapFragment extends BaseFragment implements View.OnClickListener {
+public class MapFragment extends BaseFragment implements View.OnClickListener,
+        OnGetGeoCoderResultListener {
     private MapView mMapView;
     private ArcGisZoomView zoomBtn;
     private ArcgisToolManager arcgisToolManager;
@@ -121,6 +132,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     private boolean isShowGj;
     private boolean isShowFire;
 
+    private ImageView locationIV;
+
     @Override
     protected void init() {
         initTool();
@@ -135,6 +148,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void getData() {
         userId = UserSP.getUserId(mContext);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getFire();
+            }
+        }, 2000);
 //        addLayer();
     }
 
@@ -157,14 +176,17 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
             case R.id.iv_gj:
                 isShowGj = !isShowGj;
                 if (isShowGj) {
+                    gjIV.setImageResource(R.mipmap.ic_gj_check);
                     getGj();
 //                    createPolylineGraphics();
                 } else {
+                    gjIV.setImageResource(R.mipmap.ic_gj_uncheck);
                     clearGjGraphics();
                 }
                 break;
             case R.id.iv_playGj:
                 if (isCanPlay) {
+                    playGj.setImageResource(R.mipmap.ic_play_gj_check);
                     playGj();
                 } else {
                     show("正在播放轨迹");
@@ -187,6 +209,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                 //导航
                 goThere();
                 break;
+            case R.id.ll_update_data:
+                startActivity(new Intent(mContext, ResoureActivity.class));
+                break;
+            case R.id.iv_location:
+                markLocation();
+                break;
         }
     }
 
@@ -206,9 +234,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         mMapView.dispose();
+        if (mCoder != null) {
+            mCoder.destroy();
+        }
     }
 
     private void initBase() {
+        mCoder = GeoCoder.newInstance();
+        mCoder.setOnGetGeoCodeResultListener(this);
         fireList = new ArrayList<>();
         pocEngine = PocEngineFactory.get();
         layerIV = getView(R.id.iv_layer);
@@ -219,6 +252,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
         playGj.setOnClickListener(this);
         fireIV = getView(R.id.iv_showFire);
         fireIV.setOnClickListener(this);
+        locationIV = getView(R.id.iv_location);
+        locationIV.setOnClickListener(this);
         layerGV = getView(R.id.gv_layer);
         layerBeanList = new ArrayList<>();
         layerBeanList.addAll(LayerBean.getDefaultLayers());
@@ -295,6 +330,13 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
         ArcGISMap map = new ArcGISMap(basemap);
         // set the map to be displayed in this view
         mMapView.setMap(map);
+        //隐藏网格线
+//        BackgroundGrid mainBackgroundGrid = new BackgroundGrid();
+//        mainBackgroundGrid.setColor(0xffffffff);
+//        mainBackgroundGrid.setGridLineColor(0xffffffff);
+//        mainBackgroundGrid.setGridLineWidth(0);
+//        mMapView.setBackgroundGrid(mainBackgroundGrid);
+
         arcgisToolManager = new ArcgisToolManager(getActivity(), mMapView);
         measureToolView = getView(R.id.measure_tool);
         arcgisToolManager
@@ -342,11 +384,18 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                         //Toast.makeText(MainActivity2.this,"onScale2",Toast.LENGTH_SHORT).show();
                         return super.onScale(detector);
                     }
+
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        L.e("onLongPress" + e.getX() + "--" + e.getY());
+                        showPointDetail(e);
+                        super.onLongPress(e);
+                    }
                 })
                 .builderMeasure(measureToolView)
                 .setButtonWidth(32)
                 .setButtonHeight(32)
-                .setMeasureBackground(R.color.colorAccent)
+                .setMeasureBackground(R.color.measure_tool)
                 .setSohwText(false)
                 .setFontSize(12)
                 .setFontColor(R.color.color444)
@@ -419,11 +468,13 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void zoomInClick(View view) {
 //                        Toast.makeText(getActivity(), "zoom in", Toast.LENGTH_SHORT).show();
+                        L.e("当前比例尺（放大）：" + mMapView.getMapScale());
                     }
 
                     @Override
                     public void zoomOutClick(View view) {
 //                        Toast.makeText(getActivity(), "zoom out", Toast.LENGTH_SHORT).show();
+                        L.e("当前比例尺(缩小)：" + mMapView.getMapScale());
                     }
                 });
     }
@@ -603,6 +654,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
     private GridView dataGV;
     private DataAdapter dataAdapter;
     private List<String> dataList;
+    private LinearLayout updateDataLL;
 
     private void initPointDetailLayout() {
         dataList = new ArrayList<>();
@@ -617,6 +669,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
         dataGV.setAdapter(dataAdapter);
         closeRL.setOnClickListener(this);
         dhLL.setOnClickListener(this);
+        updateDataLL = getView(R.id.ll_update_data);
+        updateDataLL.setOnClickListener(this);
     }
 
     private LocationDisplay locationDisplay;
@@ -895,6 +949,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
             } else if (msg.what == 1) {
                 show("轨迹播放完成");
                 isCanPlay = true;
+                playGj.setImageResource(R.mipmap.ic_play_gj_uncheck);
+
             }
         }
     };
@@ -975,7 +1031,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
      * 绘制圆
      */
     private void drawCircle(Point point) {
-        double radius = 0.005;
+        double scale = mMapView.getMapScale() / 100;
+        L.e("比例尺=" + scale + "米");
+        double radius = 0.01;
         Point point1 = new Point(106.37487306404074, 29.826253132276292);
         Point point2 = new Point(106.35709505988916, 29.819586659396862);
 //        double x = (point1.getX() - point2.getX());
@@ -1001,6 +1059,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
                 Color.parseColor("#33e97676"), lineSymbol);
         Graphic graphic = new Graphic(polygon, simpleFillSymbol);
         fireOverlay.getGraphics().add(graphic);
+        mMapView.setViewpointGeometryAsync(fireOverlay.getExtent(),50);
     }
 
     /**
@@ -1071,5 +1130,59 @@ public class MapFragment extends BaseFragment implements View.OnClickListener {
             }
         });
         particleAnimator.boom(dataLL);
+    }
+
+    private Point longPressPoint;
+
+    private void showPointDetail(MotionEvent e) {
+        android.graphics.Point screenPoint =
+                new android.graphics.Point(Math.round(e.getX()),
+                        Math.round(e.getY()));
+        longPressPoint = mMapView.screenToLocation(screenPoint);
+        if (longPressPoint != null) {
+            L.e("x=" + longPressPoint.getX() + "--y=" + longPressPoint.getY());
+            double[] points = GPSUtil.gps84_To_bd09(longPressPoint.getY(), longPressPoint.getX());
+            geoAddress(points[0], points[1]);
+//            DialogUtil.showPointTip(getActivity(), "行政区划：",
+//                    clickPoint.getX() + "," + clickPoint.getY());
+        }
+
+    }
+
+    private GeoCoder mCoder;
+
+    private void geoAddress(double lat, double lon) {
+        mCoder.reverseGeoCode(new ReverseGeoCodeOption()
+                .location(new LatLng(lat, lon))
+                // 设置是否返回新数据 默认值0不返回，1返回
+                .newVersion(1)
+                // POI召回半径，允许设置区间为0-1000米，超过1000米按1000米召回。默认值为1000
+                .radius(500));
+    }
+
+    @Override
+    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+
+    }
+
+    @Override
+    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+        String city = "";
+        if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+            //没有找到检索结果
+            city = "未检索到行政区划";
+            L.e("onGetReverseGeoCodeResult---没有检索到结果");
+        } else {
+            //详细地址
+            String address = reverseGeoCodeResult.getAddress();
+            //行政区号
+            int adCode = reverseGeoCodeResult.getCityCode();
+            city = address;
+            L.e("address=" + address + "--adCode=" + adCode);
+        }
+        if (longPressPoint != null) {
+            DialogUtil.showPointTip(getActivity(), city,
+                    longPressPoint.getX() + "," + longPressPoint.getY());
+        }
     }
 }

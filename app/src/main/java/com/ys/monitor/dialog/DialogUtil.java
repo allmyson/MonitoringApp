@@ -219,4 +219,27 @@ public class DialogUtil {
         newFragment.show(ft, mDialogTag);
         return newFragment;
     }
+
+
+    /**
+     * 弹出确认框
+     *
+     * @param context
+     * @return
+     */
+    public static PointTipFragment showPointTip(Context context,String areaText,String locationText) {
+        FragmentActivity activity = (FragmentActivity) context;
+        removeDialog(activity);
+        PointTipFragment newFragment = PointTipFragment.newInstance(DialogFragment.STYLE_NO_TITLE, android.R.style
+                .Theme_Holo_Light_Dialog);
+        newFragment.setAreaText(areaText);
+        newFragment.setLocationText(locationText);
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        // 指定一个过渡动画
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        newFragment.show(ft, mDialogTag);//Can not perform this action after onSaveInstanceState
+//        ft.add(newFragment, mDialogTag);
+//        ft.commitAllowingStateLoss();
+        return newFragment;
+    }
 }

@@ -97,27 +97,39 @@
                     android:layout_marginBottom="10dp"
                     android:scaleType="fitXY"
                     android:src="@mipmap/map_layer" />
+
                 <ImageView
                     android:id="@+id/iv_gj"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginBottom="10dp"
                     android:scaleType="fitXY"
-                    android:src="@mipmap/map_layer" />
+                    android:src="@mipmap/ic_gj_uncheck" />
+
                 <ImageView
                     android:id="@+id/iv_playGj"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginBottom="10dp"
                     android:scaleType="fitXY"
-                    android:src="@mipmap/map_layer" />
+                    android:src="@mipmap/ic_play_gj_uncheck" />
+
+                <ImageView
+                    android:id="@+id/iv_location"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginBottom="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_map_location" />
+
                 <ImageView
                     android:id="@+id/iv_showFire"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginBottom="10dp"
                     android:scaleType="fitXY"
-                    android:src="@mipmap/map_layer" />
+                    android:src="@mipmap/map_layer"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -142,14 +154,33 @@
                 android:orientation="horizontal"
                 android:paddingLeft="15dp">
 
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/ll_update_data"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:textColor="#ff000000"
-                    android:textSize="17sp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingRight="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:textColor="#ff000000"
+                        android:textSize="17sp" />
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/ic_map_update" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
 
                 <RelativeLayout
                     android:id="@+id/rl_close"
