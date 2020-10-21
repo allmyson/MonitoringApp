@@ -21,7 +21,18 @@ public class NoticeAdapter extends CommonAdapter<Msg> {
         helper.setText(R.id.tv_time, getTime(item.time));
         helper.setText(R.id.tv_title, StringUtil.valueOf(item.title));
         helper.setText(R.id.tv_content, StringUtil.valueOf(item.content));
-        helper.setImageResource(R.id.iv_, item.drawableId);
+//        helper.setImageResource(R.id.iv_, item.drawableId);
+        if(position==0){
+            helper.setImageResource(R.id.iv_, R.mipmap.notice_fire_check);
+        }else if(position==1){
+            helper.setImageResource(R.id.iv_, R.mipmap.notice_warning);
+        }else if(position==2){
+            helper.setImageResource(R.id.iv_, R.mipmap.notice_task);
+        }else if(position==3){
+            helper.setImageResource(R.id.iv_, R.mipmap.notice_command_center);
+        }else {
+            helper.setImageResource(R.id.iv_, item.drawableId);
+        }
         int num = item.num;
         TextView numTV = helper.getView(R.id.tv_num);
         if (num == 0) {

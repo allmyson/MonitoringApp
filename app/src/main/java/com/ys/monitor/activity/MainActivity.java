@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity {
                 ((ImageView) tab.getCustomView().findViewById(R.id.iv)).setImageResource(list.get(tab.getPosition())
                         .selectIconId);
                 if (tab.getPosition() == 2) {
-                    setBarColor("#0D87F8");
+                    setBarColor("#0D87F8",false);
                 } else {
                     setTransparent();
                 }

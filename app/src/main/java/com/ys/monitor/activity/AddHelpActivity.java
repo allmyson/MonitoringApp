@@ -54,6 +54,7 @@ import com.ys.monitor.sp.MsgSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.GPSUtil;
 import com.ys.monitor.util.HttpUtil;
+import com.ys.monitor.util.KeyBoardUtils;
 import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.YS;
@@ -110,9 +111,10 @@ public class AddHelpActivity extends BaseActivity implements ChatFunctionFragmen
 
     @Override
     public void initView() {
+        initColor();
         fireList = new ArrayList<>();
         messageInfos = new ArrayList<>();
-        setBarColor2("#ffffff", true);
+//        setBarColor2("#ffffff", true);
 //        setBarColor("#ffffff");
         titleView.setText("指挥中心");
         findViewByIds();
@@ -125,7 +127,15 @@ public class AddHelpActivity extends BaseActivity implements ChatFunctionFragmen
         getAddress();
         getFire();
     }
-
+    private void initColor(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            View decor = getWindow().getDecorView();
+            int ui = decor.getSystemUiVisibility();
+            ui |=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体的颜色为黑色
+            //ui &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体颜色为白色
+            decor.setSystemUiVisibility(ui);
+        }
+    }
     @Override
     public void getData() {
 
@@ -163,7 +173,7 @@ public class AddHelpActivity extends BaseActivity implements ChatFunctionFragmen
         fragments.add(chatFunctionFragment);
         adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(adapter);
-        viewpager.setCurrentItem(0);
+        viewpager.setCurrentItem(1);
 
         mDetector = EmotionInputDetector.with(this)
                 .setEmotionView(emotionLayout)
@@ -211,6 +221,7 @@ public class AddHelpActivity extends BaseActivity implements ChatFunctionFragmen
         });
         chatAdapter.addItemClickListener(itemClickListener);
 //        LoadData();
+        KeyBoardUtils.openKeybord(editText,mContext);
     }
 
     /**

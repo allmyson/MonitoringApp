@@ -309,9 +309,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void initLayer() {
-        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("http://gis.cqzhly" +
-                ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8/FeatureServer" +
-                "/0");
+//        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("http://gis.cqzhly" +
+//                ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8/FeatureServer" +
+//                "/0");
+        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("https://222.178.189.231:9443/arcgis/rest/services/JysBaseData/FeatureServer/0");
         featureLayer_gsmm = new FeatureLayer(serviceFeatureTable);
         SimpleMarkerSymbol simpleMarkerSymbol =
                 new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 10);

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F4F5F9"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.ys.monitor.ui.TitleView

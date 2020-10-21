@@ -526,6 +526,7 @@ public class ResoureActivity extends BaseActivity {
     private void addResource() {
         waitDialog.show();
         resultMap.clear();
+        resultMap.put(" isDelete","0");
         resultMap.put("elementType", currentKVBean.id);
 //        double[] gps = GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(gis_wd),
 //                StringUtil.StringToDouble(gis_jd));
