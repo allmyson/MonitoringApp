@@ -54,7 +54,6 @@ import com.ys.monitor.sp.MsgSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.GPSUtil;
 import com.ys.monitor.util.HttpUtil;
-import com.ys.monitor.util.KeyBoardUtils;
 import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.YS;
@@ -127,15 +126,17 @@ public class AddHelpActivity extends BaseActivity implements ChatFunctionFragmen
         getAddress();
         getFire();
     }
-    private void initColor(){
+
+    private void initColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             View decor = getWindow().getDecorView();
             int ui = decor.getSystemUiVisibility();
-            ui |=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体的颜色为黑色
+            ui |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体的颜色为黑色
             //ui &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体颜色为白色
             decor.setSystemUiVisibility(ui);
         }
     }
+
     @Override
     public void getData() {
 
@@ -164,17 +165,17 @@ public class AddHelpActivity extends BaseActivity implements ChatFunctionFragmen
     }
 
     private void initWidget() {
-        fragments = new ArrayList<>();
-        chatEmotionFragment = new ChatEmotionFragment();
-        fragments.add(chatEmotionFragment);
+//        fragments = new ArrayList<>();
+//        chatEmotionFragment = new ChatEmotionFragment();
+//        fragments.add(chatEmotionFragment);
         chatFunctionFragment = new ChatFunctionFragment();
         chatFunctionFragment.setClickListener(this);
         chatFunctionFragment.setHide(false);
-        fragments.add(chatFunctionFragment);
-        adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragments);
-        viewpager.setAdapter(adapter);
-        viewpager.setCurrentItem(1);
-
+//        fragments.add(chatFunctionFragment);
+//        adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragments);
+//        viewpager.setAdapter(adapter);
+//        viewpager.setCurrentItem(1);
+        addFragment(chatFunctionFragment, R.id.emotion_layout);
         mDetector = EmotionInputDetector.with(this)
                 .setEmotionView(emotionLayout)
                 .setViewPager(viewpager)
@@ -221,7 +222,7 @@ public class AddHelpActivity extends BaseActivity implements ChatFunctionFragmen
         });
         chatAdapter.addItemClickListener(itemClickListener);
 //        LoadData();
-        KeyBoardUtils.openKeybord(editText,mContext);
+//        KeyBoardUtils.openKeybord(editText, mContext);
     }
 
     /**

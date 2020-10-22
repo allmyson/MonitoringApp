@@ -27,6 +27,7 @@ import com.ys.monitor.chat.util.AudioRecorderUtils;
 import com.ys.monitor.chat.util.Constants;
 import com.ys.monitor.chat.util.PopupWindowFactory;
 import com.ys.monitor.chat.util.Utils;
+import com.ys.monitor.util.L;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -51,8 +52,8 @@ public class EmotionInputDetector {
     private ViewPager mViewPager;
     private View mSendButton;
     private View mAddButton;
-    private Boolean isShowEmotion = false;
-    private Boolean isShowAdd = false;
+    //    private Boolean isShowEmotion = false;
+//    private Boolean isShowAdd = false;
     private boolean isShowVoice = false;
     private AudioRecorderUtils mAudioRecorderUtils;
     private PopupWindowFactory mVoicePop;
@@ -64,8 +65,10 @@ public class EmotionInputDetector {
     public static EmotionInputDetector with(Activity activity) {
         EmotionInputDetector emotionInputDetector = new EmotionInputDetector();
         emotionInputDetector.mActivity = activity;
-        emotionInputDetector.mInputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        emotionInputDetector.sp = activity.getSharedPreferences(SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        emotionInputDetector.mInputManager =
+                (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        emotionInputDetector.sp = activity.getSharedPreferences(SHARE_PREFERENCE_NAME,
+                Context.MODE_PRIVATE);
         return emotionInputDetector;
     }
 
@@ -125,28 +128,28 @@ public class EmotionInputDetector {
         emotionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEmotionLayout.isShown()) {
-                    if (isShowAdd) {
-                        mViewPager.setCurrentItem(0);
-                        isShowEmotion = true;
-                        isShowAdd = false;
-                    } else {
-                        lockContentHeight();
-                        hideEmotionLayout(true);
-                        isShowEmotion = false;
-                        unlockContentHeightDelayed();
-                    }
-                } else {
-                    if (isSoftInputShown()) {
-                        lockContentHeight();
-                        showEmotionLayout();
-                        unlockContentHeightDelayed();
-                    } else {
-                        showEmotionLayout();
-                    }
-                    mViewPager.setCurrentItem(0);
-                    isShowEmotion = true;
-                }
+//                if (mEmotionLayout.isShown()) {
+//                    if (isShowAdd) {
+//                        mViewPager.setCurrentItem(0);
+//                        isShowEmotion = true;
+//                        isShowAdd = false;
+//                    } else {
+//                        lockContentHeight();
+//                        hideEmotionLayout(true);
+//                        isShowEmotion = false;
+//                        unlockContentHeightDelayed();
+//                    }
+//                } else {
+//                    if (isSoftInputShown()) {
+//                        lockContentHeight();
+//                        showEmotionLayout();
+//                        unlockContentHeightDelayed();
+//                    } else {
+//                        showEmotionLayout();
+//                    }
+//                    mViewPager.setCurrentItem(0);
+//                    isShowEmotion = true;
+//                }
             }
         });
         return this;
@@ -158,16 +161,19 @@ public class EmotionInputDetector {
             @Override
             public void onClick(View v) {
                 if (mEmotionLayout.isShown()) {
-                    if (isShowEmotion) {
-                        mViewPager.setCurrentItem(1);
-                        isShowAdd = true;
-                        isShowEmotion = false;
-                    } else {
-                        lockContentHeight();
-                        hideEmotionLayout(true);
-                        isShowAdd = false;
-                        unlockContentHeightDelayed();
-                    }
+//                    if (isShowEmotion) {
+//                        mViewPager.setCurrentItem(1);
+//                        isShowAdd = true;
+//                        isShowEmotion = false;
+//                    } else {
+//                        lockContentHeight();
+//                        hideEmotionLayout(true);
+//                        isShowAdd = false;
+//                        unlockContentHeightDelayed();
+//                    }
+                    lockContentHeight();
+                    hideEmotionLayout(true);
+                    unlockContentHeightDelayed();
                 } else {
                     if (isSoftInputShown()) {
                         lockContentHeight();
@@ -176,8 +182,8 @@ public class EmotionInputDetector {
                     } else {
                         showEmotionLayout();
                     }
-                    mViewPager.setCurrentItem(1);
-                    isShowAdd = true;
+//                    mViewPager.setCurrentItem(1);
+//                    isShowAdd = true;
                 }
             }
         });
@@ -216,8 +222,10 @@ public class EmotionInputDetector {
 
                 hideEmotionLayout(false);
                 hideSoftInput();
-                mVoiceText.setVisibility(mVoiceText.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                mEditText.setVisibility(mVoiceText.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                mVoiceText.setVisibility(mVoiceText.getVisibility() == View.GONE ? View.VISIBLE :
+                        View.GONE);
+                mEditText.setVisibility(mVoiceText.getVisibility() == View.GONE ? View.VISIBLE :
+                        View.GONE);
             }
         });
         return this;
@@ -348,11 +356,15 @@ public class EmotionInputDetector {
 
     private void showEmotionLayout() {
         int softInputHeight = getSupportSoftInputHeight();
-        if (softInputHeight == 0) {
-            softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, 768);
+//        ToastUtil.show(mActivity, "软键盘高度=" + softInputHeight);
+        L.e("软键盘高度=" + softInputHeight);
+        if (softInputHeight <= 0) {
+//            softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, 768);
+            //oppo Reno Z android 10 软键盘高度803
+            softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, 803);
         }
         hideSoftInput();
-        Log.e(TAG, "showEmotionLayout: ->" + softInputHeight );
+        Log.e(TAG, "showEmotionLayout: ->" + softInputHeight);
         mEmotionLayout.getLayoutParams().height = softInputHeight;
         mEmotionLayout.setVisibility(View.VISIBLE);
     }
@@ -368,7 +380,8 @@ public class EmotionInputDetector {
 
     private void lockContentHeight() {
         Log.e(TAG, "lockContentHeight: ->" + mContentView.getHeight());
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mContentView.getLayoutParams();
+        LinearLayout.LayoutParams params =
+                (LinearLayout.LayoutParams) mContentView.getLayoutParams();
         params.height = mContentView.getHeight();
         params.weight = 0.0F;
     }
@@ -397,7 +410,8 @@ public class EmotionInputDetector {
     }
 
     private boolean isSoftInputShown() {
-        return getSupportSoftInputHeight() != 0;
+//        return getSupportSoftInputHeight() != 0;
+        return getSupportSoftInputHeight() > 0;
     }
 
     private int getSupportSoftInputHeight() {
@@ -406,14 +420,16 @@ public class EmotionInputDetector {
         int screenHeight = mActivity.getWindow().getDecorView().getRootView().getHeight();
         int softInputHeight = screenHeight - r.bottom;
         if (Build.VERSION.SDK_INT >= 20) {
-            // When SDK Level >= 20 (Android L), the softInputHeight will contain the height of softButtonsBar (if has)
+            // When SDK Level >= 20 (Android L), the softInputHeight will contain the height of
+            // softButtonsBar (if has)
             softInputHeight = softInputHeight - getSoftButtonsBarHeight();
         }
         if (softInputHeight < 0) {
             Log.w("EmotionInputDetector", "Warning: value of softInputHeight is below zero!");
+//            ToastUtil.show(mActivity, "Warning: value of softInputHeight is below zero!");
         }
         if (softInputHeight > 0) {
-            Log.e(TAG, "getSupportSoftInputHeight: ->" + softInputHeight );
+            Log.e(TAG, "getSupportSoftInputHeight: ->" + softInputHeight);
             sp.edit().putInt(SHARE_PREFERENCE_TAG, softInputHeight).apply();
         }
         return softInputHeight;

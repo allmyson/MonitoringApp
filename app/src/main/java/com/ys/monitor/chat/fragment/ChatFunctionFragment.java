@@ -7,17 +7,13 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +21,7 @@ import android.widget.Toast;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
 import com.ys.monitor.api.FunctionApi;
-import com.ys.monitor.chat.base.BaseFragment;
+import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.chat.entity.MessageInfo;
 import com.ys.monitor.chat.util.Constants;
 import com.ys.monitor.chat.util.FileUtils;
@@ -71,29 +67,45 @@ public class ChatFunctionFragment extends BaseFragment {
     private String currentVideoName;
     private boolean isHide = false;//隐藏语音和视频通话
 
-    @Nullable
+//    @Nullable
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+//                             @Nullable Bundle savedInstanceState) {
+//        if (rootView == null) {
+//            rootView = inflater.inflate(R.layout.fragment_chat_function, container, false);
+//            findViewByIds();
+//            setItemClick();
+//        }
+//        return rootView;
+//    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_chat_function, container, false);
-            findViewByIds(rootView);
-            setItemClick();
-        }
-        return rootView;
+    protected void init() {
+        findViewByIds();
+        setItemClick();
     }
 
-    private void findViewByIds(View rootView) {
+    @Override
+    protected void getData() {
+
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.fragment_chat_function;
+    }
+
+    private void findViewByIds() {
 //        tvCapture = (TextView) rootView.findViewById(R.id.chat_function_capture);
 //        tvAlbum = (TextView) rootView.findViewById(R.id.chat_function_album);
 //        tvContact = (TextView) rootView.findViewById(R.id.chat_function_contact);
 //        tvCloud = (TextView) rootView.findViewById(R.id.chat_function_cloud);
 //        tvFile = (TextView) rootView.findViewById(R.id.chat_function_file);
 //        tvLocation = (TextView) rootView.findViewById(R.id.chat_function_location);
-        photoLL = (LinearLayout) rootView.findViewById(R.id.ll_photo);
-        cameraLL = (LinearLayout) rootView.findViewById(R.id.ll_camera);
-        voiceLL = (LinearLayout) rootView.findViewById(R.id.ll_voice);
-        videoLL = (LinearLayout) rootView.findViewById(R.id.ll_video);
+        photoLL = getView(R.id.ll_photo);
+        cameraLL = getView(R.id.ll_camera);
+        voiceLL = getView(R.id.ll_voice);
+        videoLL = getView(R.id.ll_video);
         setGone();
 
     }
@@ -344,14 +356,14 @@ public class ChatFunctionFragment extends BaseFragment {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
                 } else {
-                    toastShow("请同意系统权限后继续");
+                    show("请同意系统权限后继续");
                 }
                 break;
             case MY_PERMISSIONS_REQUEST_WRITE_STORAGE_CODE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     choosePhoto();
                 } else {
-                    toastShow("请同意系统权限后继续");
+                    show("请同意系统权限后继续");
                 }
                 break;
             case MY_PERMISSIONS_REQUEST_CAMERACODE:

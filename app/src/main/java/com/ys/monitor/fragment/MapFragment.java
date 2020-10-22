@@ -852,32 +852,32 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                                         GjBean gjBean = new Gson().fromJson(json, GjBean.class);
                                         if (gjBean != null && gjBean.track != null && gjBean.track.size() > 0) {
                                             List<Point> list = new ArrayList<>();
-//                                            for (GjBean.TrackBean trackBean : gjBean.track) {
-//                                                double[] gps =
-//                                                        GPSUtil.bd09_To_gps84(StringUtil
-//                                                        .StringToDouble(trackBean.gis_wd),
-//                                                                StringUtil.StringToDouble
-//                                                                (trackBean.gis_jd));
-//                                                Point point = new Point(gps[1], gps[0],
-//                                                        SpatialReferences.getWgs84());
-//                                                list.add(point);
-//                                            }
-                                            //测试数据
-                                            list.add(new Point(106.41431823010231,
-                                                    29.854030543574765,
-                                                    SpatialReferences.getWgs84()));
-                                            list.add(new Point(106.37181760929531,
-                                                    29.833475430246949,
-                                                    SpatialReferences.getWgs84()));
-                                            list.add(new Point(106.40042894753793,
-                                                    29.835975076988291,
-                                                    SpatialReferences.getWgs84()));
-                                            list.add(new Point(106.36116413241882,
-                                                    29.818852793721533,
-                                                    SpatialReferences.getWgs84()));
-                                            list.add(new Point(106.36110841042483,
-                                                    29.818837171598261,
-                                                    SpatialReferences.getWgs84()));
+                                            for (GjBean.TrackBean trackBean : gjBean.track) {
+                                                double[] gps =
+                                                        GPSUtil.bd09_To_gps84(StringUtil
+                                                        .StringToDouble(trackBean.gis_wd),
+                                                                StringUtil.StringToDouble
+                                                                (trackBean.gis_jd));
+                                                Point point = new Point(gps[1], gps[0],
+                                                        SpatialReferences.getWgs84());
+                                                list.add(point);
+                                            }
+//                                            //测试数据
+//                                            list.add(new Point(106.41431823010231,
+//                                                    29.854030543574765,
+//                                                    SpatialReferences.getWgs84()));
+//                                            list.add(new Point(106.37181760929531,
+//                                                    29.833475430246949,
+//                                                    SpatialReferences.getWgs84()));
+//                                            list.add(new Point(106.40042894753793,
+//                                                    29.835975076988291,
+//                                                    SpatialReferences.getWgs84()));
+//                                            list.add(new Point(106.36116413241882,
+//                                                    29.818852793721533,
+//                                                    SpatialReferences.getWgs84()));
+//                                            list.add(new Point(106.36110841042483,
+//                                                    29.818837171598261,
+//                                                    SpatialReferences.getWgs84()));
                                             playTodayGj(list);
                                         }
                                     } else {

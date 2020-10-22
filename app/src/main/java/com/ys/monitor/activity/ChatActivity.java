@@ -94,9 +94,10 @@ public class ChatActivity extends BaseActivity implements ChatFunctionFragment.C
 
     @Override
     public void initView() {
+        initColor();
         chatId = getIntent().getLongExtra(EXTRAS_CHAT_ID, -1);
         messageInfos = new ArrayList<>();
-        setBarColor2("#ffffff", true);
+//        setBarColor2("#ffffff", true);
 //        setBarColor("#ffffff");
         PocEngineFactory.get().addEventHandler(pocEngineEventHandler);
         MessageDialogue md = null;
@@ -153,16 +154,16 @@ public class ChatActivity extends BaseActivity implements ChatFunctionFragment.C
     }
 
     private void initWidget() {
-        fragments = new ArrayList<>();
-        chatEmotionFragment = new ChatEmotionFragment();
-        fragments.add(chatEmotionFragment);
+//        fragments = new ArrayList<>();
+//        chatEmotionFragment = new ChatEmotionFragment();
+//        fragments.add(chatEmotionFragment);
         chatFunctionFragment = new ChatFunctionFragment();
         chatFunctionFragment.setClickListener(this);
-        fragments.add(chatFunctionFragment);
-        adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragments);
-        viewpager.setAdapter(adapter);
-        viewpager.setCurrentItem(0);
-
+//        fragments.add(chatFunctionFragment);
+//        adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragments);
+//        viewpager.setAdapter(adapter);
+//        viewpager.setCurrentItem(0);
+        addFragment(chatFunctionFragment, R.id.emotion_layout);
         mDetector = EmotionInputDetector.with(this)
                 .setEmotionView(emotionLayout)
                 .setViewPager(viewpager)
@@ -281,7 +282,8 @@ public class ChatActivity extends BaseActivity implements ChatFunctionFragment.C
                     intent.addCategory(Intent.CATEGORY_DEFAULT);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     File file = new File(messageInfo.getFilepath());
-                    Uri fileUri = FileProvider.getUriForFile(mContext, FunctionApi.getAuthority(mContext)
+                    Uri fileUri = FileProvider.getUriForFile(mContext,
+                            FunctionApi.getAuthority(mContext)
                             , file);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -489,5 +491,15 @@ public class ChatActivity extends BaseActivity implements ChatFunctionFragment.C
         intent.putExtra("type", IPocEngineEventHandler.SessionType.TYPE_VIDEO_CALL);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.getApplicationContext().startActivity(intent);
+    }
+
+    private void initColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            View decor = getWindow().getDecorView();
+            int ui = decor.getSystemUiVisibility();
+            ui |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体的颜色为黑色
+            //ui &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体颜色为白色
+            decor.setSystemUiVisibility(ui);
+        }
     }
 }
