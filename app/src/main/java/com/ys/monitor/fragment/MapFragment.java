@@ -69,9 +69,9 @@ import com.ys.monitor.activity.ResoureActivity;
 import com.ys.monitor.adapter.DataAdapter;
 import com.ys.monitor.adapter.LayerAdapter;
 import com.ys.monitor.base.BaseFragment;
+import com.ys.monitor.bean.FeatureBean;
 import com.ys.monitor.bean.FireBean;
 import com.ys.monitor.bean.GjBean;
-import com.ys.monitor.bean.LayerBean;
 import com.ys.monitor.dialog.DialogUtil;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.LocationSP;
@@ -118,7 +118,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     private MeasureToolView measureToolView;
     private GridView layerGV;
     private LayerAdapter layerAdapter;
-    private List<LayerBean> layerBeanList;
+    private List<FeatureBean> layerBeanList;
     private ImageView layerIV, gjIV, playGj, fireIV;
 
     private FeatureLayer featureLayer_gsmm;
@@ -256,21 +256,22 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         locationIV.setOnClickListener(this);
         layerGV = getView(R.id.gv_layer);
         layerBeanList = new ArrayList<>();
-        layerBeanList.addAll(LayerBean.getDefaultLayers());
+        layerBeanList.addAll(FeatureBean.getLayerList());
         layerAdapter = new LayerAdapter(mContext, layerBeanList, R.layout.item_layer);
         layerGV.setAdapter(layerAdapter);
         layerGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 layerAdapter.selectPosition(i);
+                FeatureBean featureBean = layerAdapter.getItem(i);
                 if (layerAdapter.isSelect(i)) {
                     show("选中");
-                    if (!mMapView.getMap().getOperationalLayers().contains(featureLayer_gsmm))
-                        mMapView.getMap().getOperationalLayers().add(featureLayer_gsmm);
+                    if (!mMapView.getMap().getOperationalLayers().contains(featureBean.featureLayer))
+                        mMapView.getMap().getOperationalLayers().add(featureBean.featureLayer);
                 } else {
                     show("取消选中");
-                    if (mMapView.getMap().getOperationalLayers().contains(featureLayer_gsmm))
-                        mMapView.getMap().getOperationalLayers().remove(featureLayer_gsmm);
+                    if (mMapView.getMap().getOperationalLayers().contains(featureBean.featureLayer))
+                        mMapView.getMap().getOperationalLayers().remove(featureBean.featureLayer);
                 }
             }
         });
@@ -310,9 +311,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 
     private void initLayer() {
 //        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("http://gis.cqzhly" +
-//                ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8/FeatureServer" +
+//                ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8
+//                /FeatureServer" +
 //                "/0");
-        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("https://222.178.189.231:9443/arcgis/rest/services/JysBaseData/FeatureServer/0");
+        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("https://222.178.189" +
+                ".231:9443/arcgis/rest/services/JysBaseData/FeatureServer/0");
         featureLayer_gsmm = new FeatureLayer(serviceFeatureTable);
         SimpleMarkerSymbol simpleMarkerSymbol =
                 new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 10);
@@ -516,7 +519,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            if ("缙云山卫星地图".equals(layerName)) {
+//            if ("缙云山卫星地图".equals(layerName)) {
+//                L.e("aaa", "layerName=" + layerName + "--continue");
+//                continue;
+//            }
+            if (!"资源点数据".equals(layerName)) {
                 L.e("aaa", "layerName=" + layerName + "--continue");
                 continue;
             }
@@ -621,7 +628,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         dataList.clear();
         dataLL.setVisibility(View.VISIBLE);
         dataLL.setAnimation(AnimationUtil.moveToViewLocation());
-        nameTV.setText(StringUtil.valueOf(layerName));
+//        nameTV.setText(StringUtil.valueOf(layerName));
         currentLayerName = layerName;
         currentMap = map;
         currentPointLat = StringUtil.valueOf(map.get("纬度"));
@@ -635,15 +642,16 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                     StringUtil.StringToDouble(currentPointLon), gps[0], gps[1]);
             distanceTV.setText(distance + "KM");
         }
-        if ("古树名木1984".equals(layerName)) {
-            String address =
-                    StringUtil.valueOf(map.get("区县")) + StringUtil.valueOf(map.get("乡镇")) + StringUtil.valueOf(map.get("村名")) + StringUtil.valueOf(map.get("小地名"));
-            currentAddress = address;
-            addressTV.setText("\t\t|\t\t" + address);
-            dataList.add("树种名:" + StringUtil.valueOf(map.get("树种名")));
-            dataList.add("年龄:" + StringUtil.StringToInt(StringUtil.valueOf(map.get("年龄"))) + "岁");
-            dataAdapter.refresh(dataList);
-        }
+//        if ("古树名木1984".equals(layerName)) {
+        nameTV.setText(StringUtil.valueOf(map.get("名称")));
+        String address =
+                StringUtil.valueOf(map.get("区县名")) + StringUtil.valueOf(map.get("乡镇名")) + StringUtil.valueOf(map.get("村名"));
+        currentAddress = address;
+        addressTV.setText("\t\t|\t\t" + address);
+//            dataList.add("树种名:" + StringUtil.valueOf(map.get("树种名")));
+//            dataList.add("年龄:" + StringUtil.StringToInt(StringUtil.valueOf(map.get("年龄"))) + "岁");
+//            dataAdapter.refresh(dataList);
+//        }
     }
 
     private LinearLayout dataLL;
@@ -855,9 +863,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                                             for (GjBean.TrackBean trackBean : gjBean.track) {
                                                 double[] gps =
                                                         GPSUtil.bd09_To_gps84(StringUtil
-                                                        .StringToDouble(trackBean.gis_wd),
+                                                                        .StringToDouble(trackBean.gis_wd),
                                                                 StringUtil.StringToDouble
-                                                                (trackBean.gis_jd));
+                                                                        (trackBean.gis_jd));
                                                 Point point = new Point(gps[1], gps[0],
                                                         SpatialReferences.getWgs84());
                                                 list.add(point);
@@ -1060,7 +1068,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                 Color.parseColor("#33e97676"), lineSymbol);
         Graphic graphic = new Graphic(polygon, simpleFillSymbol);
         fireOverlay.getGraphics().add(graphic);
-        mMapView.setViewpointGeometryAsync(fireOverlay.getExtent(),50);
+        mMapView.setViewpointGeometryAsync(fireOverlay.getExtent(), 50);
     }
 
     /**

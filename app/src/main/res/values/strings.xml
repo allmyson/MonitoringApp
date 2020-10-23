@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MonitorApp</string>
+    <string name="app_name">移动采集系统</string>
     <string name="kefu">尊敬的会员您好：\n\t\t\t弈尚游戏欢迎您！如果您需要联系官方客服，请通过官方公布的以下途径。</string>
 
     <string name="wait_dialog_title">正在请求，请稍后</string>
@@ -63,5 +63,6 @@
 
 
     <string name="tag_key_translation_z">translation_z</string>
+    <string name="app_descript">缙云山国家级自然保护区森林防火预警监测指挥平台移动采集系统</string>
 
 </resources>

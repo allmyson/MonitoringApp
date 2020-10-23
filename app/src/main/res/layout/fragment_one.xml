@@ -25,7 +25,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -37,7 +39,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="缙云山森林防火预警监测指挥平台"
+                        android:text="@string/app_descript"
                         android:textColor="#ffffff"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -168,15 +170,15 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
-                        android:text=""
-                        android:textColor="#fff8b233"
-                        android:textSize="13sp"
-                        android:singleLine="true"
-                        android:scrollHorizontally="true"
                         android:ellipsize="marquee"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:marqueeRepeatLimit="marquee_forever"/>
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textColor="#fff8b233"
+                        android:textSize="13sp" />
 
                     <ImageView
                         android:layout_width="5.5dp"

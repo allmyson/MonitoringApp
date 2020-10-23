@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_to_dp_145"
+            android:background="@color/main_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/px_to_dp_40"
+            android:paddingRight="@dimen/px_to_dp_40">
+
+            <ImageView
+                android:id="@+id/iv_left"
+                android:layout_width="@dimen/px_to_dp_56"
+                android:layout_height="@dimen/px_to_dp_56"
+                android:src="@mipmap/ic_back" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="@dimen/px_to_dp_30"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_toRightOf="@+id/iv_left"
+                android:layout_weight="1"
+                android:background="@drawable/et_border"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="@dimen/px_to_dp_30"
+                    android:layout_marginRight="15dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_map_search" />
+
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:completionThreshold="1"
+                    android:dropDownHorizontalOffset="5dp"
+                    android:hint="关键字"
+                    android:imeOptions="actionSearch"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="#CCCCCC"
+                    android:textColorHint="#CCCCCC"
+                    android:textCursorDrawable="@null"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <com.baidu.mapapi.map.MapView
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff" />
+
+            <ImageView
+                android:id="@+id/mapbox_plugins_image_view_marker"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:elevation="2dp"
+                android:src="@mipmap/map_search_address" />
+
+            <ImageView
+                android:id="@+id/mapbox_plugins_image_view_shadow"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@+id/mapbox_plugins_image_view_marker"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/lv_near_address"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:cacheColorHint="#00000000"
+            android:descendantFocusability="beforeDescendants"
+            android:fastScrollEnabled="true"
+            android:listSelector="@color/transparent"
+            android:scrollbars="none" />
+
+        <ListView
+            android:id="@+id/search_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="@dimen/px_to_dp_40"
+            android:divider="#cccccc"
+            android:scrollbars="none" />
+
+        <RelativeLayout
+            android:id="@+id/rl_gps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/img_load_animation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:src="@mipmap/ic_launcher"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_net"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="请联网或打开GPS"
+                android:textSize="20sp"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.ys.monitor.ui.TitleView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:visibility="gone" />
+</RelativeLayout>

@@ -30,7 +30,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="32dp"
         android:gravity="center"
-        android:text="缙云山森林防火预警监测指挥平台"
+        android:text="@string/app_descript"
         android:textColor="#ff000000"
         android:textSize="19sp" />
 

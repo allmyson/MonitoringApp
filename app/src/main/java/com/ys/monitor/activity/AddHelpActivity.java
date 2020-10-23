@@ -565,6 +565,9 @@ public class AddHelpActivity extends BaseActivity implements ChatFunctionFragmen
         if (pocEngine.hasServiceConnected()) {
             if (!pocEngine.isDisableInternalGpsFunc()) {
                 User user = pocEngine.getCurrentUser();
+                if (user == null) {
+                    return;
+                }
                 number = "" + user.getNumber();
                 L.e("user=" + user.toString());
                 List<User> list = new ArrayList<>();

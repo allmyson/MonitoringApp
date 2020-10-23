@@ -115,6 +115,7 @@ public class AddFireActivity extends BaseActivity {
         pocEngine = PocEngineFactory.get();
         mCoder = GeoCoder.newInstance();
         mCoder.setOnGetGeoCodeResultListener(listener);
+        getView(R.id.tv_map).setOnClickListener(this);
     }
 
     private String number;
@@ -221,6 +222,9 @@ public class AddFireActivity extends BaseActivity {
                     commitFile();
                 }
                 break;
+            case R.id.tv_map:
+                startActivityForResult(new Intent(mContext, BaiduMapSelectAddressActivity.class),
+                        1000);
         }
     }
 
@@ -252,6 +256,13 @@ public class AddFireActivity extends BaseActivity {
                     L.e("视频录制成功");
                     videoList.add(Constant.VIDEO_PATH + "/" + currentVideoName);
                     videoGridAdapter.refresh(videoList);
+                    break;
+                case 1000:
+                    String address = data.getStringExtra("address");
+                    String lon = data.getStringExtra("lon");
+                    String lat = data.getStringExtra("lat");
+                    L.e("address="+address+"--lon="+lon+"--lat="+lat);
+                    addressTV.setText(address);
                     break;
             }
         }
