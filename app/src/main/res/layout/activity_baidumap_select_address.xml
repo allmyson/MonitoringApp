@@ -66,7 +66,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/title"
+            android:layout_below="@+id/ll_title"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -110,7 +110,7 @@
             android:id="@+id/search_listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
+            android:layout_below="@+id/ll_title"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="@dimen/px_to_dp_40"
             android:divider="#cccccc"
