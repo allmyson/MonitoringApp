@@ -110,6 +110,7 @@ public class BaiduMapSelectAddressActivity extends BaseActivity implements OnCli
 
     @Override
     public void initView() {
+        setBarColor("#0D87F8");
         getPermission();
         initData();
 //
