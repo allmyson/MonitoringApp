@@ -9,12 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.ys.monitor.ui.NoNetView
-            android:id="@+id/nnv_"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
         <com.ys.monitor.ui.BlankView
             android:id="@+id/bv_"
             android:layout_width="match_parent"

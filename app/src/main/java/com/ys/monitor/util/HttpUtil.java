@@ -132,6 +132,20 @@ public class HttpUtil {
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
+    //同步添加火情
+    public static Response<String> addFireSync(Context context, String userId, String data
+    ) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.ADD_FIRE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId + "&data=" + URLEncoder.encode(data);
+        Response<String> response = BaseHttp.getInstance().postJsonSync(context, url, "");
+        return response;
+    }
+
     //火情核查
     public static void updateFire(Context context, String userId, String data,
                                   HttpListener<String> httpListener) {

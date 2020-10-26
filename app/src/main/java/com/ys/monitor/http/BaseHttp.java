@@ -378,4 +378,17 @@ public class BaseHttp {
         Response<String> response = NoHttp.startRequestSync(request);
         return response;
     }
+    //同步
+    public Response<String> postJsonSync(Context activity, String url, String postJson) {
+        L.e("url=" + url);
+        L.e("postJson=" + postJson);
+        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
+        request.setDefineRequestBodyForJson(postJson);
+        String token = CookieSP.getCookie(activity);
+        if (token != null && !"".equals(token)) {
+            request.addHeader("Cookie", token);
+        }
+        Response<String> response = NoHttp.startRequestSync(request);
+        return response;
+    }
 }

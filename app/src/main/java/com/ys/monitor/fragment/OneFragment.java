@@ -16,19 +16,18 @@ import com.ys.monitor.R;
 import com.ys.monitor.activity.AddFireActivity;
 import com.ys.monitor.activity.AddXHActivity;
 import com.ys.monitor.activity.ContactActivity;
+import com.ys.monitor.activity.RecordListActivity;
 import com.ys.monitor.activity.ResoureActivity;
 import com.ys.monitor.activity.VideoListActivity;
 import com.ys.monitor.activity.YjtzDetailActivity;
 import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.HFAqi;
 import com.ys.monitor.bean.HFWeather;
-import com.ys.monitor.bean.Msg;
 import com.ys.monitor.bean.YjtzBean;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.MsgSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.HttpUtil;
-import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
 
 /**
@@ -81,6 +80,9 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
                     show("暂无预警通知");
                 }
                 break;
+            case R.id.ll_history:
+                startActivity(new Intent(mContext, RecordListActivity.class));
+                break;
         }
     }
 
@@ -102,6 +104,7 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
         getView(R.id.ll_zycj).setOnClickListener(this);
         getView(R.id.ll_spck).setOnClickListener(this);
         getView(R.id.ll_txl).setOnClickListener(this);
+        getView(R.id.ll_history).setOnClickListener(this);
         userId = UserSP.getUserId(mContext);
         String json = MsgSP.getFirstMsg(mContext);
         if (StringUtil.isGoodJson(json)) {

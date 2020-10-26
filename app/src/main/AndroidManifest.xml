@@ -61,6 +61,7 @@
         <activity android:name="com.ys.monitor.activity.VideoListActivity" />
         <activity android:name="com.ys.monitor.activity.AddXHActivity" />
         <activity android:name="com.ys.monitor.activity.ContactActivity" />
+        <activity android:name="com.ys.monitor.activity.RecordListActivity" />
         <activity
             android:name="com.ys.monitor.activity.BaiduMapSelectAddressActivity"
             android:screenOrientation="portrait" />
@@ -117,6 +118,8 @@
             android:name=".activity.AvActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <service android:name=".service.UploadFireService"
+            android:exported="false"/>
     </application>
 
 </manifest>
