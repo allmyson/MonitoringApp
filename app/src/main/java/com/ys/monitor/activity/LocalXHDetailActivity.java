@@ -126,13 +126,13 @@ public class LocalXHDetailActivity extends BaseActivity {
                 }
             }
         });
-        initLocationOption();
+//        initLocationOption();
         getView(R.id.iv_map).setOnClickListener(this);
         userId = UserSP.getUserId(mContext);
         loginBean = UserSP.getLoginBean(mContext);
-        if (loginBean != null && loginBean.data != null) {
-            nameTV.setText(loginBean.data.trueName);
-        }
+//        if (loginBean != null && loginBean.data != null) {
+//            nameTV.setText(loginBean.data.trueName);
+//        }
     }
 
     @Override
@@ -166,6 +166,8 @@ public class LocalXHDetailActivity extends BaseActivity {
                 }
                 descripET.setText(StringUtil.valueOf(map.get("warnDesc")));
                 addressTV.setText(StringUtil.valueOf(map.get("siteSplicing")));
+                wayET.setText(StringUtil.valueOf(map.get("way")));
+                nameTV.setText(StringUtil.valueOf(map.get("name")));
                 ArrayList<String> imgs = recordDetail.imgs;
                 ArrayList<String> videos = recordDetail.videos;
                 if (imgs != null && imgs.size() > 0) {
