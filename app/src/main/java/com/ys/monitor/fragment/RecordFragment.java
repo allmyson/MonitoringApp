@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.ys.monitor.R;
+import com.ys.monitor.activity.LocalFireDetailActivity;
+import com.ys.monitor.activity.LocalXHDetailActivity;
 import com.ys.monitor.adapter.RecordAdapter;
 import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.RecordBean;
@@ -72,7 +74,21 @@ public class RecordFragment extends BaseFragment implements
                 L.e("uuid=" + uuid);
                 String detailJson = (String) SPUtil.get(mContext, uuid, "");
                 L.e("detailJson=" + detailJson);
+                String name = adapter.getItem(position).name;
+                boolean isSucc = adapter.getItem(position).isSucc;
+                if (RecordBean.TYPE_FIRE.equals(name)) {
+                    if (isSucc) {
+                        //查看
+                        LocalFireDetailActivity.lookLocalFire(mContext,uuid,isSucc);
+                    } else {
+                        //不可编辑提交
+                        LocalFireDetailActivity.lookLocalFire(mContext,uuid,isSucc);
+                    }
+                } else if (RecordBean.TYPE_XUHU.equals(name)) {
+                    LocalXHDetailActivity.lookLocalXh(mContext,uuid,isSucc);
+                } else if (RecordBean.TYPE_ZIYUAN.equals(name)) {
 
+                }
 //                FireBean.DataBean.RowsBean bean = adapter.getItem(position);
 //                String json = new Gson().toJson(bean);
 //                FireDetailActivity.intentToDetail(mContext, json);
@@ -102,17 +118,34 @@ public class RecordFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if (isRefresh) {
-            isRefresh = false;
-            getData();
-        }
+//        if (isRefresh) {
+//            isRefresh = false;
+//            getData();
+//        }
+        getDataSp();
     }
 
     @Override
     public void getData() {
+    }
+
+    private void getDataSp(){
         dataLL.setVisibility(View.VISIBLE);
         List<RecordBean> list = RecordSP.getRecordList(mContext);
-        recordBeanList.addAll(list);
+        recordBeanList.clear();
+        if (list != null && list.size() > 0) {
+            for (RecordBean recordBean : list) {
+                if (type == TYPE_UNDO) {
+                    if (!recordBean.isSucc) {
+                        recordBeanList.add(recordBean);
+                    }
+                } else if (type == TYPE_FINISH) {
+                    if (recordBean.isSucc) {
+                        recordBeanList.add(recordBean);
+                    }
+                }
+            }
+        }
         adapter.refresh(recordBeanList);
         if (adapter.getCount() > 0) {
             blankView.setVisibility(View.GONE);
@@ -121,7 +154,6 @@ public class RecordFragment extends BaseFragment implements
         }
         swipeRefreshLayout.setRefreshing(false);
     }
-
 
     @Override
     protected int getLayoutResource() {

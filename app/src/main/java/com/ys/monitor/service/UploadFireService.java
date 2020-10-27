@@ -46,10 +46,13 @@ public class UploadFireService extends IntentService {
         super(name);
     }
 
-    public static void startUploadFire(Context context, ArrayList<String> imgs,
-                                       ArrayList<String> videos, Map<String, String> map) {
+    public static void startUploadFire(Context context, String uuid, ArrayList<String> imgs,
+                                       ArrayList<String> videos, Map<String, String> map,
+                                       String typeName) {
         Intent intent = new Intent(context, UploadFireService.class);
         intent.setAction(ACTION_UPLOAD_FIRE);
+        intent.putExtra("uuid", uuid);
+        intent.putExtra("type", typeName);
         intent.putStringArrayListExtra("imgs", imgs);
         intent.putStringArrayListExtra("videos", videos);
         intent.putExtra("map", (Serializable) map);
@@ -61,20 +64,30 @@ public class UploadFireService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_UPLOAD_FIRE.equals(action)) {
+                String uuid = intent.getStringExtra("uuid");
+                String typeName = intent.getStringExtra("type");
                 ArrayList<String> imgs = intent.getStringArrayListExtra("imgs");
                 ArrayList<String> videos = intent.getStringArrayListExtra("videos");
                 Map<String, String> map = (Map<String, String>) intent.getSerializableExtra("map");
-                handleUploadFire(imgs, videos, map);
+                handleUploadFire(uuid, imgs, videos, map, typeName);
             }
         }
     }
 
-    private void handleUploadFire(ArrayList<String> imgs,
-                                  ArrayList<String> videos, Map<String, String> map) {
+    private void handleUploadFire(String uuid, ArrayList<String> imgs,
+                                  ArrayList<String> videos, Map<String, String> map,
+                                  String typeName) {
         RecordBean recordBean = new RecordBean();
-        recordBean.id = StringUtil.getUUID();
+        L.e("typeName=" + typeName);
+        if (StringUtil.isBlank(uuid)) {
+            L.e("uuid == null,add fire");
+            recordBean.id = StringUtil.getUUID();
+        } else {
+            recordBean.id = uuid;
+            L.e("uuid != null,reAdd fire");
+        }
         recordBean.createTime = System.currentTimeMillis();
-        recordBean.name = RecordBean.TYPE_FIRE;
+        recordBean.name = typeName;
         recordBean.address = map.get("siteSplicing");
         RecordDetail recordDetail = new RecordDetail();
         recordDetail.id = recordBean.id;
@@ -82,8 +95,8 @@ public class UploadFireService extends IntentService {
         recordDetail.videos = videos;
         recordDetail.map = map;
         String detailJson = new Gson().toJson(recordDetail);
-        L.e("detailJson="+detailJson);
-        SPUtil.put(getBaseContext(),recordBean.id,detailJson);
+        L.e("detailJson=" + detailJson);
+        SPUtil.put(getBaseContext(), recordBean.id, detailJson);
         try {
             Map<String, String> dataMap = map;
             String imageUrls = null;
@@ -166,10 +179,10 @@ public class UploadFireService extends IntentService {
 //                    ToastUtil.show(getBaseContext(),"视频上传失败");
 //                    ToastUtil.show(getBaseContext(), "火情添加失败");
                 case UPLOAD_FAIL:
-                    ToastUtil.show(getBaseContext(), "火情添加失败");
+                    ToastUtil.show(getBaseContext(), "上报失败");
                     break;
                 case UPLOAD_SUCC:
-                    ToastUtil.show(getBaseContext(), "火情添加成功");
+                    ToastUtil.show(getBaseContext(), "上报成功");
                     break;
             }
         }

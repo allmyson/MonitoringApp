@@ -20,8 +20,8 @@ import com.google.gson.JsonSyntaxException;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
-import com.ys.monitor.adapter.GridAdapter;
-import com.ys.monitor.adapter.VideoGridAdapter;
+import com.ys.monitor.adapter.LocalGridAdapter;
+import com.ys.monitor.adapter.LocalVideoGridAdapter;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.BaseBean;
@@ -29,6 +29,7 @@ import com.ys.monitor.bean.FileUploadBean;
 import com.ys.monitor.bean.KVBean;
 import com.ys.monitor.bean.LoginBean;
 import com.ys.monitor.bean.RecordBean;
+import com.ys.monitor.bean.RecordDetail;
 import com.ys.monitor.dialog.DialogUtil;
 import com.ys.monitor.dialog.ListDialogFragment;
 import com.ys.monitor.dialog.WaitDialog;
@@ -42,6 +43,7 @@ import com.ys.monitor.util.DateUtil;
 import com.ys.monitor.util.GPSUtil;
 import com.ys.monitor.util.HttpUtil;
 import com.ys.monitor.util.L;
+import com.ys.monitor.util.SPUtil;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.YS;
 
@@ -49,12 +51,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddXHActivity extends BaseActivity {
+public class LocalXHDetailActivity extends BaseActivity {
     public static final int CAMERA = 555;
     public static final int REQUEST_DELETE_CODE = 1001;
     private MyGridView myGridView, videoGV;
-    private GridAdapter mAdapter;
-    private VideoGridAdapter videoGridAdapter;
+    private LocalGridAdapter mAdapter;
+    private LocalVideoGridAdapter videoGridAdapter;
     private ArrayList<String> list;
     private ArrayList<String> videoList;
     private String userId;
@@ -68,10 +70,12 @@ public class AddXHActivity extends BaseActivity {
     private String gis_wd;
     private String currentVideoName;
     private WaitDialog waitDialog;
-
+    private RecordDetail recordDetail;
+    private String uuid;
+    private boolean isSucc;
     @Override
     public int getLayoutId() {
-        return R.layout.activity_xh_add;
+        return R.layout.activity_xh_local;
     }
 
     @Override
@@ -94,13 +98,13 @@ public class AddXHActivity extends BaseActivity {
         titleView.setText("日常巡护");
         myGridView = getView(R.id.gv_image);
         myGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mAdapter = new GridAdapter(mContext, list, R.layout.item_grid_image);
+        mAdapter = new LocalGridAdapter(mContext, list, R.layout.item_grid_image);
         myGridView.setAdapter(mAdapter);
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == list.size()) {
-                    FunctionApi.takePicture(mContext, 9 - list.size(), 1, true, false, false);
+//                    FunctionApi.takePicture(mContext, 9 - list.size(), 1, true, false, false);
                 } else {
                     PhotoActivity.intentToPhotoActivity(mActivity, REQUEST_DELETE_CODE, list,
                             position);
@@ -109,14 +113,14 @@ public class AddXHActivity extends BaseActivity {
         });
         videoGV = getView(R.id.gv_video);
         videoGV.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        videoGridAdapter = new VideoGridAdapter(mContext, videoList, R.layout.item_grid_video);
+        videoGridAdapter = new LocalVideoGridAdapter(mContext, videoList, R.layout.item_grid_video);
         videoGV.setAdapter(videoGridAdapter);
         videoGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == videoList.size()) {
-                    currentVideoName = StringUtil.getNowTimeStr(3);
-                    FunctionApi.startVideo(mActivity, CAMERA, currentVideoName);
+//                    currentVideoName = StringUtil.getNowTimeStr(3);
+//                    FunctionApi.startVideo(mActivity, CAMERA, currentVideoName);
                 } else {
                     FunctionApi.playVideo(mContext, videoGridAdapter.getItem(position));
                 }
@@ -145,6 +149,36 @@ public class AddXHActivity extends BaseActivity {
 //        getAddress();
 //        getLocation();
 //        initLocationOption();
+        uuid = getIntent().getStringExtra("uuid");
+        isSucc = getIntent().getBooleanExtra("isSucc", false);
+        if (isSucc) {
+            commitTV.setVisibility(View.GONE);
+        } else {
+            commitTV.setVisibility(View.VISIBLE);
+        }
+        String detailJson = (String) SPUtil.get(mContext, uuid, "");
+        if (StringUtil.isGoodJson(detailJson)) {
+            recordDetail = new Gson().fromJson(detailJson, RecordDetail.class);
+            if (recordDetail != null) {
+                Map<String, String> map = recordDetail.map;
+                if (map == null) {
+                    return;
+                }
+                descripET.setText(StringUtil.valueOf(map.get("warnDesc")));
+                addressTV.setText(StringUtil.valueOf(map.get("siteSplicing")));
+                ArrayList<String> imgs = recordDetail.imgs;
+                ArrayList<String> videos = recordDetail.videos;
+                if (imgs != null && imgs.size() > 0) {
+                    list.addAll(imgs);
+                    mAdapter.refresh(list);
+                }
+                if (videos != null && videos.size() > 0) {
+                    videoList.addAll(videos);
+                    videoGridAdapter.refresh(videoList);
+                }
+
+            }
+        }
     }
 
     @Override
@@ -328,7 +362,7 @@ public class AddXHActivity extends BaseActivity {
     };
 
     public static void intentToXH(Context context, String taskNo, String taskName) {
-        Intent intent = new Intent(context, AddXHActivity.class);
+        Intent intent = new Intent(context, LocalXHDetailActivity.class);
         intent.putExtra("patrolPersonNo", taskNo);
         intent.putExtra("patrolPlanName", taskName);
         context.startActivity(intent);
@@ -420,21 +454,28 @@ public class AddXHActivity extends BaseActivity {
     }
 
     private void commitByService() {
-        Map<String, String> map = new HashMap<>();
-        map.put("name", nameTV.getText().toString());
-        map.put("patrolStatus", kvBean.id);
-        map.put("warnDesc", descripET.getText().toString());
-        map.put("source", YS.source);
-        map.put("siteSplicing", addressTV.getText().toString());
-        map.put("latitude", gis_wd);
-        map.put("longitude", gis_jd);
-        map.put("warnTime",
-                DateUtil.changeTimeToYMDHMS(StringUtil.valueOf(System.currentTimeMillis())));
-        map.put("imgUrl", imageUrls);
-        map.put("videoUrl", videoUrls);
-        map.put("way", wayET.getText().toString());
-        UploadFireService.startUploadFire(mContext, "", list, videoList, map,
-                RecordBean.TYPE_XUHU);
+//        Map<String, String> map = new HashMap<>();
+//        map.put("name", nameTV.getText().toString());
+//        map.put("patrolStatus", kvBean.id);
+//        map.put("warnDesc", descripET.getText().toString());
+//        map.put("source", YS.source);
+//        map.put("siteSplicing", addressTV.getText().toString());
+//        map.put("latitude", gis_wd);
+//        map.put("longitude", gis_jd);
+//        map.put("warnTime",
+//                DateUtil.changeTimeToYMDHMS(StringUtil.valueOf(System.currentTimeMillis())));
+//        map.put("imgUrl", imageUrls);
+//        map.put("videoUrl", videoUrls);
+//        map.put("way", wayET.getText().toString());
+        UploadFireService.startUploadFire(mContext, uuid, recordDetail.imgs, recordDetail.videos,
+                recordDetail.map, RecordBean.TYPE_XUHU);
         finish();
+    }
+
+    public static void lookLocalXh(Context context, String uuid, boolean isSucc) {
+        Intent intent = new Intent(context, LocalFireDetailActivity.class);
+        intent.putExtra("uuid", uuid);
+        intent.putExtra("isSucc", isSucc);
+        context.startActivity(intent);
     }
 }

@@ -11,21 +11,17 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
-import com.baidu.location.LocationClient;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
-import com.ys.monitor.adapter.GridAdapter;
-import com.ys.monitor.adapter.VideoGridAdapter;
+import com.ys.monitor.adapter.LocalGridAdapter;
+import com.ys.monitor.adapter.LocalVideoGridAdapter;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.BaseBean;
-import com.ys.monitor.bean.FileUploadBean;
 import com.ys.monitor.bean.RecordBean;
+import com.ys.monitor.bean.RecordDetail;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.service.UploadFireService;
@@ -36,6 +32,7 @@ import com.ys.monitor.util.DateUtil;
 import com.ys.monitor.util.GPSUtil;
 import com.ys.monitor.util.HttpUtil;
 import com.ys.monitor.util.L;
+import com.ys.monitor.util.SPUtil;
 import com.ys.monitor.util.StringUtil;
 import com.ys.monitor.util.YS;
 
@@ -43,12 +40,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddFireActivity extends BaseActivity {
+public class LocalFireDetailActivity extends BaseActivity {
     public static final int CAMERA = 444;
     public static final int REQUEST_DELETE_CODE = 1001;
     private MyGridView myGridView, videoGV;
-    private GridAdapter mAdapter;
-    private VideoGridAdapter videoGridAdapter;
+    private LocalGridAdapter mAdapter;
+    private LocalVideoGridAdapter videoGridAdapter;
     private ArrayList<String> list;
     private ArrayList<String> videoList;
     private String userId;
@@ -57,11 +54,10 @@ public class AddFireActivity extends BaseActivity {
     private TextView addressTV;
     private String currentVideoName;
     private WaitDialog waitDialog;
-    private String uuid="";
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_fire_add;
+        return R.layout.activity_fire_local;
     }
 
     @Override
@@ -69,22 +65,23 @@ public class AddFireActivity extends BaseActivity {
         waitDialog = new WaitDialog(mContext);
         nameET = getView(R.id.et_name);
         descripET = getView(R.id.et_description);
-        addressTV = getView(R.id.tv_address);
+        descripET.setEnabled(false);
         commitTV = getView(R.id.tv_commit);
         commitTV.setOnClickListener(this);
+        addressTV = getView(R.id.tv_address);
         list = new ArrayList<>();
         videoList = new ArrayList<>();
         setBarColor("#ffffff");
         titleView.setText("火情上报");
         myGridView = getView(R.id.gv_image);
         myGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mAdapter = new GridAdapter(mContext, list, R.layout.item_grid_image);
+        mAdapter = new LocalGridAdapter(mContext, list, R.layout.item_grid_image);
         myGridView.setAdapter(mAdapter);
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == list.size()) {
-                    FunctionApi.takePicture(mContext, 9 - list.size(), 1, true, false, false);
+//                    FunctionApi.takePicture(mContext, 9 - list.size(), 1, true, false, false);
                 } else {
                     PhotoActivity.intentToPhotoActivity(mActivity, REQUEST_DELETE_CODE, list,
                             position);
@@ -93,30 +90,62 @@ public class AddFireActivity extends BaseActivity {
         });
         videoGV = getView(R.id.gv_video);
         videoGV.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        videoGridAdapter = new VideoGridAdapter(mContext, videoList, R.layout.item_grid_video);
+        videoGridAdapter = new LocalVideoGridAdapter(mContext, videoList, R.layout.item_grid_video);
         videoGV.setAdapter(videoGridAdapter);
         videoGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == videoList.size()) {
-                    currentVideoName = StringUtil.getNowTimeStr(3);
-                    FunctionApi.startVideo(mActivity, CAMERA, currentVideoName);
+//                    currentVideoName = StringUtil.getNowTimeStr(3);
+//                    FunctionApi.startVideo(mActivity, CAMERA, currentVideoName);
                 } else {
                     FunctionApi.playVideo(mContext, videoGridAdapter.getItem(position));
                 }
             }
         });
         userId = UserSP.getUserId(mContext);
+        getView(R.id.iv_map).setVisibility(View.GONE);
         getView(R.id.iv_map).setOnClickListener(this);
-        initLocationOption();
     }
 
     private String gis_jd;
     private String gis_wd;
+    private RecordDetail recordDetail;
+    private String uuid;
+    private boolean isSucc;
 
     @Override
     public void getData() {
+        uuid = getIntent().getStringExtra("uuid");
+        isSucc = getIntent().getBooleanExtra("isSucc", false);
+        if (isSucc) {
+            commitTV.setVisibility(View.GONE);
+        } else {
+            commitTV.setVisibility(View.VISIBLE);
+        }
+        String detailJson = (String) SPUtil.get(mContext, uuid, "");
+        if (StringUtil.isGoodJson(detailJson)) {
+            recordDetail = new Gson().fromJson(detailJson, RecordDetail.class);
+            if (recordDetail != null) {
+                Map<String, String> map = recordDetail.map;
+                if (map == null) {
+                    return;
+                }
+                descripET.setText(StringUtil.valueOf(map.get("warnDesc")));
+                addressTV.setText(StringUtil.valueOf(map.get("siteSplicing")));
+                ArrayList<String> imgs = recordDetail.imgs;
+                ArrayList<String> videos = recordDetail.videos;
+                if (imgs != null && imgs.size() > 0) {
+                    list.addAll(imgs);
+                    mAdapter.refresh(list);
+                }
+                if (videos != null && videos.size() > 0) {
+                    videoList.addAll(videos);
+                    videoGridAdapter.refresh(videoList);
+                }
 
+            }
+        }
     }
 
     @Override
@@ -184,70 +213,6 @@ public class AddFireActivity extends BaseActivity {
     private static final int UPLOAD_IMAGE_FAIL = 10;
     private static final int UPLOAD_VIDEO_FAIL = 11;
 
-    private void commitFile() {
-        if (list.size() == 0 && videoList.size() == 0) {
-            addFire("", "");
-            return;
-        }
-        waitDialog.show();
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    if (list.size() > 0) {
-                        Response<String> response = HttpUtil.uploadFile(mContext, userId,
-                                YS.FileType.FILE_FIRE, list);
-                        FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
-                                FileUploadBean.class);
-                        if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) && fileUploadBean.data != null) {
-                            imageUrls = fileUploadBean.data.url;
-                        } else {
-                            L.e("图片上传失败,请稍后重试！");
-                            handler.sendEmptyMessage(UPLOAD_IMAGE_FAIL);
-                            return;
-                        }
-                    }
-                    if (videoList.size() > 0) {
-                        Response<String> response = HttpUtil.uploadFile(mContext, userId,
-                                YS.FileType.FILE_FIRE, videoList);
-                        FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
-                                FileUploadBean.class);
-                        if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) && fileUploadBean.data != null) {
-                            videoUrls = fileUploadBean.data.url;
-                        } else {
-                            L.e("视频上传失败,请稍后重试！");
-                            handler.sendEmptyMessage(UPLOAD_VIDEO_FAIL);
-                            return;
-                        }
-                    }
-                    handler.sendEmptyMessage(UPLOAD_SUCC);
-                } catch (JsonSyntaxException e) {
-                    e.printStackTrace();
-                    handler.sendEmptyMessage(UPLOAD_IMAGE_FAIL);
-                }
-            }
-        }.start();
-//        //上传附件
-//        HttpUtil.uploadFile(mContext, userId, YS.FileType.FILE_FIRE, list,
-//                new HttpListener<String>() {
-//                    @Override
-//                    public void onSucceed(int what, Response<String> response) {
-//                        FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
-//                                FileUploadBean.class);
-//                        if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) &&
-//                        fileUploadBean.data != null) {
-//                            addFire(fileUploadBean.data.url);
-//                        } else {
-//                            show("附件上传失败!");
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailed(int what, Response<String> response) {
-//
-//                    }
-//                });
-    }
 
     private void addFire(String imageUrls, String videoUrls) {
         Map<String, Object> map = new HashMap<>();
@@ -324,68 +289,28 @@ public class AddFireActivity extends BaseActivity {
         return true;
     }
 
-    private void initLocationOption() {
-        //定位服务的客户端。宿主程序在客户端声明此类，并调用，目前只支持在主线程中启动
-        MyLocationListener myLocationListener = new MyLocationListener();
-        LocationClient locationClient = StringUtil.getDefaultLocationClient(mContext,
-                myLocationListener);
-        //开始定位
-        locationClient.start();
-    }
-
-    /**
-     * 实现定位回调
-     */
-    public class MyLocationListener extends BDAbstractLocationListener {
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
-            //以下只列举部分获取经纬度相关（常用）的结果信息
-            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
-
-            if (null != location && location.getLocType() != BDLocation.TypeServerError) {
-                //获取纬度信息
-                double latitude = location.getLatitude();
-                //获取经度信息
-                double longitude = location.getLongitude();
-                String address = location.getAddress().address;
-                //获取定位精度，默认值为0.0f
-                float radius = location.getRadius();
-                //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
-                String coorType = location.getCoorType();
-                L.e("定位成功==latitude=" + latitude + "---longtitude=" + longitude + "--address=" + address);
-                nameET.setText("(" + address + ")+火情");
-                addressTV.setText(StringUtil.valueOf(address));
-                double[] gps = GPSUtil.bd09_To_gps84(latitude, longitude);
-                gis_jd = StringUtil.valueOf(gps[1]);
-                gis_wd = StringUtil.valueOf(gps[0]);
-            } else {
-                L.e("定位失败==" + location.getLocType());
-            }
-
-        }
-    }
-
 
     private void commitByService() {
-        Map<String, String> map = new HashMap<>();
-        map.put("name", nameET.getText().toString());
-        map.put("warnDesc", descripET.getText().toString());
-        map.put("source", YS.source);
-        map.put("siteSplicing", addressTV.getText().toString());
-        map.put("latitude", "" + gis_wd);
-        map.put("longitude", "" + gis_jd);
-        map.put("warnTime",
-                DateUtil.changeTimeToYMDHMS(StringUtil.valueOf(System.currentTimeMillis())));
-        map.put("imgUrl", StringUtil.valueOf(imageUrls));
-        map.put("videoUrl", StringUtil.valueOf(videoUrls));
-        UploadFireService.startUploadFire(mContext, uuid, list, videoList, map, RecordBean.TYPE_FIRE);
+//        Map<String, String> map = new HashMap<>();
+//        map.put("name", nameET.getText().toString());
+//        map.put("warnDesc", descripET.getText().toString());
+//        map.put("source", YS.source);
+//        map.put("siteSplicing", addressTV.getText().toString());
+//        map.put("latitude", "" + gis_wd);
+//        map.put("longitude", "" + gis_jd);
+//        map.put("warnTime",
+//                DateUtil.changeTimeToYMDHMS(StringUtil.valueOf(System.currentTimeMillis())));
+//        map.put("imgUrl", StringUtil.valueOf(imageUrls));
+//        map.put("videoUrl", StringUtil.valueOf(videoUrls));
+        UploadFireService.startUploadFire(mContext, uuid, recordDetail.imgs, recordDetail.videos,
+                recordDetail.map, RecordBean.TYPE_FIRE);
         finish();
     }
 
-    public static void addFireActivity(Context context, String uuid) {
-        Intent intent = new Intent(context, AddFireActivity.class);
+    public static void lookLocalFire(Context context, String uuid, boolean isSucc) {
+        Intent intent = new Intent(context, LocalFireDetailActivity.class);
         intent.putExtra("uuid", uuid);
+        intent.putExtra("isSucc", isSucc);
         context.startActivity(intent);
     }
 }

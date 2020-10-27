@@ -15,12 +15,12 @@ import java.util.List;
 /**
  * @author lh
  * @version 1.0.0
- * @filename GridAdapter
+ * @filename LocalGridAdapter
  * @description -------------------------------------------------------
  * @date 2017/7/7 16:19
  */
-public class GridAdapter extends CommonAdapter<String> {
-    public GridAdapter(Context context, List<String> mDatas, int itemLayoutId) {
+public class LocalGridAdapter extends CommonAdapter<String> {
+    public LocalGridAdapter(Context context, List<String> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
     }
 
@@ -29,27 +29,15 @@ public class GridAdapter extends CommonAdapter<String> {
     @Override
     public void convert(ViewHolder helper, String item, final int position) {
         RelativeLayout deleteRL = helper.getView(R.id.rl_delete);
-        deleteRL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDatas.remove(position);
-                notifyDataSetChanged();
-            }
-        });
         ImageView iv = helper.getView(R.id.iv_);
         Log.e("lh", "执行次数");
         if (position < mDatas.size()) {
+            iv.setVisibility(View.VISIBLE);
             Glide.with(mContext).load(new File(item)).into(iv);
-            deleteRL.setVisibility(View.VISIBLE);
-        } else {
-            deleteRL.setVisibility(View.GONE);
-            Glide.with(mContext).load(R.mipmap.ic_add_dt).into(iv);
-            if (position == 9) {
-                iv.setVisibility(View.GONE);
-            } else {
-                iv.setVisibility(View.VISIBLE);
-            }
+        }else {
+            iv.setVisibility(View.GONE);
         }
+        deleteRL.setVisibility(View.GONE);
     }
 
     @Override

@@ -7,7 +7,6 @@ import com.ys.monitor.R;
 import com.ys.monitor.adapter.CommonFragmentAdapter;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.TabBean;
-import com.ys.monitor.fragment.FireFragment;
 import com.ys.monitor.fragment.RecordFragment;
 import com.ys.monitor.ui.LhViewPager;
 
@@ -47,8 +46,8 @@ public class RecordListActivity extends BaseActivity {
 
     private List<TabBean> getList() {
         List<TabBean> list = new ArrayList<>();
-        list.add(new TabBean("上传失败", RecordFragment.newInstance(FireFragment.TYPE_UNDO)));
-        list.add(new TabBean("上传成功", RecordFragment.newInstance(FireFragment.TYPE_FINISH)));
+        list.add(new TabBean("上传失败", RecordFragment.newInstance(RecordFragment.TYPE_UNDO)));
+        list.add(new TabBean("上传成功", RecordFragment.newInstance(RecordFragment.TYPE_FINISH)));
         return list;
     }
 

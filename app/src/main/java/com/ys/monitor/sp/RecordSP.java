@@ -54,7 +54,20 @@ public class RecordSP {
 
     public static void addRecord(Context context, RecordBean recordBean) {
         List<RecordBean> list = getRecordList(context);
-        list.add(recordBean);
+        int j = -1;
+        for (int i = 0; i < list.size(); i++) {
+            if (recordBean.id.equals(list.get(i).id)) {
+                j = i;
+                break;
+            }
+        }
+        if (j == -1) {
+            //add
+            list.add(recordBean);
+        } else {
+            //update
+            list.set(j, recordBean);
+        }
         saveRecord(context, list);
     }
 }

@@ -6,21 +6,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
 import com.ys.monitor.R;
+import com.ys.monitor.util.StringUtil;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * @author lh
  * @version 1.0.0
- * @filename GridAdapter
+ * @filename LocalVideoGridAdapter
  * @description -------------------------------------------------------
  * @date 2017/7/7 16:19
  */
-public class GridAdapter extends CommonAdapter<String> {
-    public GridAdapter(Context context, List<String> mDatas, int itemLayoutId) {
+public class LocalVideoGridAdapter extends CommonAdapter<String> {
+    public LocalVideoGridAdapter(Context context, List<String> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
     }
 
@@ -29,26 +28,20 @@ public class GridAdapter extends CommonAdapter<String> {
     @Override
     public void convert(ViewHolder helper, String item, final int position) {
         RelativeLayout deleteRL = helper.getView(R.id.rl_delete);
-        deleteRL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDatas.remove(position);
-                notifyDataSetChanged();
-            }
-        });
+        deleteRL.setVisibility(View.GONE);
         ImageView iv = helper.getView(R.id.iv_);
         Log.e("lh", "执行次数");
         if (position < mDatas.size()) {
-            Glide.with(mContext).load(new File(item)).into(iv);
-            deleteRL.setVisibility(View.VISIBLE);
-        } else {
-            deleteRL.setVisibility(View.GONE);
-            Glide.with(mContext).load(R.mipmap.ic_add_dt).into(iv);
-            if (position == 9) {
-                iv.setVisibility(View.GONE);
-            } else {
-                iv.setVisibility(View.VISIBLE);
+            iv.setVisibility(View.VISIBLE);
+            if (!StringUtil.isBlank(item)) {
+                if (item.startsWith("http://") || item.startsWith("https//")) {
+                    iv.setImageBitmap(StringUtil.getNetVideoBitmap(item));
+                } else {
+                    iv.setImageBitmap(StringUtil.getVideoThumb(item));
+                }
             }
+        } else {
+            iv.setVisibility(View.GONE);
         }
     }
 
@@ -64,5 +57,4 @@ public class GridAdapter extends CommonAdapter<String> {
         }
         return super.getItem(position);
     }
-
 }

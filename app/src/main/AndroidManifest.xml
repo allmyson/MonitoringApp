@@ -62,6 +62,7 @@
         <activity android:name="com.ys.monitor.activity.AddXHActivity" />
         <activity android:name="com.ys.monitor.activity.ContactActivity" />
         <activity android:name="com.ys.monitor.activity.RecordListActivity" />
+        <activity android:name="com.ys.monitor.activity.LocalFireDetailActivity" />
         <activity
             android:name="com.ys.monitor.activity.BaiduMapSelectAddressActivity"
             android:screenOrientation="portrait" />
