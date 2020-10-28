@@ -168,7 +168,7 @@ public class AddFireActivity extends BaseActivity {
                     String lon = data.getStringExtra("lon");
                     String lat = data.getStringExtra("lat");
                     L.e("address=" + address + "--lon=" + lon + "--lat=" + lat);
-                    nameET.setText("(" + address + ")+火情");
+                    nameET.setText(address + "火情");
                     addressTV.setText(StringUtil.valueOf(address));
                     double[] gps = GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(lat),
                             StringUtil.StringToDouble(lon));
@@ -354,7 +354,7 @@ public class AddFireActivity extends BaseActivity {
                 //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
                 String coorType = location.getCoorType();
                 L.e("定位成功==latitude=" + latitude + "---longtitude=" + longitude + "--address=" + address);
-                nameET.setText("(" + address + ")+火情");
+                nameET.setText(address + "火情");
                 addressTV.setText(StringUtil.valueOf(address));
                 double[] gps = GPSUtil.bd09_To_gps84(latitude, longitude);
                 gis_jd = StringUtil.valueOf(gps[1]);

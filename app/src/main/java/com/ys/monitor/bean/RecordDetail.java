@@ -15,4 +15,5 @@ public class RecordDetail {
     public ArrayList<String> imgs;
     public ArrayList<String> videos;
     public Map<String,String> map;
+    public ResourceTypeBean resourceTypeBean;
 }

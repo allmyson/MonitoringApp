@@ -461,7 +461,7 @@
                             android:layout_width="36.72dp"
                             android:layout_height="47.47dp"
                             android:scaleType="fitXY"
-                            android:src="@mipmap/ic_txl" />
+                            android:src="@mipmap/home_recording" />
 
                     </LinearLayout>
                 </LinearLayout>

@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.hikvision.open.hikvideoplayer.HikVideoPlayerFactory;
 import com.huamai.poc.IPocEngineEventHandler;
 import com.huamai.poc.PocEngine;
 import com.huamai.poc.PocEngineFactory;
@@ -64,6 +65,7 @@ public class App extends PocApplication {
         Logger.setDebug(true);
         initBugly();
         initScreenSize();
+        HikVideoPlayerFactory.initLib(null, true);
         /** 防止反复初始化 */
         if (getPackageName() != null && getPackageName().equals(getProcessName(android.os.Process.myPid()))) {
             initBroadcast();

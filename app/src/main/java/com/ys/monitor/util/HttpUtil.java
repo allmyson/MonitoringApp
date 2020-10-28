@@ -310,7 +310,7 @@ public class HttpUtil {
     }
 
     //获取设备播放地址
-    public static void getVideoUrl(Context context, String userId,
+    public static void getVideoUrl(Context context, String userId, String recNo,
                                    HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
@@ -319,7 +319,7 @@ public class HttpUtil {
         String token = Md5Util.getMD5(YS.token + timeStamp);
         String url =
                 YS.RTSP + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
-                        userId + "&recNo=40289fa574203e830174203f14880002";
+                        userId + "&recNo=" + recNo;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 

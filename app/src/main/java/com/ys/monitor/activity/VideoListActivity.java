@@ -10,6 +10,7 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.adapter.VideoListAdapter;
@@ -147,20 +148,24 @@ public class VideoListActivity extends BaseActivity implements NoNetView.ClickLi
     }
 
     private void getVideoUrl(String recNo) {
-        HttpUtil.getVideoUrl(mContext, userId, new HttpListener<String>() {
+        HttpUtil.getVideoUrl(mContext, userId, recNo,new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
-                VideoUrl videoUrl = new Gson().fromJson(response.get(), VideoUrl.class);
-                if (videoUrl != null && YS.SUCCESE.equals(videoUrl.code) && videoUrl.data != null && videoUrl.data.size() > 0) {
-                    VideoUrl.DataBeanX dataBean = videoUrl.data.get(0);
-                    if (dataBean != null && dataBean.data != null) {
-                        L.e("rtsp=" + dataBean.data.url);
-                        if (!StringUtil.isBlank(dataBean.data.url)) {
-                            RtspVideoActivity.playRtspVideo(mContext, dataBean.data.url);
+                try {
+                    VideoUrl videoUrl = new Gson().fromJson(response.get(), VideoUrl.class);
+                    if (videoUrl != null && YS.SUCCESE.equals(videoUrl.code) && videoUrl.data != null && videoUrl.data.size() > 0) {
+                        VideoUrl.DataBeanX dataBean = videoUrl.data.get(0);
+                        if (dataBean != null && dataBean.data != null) {
+                            L.e("rtsp=" + dataBean.data.url);
+                            if (!StringUtil.isBlank(dataBean.data.url)) {
+                                PreviewActivity.playRtspVideo(mContext, dataBean.data.url);
+                            }
                         }
+                    } else {
+                        show("获取视频流地址失败！");
                     }
-                } else {
-                    show("获取视频流地址失败！");
+                } catch (JsonSyntaxException e) {
+                    e.printStackTrace();
                 }
             }
 

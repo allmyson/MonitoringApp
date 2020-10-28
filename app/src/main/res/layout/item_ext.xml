@@ -49,6 +49,14 @@
             android:text=""
             android:textColor="#ffbbbbbb"
             android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/iv_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            android:src="@mipmap/select_map" />
     </LinearLayout>
 
     <View

@@ -30,8 +30,6 @@ import com.ys.monitor.bean.KVBean;
 import com.ys.monitor.bean.LoginBean;
 import com.ys.monitor.bean.RecordBean;
 import com.ys.monitor.bean.RecordDetail;
-import com.ys.monitor.dialog.DialogUtil;
-import com.ys.monitor.dialog.ListDialogFragment;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.service.UploadFireService;
@@ -128,6 +126,7 @@ public class LocalXHDetailActivity extends BaseActivity {
         });
 //        initLocationOption();
         getView(R.id.iv_map).setOnClickListener(this);
+        setUndo();
         userId = UserSP.getUserId(mContext);
         loginBean = UserSP.getLoginBean(mContext);
 //        if (loginBean != null && loginBean.data != null) {
@@ -192,14 +191,14 @@ public class LocalXHDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.tv_status:
-                DialogUtil.showListFragment(mContext, KVBean.getXHStatusList(),
-                        new ListDialogFragment.ItemClickListener() {
-                            @Override
-                            public void clickResult(KVBean listBean) {
-                                kvBean = listBean;
-                                statusTV.setText(kvBean.name);
-                            }
-                        });
+//                DialogUtil.showListFragment(mContext, KVBean.getXHStatusList(),
+//                        new ListDialogFragment.ItemClickListener() {
+//                            @Override
+//                            public void clickResult(KVBean listBean) {
+//                                kvBean = listBean;
+//                                statusTV.setText(kvBean.name);
+//                            }
+//                        });
                 break;
             case R.id.iv_map:
                 startActivityForResult(new Intent(mContext, BaiduMapSelectAddressActivity.class),
@@ -475,9 +474,16 @@ public class LocalXHDetailActivity extends BaseActivity {
     }
 
     public static void lookLocalXh(Context context, String uuid, boolean isSucc) {
-        Intent intent = new Intent(context, LocalFireDetailActivity.class);
+        Intent intent = new Intent(context, LocalXHDetailActivity.class);
         intent.putExtra("uuid", uuid);
         intent.putExtra("isSucc", isSucc);
         context.startActivity(intent);
+    }
+
+    private void setUndo(){
+        descripET.setEnabled(false);
+        getView(R.id.iv_map).setVisibility(View.GONE);
+        wayET.setEnabled(false);
+        statusTV.setClickable(false);
     }
 }

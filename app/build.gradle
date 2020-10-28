@@ -14,8 +14,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
 //            abiFilters "armeabi"
-//            abiFilters "armeabi-v7a"
-            abiFilters "armeabi-v7a", "x86", "armeabi"
+            abiFilters "armeabi-v7a"
+//            abiFilters "armeabi-v7a", "x86", "armeabi"
         }
         multiDexEnabled true
     }
@@ -48,17 +48,17 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
-    sourceSets {
-        main {
-            jniLibs.srcDir 'libs'
-        }
-    }
-
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
+//    sourceSets {
+//        main {
+//            jniLibs.srcDir 'libs'
+//        }
+//    }
+//
+//    repositories {
+//        flatDir {
+//            dirs 'libs'
+//        }
+//    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -67,7 +67,7 @@ android {
 }
 
 dependencies {
-//    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.dependencies.appcompat
     implementation rootProject.ext.dependencies.cardview
     implementation rootProject.ext.dependencies.design
@@ -78,7 +78,6 @@ dependencies {
     implementation rootProject.ext.dependencies.okhttp
     implementation rootProject.ext.dependencies.multidex
     implementation rootProject.ext.dependencies.permisson
-    implementation files('src\\main\\jniLibs\\BaiduLBS_Android.jar')
     testImplementation 'junit:junit:4.12'
     implementation project(':imageSelect')
 //    implementation project(':qrcode')
@@ -96,6 +95,7 @@ dependencies {
     implementation project(path: ':arcgistool')
 
     implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.blankj:utilcode:1.20.3'
 
     configurations.all {
         resolutionStrategy.eachDependency {

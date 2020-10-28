@@ -11,6 +11,9 @@ public class RecordBean {
     public static final String TYPE_FIRE= "火情上报";
     public static final String TYPE_XUHU= "日常巡护";
     public static final String TYPE_ZIYUAN= "资源采集";
+    public static final String DO_ADD= "新增";
+    public static final String DO_UPDATE= "更新";
+    public static final String DO_DELETE= "删除";
     public String id;
     public String name;//火情上报、日常巡护、资源采集
     public String handleType;//新增、更新、删除

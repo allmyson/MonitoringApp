@@ -1,5 +1,9 @@
 package com.ys.monitor.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
@@ -10,6 +14,7 @@ import android.widget.ListView;
 
 import com.ys.monitor.R;
 import com.ys.monitor.activity.LocalFireDetailActivity;
+import com.ys.monitor.activity.LocalResoureDetailActivity;
 import com.ys.monitor.activity.LocalXHDetailActivity;
 import com.ys.monitor.adapter.RecordAdapter;
 import com.ys.monitor.base.BaseFragment;
@@ -75,19 +80,21 @@ public class RecordFragment extends BaseFragment implements
                 String detailJson = (String) SPUtil.get(mContext, uuid, "");
                 L.e("detailJson=" + detailJson);
                 String name = adapter.getItem(position).name;
+                L.e("name=" + name);
+
                 boolean isSucc = adapter.getItem(position).isSucc;
                 if (RecordBean.TYPE_FIRE.equals(name)) {
                     if (isSucc) {
                         //查看
-                        LocalFireDetailActivity.lookLocalFire(mContext,uuid,isSucc);
+                        LocalFireDetailActivity.lookLocalFire(mContext, uuid, isSucc);
                     } else {
                         //不可编辑提交
-                        LocalFireDetailActivity.lookLocalFire(mContext,uuid,isSucc);
+                        LocalFireDetailActivity.lookLocalFire(mContext, uuid, isSucc);
                     }
                 } else if (RecordBean.TYPE_XUHU.equals(name)) {
-                    LocalXHDetailActivity.lookLocalXh(mContext,uuid,isSucc);
+                    LocalXHDetailActivity.lookLocalXh(mContext, uuid, isSucc);
                 } else if (RecordBean.TYPE_ZIYUAN.equals(name)) {
-
+                    LocalResoureDetailActivity.lookLocalResoure(mContext,uuid,isSucc);
                 }
 //                FireBean.DataBean.RowsBean bean = adapter.getItem(position);
 //                String json = new Gson().toJson(bean);
@@ -113,6 +120,7 @@ public class RecordFragment extends BaseFragment implements
                 }
             }
         });
+        register();
     }
 
     @Override
@@ -129,7 +137,7 @@ public class RecordFragment extends BaseFragment implements
     public void getData() {
     }
 
-    private void getDataSp(){
+    private void getDataSp() {
         dataLL.setVisibility(View.VISIBLE);
         List<RecordBean> list = RecordSP.getRecordList(mContext);
         recordBeanList.clear();
@@ -162,6 +170,33 @@ public class RecordFragment extends BaseFragment implements
 
     @Override
     public void onRefresh() {
-        getData();
+        getDataSp();
+    }
+
+    public static final String UPLOAD_RESULT = "com.ys.monitor.intentservice.UPLOAD_RESULT";
+
+    private BroadcastReceiver uploadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == UPLOAD_RESULT) {
+                L.e("收到上报结果广播");
+                getDataSp();
+            }
+
+        }
+    };
+
+    private void register() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(UPLOAD_RESULT);
+        getActivity().registerReceiver(uploadReceiver, filter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (uploadReceiver != null) {
+            getActivity().unregisterReceiver(uploadReceiver);
+        }
     }
 }
