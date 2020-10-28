@@ -30,7 +30,8 @@ import com.ys.monitor.util.StringUtil;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 
-public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallback, TextureView.SurfaceTextureListener{
+public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallback,
+        TextureView.SurfaceTextureListener {
     /**
      * 播放区域
      */
@@ -50,6 +51,7 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
      * 电子放大倍数格式化,显示小数点后一位
      */
     private DecimalFormat decimalFormat;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_preview;
@@ -82,7 +84,9 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
 
     @Override
     public void getData() {
-
+        if (mPlayerStatus != PlayerStatus.SUCCESS) {
+            startRealPlay(textureView.getSurfaceTexture());
+        }
     }
 
     @Override
@@ -94,6 +98,7 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
         intent.putExtra("path", path);
         context.startActivity(intent);
     }
+
     private void initPlayWindowContainer() {
         frameLayout = findViewById(R.id.frame_layout);
         frameLayout.setOnClickListener(new PlayWindowContainer.OnClickListener() {
@@ -113,6 +118,7 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
             }
         });
     }
+
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
 
@@ -136,24 +142,25 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
     /**
      * 执行电子放大操作
      */
-    private void executeDigitalZoom(){
+    private void executeDigitalZoom() {
         if (mPlayerStatus != PlayerStatus.SUCCESS) {
             ToastUtils.showShort("没有视频在播放");
         }
-        if (decimalFormat == null){
+        if (decimalFormat == null) {
             decimalFormat = new DecimalFormat("0.0");
         }
-        if (!mDigitalZooming){
+        if (!mDigitalZooming) {
             frameLayout.setOnScaleChangeListener(new PlayWindowContainer.OnDigitalScaleChangeListener() {
                 @Override
                 public void onDigitalScaleChange(float scale) {
-                    L.e("onDigitalScaleChange scale = "+scale);
-                    if (scale < 1.0f && mDigitalZooming){
+                    L.e("onDigitalScaleChange scale = " + scale);
+                    if (scale < 1.0f && mDigitalZooming) {
                         //如果已经开启了电子放大且倍率小于1就关闭电子放大
                         executeDigitalZoom();
                     }
-                    if (scale>= 1.0f){
-                        digitalScaleText.setText(MessageFormat.format("{0}X",decimalFormat.format(scale)));
+                    if (scale >= 1.0f) {
+                        digitalScaleText.setText(MessageFormat.format("{0}X",
+                                decimalFormat.format(scale)));
                     }
                 }
 
@@ -165,8 +172,8 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
             ToastUtils.showShort("电子放大开启");
             mDigitalZooming = true;
             digitalScaleText.setVisibility(View.VISIBLE);
-            digitalScaleText.setText(MessageFormat.format("{0}X",decimalFormat.format(1.0f)));
-        }else {
+            digitalScaleText.setText(MessageFormat.format("{0}X", decimalFormat.format(1.0f)));
+        } else {
             ToastUtils.showShort("电子放大关闭");
             mDigitalZooming = false;
             digitalScaleText.setVisibility(View.GONE);
@@ -174,6 +181,7 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
             mPlayer.closeDigitalZoom();
         }
     }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -218,12 +226,15 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
 
         // Mode属性
         //View.SYSTEM_UI_FLAG_LOW_PROFILE：状态栏显示处于低能显示状态(low profile模式)，状态栏上一些图标显示会被隐藏。
-        //View.SYSTEM_UI_FLAG_FULLSCREEN：Activity全屏显示，且状态栏被隐藏覆盖掉。等同于（WindowManager.LayoutParams.FLAG_FULLSCREEN）
+        //View.SYSTEM_UI_FLAG_FULLSCREEN：Activity全屏显示，且状态栏被隐藏覆盖掉。等同于（WindowManager.LayoutParams
+        // .FLAG_FULLSCREEN）
         //View.SYSTEM_UI_FLAG_HIDE_NAVIGATION：隐藏虚拟按键(导航栏)。有些手机会用虚拟按键来代替物理按键。
         //View.SYSTEM_UI_FLAG_IMMERSIVE：这个flag只有当设置了SYSTEM_UI_FLAG_HIDE_NAVIGATION才起作用。
         // 如果没有设置这个flag，任意的View相互动作都退出SYSTEM_UI_FLAG_HIDE_NAVIGATION模式。如果设置就不会退出。
-        //View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY：这个flag只有当设置了SYSTEM_UI_FLAG_FULLSCREEN | SYSTEM_UI_FLAG_HIDE_NAVIGATION 时才起作用。
-        // 如果没有设置这个flag，任意的View相互动作都坏退出SYSTEM_UI_FLAG_FULLSCREEN | SYSTEM_UI_FLAG_HIDE_NAVIGATION模式。如果设置就不受影响。
+        //View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY：这个flag只有当设置了SYSTEM_UI_FLAG_FULLSCREEN |
+        // SYSTEM_UI_FLAG_HIDE_NAVIGATION 时才起作用。
+        // 如果没有设置这个flag，任意的View相互动作都坏退出SYSTEM_UI_FLAG_FULLSCREEN |
+        // SYSTEM_UI_FLAG_HIDE_NAVIGATION模式。如果设置就不受影响。
 
         // Layout属性
         //View.SYSTEM_UI_FLAG_LAYOUT_STABLE： 保持View Layout不变，隐藏状态栏或者导航栏后，View不会拉伸。
@@ -257,13 +268,15 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
 //        //解决在华为手机上横屏时，状态栏不消失的问题
 //        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //显示状态栏
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         //TODO 注意:APP前后台切换时 SurfaceTextureListener可能在有某些 华为手机 上不会回调，例如：华为P20，所以我们在这里手动调用
         if (textureView.isAvailable()) {
             L.e("onResume: onSurfaceTextureAvailable");
-            onSurfaceTextureAvailable(textureView.getSurfaceTexture(), textureView.getWidth(), textureView.getHeight());
+            onSurfaceTextureAvailable(textureView.getSurfaceTexture(), textureView.getWidth(),
+                    textureView.getHeight());
         }
     }
 
@@ -290,7 +303,8 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
         mPlayer.setSurfaceTexture(surface);
         //TODO 注意: startRealPlay() 方法会阻塞当前线程，需要在子线程中执行,建议使用RxJava
         new Thread(() -> {
-            //TODO 注意: 不要通过判断 startRealPlay() 方法返回 true 来确定播放成功，播放成功会通过HikVideoPlayerCallback回调，startRealPlay() 方法返回 false 即代表 播放失败;
+            //TODO 注意: 不要通过判断 startRealPlay() 方法返回 true
+            // 来确定播放成功，播放成功会通过HikVideoPlayerCallback回调，startRealPlay() 方法返回 false 即代表 播放失败;
             if (!mPlayer.startRealPlay(mUri, PreviewActivity.this)) {
                 onPlayerStatus(Status.FAILED, mPlayer.getLastError());
             }
@@ -325,14 +339,16 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
                         //播放失败
                         mPlayerStatus = PlayerStatus.FAILED;
                         playHintText.setVisibility(View.VISIBLE);
-                        playHintText.setText(MessageFormat.format("预览失败，错误码：{0}", Integer.toHexString(errorCode)));
+                        playHintText.setText(MessageFormat.format("预览失败，错误码：{0}",
+                                Integer.toHexString(errorCode)));
                         break;
                     case EXCEPTION:
                         //取流异常
                         mPlayerStatus = PlayerStatus.EXCEPTION;
                         mPlayer.stopPlay();//TODO 注意:异常时关闭取流
                         playHintText.setVisibility(View.VISIBLE);
-                        playHintText.setText(MessageFormat.format("取流发生异常，错误码：{0}", Integer.toHexString(errorCode)));
+                        playHintText.setText(MessageFormat.format("取流发生异常，错误码：{0}",
+                                Integer.toHexString(errorCode)));
                         break;
                 }
             }
