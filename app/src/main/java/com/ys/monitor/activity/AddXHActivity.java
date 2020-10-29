@@ -33,7 +33,7 @@ import com.ys.monitor.dialog.DialogUtil;
 import com.ys.monitor.dialog.ListDialogFragment;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
-import com.ys.monitor.service.UploadFireService;
+import com.ys.monitor.service.UploadDataService;
 import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.MyGridView;
@@ -423,17 +423,17 @@ public class AddXHActivity extends BaseActivity {
         Map<String, String> map = new HashMap<>();
         map.put("name", nameTV.getText().toString());
         map.put("patrolStatus", kvBean.id);
-        map.put("warnDesc", descripET.getText().toString());
+        map.put("description", descripET.getText().toString());
         map.put("source", YS.source);
         map.put("siteSplicing", addressTV.getText().toString());
         map.put("latitude", gis_wd);
         map.put("longitude", gis_jd);
-        map.put("warnTime",
+        map.put("patrolTime",
                 DateUtil.changeTimeToYMDHMS(StringUtil.valueOf(System.currentTimeMillis())));
         map.put("imgUrl", imageUrls);
         map.put("videoUrl", videoUrls);
         map.put("way", wayET.getText().toString());
-        UploadFireService.startUploadFire(mContext, "", list, videoList, map,
+        UploadDataService.startUploadFire(mContext, "", list, videoList, map,
                 RecordBean.TYPE_XUHU);
         finish();
     }

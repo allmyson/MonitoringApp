@@ -65,7 +65,9 @@
         <activity android:name="com.ys.monitor.activity.LocalFireDetailActivity" />
         <activity android:name="com.ys.monitor.activity.LocalXHDetailActivity" />
         <activity android:name="com.ys.monitor.activity.LocalResoureDetailActivity" />
-        <activity android:name="com.ys.monitor.activity.PreviewActivity" />
+        <activity android:name="com.ys.monitor.activity.PreviewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"/>
         <activity
             android:name="com.ys.monitor.activity.BaiduMapSelectAddressActivity"
             android:screenOrientation="portrait" />
@@ -122,7 +124,7 @@
             android:name=".activity.AvActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
-        <service android:name=".service.UploadFireService"
+        <service android:name=".service.UploadDataService"
             android:exported="false"/>
     </application>
 

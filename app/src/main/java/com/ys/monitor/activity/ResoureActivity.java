@@ -43,7 +43,7 @@ import com.ys.monitor.dialog.DialogUtil;
 import com.ys.monitor.dialog.ListDialogFragment;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
-import com.ys.monitor.service.UploadFireService;
+import com.ys.monitor.service.UploadDataService;
 import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.LastInputEditText;
@@ -236,7 +236,7 @@ public class ResoureActivity extends BaseActivity {
                                 Field f = fields[i];
                                 f.setAccessible(true);
                                 L.e("属性名:" + f.getName() + " 属性值:" + f.get(resourceZDBean.data.ElementBasic));
-                                if (!"imgUrl".equals(f.getName())) {
+                                if (!"imgUrl".equals(f.getName()) && !StringUtil.isBlank(f.getName())) {
                                     addBaseView(StringUtil.valueOf(f.getName()),
                                             StringUtil.valueOf(f.get(resourceZDBean.data.ElementBasic)));
                                 } else {
@@ -750,12 +750,14 @@ public class ResoureActivity extends BaseActivity {
         int baseCount = baseLL.getChildCount();
         for (int i = 0; i < baseCount; i++) {
             View view = baseLL.getChildAt(i);
-            TextView idTV = (TextView) view.findViewById(R.id.tv_id);
-            TextView nameTV = (TextView) view.findViewById(R.id.tv_name);
-            LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
-            String name = nameTV.getText().toString();
-            String value = valueET.getText().toString();
-            baseMap.put(name, value);
+            if (view.getVisibility() == View.VISIBLE) {
+                TextView idTV = (TextView) view.findViewById(R.id.tv_id);
+                TextView nameTV = (TextView) view.findViewById(R.id.tv_name);
+                LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
+                String name = nameTV.getText().toString();
+                String value = valueET.getText().toString();
+                baseMap.put(name, value);
+            }
         }
         Map<String, String> extMap = new HashMap<>();
         int extCount = extLL.getChildCount();
@@ -831,8 +833,8 @@ public class ResoureActivity extends BaseActivity {
         }
         ResourceTypeBean resourceTypeBean = getViewData();
         String json = new Gson().toJson(resourceTypeBean);
-        UploadFireService.startUploadFire(mContext, "", imageList, new ArrayList<>(), resultMap,
-                RecordBean.TYPE_ZIYUAN, RecordBean.DO_ADD, json,address);
+        UploadDataService.startUploadFire(mContext, "", imageList, new ArrayList<>(), resultMap,
+                RecordBean.TYPE_ZIYUAN, RecordBean.DO_ADD, json, address);
         finish();
     }
 }

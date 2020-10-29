@@ -148,6 +148,8 @@ public class VideoListActivity extends BaseActivity implements NoNetView.ClickLi
     }
 
     private void getVideoUrl(String recNo) {
+//        PreviewActivity.playRtspVideo(mContext, "rtsp://10.66.165.243:655/EUrl/8ccdhg4");
+
         HttpUtil.getVideoUrl(mContext, userId, recNo,new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

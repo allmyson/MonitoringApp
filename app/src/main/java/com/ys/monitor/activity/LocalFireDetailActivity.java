@@ -24,7 +24,7 @@ import com.ys.monitor.bean.RecordBean;
 import com.ys.monitor.bean.RecordDetail;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
-import com.ys.monitor.service.UploadFireService;
+import com.ys.monitor.service.UploadDataService;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.MyGridView;
 import com.ys.monitor.util.Constant;
@@ -302,7 +302,7 @@ public class LocalFireDetailActivity extends BaseActivity {
 //                DateUtil.changeTimeToYMDHMS(StringUtil.valueOf(System.currentTimeMillis())));
 //        map.put("imgUrl", StringUtil.valueOf(imageUrls));
 //        map.put("videoUrl", StringUtil.valueOf(videoUrls));
-        UploadFireService.startUploadFire(mContext, uuid, recordDetail.imgs, recordDetail.videos,
+        UploadDataService.startUploadFire(mContext, uuid, recordDetail.imgs, recordDetail.videos,
                 recordDetail.map, RecordBean.TYPE_FIRE);
         finish();
     }

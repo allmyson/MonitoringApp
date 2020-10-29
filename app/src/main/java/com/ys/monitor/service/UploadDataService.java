@@ -36,23 +36,23 @@ import java.util.Map;
  * @description -------------------------------------------------------
  * @date 2020/10/26 13:58
  */
-public class UploadFireService extends IntentService {
+public class UploadDataService extends IntentService {
     private String userId;
     private static final String ACTION_UPLOAD_FIRE = "com.ys.monitor.intentservice.action" +
             ".UPLOAD_FIRE";
 
-    public UploadFireService() {
+    public UploadDataService() {
         super("UploadFireService");
     }
 
-    public UploadFireService(String name) {
+    public UploadDataService(String name) {
         super(name);
     }
 
     public static void startUploadFire(Context context, String uuid, ArrayList<String> imgs,
                                        ArrayList<String> videos, Map<String, String> map,
                                        String typeName) {
-        Intent intent = new Intent(context, UploadFireService.class);
+        Intent intent = new Intent(context, UploadDataService.class);
         intent.setAction(ACTION_UPLOAD_FIRE);
         intent.putExtra("uuid", uuid);
         intent.putExtra("type", typeName);
@@ -66,7 +66,7 @@ public class UploadFireService extends IntentService {
                                        ArrayList<String> videos, Map<String, String> map,
                                        String typeName, String handleType, String view,
                                        String address) {
-        Intent intent = new Intent(context, UploadFireService.class);
+        Intent intent = new Intent(context, UploadDataService.class);
         intent.setAction(ACTION_UPLOAD_FIRE);
         intent.putExtra("address", address);
         intent.putExtra("uuid", uuid);
@@ -196,10 +196,13 @@ public class UploadFireService extends IntentService {
                 L.e("暂无视频！");
             }
             dataMap.put("imgUrl", StringUtil.valueOf(imageUrls));
-            dataMap.put("videoUrl", StringUtil.valueOf(videoUrls));
+            if (!RecordBean.TYPE_ZIYUAN.equals(recordBean.name)) {
+                dataMap.put("videoUrl", StringUtil.valueOf(videoUrls));
+            }
             String data = new Gson().toJson(map);
             L.e("data=" + data);
-            Response<String> response = HttpUtil.addFireSync(getBaseContext(), userId, data);
+            Response<String> response = HttpUtil.addDataSync(getBaseContext(), userId, data,
+                    recordBean.name, recordBean.handleType);
             BaseBean baseBean = new Gson().fromJson(response.get(), BaseBean.class);
             if (baseBean != null && YS.SUCCESE.equals(baseBean.code)) {
                 L.e("上报成功!");
@@ -252,13 +255,13 @@ public class UploadFireService extends IntentService {
     public void onCreate() {
         super.onCreate();
         userId = UserSP.getUserId(getBaseContext());
-        L.e(UploadFireService.this.getClass().getName() + "onCreate");
+        L.e(UploadDataService.this.getClass().getName() + "onCreate");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        L.e(UploadFireService.this.getClass().getName() + "onDestroy");
+        L.e(UploadDataService.this.getClass().getName() + "onDestroy");
     }
 
     private void sendMsg() {

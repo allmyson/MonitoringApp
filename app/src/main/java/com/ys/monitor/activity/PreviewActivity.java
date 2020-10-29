@@ -8,12 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.view.TextureView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.ScreenUtils;
-import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hikvision.open.hikvideoplayer.CustomRect;
 import com.hikvision.open.hikvideoplayer.HikVideoPlayer;
@@ -21,7 +18,6 @@ import com.hikvision.open.hikvideoplayer.HikVideoPlayerCallback;
 import com.hikvision.open.hikvideoplayer.HikVideoPlayerFactory;
 import com.ys.monitor.R;
 import com.ys.monitor.base.BaseActivity;
-import com.ys.monitor.rtsp.AutoHideView;
 import com.ys.monitor.rtsp.PlayWindowContainer;
 import com.ys.monitor.rtsp.PlayerStatus;
 import com.ys.monitor.util.L;
@@ -40,13 +36,12 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
     protected ProgressBar progressBar;
     protected TextView playHintText;
     protected TextView digitalScaleText;
-    protected AutoHideView autoHideView;
 
     private String mUri;
     private HikVideoPlayer mPlayer;
     private boolean mDigitalZooming = false;
     private PlayerStatus mPlayerStatus = PlayerStatus.IDLE;//默认闲置
-
+    private boolean isFirst = true;
     /**
      * 电子放大倍数格式化,显示小数点后一位
      */
@@ -59,7 +54,8 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
 
     @Override
     public void initView() {
-        setBarColor("#ffffff");
+//        setBarColor("#ffffff");
+        setTransparent();
         mUri = getIntent().getStringExtra("path");
         L.e("mUri=" + mUri);
         if (StringUtil.isBlank(mUri)) {
@@ -71,7 +67,6 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
         progressBar = findViewById(R.id.progress_bar);
         playHintText = findViewById(R.id.result_hint_text);
         digitalScaleText = findViewById(R.id.digital_scale_text);
-        autoHideView = findViewById(R.id.auto_hide_view);
         textureView.setSurfaceTextureListener(this);
         initPlayWindowContainer();
         mPlayer = HikVideoPlayerFactory.provideHikVideoPlayer();
@@ -84,9 +79,9 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
 
     @Override
     public void getData() {
-        if (mPlayerStatus != PlayerStatus.SUCCESS) {
-            startRealPlay(textureView.getSurfaceTexture());
-        }
+//        if (mPlayerStatus != PlayerStatus.SUCCESS) {
+//            startRealPlay(textureView.getSurfaceTexture());
+//        }
     }
 
     @Override
@@ -101,16 +96,6 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
 
     private void initPlayWindowContainer() {
         frameLayout = findViewById(R.id.frame_layout);
-        frameLayout.setOnClickListener(new PlayWindowContainer.OnClickListener() {
-            @Override
-            public void onSingleClick() {
-                if (autoHideView.isVisible()) {
-                    autoHideView.hide();
-                } else {
-                    autoHideView.show();
-                }
-            }
-        });
         frameLayout.setOnDigitalListener(new PlayWindowContainer.OnDigitalZoomListener() {
             @Override
             public void onDigitalZoomOpen() {
@@ -119,25 +104,6 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
         });
     }
 
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-
-    }
-
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-        return false;
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-
-    }
 
     /**
      * 执行电子放大操作
@@ -185,89 +151,8 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        layoutViews();
     }
 
-    /**
-     * 屏幕方向变化后重新布局View
-     */
-    private void layoutViews() {
-        ViewGroup.LayoutParams layoutParams = frameLayout.getLayoutParams();
-        if (ScreenUtils.isPortrait()) {
-            //先显示系统状态栏
-            showSystemUI();
-            //再显示控制按钮区域
-            layoutParams.height = SizeUtils.dp2px(250f);
-            showOrHideControlArea(true);
-        } else if (ScreenUtils.isLandscape()) {
-            //隐藏系统UI
-            hideSystemUI();
-            showOrHideControlArea(false);
-            layoutParams.height = ScreenUtils.getScreenHeight();
-        }
-    }
-
-    /**
-     * 显示或隐藏控制区域
-     *
-     * @param isShow true-显示，false-隐藏
-     */
-    private void showOrHideControlArea(boolean isShow) {
-        int visibility = isShow ? View.VISIBLE : View.GONE;
-    }
-
-    /**
-     * 隐藏系统ui
-     */
-    private void hideSystemUI() {
-        //隐藏ActionBar 如果使用了NoActionBar的Theme则不需要隐藏actionBar
-
-        //TODO：View.setSystemUiVisibility(int visibility)中，visibility是Mode与Layout任意取值的组合，可传入的实参为：
-
-        // Mode属性
-        //View.SYSTEM_UI_FLAG_LOW_PROFILE：状态栏显示处于低能显示状态(low profile模式)，状态栏上一些图标显示会被隐藏。
-        //View.SYSTEM_UI_FLAG_FULLSCREEN：Activity全屏显示，且状态栏被隐藏覆盖掉。等同于（WindowManager.LayoutParams
-        // .FLAG_FULLSCREEN）
-        //View.SYSTEM_UI_FLAG_HIDE_NAVIGATION：隐藏虚拟按键(导航栏)。有些手机会用虚拟按键来代替物理按键。
-        //View.SYSTEM_UI_FLAG_IMMERSIVE：这个flag只有当设置了SYSTEM_UI_FLAG_HIDE_NAVIGATION才起作用。
-        // 如果没有设置这个flag，任意的View相互动作都退出SYSTEM_UI_FLAG_HIDE_NAVIGATION模式。如果设置就不会退出。
-        //View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY：这个flag只有当设置了SYSTEM_UI_FLAG_FULLSCREEN |
-        // SYSTEM_UI_FLAG_HIDE_NAVIGATION 时才起作用。
-        // 如果没有设置这个flag，任意的View相互动作都坏退出SYSTEM_UI_FLAG_FULLSCREEN |
-        // SYSTEM_UI_FLAG_HIDE_NAVIGATION模式。如果设置就不受影响。
-
-        // Layout属性
-        //View.SYSTEM_UI_FLAG_LAYOUT_STABLE： 保持View Layout不变，隐藏状态栏或者导航栏后，View不会拉伸。
-        //View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN：让View全屏显示，Layout会被拉伸到StatusBar下面，不包含NavigationBar。
-        //View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION：让View全屏显示，Layout会被拉伸到StatusBar和NavigationBar下面。
-//        View decorView = getWindow().getDecorView();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            decorView.setSystemUiVisibility(
-//                    View.SYSTEM_UI_FLAG_LOW_PROFILE
-//                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-//                            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-//                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//            );
-//        }
-//        //解决在华为手机上横屏时，状态栏不消失的问题
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
-
-    }
-
-    /**
-     * 显示系统UI
-     */
-    private void showSystemUI() {
-        //显示ActionBar 如果使用了NoActionBar的Theme则不需要显示actionBar
-//        View decorView = getWindow().getDecorView();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//            // This snippet shows the system bars. It does this by removing all the flags
-//            // except for the ones that make the content appear under the system bars.
-//            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-//        }
-//        //解决在华为手机上横屏时，状态栏不消失的问题
-//        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //显示状态栏
-    }
 
     @Override
     protected void onResume() {
@@ -353,5 +238,44 @@ public class PreviewActivity extends BaseActivity implements HikVideoPlayerCallb
                 }
             }
         });
+    }
+
+    /*************************TextureView.SurfaceTextureListener 接口的回调方法********************/
+    //TODO 注意:APP前后台切换时 SurfaceTextureListener可能在有某些华为手机上不会回调，例如：华为P20，因此我们需要在Activity生命周期中手动调用回调方法
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        L.e("onSurfaceTextureAvailable执行---width=" + width + "---height=" + height);
+        if (isFirst) {
+            L.e("onSurfaceTextureAvailable执行---进行播放操作");
+            isFirst = false;
+            if (mPlayerStatus != PlayerStatus.SUCCESS) {
+                startRealPlay(textureView.getSurfaceTexture());
+            }
+        }
+        if (mPlayerStatus == PlayerStatus.STOPPING) {
+            //恢复处于暂停播放状态的窗口
+            startRealPlay(textureView.getSurfaceTexture());
+            L.e("onSurfaceTextureAvailable: startRealPlay");
+        }
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        L.e("onSurfaceTextureSizeChanged执行---width=" + width + "---height=" + height);
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        if (mPlayerStatus == PlayerStatus.SUCCESS) {
+            mPlayerStatus = PlayerStatus.STOPPING;//暂停播放，再次进入时恢复播放
+            mPlayer.stopPlay();
+            L.e("onSurfaceTextureDestroyed: stopPlay");
+        }
+        return false;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+        L.e("onSurfaceTextureUpdated执行");
     }
 }

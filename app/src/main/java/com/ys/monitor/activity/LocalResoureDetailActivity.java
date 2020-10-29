@@ -32,7 +32,7 @@ import com.ys.monitor.bean.ResourceBean;
 import com.ys.monitor.bean.ResourceTypeBean;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
-import com.ys.monitor.service.UploadFireService;
+import com.ys.monitor.service.UploadDataService;
 import com.ys.monitor.ui.LastInputEditText;
 import com.ys.monitor.ui.MyGridView;
 import com.ys.monitor.util.GPSUtil;
@@ -591,7 +591,7 @@ public class LocalResoureDetailActivity extends BaseActivity {
 
     private void commitByService() {
         String json = new Gson().toJson(recordDetail.resourceTypeBean);
-        UploadFireService.startUploadFire(mContext, uuid, recordDetail.imgs, recordDetail.videos,
+        UploadDataService.startUploadFire(mContext, uuid, recordDetail.imgs, recordDetail.videos,
                 recordDetail.map, RecordBean.TYPE_ZIYUAN, "", json,"");
         finish();
     }

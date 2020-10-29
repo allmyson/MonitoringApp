@@ -58,7 +58,7 @@ public class YS {
 
     public static final String testImageUrl = "https://bkimg.cdn.bcebos" +
             ".com/pic/b219ebc4b74543a9a8a81e741d178a82b80114d2";
-    public static final String kefuPhone = "023-67026768";
+    public static final String kefuPhone = "17749922317";
     public static final String kefuEmail = "huangjueshu@163.com";
     public static final String token = "641bd74eec96453aacad5b0acd785717";
 

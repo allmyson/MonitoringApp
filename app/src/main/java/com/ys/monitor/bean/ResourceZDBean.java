@@ -80,14 +80,14 @@ public class ResourceZDBean {
             public String imgUrl;
             public String createUserNo;
             public String createTime;
-            public String smallPlaceName;
-            public String smallClassNo;
-            public String areaCode;
+//            public String smallPlaceName;
+//            public String smallClassNo;
+//            public String areaCode;
             public String description;
             public String resourcetypeName;
             public String name;
-            public String investigationAddr;
-            public String agency;
+//            public String investigationAddr;
+//            public String agency;
             public String resourcetype;
             public String recNo;
         }

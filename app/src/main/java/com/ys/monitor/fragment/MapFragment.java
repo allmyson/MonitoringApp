@@ -265,11 +265,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                 layerAdapter.selectPosition(i);
                 FeatureBean featureBean = layerAdapter.getItem(i);
                 if (layerAdapter.isSelect(i)) {
-                    show("选中");
+//                    show("选中");
                     if (!mMapView.getMap().getOperationalLayers().contains(featureBean.featureLayer))
                         mMapView.getMap().getOperationalLayers().add(featureBean.featureLayer);
                 } else {
-                    show("取消选中");
+//                    show("取消选中");
                     if (mMapView.getMap().getOperationalLayers().contains(featureBean.featureLayer))
                         mMapView.getMap().getOperationalLayers().remove(featureBean.featureLayer);
                 }

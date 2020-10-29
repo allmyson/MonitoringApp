@@ -3,6 +3,7 @@ package com.ys.monitor.util;
 import android.content.Context;
 
 import com.yanzhenjie.nohttp.rest.Response;
+import com.ys.monitor.bean.RecordBean;
 import com.ys.monitor.http.BaseHttp;
 import com.ys.monitor.http.HttpListener;
 
@@ -320,6 +321,9 @@ public class HttpUtil {
         String url =
                 YS.RTSP + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&recNo=" + recNo;
+        //本地测试
+        url = "http://192.168.31.188:8080/send/queryDeviceInfoByNo.mo"+ "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                userId + "&recNo="+ recNo;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -420,6 +424,39 @@ public class HttpUtil {
                 YS.UPLOAD_HEAD + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&icon=" + icon;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+
+    //同步添加火情、巡护、资源
+    public static Response<String> addDataSync(Context context, String userId, String data,
+                                               String type, String handleType) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String baseUrl = YS.ADD_FIRE;
+        if (RecordBean.TYPE_FIRE.equals(type)) {
+            baseUrl = YS.ADD_FIRE;
+        } else if (RecordBean.TYPE_XUHU.equals(type)) {
+            baseUrl = YS.ADD_XH;
+        } else if (RecordBean.TYPE_ZIYUAN.equals(type)) {
+            baseUrl = YS.ADD_RESOURCE;
+        }
+        String url =
+                baseUrl + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId +
+                        "&data=" + URLEncoder.encode(data);
+        if (RecordBean.TYPE_ZIYUAN.equals(type)) {
+            if (RecordBean.DO_ADD.equals(handleType)) {
+                url += "&operationType=0";
+            } else if (RecordBean.DO_UPDATE.equals(type)) {
+                url += "&operationType=1";
+            } else if (RecordBean.DO_DELETE.equals(type)) {
+                url += "&operationType=2";
+            }
+        }
+        Response<String> response = BaseHttp.getInstance().postJsonSync(context, url, "");
+        return response;
     }
 
 }
