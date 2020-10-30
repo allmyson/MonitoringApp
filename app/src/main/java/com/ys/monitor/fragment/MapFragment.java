@@ -36,7 +36,11 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureCollection;
+import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.geometry.Envelope;
+import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
@@ -1069,6 +1073,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         Graphic graphic = new Graphic(polygon, simpleFillSymbol);
         fireOverlay.getGraphics().add(graphic);
         mMapView.setViewpointGeometryAsync(fireOverlay.getExtent(), 50);
+
+        //查询要素
+        queryFeature(polygon);
     }
 
     /**
@@ -1192,6 +1199,62 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         if (longPressPoint != null) {
             DialogUtil.showPointTip(getActivity(), city,
                     longPressPoint.getX() + "," + longPressPoint.getY());
+        }
+    }
+
+
+    private void queryFeature(Geometry geometry) {
+        try {
+            ServiceFeatureTable serviceFeatureTable =
+                    new ServiceFeatureTable(FeatureBean.FEATURE_SERVER + "/0");
+            FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
+            QueryParameters args = new QueryParameters();
+            args.setReturnGeometry(true);// 是否返回Geometry
+            args.setGeometry(geometry); // 查询范围面
+            args.setOutSpatialReference(SpatialReferences.getWgs84());
+            args.setSpatialRelationship(QueryParameters.SpatialRelationship.WITHIN);
+            //获取查询结果result
+            ListenableFuture<FeatureQueryResult> future =
+                    serviceFeatureTable.queryFeaturesAsync(args);
+            future.addDoneListener(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // 调用future的get方法获取结果
+                        FeatureQueryResult result = future.get();
+                        // 检查是否查询出了结果
+                        if (result.iterator().hasNext()) {
+                            // 获取查询结果的第一个要素的地图范围，并设置地图缩放至该范围
+                            Feature feature = result.iterator().next();
+                            //获取结果feature的几何形状变量
+                            Geometry geoResult = feature.getGeometry();
+                            //获取结果feature的几何外接矩形
+                            Envelope envelope = geoResult.getExtent();
+                            //创建用于显示查询结果的Symbol符号
+                            SimpleFillSymbol FillSymbol =
+                                    new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.RED,
+                                            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,
+                                                    Color.RED, 2));
+                            //创建用于显示查询结果的Graphic图形
+                            Graphic graphicResult = new Graphic(geoResult, FillSymbol);
+                            //创建用于显示查询结果的GraphicOverlay，并将Graphic加入其中
+                            GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+                            graphicsOverlay.getGraphics().add(graphicResult);
+                            //显示查询结果
+                            mMapView.getGraphicsOverlays().clear();
+                            mMapView.getGraphicsOverlays().add(graphicsOverlay);
+                            mMapView.setViewpointGeometryAsync(envelope, 10);
+                            //查询要素
+                            featureLayer.selectFeature(feature);
+                        } else {
+                            show("No states found with name: ");
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            });
+        } catch (Exception e) {
+
         }
     }
 }

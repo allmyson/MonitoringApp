@@ -172,8 +172,8 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                 fireList.clear();
                 try {
                     FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
+                    List<FireBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
                     if (fireBean != null && fireBean.data != null && fireBean.data.rows != null && fireBean.data.rows.size() > 0) {
-                        List<FireBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
                         for (FireBean.DataBean.RowsBean rowsBean1 : fireBean.data.rows) {
                             if (YS.FireStatus.Status_DCL.equals(rowsBean1.status) || YS.FireStatus.Status_HSZ.equals(rowsBean1.status)) {
                                 rowsBeanList.add(rowsBean1);
@@ -182,21 +182,29 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                                 fireList.add(rowsBean1);
                             }
                         }
-                        if (rowsBeanList.size() > 0) {
-                            if (rowsBeanList.get(0) != null) {
-                                String data =
-                                        "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
-                                Msg msg = new Msg(R.mipmap.notice_fire_check,
-                                        rowsBeanList.size()
-                                        , "火情核查", data, rowsBeanList.get(0).createTime);
-                                topList.set(0, msg);
-                                list.set(0, msg);
-                                L.e(msg.toString());
-                                adapter.refresh(list);
-                                MsgSP.saveMsg(mContext,topList);
-                            }
+                    }
+                    if (rowsBeanList.size() > 0) {
+                        if (rowsBeanList.get(0) != null) {
+                            String data =
+                                    "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
+                            Msg msg = new Msg(R.mipmap.notice_fire_check,
+                                    rowsBeanList.size()
+                                    , "火情核查", data, rowsBeanList.get(0).createTime);
+                            topList.set(0, msg);
+                            list.set(0, msg);
+                            L.e(msg.toString());
+                            adapter.refresh(list);
+                            MsgSP.saveMsg(mContext,topList);
                         }
-
+                    }else{
+                        Msg msg = new Msg(R.mipmap.notice_fire_check,
+                                rowsBeanList.size()
+                                , "火情核查", "", 0);
+                        topList.set(0, msg);
+                        list.set(0, msg);
+                        L.e(msg.toString());
+                        adapter.refresh(list);
+                        MsgSP.saveMsg(mContext,topList);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -215,19 +223,32 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
             public void onSucceed(int what, Response<String> response) {
                 try {
                     YjtzBean yjtzBean = new Gson().fromJson(response.get(), YjtzBean.class);
+                    List<YjtzBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
                     if (yjtzBean != null && yjtzBean.data != null && yjtzBean.data.rows != null && yjtzBean.data.rows.size() > 0) {
-                        if (yjtzBean.data.rows.get(0) != null) {
+                        rowsBeanList.addAll(yjtzBean.data.rows);
+                    }
+                    if (rowsBeanList.size() > 0) {
+                        if (rowsBeanList.get(0) != null) {
                             String data =
-                                    "[" + yjtzBean.data.rows.size() + "条]" + StringUtil.valueOf(yjtzBean.data.rows.get(0).title);
+                                    "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).title);
                             Msg msg = new Msg(R.mipmap.notice_warning,
-                                    yjtzBean.data.rows.size(),
-                                    "预警通知", data, yjtzBean.data.rows.get(0).createTime);
+                                    rowsBeanList.size(),
+                                    "预警通知", data, rowsBeanList.get(0).createTime);
                             topList.set(1, msg);
                             list.set(1, msg);
                             L.e(msg.toString());
                             adapter.refresh(list);
                             MsgSP.saveMsg(mContext,topList);
                         }
+                    }else{
+                        Msg msg = new Msg(R.mipmap.notice_warning,
+                                rowsBeanList.size(),
+                                "预警通知", "", 0);
+                        topList.set(1, msg);
+                        list.set(1, msg);
+                        L.e(msg.toString());
+                        adapter.refresh(list);
+                        MsgSP.saveMsg(mContext,topList);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -247,25 +268,32 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
             public void onSucceed(int what, Response<String> response) {
                 try {
                     TaskBean taskBean = new Gson().fromJson(response.get(), TaskBean.class);
+                    List<TaskBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
                     if (taskBean != null && taskBean.data != null && taskBean.data.rows != null && taskBean.data.rows.size() > 0) {
-                        List<TaskBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
                         for (TaskBean.DataBean.RowsBean rowsBean : taskBean.data.rows) {
                             if (rowsBean != null && rowsBean.isFinish == 0) {
                                 rowsBeanList.add(rowsBean);
                             }
                         }
-
-                        if (rowsBeanList.size() > 0) {
-                            String data =
-                                    "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
-                            Msg msg = new Msg(R.mipmap.notice_task, rowsBeanList.size(), "任务通知",
-                                    data, rowsBeanList.get(0).createTime);
-                            topList.set(2, msg);
-                            list.set(2, msg);
-                            L.e(msg.toString());
-                            adapter.refresh(list);
-                            MsgSP.saveMsg(mContext,topList);
-                        }
+                    }
+                    if (rowsBeanList.size() > 0) {
+                        String data =
+                                "[" + rowsBeanList.size() + "条]" + StringUtil.valueOf(rowsBeanList.get(0).name);
+                        Msg msg = new Msg(R.mipmap.notice_task, rowsBeanList.size(), "任务通知",
+                                data, rowsBeanList.get(0).createTime);
+                        topList.set(2, msg);
+                        list.set(2, msg);
+                        L.e(msg.toString());
+                        adapter.refresh(list);
+                        MsgSP.saveMsg(mContext,topList);
+                    }else {
+                        Msg msg = new Msg(R.mipmap.notice_task, rowsBeanList.size(), "任务通知",
+                                "", 0);
+                        topList.set(2, msg);
+                        list.set(2, msg);
+                        L.e(msg.toString());
+                        adapter.refresh(list);
+                        MsgSP.saveMsg(mContext,topList);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

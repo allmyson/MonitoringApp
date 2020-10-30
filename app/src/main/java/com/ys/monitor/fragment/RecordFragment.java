@@ -26,6 +26,8 @@ import com.ys.monitor.util.L;
 import com.ys.monitor.util.SPUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class RecordFragment extends BaseFragment implements
@@ -154,6 +156,19 @@ public class RecordFragment extends BaseFragment implements
                 }
             }
         }
+        Collections.sort(recordBeanList, new Comparator<RecordBean>() {
+
+            @Override
+
+            public int compare(RecordBean o1, RecordBean o2) {
+
+                //return o1.para - o2.para;  //升序
+
+                return (int) (o2.createTime - o1.createTime); //降序
+
+            }
+
+        });
         adapter.refresh(recordBeanList);
         if (adapter.getCount() > 0) {
             blankView.setVisibility(View.GONE);

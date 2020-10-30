@@ -70,4 +70,8 @@ public class RecordSP {
         }
         saveRecord(context, list);
     }
+
+    public static void clear(Context context){
+        SPUtil.deleteKey(context,KEY_RECORD);
+    }
 }

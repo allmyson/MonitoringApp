@@ -2,7 +2,9 @@ package com.ys.monitor.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -79,6 +81,11 @@ public class SetActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
-        mDialog.create().show();
+        AlertDialog dialog = mDialog.create();
+        dialog.show();
+        Button btnPos = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button btnNeg = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        btnPos.setTextColor(Color.parseColor("#0D87F8"));
+        btnNeg.setTextColor(Color.parseColor("#0D87F8"));
     }
 }
