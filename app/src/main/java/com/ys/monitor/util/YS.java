@@ -80,9 +80,8 @@ public class YS {
     public static final String FAIL = "FAIL";
 
 
-    //        public static final String IP = "http://148.163.169.41:8090";
-//    public static final String IP = "http://47.244.135.12:8090";
-    public static final String IP = "http://219.153.13.225:8085";
+//    public static final String IP = "http://219.153.13.225:8085";
+    public static final String IP = "http://222.178.189.231:8081";
     //登录
     public static final String LOGIN = IP + "/receive/phoneLogin.mo";
     //火情列表
