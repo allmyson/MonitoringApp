@@ -8,7 +8,6 @@ import com.ys.monitor.fragment.FourFragment;
 import com.ys.monitor.fragment.MapFragment;
 import com.ys.monitor.fragment.OneFragment;
 import com.ys.monitor.fragment.ThreeFragment;
-import com.ys.monitor.fragment.TwoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class MainBean {
         mainBean2.title = "地图";
         mainBean2.selectIconId = R.drawable.ic_title_map_selected;
         mainBean2.unSelectIconId = R.drawable.ic_title_map_unselected;
-        mainBean2.fragment = TwoFragment.newInstance();
+        mainBean2.fragment = MapFragment.newInstance();
         mainBean2.selectTextColor = context.getResources().getColor(R.color.main_color);
         mainBean2.unSelectTextColor = context.getResources().getColor(R.color.gray_color);
         list.add(mainBean2);

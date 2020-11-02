@@ -37,6 +37,7 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureCollection;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.Field;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -745,6 +746,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         mMapView.getGraphicsOverlays().add(gjOverlay);
         fireOverlay = new GraphicsOverlay();
         mMapView.getGraphicsOverlays().add(fireOverlay);
+        pointOverlay = new GraphicsOverlay();
+        mMapView.getGraphicsOverlays().add(pointOverlay);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_fire);
         BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
         fireSymbol = new PictureMarkerSymbol(bitmapDrawable);
@@ -1073,9 +1076,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         Graphic graphic = new Graphic(polygon, simpleFillSymbol);
         fireOverlay.getGraphics().add(graphic);
         mMapView.setViewpointGeometryAsync(fireOverlay.getExtent(), 50);
-
+        queryFeaturesFromTable(polygon);
         //查询要素
-        queryFeature(polygon);
+//        queryFeature(polygon);
     }
 
     /**
@@ -1202,6 +1205,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
+    private GraphicsOverlay pointOverlay;//点位
+    private SimpleMarkerSymbol pointFireMarker =
+            new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 4);
 
     private void queryFeature(Geometry geometry) {
         try {
@@ -1256,5 +1262,49 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         } catch (Exception e) {
 
         }
+    }
+
+    private void queryFeaturesFromTable(Geometry geometry) {
+        L.e("queryFeaturesFromTable");
+        pointOverlay.getGraphics().clear();
+        ServiceFeatureTable table = new ServiceFeatureTable(
+                "http://222.178.189.231:9080/arcgis/rest/services/JysBaseData/FeatureServer/0");
+        table.loadAsync();
+        table.addDoneLoadingListener(() -> {
+            QueryParameters query = new QueryParameters();
+            query.setWhereClause("1=1");
+            query.setGeometry(geometry);
+            query.setReturnGeometry(true);
+            ListenableFuture<FeatureQueryResult> tableQueryResult =
+                    table.queryFeaturesAsync(query,
+                            ServiceFeatureTable.QueryFeatureFields.LOAD_ALL);
+            /* ** ADD ** */
+            tableQueryResult.addDoneListener(() -> {
+                try {
+                    List<Graphic> graphics = new ArrayList<>();
+                    FeatureQueryResult result = tableQueryResult.get();
+                    List<Field> fields = result.getFields();
+                    for (Field field : fields) {
+                        L.e("Field==" + field.getName() + "--" + field.getAlias());
+                    }
+                    int i = 0;
+                    for (Feature feature : result) {
+                        i++;
+                        Map<String, Object> attributes = feature.getAttributes();
+                        L.e("attributes.size()=" + attributes.size());
+                        for (Map.Entry<String, Object> m : attributes.entrySet()) {
+                            L.e(m.getKey() + "--------" + m.getValue());
+                        }
+                        SimpleMarkerSymbol simpleMarkerSymbol =
+                                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 4);
+                        graphics.add(new Graphic(feature.getGeometry(), simpleMarkerSymbol));
+                    }
+                    L.e("result.size()=" + i);
+                    pointOverlay.getGraphics().addAll(graphics);
+                } catch (Exception e) {
+                    L.e(e.getMessage());
+                }
+            });
+        });
     }
 }
