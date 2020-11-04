@@ -459,4 +459,18 @@ public class HttpUtil {
         return response;
     }
 
+
+    //获取资源详情
+    public static void getResourceValue(Context context, String userId, String id,
+                                         HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.SELECT_RESOURCE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                        userId + "&recNo=" +"5b198d61751640b6017521410a970003";
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
 }

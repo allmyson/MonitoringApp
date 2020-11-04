@@ -2,6 +2,7 @@ package com.ys.monitor.activity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -16,9 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
-import com.baidu.location.LocationClient;
 import com.google.gson.Gson;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.yongchun.library.view.ImageSelectorActivity;
@@ -38,7 +36,6 @@ import com.ys.monitor.dialog.ListDialogFragment;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.service.UploadDataService;
-import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.LastInputEditText;
 import com.ys.monitor.ui.MyGridView;
@@ -93,8 +90,6 @@ public class UpdateResoureActivity extends BaseActivity {
 
     @Override
     public void getData() {
-        getLocation();
-        initLocationOption();
         userId = UserSP.getUserId(mContext);
         //获取资源类型
         HttpUtil.getResourceTypeList(mContext, userId, new HttpListener<String>() {
@@ -123,20 +118,19 @@ public class UpdateResoureActivity extends BaseActivity {
 
             }
         });
+        HttpUtil.getResourceValue(mContext, userId, "", new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
 
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
     }
 
-    private void getLocation() {
-        Map<String, Object> locationMap = LocationSP.getLocationData(mContext);
-        if (locationMap != null) {
-            double lat = (double) locationMap.get("lat");
-            double lon = (double) locationMap.get("lon");
-            double[] gps = GPSUtil.bd09_To_gps84(lat, lon);
-            gis_jd = StringUtil.valueOf(gps[1]);
-            gis_wd = StringUtil.valueOf(gps[0]);
-            address = (String) locationMap.get("address");
-        }
-    }
 
 
     @Override
@@ -649,46 +643,7 @@ public class UpdateResoureActivity extends BaseActivity {
         });
     }
 
-    private void initLocationOption() {
-        //定位服务的客户端。宿主程序在客户端声明此类，并调用，目前只支持在主线程中启动
-        MyLocationListener myLocationListener = new MyLocationListener();
-        LocationClient locationClient = StringUtil.getDefaultLocationClient(mContext,
-                myLocationListener);
-        //开始定位
-        locationClient.start();
-    }
 
-    /**
-     * 实现定位回调
-     */
-    public class MyLocationListener extends BDAbstractLocationListener {
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
-            //以下只列举部分获取经纬度相关（常用）的结果信息
-            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
-
-            if (null != location && location.getLocType() != BDLocation.TypeServerError) {
-                //获取纬度信息
-                double latitude = location.getLatitude();
-                //获取经度信息
-                double longitude = location.getLongitude();
-                String address = location.getAddress().address;
-                //获取定位精度，默认值为0.0f
-                float radius = location.getRadius();
-                //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
-                String coorType = location.getCoorType();
-                L.e("定位成功==latitude=" + latitude + "---longtitude=" + longitude + "--address=" + address);
-                double[] gps = GPSUtil.bd09_To_gps84(latitude, longitude);
-                gis_jd = StringUtil.valueOf(gps[1]);
-                gis_wd = StringUtil.valueOf(gps[0]);
-                address = location.getAddress().address;
-            } else {
-                L.e("定位失败==" + location.getLocType());
-            }
-
-        }
-    }
 
 
     private ResourceTypeBean getViewData() {
@@ -782,5 +737,11 @@ public class UpdateResoureActivity extends BaseActivity {
         UploadDataService.startUploadFire(mContext, "", imageList, new ArrayList<>(), resultMap,
                 RecordBean.TYPE_ZIYUAN, RecordBean.DO_ADD, json, address);
         finish();
+    }
+
+    public static void updateResourceActivity(Context context, String id){
+        Intent intent = new Intent(context,UpdateResoureActivity.class);
+        intent.putExtra("recNo",id);
+        context.startActivity(intent);
     }
 }
