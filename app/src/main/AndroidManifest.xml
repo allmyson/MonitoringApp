@@ -65,6 +65,7 @@
         <activity android:name="com.ys.monitor.activity.LocalFireDetailActivity" />
         <activity android:name="com.ys.monitor.activity.LocalXHDetailActivity" />
         <activity android:name="com.ys.monitor.activity.LocalResoureDetailActivity" />
+        <activity android:name="com.ys.monitor.activity.UpdateResoureActivity" />
         <activity android:name="com.ys.monitor.activity.PreviewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"/>

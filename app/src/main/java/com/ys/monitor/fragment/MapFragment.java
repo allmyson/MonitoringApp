@@ -2,6 +2,7 @@ package com.ys.monitor.fragment;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -22,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,8 +74,10 @@ import com.huamai.poc.PocEngineFactory;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
 import com.ys.monitor.activity.ResoureActivity;
+import com.ys.monitor.adapter.CommonAdapter;
 import com.ys.monitor.adapter.DataAdapter;
 import com.ys.monitor.adapter.LayerAdapter;
+import com.ys.monitor.adapter.ViewHolder;
 import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.FeatureBean;
 import com.ys.monitor.bean.FireBean;
@@ -141,6 +146,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     protected void init() {
+        initFirePointLayout();
         initTool();
         initBase();
         initPointDetailLayout();
@@ -1266,6 +1272,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 
     private void queryFeaturesFromTable(Geometry geometry) {
         L.e("queryFeaturesFromTable");
+        pointList.clear();
         pointOverlay.getGraphics().clear();
         ServiceFeatureTable table = new ServiceFeatureTable(
                 "http://222.178.189.231:9080/arcgis/rest/services/JysBaseData/FeatureServer/0");
@@ -1295,16 +1302,99 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                         for (Map.Entry<String, Object> m : attributes.entrySet()) {
                             L.e(m.getKey() + "--------" + m.getValue());
                         }
+                        pointList.add(attributes);
                         SimpleMarkerSymbol simpleMarkerSymbol =
-                                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 4);
+                                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,
+                                        Color.BLUE, 4);
                         graphics.add(new Graphic(feature.getGeometry(), simpleMarkerSymbol));
                     }
                     L.e("result.size()=" + i);
                     pointOverlay.getGraphics().addAll(graphics);
+                    if (i > 0) {
+                        fireLL.setVisibility(View.VISIBLE);
+                        setPointNum(i);
+                        pointAdapter.refresh(pointList);
+                    } else {
+                        fireLL.setVisibility(View.GONE);
+                    }
                 } catch (Exception e) {
                     L.e(e.getMessage());
                 }
             });
         });
+    }
+
+    private LinearLayout fireLL;
+    private LinearLayout showLL;
+    private TextView numTV;
+    private ListView pointLV;
+    private ImageView showIV;
+    private PointAdapter pointAdapter;
+    private List<Map<String, Object>> pointList;
+    private boolean isShowFirePoint = false;
+
+    private void initFirePointLayout() {
+        pointList = new ArrayList<>();
+        fireLL = getView(R.id.ll_fire);
+        showLL = getView(R.id.ll_show);
+        numTV = getView(R.id.tv_num);
+        showIV = getView(R.id.iv_show);
+        pointLV = getView(R.id.lv_point);
+        pointAdapter = new PointAdapter(mContext, pointList, R.layout.item_fire_point);
+        pointLV.setAdapter(pointAdapter);
+        showLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isShowFirePoint = !isShowFirePoint;
+                if (isShowFirePoint) {
+                    pointLV.setVisibility(View.VISIBLE);
+                    showIV.setImageResource(R.mipmap.fire_down);
+                } else {
+                    pointLV.setVisibility(View.GONE);
+                    showIV.setImageResource(R.mipmap.fire_up);
+                }
+            }
+        });
+    }
+
+    public class PointAdapter extends CommonAdapter<Map<String, Object>> {
+        private Map<String, Object> locationMap;
+        private double[] gps;
+
+        public PointAdapter(Context context, List<Map<String, Object>> mDatas, int itemLayoutId) {
+            super(context, mDatas, itemLayoutId);
+            locationMap = LocationSP.getLocationData(mContext);
+            if (locationMap != null) {
+                double lat = (double) locationMap.get("lat");
+                double lon = (double) locationMap.get("lon");
+                gps = GPSUtil.bd09_To_gps84(lat, lon);
+            }
+        }
+
+        @Override
+        public void convert(ViewHolder helper, Map<String, Object> item, int position) {
+            if (gps != null) {
+                double distance =
+                        GPSUtil.gps2km(StringUtil.StringToDouble(StringUtil.valueOf(item.get("纬度"))),
+                        StringUtil.StringToDouble(StringUtil.valueOf(item.get("经度"))), gps[0],
+                                gps[1]);
+                helper.setText(R.id.tv_distance, distance + "KM");
+            }
+            helper.setText(R.id.tv_name, StringUtil.valueOf(item.get("名称")));
+            String address =
+                    StringUtil.valueOf(item.get("区县名")) + StringUtil.valueOf(item.get("乡镇名")) + StringUtil.valueOf(item.get("村名"));
+            helper.setText(R.id.tv_address, "\t\t|\t\t" + address);
+            helper.getView(R.id.ll_navigation).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+    }
+
+    private void setPointNum(int num) {
+        String numText = String.format("附近共找到资源<font color=\"#000000\">%d</font>处", num);
+        numTV.setText(Html.fromHtml(numText));
     }
 }
