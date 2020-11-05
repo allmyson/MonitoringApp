@@ -11,7 +11,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="投注确认"
+        android:text="删除确认"
         android:textColor="#000000"
         android:textSize="16sp" />
 
@@ -27,7 +27,7 @@
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
             android:textColor="#000000"
             android:textSize="14sp" />
     </RelativeLayout>

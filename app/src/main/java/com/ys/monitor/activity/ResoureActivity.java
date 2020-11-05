@@ -552,10 +552,12 @@ public class ResoureActivity extends BaseActivity {
             TextView typeTV = (TextView) view.findViewById(R.id.tv_type);
             LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
             String value = valueET.getText().toString();
-            if (StringUtil.isBlank(value)) {
-                show(nameTV.getText().toString() + "不能为空！");
-                isCan = false;
-                break;
+            if ("经度".equals(nameTV.getText().toString()) || "纬度".equals(nameTV.getText().toString())) {
+                if (StringUtil.isBlank(value)) {
+                    show(nameTV.getText().toString() + "不能为空！");
+                    isCan = false;
+                    break;
+                }
             }
             if ("int".equals(typeTV.getText().toString())) {
                 if (!StringUtil.isInteger(value)) {

@@ -322,8 +322,8 @@ public class HttpUtil {
                 YS.RTSP + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&recNo=" + recNo;
         //本地测试
-        url = "http://192.168.31.188:8080/send/queryDeviceInfoByNo.mo"+ "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
-                userId + "&recNo="+ recNo;
+        url = "http://192.168.31.188:8080/send/queryDeviceInfoByNo.mo" + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                userId + "&recNo=" + recNo;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
@@ -444,17 +444,17 @@ public class HttpUtil {
             baseUrl = YS.ADD_RESOURCE;
         }
         String url =
-                baseUrl + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId +
-                        "&data=" + URLEncoder.encode(data);
+                baseUrl + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId;
         if (RecordBean.TYPE_ZIYUAN.equals(type)) {
             if (RecordBean.DO_ADD.equals(handleType)) {
                 url += "&operationType=0";
-            } else if (RecordBean.DO_UPDATE.equals(type)) {
+            } else if (RecordBean.DO_UPDATE.equals(handleType)) {
                 url += "&operationType=1";
-            } else if (RecordBean.DO_DELETE.equals(type)) {
+            } else if (RecordBean.DO_DELETE.equals(handleType)) {
                 url += "&operationType=2";
             }
         }
+        url += "&data=" + URLEncoder.encode(data);
         Response<String> response = BaseHttp.getInstance().postJsonSync(context, url, "");
         return response;
     }
@@ -462,7 +462,7 @@ public class HttpUtil {
 
     //获取资源详情
     public static void getResourceValue(Context context, String userId, String id,
-                                         HttpListener<String> httpListener) {
+                                        HttpListener<String> httpListener) {
         long timeStamp = System.currentTimeMillis();
         if (String.valueOf(timeStamp).length() == 13) {
             timeStamp /= 1000;
@@ -470,7 +470,7 @@ public class HttpUtil {
         String token = Md5Util.getMD5(YS.token + timeStamp);
         String url =
                 YS.SELECT_RESOURCE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
-                        userId + "&recNo=" +"5b198d61751640b6017521410a970003";
+                        userId + "&recNo=" + "620e65bc427c32702917fd8dfaeb0004";
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 }

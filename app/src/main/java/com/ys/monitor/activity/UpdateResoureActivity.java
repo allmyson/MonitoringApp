@@ -25,14 +25,15 @@ import com.ys.monitor.adapter.GridAdapter;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
 import com.ys.monitor.bean.BaseBean;
-import com.ys.monitor.bean.FileUploadBean;
 import com.ys.monitor.bean.KVBean;
 import com.ys.monitor.bean.RecordBean;
 import com.ys.monitor.bean.ResourceBean;
 import com.ys.monitor.bean.ResourceTypeBean;
 import com.ys.monitor.bean.ResourceZDBean;
+import com.ys.monitor.bean.UpdateResource;
 import com.ys.monitor.dialog.DialogUtil;
 import com.ys.monitor.dialog.ListDialogFragment;
+import com.ys.monitor.dialog.TipFragment;
 import com.ys.monitor.dialog.WaitDialog;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.service.UploadDataService;
@@ -56,19 +57,19 @@ public class UpdateResoureActivity extends BaseActivity {
     private String userId;
     private TextView typeTV;
     private List<KVBean> typeList;
-    private KVBean currentKVBean;
+    //    private KVBean currentKVBean;
     private LinearLayout baseLL, extLL, imgLL;
     private TextView commitTV;
     private List<ResourceBean.DataBean.RowsBean> rowsBeanList;
-    private ResourceBean.DataBean.RowsBean currentRowsBean;
     private String number;
     private String gis_jd;
     private String gis_wd;
     private String address;
+    private UpdateResource updateResource;
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_resource;
+        return R.layout.activity_resource_update;
     }
 
     @Override
@@ -78,7 +79,7 @@ public class UpdateResoureActivity extends BaseActivity {
         setBarColor("#ffffff");
         titleView.setText("资源采集");
         typeTV = getView(R.id.tv_type);
-        typeTV.setOnClickListener(this);
+//        typeTV.setOnClickListener(this);
         typeList = new ArrayList<>();
         rowsBeanList = new ArrayList<>();
         baseLL = getView(R.id.ll_base);
@@ -86,30 +87,51 @@ public class UpdateResoureActivity extends BaseActivity {
         imgLL = getView(R.id.ll_img);
         commitTV = getView(R.id.tv_commit);
         commitTV.setOnClickListener(this);
+        getView(R.id.rl_delete).setOnClickListener(this);
     }
 
     @Override
     public void getData() {
         userId = UserSP.getUserId(mContext);
-        //获取资源类型
-        HttpUtil.getResourceTypeList(mContext, userId, new HttpListener<String>() {
+//        //获取资源类型
+//        HttpUtil.getResourceTypeList(mContext, userId, new HttpListener<String>() {
+//            @Override
+//            public void onSucceed(int what, Response<String> response) {
+//                typeList.clear();
+//                rowsBeanList.clear();
+//                try {
+//                    ResourceBean resourceBean = new Gson().fromJson(response.get(),
+//                            ResourceBean.class);
+//                    if (resourceBean != null && YS.SUCCESE.equals(resourceBean.code) &&
+//                    resourceBean.data != null && resourceBean.data.rows != null && resourceBean
+//                    .data.rows.size() > 0) {
+//                        rowsBeanList.addAll(resourceBean.data.rows);
+//                        for (ResourceBean.DataBean.RowsBean rowsBean : resourceBean.data.rows) {
+//                            KVBean kvBean = new KVBean(rowsBean.recNo,
+//                                    rowsBean.resourcetypeName + "_" + rowsBean.name);
+//                            typeList.add(kvBean);
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(int what, Response<String> response) {
+//
+//            }
+//        });
+        HttpUtil.getResourceValue(mContext, userId, "", new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
-                typeList.clear();
-                rowsBeanList.clear();
-                try {
-                    ResourceBean resourceBean = new Gson().fromJson(response.get(),
-                            ResourceBean.class);
-                    if (resourceBean != null && YS.SUCCESE.equals(resourceBean.code) && resourceBean.data != null && resourceBean.data.rows != null && resourceBean.data.rows.size() > 0) {
-                        rowsBeanList.addAll(resourceBean.data.rows);
-                        for (ResourceBean.DataBean.RowsBean rowsBean : resourceBean.data.rows) {
-                            KVBean kvBean = new KVBean(rowsBean.recNo,
-                                    rowsBean.resourcetypeName + "_" + rowsBean.name);
-                            typeList.add(kvBean);
-                        }
+                updateResource = new Gson().fromJson(response.get(),
+                        UpdateResource.class);
+                if (updateResource != null && YS.SUCCESE.equals(updateResource.code) && updateResource.data != null) {
+                    if (updateResource.data.elementBasic != null) {
+                        typeTV.setText(StringUtil.valueOf(updateResource.data.elementBasic.resourceTypeName) + "_" + StringUtil.valueOf(updateResource.data.elementBasic.elementTypeName));
+                        getZiduan(updateResource.data.elementBasic.elementType);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
 
@@ -118,19 +140,7 @@ public class UpdateResoureActivity extends BaseActivity {
 
             }
         });
-        HttpUtil.getResourceValue(mContext, userId, "", new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-
-            }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-
-            }
-        });
     }
-
 
 
     @Override
@@ -143,9 +153,8 @@ public class UpdateResoureActivity extends BaseActivity {
                                 @Override
                                 public void clickResult(KVBean listBean) {
                                     removeAllView();
-                                    currentKVBean = listBean;
+//                                    currentKVBean = listBean;
                                     typeTV.setText(listBean.name);
-                                    currentRowsBean = getCurrentRowsBean();
                                     getZiduan(listBean.id);
                                 }
                             });
@@ -156,6 +165,14 @@ public class UpdateResoureActivity extends BaseActivity {
 //                    addResource();
                     commitByService();
                 }
+                break;
+            case R.id.rl_delete:
+                DialogUtil.showTip(mContext, "删除确认!", new TipFragment.ClickListener() {
+                    @Override
+                    public void sure() {
+                        deleteByService();
+                    }
+                });
                 break;
         }
     }
@@ -229,39 +246,23 @@ public class UpdateResoureActivity extends BaseActivity {
         if (name != null && name.contains("时间")) {
             valueET.setText(DateUtil.getLongDate3(System.currentTimeMillis()));
         }
-        if ("areaCode".equals(id)) {
-            valueET.setText("areaCode");
+        if ("name".equals(id)) {
+            valueET.setText(StringUtil.valueOf(updateResource.data.elementBasic.name));
         }
-        if ("agency".equals(id)) {
-            valueET.setText("agency");
-        }
-        if ("investigationAddr".equals(id)) {
-//            valueET.setText("investigationAddr");
-            if (StringUtil.isBlank(address)) {
-                valueET.setText("investigationAddr");
-            } else {
-                valueET.setText(address);
-            }
+        if ("description".equals(id)) {
+            valueET.setText(StringUtil.valueOf(updateResource.data.elementBasic.description));
         }
         if ("createUserNo".equals(id)) {
-            valueET.setText(userId);
+            valueET.setText(StringUtil.valueOf(updateResource.data.elementBasic.createUserNo));
         }
         if ("recNo".equals(id)) {
-            valueET.setText(StringUtil.getUUID());
+            valueET.setText(StringUtil.valueOf(updateResource.data.elementBasic.recNo));
         }
-        if ("smallClassNo".equals(id)) {
-            valueET.setText("smallClassNo");
+        if ("resourcetypeName".equals(id)) {
+            valueET.setText(StringUtil.valueOf(updateResource.data.elementBasic.resourceTypeName));
         }
-        if ("smallPlaceName".equals(id)) {
-            valueET.setText("smallPlaceName");
-        }
-        if (currentRowsBean != null) {
-            if ("resourcetype".equals(id)) {
-//                L.e("resourcetype=" + currentRowsBean.resourcetype);
-                valueET.setText(StringUtil.valueOf(currentRowsBean.resourcetype));
-            } else if ("resourcetypeName".equals(id)) {
-                valueET.setText(StringUtil.valueOf(currentRowsBean.resourcetypeName));
-            }
+        if ("createTime".equals(id)) {
+            valueET.setText(DateUtil.getLongDate3(updateResource.data.elementBasic.createTime));
         }
         if ("areaCode".equals(id) || "agency".equals(id) || "investigationAddr".equals(id) ||
                 "createUserNo".equals(id) || "recNo".equals(id) || "resourcetype".equals(id) ||
@@ -271,20 +272,6 @@ public class UpdateResoureActivity extends BaseActivity {
             view.setVisibility(View.VISIBLE);
         }
         baseLL.addView(view);
-    }
-
-    private ResourceBean.DataBean.RowsBean getCurrentRowsBean() {
-        if (currentKVBean == null || rowsBeanList.size() == 0) {
-            return null;
-        }
-        ResourceBean.DataBean.RowsBean rowsBean = null;
-        for (int i = 0; i < rowsBeanList.size(); i++) {
-            if (currentKVBean.id.equals(rowsBeanList.get(i).recNo)) {
-                rowsBean = rowsBeanList.get(i);
-                break;
-            }
-        }
-        return rowsBean;
     }
 
 
@@ -298,11 +285,16 @@ public class UpdateResoureActivity extends BaseActivity {
         idTV.setText(StringUtil.valueOf(bean.dataName));
         nameTV.setText(StringUtil.valueOf(bean.name));
         typeTV.setText(StringUtil.valueOf(bean.datatype));
-        if ("longitude".equals(bean.dataName)) {
-            valueET.setText(gis_jd);
-        }
-        if ("latitude".equals(bean.dataName)) {
-            valueET.setText(gis_wd);
+        List<UpdateResource.DataBean.ElementBasicExBean> list = updateResource.data.elementBasicEx;
+        if (list != null && list.size() > 0) {
+            for (UpdateResource.DataBean.ElementBasicExBean elementBasicExBean : list) {
+                if (elementBasicExBean.dataName != null && elementBasicExBean.dataName.equals(bean.dataName)) {
+                    valueET.setText(StringUtil.valueOf(elementBasicExBean.dataValue));
+                }
+                if ("investigationAddr".equals(elementBasicExBean.dataName)) {
+                    address = StringUtil.valueOf(elementBasicExBean.dataValue);
+                }
+            }
         }
         if ("longitude".equals(bean.dataName)) {
             mapIV.setVisibility(View.VISIBLE);
@@ -353,11 +345,6 @@ public class UpdateResoureActivity extends BaseActivity {
                 }
             });
         }
-//        if ("longitude".equals(bean.dataName) || "latitude".equals(bean.dataName)) {
-//            view.setVisibility(View.GONE);
-//        } else {
-//            view.setVisibility(View.VISIBLE);
-//        }
         extLL.addView(view);
     }
 
@@ -372,6 +359,15 @@ public class UpdateResoureActivity extends BaseActivity {
         MyGridView myGridView = (MyGridView) view.findViewById(R.id.gv_image);
         myGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         final List<String> list = new ArrayList<>();
+        String imgUrl = updateResource.data.elementBasic.imgUrl;
+        if (imgUrl != null && imgUrl.contains(";")) {
+            String[] a = imgUrl.split(";");
+            if (a != null && a.length > 0) {
+                for (String s : a) {
+                    list.add(YS.IP + s);
+                }
+            }
+        }
         GridAdapter mAdapter = new GridAdapter(mContext, list, R.layout.item_grid_image);
         myGridView.setAdapter(mAdapter);
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -476,7 +472,7 @@ public class UpdateResoureActivity extends BaseActivity {
             TextView nameTV = (TextView) view.findViewById(R.id.tv_name);
             LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
             String value = valueET.getText().toString();
-            if (StringUtil.isBlank(value) && !"描述".equals(nameTV.getText().toString())) {
+            if (StringUtil.isBlank(value) && !"描述".equals(nameTV.getText().toString()) && !"资源类型".equals(nameTV.getText().toString())) {
                 show(nameTV.getText().toString() + "不能为空！");
                 isCan = false;
                 break;
@@ -492,10 +488,12 @@ public class UpdateResoureActivity extends BaseActivity {
             TextView typeTV = (TextView) view.findViewById(R.id.tv_type);
             LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
             String value = valueET.getText().toString();
-            if (StringUtil.isBlank(value)) {
-                show(nameTV.getText().toString() + "不能为空！");
-                isCan = false;
-                break;
+            if ("经度".equals(nameTV.getText().toString()) || "纬度".equals(nameTV.getText().toString())) {
+                if (StringUtil.isBlank(value)) {
+                    show(nameTV.getText().toString() + "不能为空！");
+                    isCan = false;
+                    break;
+                }
             }
             if ("int".equals(typeTV.getText().toString())) {
                 if (!StringUtil.isInteger(value)) {
@@ -527,77 +525,6 @@ public class UpdateResoureActivity extends BaseActivity {
     private Map<String, String> resultMap;
     private WaitDialog waitDialog;
 
-    private void addResource() {
-        waitDialog.show();
-        resultMap.clear();
-        resultMap.put(" isDelete", "0");
-        resultMap.put("elementType", currentKVBean.id);
-//        double[] gps = GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(gis_wd),
-//                StringUtil.StringToDouble(gis_jd));
-//        resultMap.put("latitude", "" + gps[0]);
-//        resultMap.put("longitude", "" + gps[1]);
-        L.e("参数齐全,可以提交");
-        int baseCount = baseLL.getChildCount();
-        for (int i = 0; i < baseCount; i++) {
-            View view = baseLL.getChildAt(i);
-            TextView idTV = (TextView) view.findViewById(R.id.tv_id);
-            LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
-            String id = idTV.getText().toString();
-            String value = valueET.getText().toString();
-            if ("areaCode".equals(id) || "agency".equals(id) || "investigationAddr".equals(id) || "smallClassNo".equals(id) || "smallPlaceName".equals(id)) {
-                value = "";
-            }
-            resultMap.put(id, value);
-        }
-        int extCount = extLL.getChildCount();
-        for (int j = 0; j < extCount; j++) {
-            View view = extLL.getChildAt(j);
-            TextView idTV = (TextView) view.findViewById(R.id.tv_id);
-            TextView typeTV = (TextView) view.findViewById(R.id.tv_type);
-            LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
-            String value = valueET.getText().toString();
-            resultMap.put(idTV.getText().toString(), value);
-        }
-        int imgCount = imgLL.getChildCount();
-        final List<List<String>> imageList = new ArrayList<>();
-        final List<String> imageKey = new ArrayList<>();
-        for (int k = 0; k < imgCount; k++) {
-            View view = imgLL.getChildAt(k);
-            TextView idTV = (TextView) view.findViewById(R.id.tv_id);
-            MyGridView myGridView = (MyGridView) view.findViewById(R.id.gv_image);
-            GridAdapter gridAdapter = (GridAdapter) myGridView.getAdapter();
-            List<String> list = gridAdapter.getmDatas();
-            imageKey.add(idTV.getText().toString());
-            imageList.add(list);
-        }
-        //开始同步传文件
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    for (int k = 0; k < imageList.size(); k++) {
-                        Response<String> response = HttpUtil.uploadFile(mContext, userId,
-                                YS.FileType.FILE_ZY, imageList.get(k));
-                        FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
-                                FileUploadBean.class);
-                        if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) && fileUploadBean.data != null) {
-                            resultMap.put(imageKey.get(k), fileUploadBean.data.url);
-                        } else {
-                            L.e("图片上传失败,请稍后重试！");
-                            handler.sendEmptyMessage(UPLOAD_FAIL);
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    L.e("图片上传失败,请稍后重试！");
-                    handler.sendEmptyMessage(UPLOAD_FAIL);
-                    e.printStackTrace();
-                }
-                L.e("图片上传成功！");
-                handler.sendEmptyMessage(UPLOAD_SUCC);
-            }
-        }.start();
-    }
 
     public static final int UPLOAD_SUCC = 100;//成功
     public static final int UPLOAD_FAIL = 101;//失败
@@ -644,8 +571,6 @@ public class UpdateResoureActivity extends BaseActivity {
     }
 
 
-
-
     private ResourceTypeBean getViewData() {
         Map<String, String> baseMap = new HashMap<>();
         int baseCount = baseLL.getChildCount();
@@ -685,19 +610,16 @@ public class UpdateResoureActivity extends BaseActivity {
         resourceTypeBean.baseMap = baseMap;
         resourceTypeBean.extMap = extMap;
         resourceTypeBean.imgList = imageList;
-        resourceTypeBean.resourceType = currentKVBean.name;
+        resourceTypeBean.resourceType = typeTV.getText().toString();
         return resourceTypeBean;
     }
 
 
     private void commitByService() {
         resultMap.clear();
-        resultMap.put(" isDelete", "0");
-        resultMap.put("elementType", currentKVBean.id);
-//        double[] gps = GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(gis_wd),
-//                StringUtil.StringToDouble(gis_jd));
-//        resultMap.put("latitude", "" + gps[0]);
-//        resultMap.put("longitude", "" + gps[1]);
+        resultMap.put(" isDelete", "1");
+        resultMap.put(" recNo", updateResource.data.elementBasic.recNo);
+        resultMap.put("elementType", updateResource.data.elementBasic.elementType);
         L.e("参数齐全,可以提交");
         int baseCount = baseLL.getChildCount();
         for (int i = 0; i < baseCount; i++) {
@@ -735,13 +657,61 @@ public class UpdateResoureActivity extends BaseActivity {
         ResourceTypeBean resourceTypeBean = getViewData();
         String json = new Gson().toJson(resourceTypeBean);
         UploadDataService.startUploadFire(mContext, "", imageList, new ArrayList<>(), resultMap,
-                RecordBean.TYPE_ZIYUAN, RecordBean.DO_ADD, json, address);
+                RecordBean.TYPE_ZIYUAN, RecordBean.DO_UPDATE, json, address);
         finish();
     }
 
-    public static void updateResourceActivity(Context context, String id){
-        Intent intent = new Intent(context,UpdateResoureActivity.class);
-        intent.putExtra("recNo",id);
+
+
+    private void deleteByService() {
+        resultMap.clear();
+        resultMap.put(" isDelete", "2");
+        resultMap.put(" recNo", updateResource.data.elementBasic.recNo);
+        resultMap.put("elementType", updateResource.data.elementBasic.elementType);
+        L.e("参数齐全,可以提交");
+        int baseCount = baseLL.getChildCount();
+        for (int i = 0; i < baseCount; i++) {
+            View view = baseLL.getChildAt(i);
+            TextView idTV = (TextView) view.findViewById(R.id.tv_id);
+            LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
+            String id = idTV.getText().toString();
+            String value = valueET.getText().toString();
+            if ("areaCode".equals(id) || "agency".equals(id) || "investigationAddr".equals(id)) {
+                value = "";
+            }
+            resultMap.put(id, value);
+        }
+        int extCount = extLL.getChildCount();
+        for (int j = 0; j < extCount; j++) {
+            View view = extLL.getChildAt(j);
+            TextView idTV = (TextView) view.findViewById(R.id.tv_id);
+            TextView typeTV = (TextView) view.findViewById(R.id.tv_type);
+            LastInputEditText valueET = (LastInputEditText) view.findViewById(R.id.et_value);
+            String value = valueET.getText().toString();
+            resultMap.put(idTV.getText().toString(), value);
+        }
+        int imgCount = imgLL.getChildCount();
+        final ArrayList<String> imageList = new ArrayList<>();
+        final List<String> imageKey = new ArrayList<>();
+        for (int k = 0; k < imgCount; k++) {
+            View view = imgLL.getChildAt(k);
+            TextView idTV = (TextView) view.findViewById(R.id.tv_id);
+            MyGridView myGridView = (MyGridView) view.findViewById(R.id.gv_image);
+            GridAdapter gridAdapter = (GridAdapter) myGridView.getAdapter();
+            List<String> list = gridAdapter.getmDatas();
+            imageKey.add(idTV.getText().toString());
+            imageList.addAll(list);
+        }
+        ResourceTypeBean resourceTypeBean = getViewData();
+        String json = new Gson().toJson(resourceTypeBean);
+        UploadDataService.startUploadFire(mContext, "", imageList, new ArrayList<>(), resultMap,
+                RecordBean.TYPE_ZIYUAN, RecordBean.DO_DELETE, json, address);
+        finish();
+    }
+
+    public static void updateResourceActivity(Context context, String id) {
+        Intent intent = new Intent(context, UpdateResoureActivity.class);
+        intent.putExtra("recNo", id);
         context.startActivity(intent);
     }
 }

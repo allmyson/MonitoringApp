@@ -121,7 +121,7 @@ public class YS {
     //上传头像
     public static final String UPLOAD_HEAD = IP + "/receive/updateIcon.mo";
     //查询资源详情
-    public static final String SELECT_RESOURCE = IP + "/send/querySourceByNo";
+    public static final String SELECT_RESOURCE = IP + "/send/querySourceByNo.mo";
 
 
     //天气
