@@ -40,14 +40,14 @@ public class MainBean {
         list.add(mainBean1);
 
 
-//        MainBean mainBean2 = new MainBean();
-//        mainBean2.title = "地图";
-//        mainBean2.selectIconId = R.drawable.ic_title_map_selected;
-//        mainBean2.unSelectIconId = R.drawable.ic_title_map_unselected;
-//        mainBean2.fragment = MapFragment.newInstance();
-//        mainBean2.selectTextColor = context.getResources().getColor(R.color.main_color);
-//        mainBean2.unSelectTextColor = context.getResources().getColor(R.color.gray_color);
-//        list.add(mainBean2);
+        MainBean mainBean2 = new MainBean();
+        mainBean2.title = "地图";
+        mainBean2.selectIconId = R.drawable.ic_title_map_selected;
+        mainBean2.unSelectIconId = R.drawable.ic_title_map_unselected;
+        mainBean2.fragment = MapFragment.newInstance();
+        mainBean2.selectTextColor = context.getResources().getColor(R.color.main_color);
+        mainBean2.unSelectTextColor = context.getResources().getColor(R.color.gray_color);
+        list.add(mainBean2);
 
 
         MainBean mainBean3 = new MainBean();

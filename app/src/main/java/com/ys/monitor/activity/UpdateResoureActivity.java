@@ -66,7 +66,7 @@ public class UpdateResoureActivity extends BaseActivity {
     private String gis_wd;
     private String address;
     private UpdateResource updateResource;
-
+    private String recNo;
     @Override
     public int getLayoutId() {
         return R.layout.activity_resource_update;
@@ -88,41 +88,13 @@ public class UpdateResoureActivity extends BaseActivity {
         commitTV = getView(R.id.tv_commit);
         commitTV.setOnClickListener(this);
         getView(R.id.rl_delete).setOnClickListener(this);
+        recNo = getIntent().getStringExtra("recNo");
     }
 
     @Override
     public void getData() {
         userId = UserSP.getUserId(mContext);
-//        //获取资源类型
-//        HttpUtil.getResourceTypeList(mContext, userId, new HttpListener<String>() {
-//            @Override
-//            public void onSucceed(int what, Response<String> response) {
-//                typeList.clear();
-//                rowsBeanList.clear();
-//                try {
-//                    ResourceBean resourceBean = new Gson().fromJson(response.get(),
-//                            ResourceBean.class);
-//                    if (resourceBean != null && YS.SUCCESE.equals(resourceBean.code) &&
-//                    resourceBean.data != null && resourceBean.data.rows != null && resourceBean
-//                    .data.rows.size() > 0) {
-//                        rowsBeanList.addAll(resourceBean.data.rows);
-//                        for (ResourceBean.DataBean.RowsBean rowsBean : resourceBean.data.rows) {
-//                            KVBean kvBean = new KVBean(rowsBean.recNo,
-//                                    rowsBean.resourcetypeName + "_" + rowsBean.name);
-//                            typeList.add(kvBean);
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailed(int what, Response<String> response) {
-//
-//            }
-//        });
-        HttpUtil.getResourceValue(mContext, userId, "", new HttpListener<String>() {
+        HttpUtil.getResourceValue(mContext, userId, recNo, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 updateResource = new Gson().fromJson(response.get(),
@@ -617,7 +589,7 @@ public class UpdateResoureActivity extends BaseActivity {
 
     private void commitByService() {
         resultMap.clear();
-        resultMap.put(" isDelete", "1");
+        resultMap.put(" isDelete", "0");
         resultMap.put(" recNo", updateResource.data.elementBasic.recNo);
         resultMap.put("elementType", updateResource.data.elementBasic.elementType);
         L.e("参数齐全,可以提交");
@@ -665,7 +637,7 @@ public class UpdateResoureActivity extends BaseActivity {
 
     private void deleteByService() {
         resultMap.clear();
-        resultMap.put(" isDelete", "2");
+        resultMap.put(" isDelete", "0");
         resultMap.put(" recNo", updateResource.data.elementBasic.recNo);
         resultMap.put("elementType", updateResource.data.elementBasic.elementType);
         L.e("参数齐全,可以提交");
