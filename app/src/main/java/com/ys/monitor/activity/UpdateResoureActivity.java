@@ -67,6 +67,7 @@ public class UpdateResoureActivity extends BaseActivity {
     private String address;
     private UpdateResource updateResource;
     private String recNo;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_resource_update;
@@ -74,6 +75,8 @@ public class UpdateResoureActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        netImgList = new ArrayList<>();
+        localImgList = new ArrayList<>();
         waitDialog = new WaitDialog(mContext);
         resultMap = new HashMap<>();
         setBarColor("#ffffff");
@@ -321,6 +324,8 @@ public class UpdateResoureActivity extends BaseActivity {
     }
 
     private String currentImgViewId = "";
+    private List<String> netImgList;
+    private List<String> localImgList;
 
     private void addImgView(ResourceZDBean.DataBean.BaseElementExtBean bean) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_images, null, false);
@@ -337,6 +342,7 @@ public class UpdateResoureActivity extends BaseActivity {
             if (a != null && a.length > 0) {
                 for (String s : a) {
                     list.add(YS.IP + s);
+                    netImgList.add(s);
                 }
             }
         }
@@ -616,6 +622,7 @@ public class UpdateResoureActivity extends BaseActivity {
         }
         int imgCount = imgLL.getChildCount();
         final ArrayList<String> imageList = new ArrayList<>();
+        final ArrayList<String> netImg = new ArrayList<>();
         final List<String> imageKey = new ArrayList<>();
         for (int k = 0; k < imgCount; k++) {
             View view = imgLL.getChildAt(k);
@@ -626,13 +633,32 @@ public class UpdateResoureActivity extends BaseActivity {
             imageKey.add(idTV.getText().toString());
             imageList.addAll(list);
         }
+        if (imageList.size() > 0) {
+            for (String string : imageList) {
+                if (netImgList.size() > 0) {
+                    for (String net : netImgList) {
+                        if ((YS.IP + net).equals(string) && !netImg.contains(net)) {
+                            netImg.add(net);
+                        }
+                    }
+                }
+            }
+            if (netImg.size() > 0) {
+                for (String net : netImg) {
+                    if (imageList.contains(YS.IP + net)) {
+                        imageList.remove(YS.IP + net);
+                    }
+                }
+            }
+        }
+        L.e("网络图片集合：" + netImg.size());
+        L.e("本地图片集合：" + imageList.size());
         ResourceTypeBean resourceTypeBean = getViewData();
         String json = new Gson().toJson(resourceTypeBean);
         UploadDataService.startUploadFire(mContext, "", imageList, new ArrayList<>(), resultMap,
-                RecordBean.TYPE_ZIYUAN, RecordBean.DO_UPDATE, json, address);
+                RecordBean.TYPE_ZIYUAN, RecordBean.DO_UPDATE, json, address, netImg);
         finish();
     }
-
 
 
     private void deleteByService() {
@@ -665,6 +691,7 @@ public class UpdateResoureActivity extends BaseActivity {
         int imgCount = imgLL.getChildCount();
         final ArrayList<String> imageList = new ArrayList<>();
         final List<String> imageKey = new ArrayList<>();
+        final ArrayList<String> netImg = new ArrayList<>();
         for (int k = 0; k < imgCount; k++) {
             View view = imgLL.getChildAt(k);
             TextView idTV = (TextView) view.findViewById(R.id.tv_id);
@@ -674,10 +701,30 @@ public class UpdateResoureActivity extends BaseActivity {
             imageKey.add(idTV.getText().toString());
             imageList.addAll(list);
         }
+        if (imageList.size() > 0) {
+            for (String string : imageList) {
+                if (netImgList.size() > 0) {
+                    for (String net : netImgList) {
+                        if ((YS.IP + net).equals(string) && !netImg.contains(net)) {
+                            netImg.add(net);
+                        }
+                    }
+                }
+            }
+            if (netImg.size() > 0) {
+                for (String net : netImg) {
+                    if (imageList.contains(YS.IP + net)) {
+                        imageList.remove(YS.IP + net);
+                    }
+                }
+            }
+        }
+        L.e("网络图片集合：" + netImg.size());
+        L.e("本地图片集合：" + imageList.size());
         ResourceTypeBean resourceTypeBean = getViewData();
         String json = new Gson().toJson(resourceTypeBean);
         UploadDataService.startUploadFire(mContext, "", imageList, new ArrayList<>(), resultMap,
-                RecordBean.TYPE_ZIYUAN, RecordBean.DO_DELETE, json, address);
+                RecordBean.TYPE_ZIYUAN, RecordBean.DO_DELETE, json, address, netImg);
         finish();
     }
 

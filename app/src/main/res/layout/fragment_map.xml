@@ -55,9 +55,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:imeOptions="actionSearch"
                 android:gravity="center"
                 android:hint="搜索小班/防火资源/古树名木"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:textSize="16sp" />

@@ -67,9 +67,10 @@
         <activity android:name="com.ys.monitor.activity.LocalResoureDetailActivity" />
         <activity android:name="com.ys.monitor.activity.UpdateResoureActivity" />
         <activity android:name="com.ys.monitor.activity.NetResoureDetailActivity" />
-        <activity android:name="com.ys.monitor.activity.PreviewActivity"
+        <activity
+            android:name="com.ys.monitor.activity.PreviewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
         <activity
             android:name="com.ys.monitor.activity.BaiduMapSelectAddressActivity"
             android:screenOrientation="portrait" />
@@ -103,7 +104,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name="com.ys.monitor.activity.MainActivity" />
+        <activity
+            android:name="com.ys.monitor.activity.MainActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name="com.ys.monitor.activity.Main2Activity" />
         <activity android:name="com.ys.monitor.activity.WelcomeActivity">
             <intent-filter>
@@ -126,8 +129,10 @@
             android:name=".activity.AvActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
-        <service android:name=".service.UploadDataService"
-            android:exported="false"/>
+
+        <service
+            android:name=".service.UploadDataService"
+            android:exported="false" />
     </application>
 
 </manifest>

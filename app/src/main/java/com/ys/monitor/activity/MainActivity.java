@@ -73,6 +73,10 @@ public class MainActivity extends BaseActivity {
                 } else {
                     setTransparent();
                 }
+//                if(tab.getPosition()==1){
+//                    L.e("TAB=1,执行检查火情范围搜索");
+//                    ((MapFragment) mainFragmentAdapter.getItem(1)).getFire();
+//                }
             }
 
             @Override

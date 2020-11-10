@@ -79,6 +79,26 @@ public class UploadDataService extends IntentService {
         context.startService(intent);
     }
 
+
+    public static void startUploadFire(Context context, String uuid, ArrayList<String> imgs,
+                                       ArrayList<String> videos, Map<String, String> map,
+                                       String typeName, String handleType, String view,
+                                       String address, ArrayList<String> netImgs) {
+        Intent intent = new Intent(context, UploadDataService.class);
+        intent.setAction(ACTION_UPLOAD_FIRE);
+        intent.putExtra("address", address);
+        intent.putExtra("uuid", uuid);
+        intent.putExtra("view", view);
+        intent.putExtra("type", typeName);
+        intent.putExtra("handleType", handleType);
+        intent.putStringArrayListExtra("imgs", imgs);
+        intent.putStringArrayListExtra("netImgs", netImgs);
+        intent.putStringArrayListExtra("videos", videos);
+        intent.putExtra("map", (Serializable) map);
+        context.startService(intent);
+    }
+
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
@@ -94,10 +114,11 @@ public class UploadDataService extends IntentService {
                 String handleType = intent.getStringExtra("handleType");
                 String typeName = intent.getStringExtra("type");
                 ArrayList<String> imgs = intent.getStringArrayListExtra("imgs");
+                ArrayList<String> netImgs = intent.getStringArrayListExtra("netImgs");
                 ArrayList<String> videos = intent.getStringArrayListExtra("videos");
                 Map<String, String> map = (Map<String, String>) intent.getSerializableExtra("map");
                 handleUploadFire(uuid, imgs, videos, map, typeName, handleType, resourceTypeBean,
-                        address);
+                        address,netImgs);
             }
         }
     }
@@ -112,6 +133,15 @@ public class UploadDataService extends IntentService {
                                   ArrayList<String> videos, Map<String, String> map,
                                   String typeName, String handleType,
                                   ResourceTypeBean resourceTypeBean, String address) {
+        handleUploadFire(uuid, imgs, videos, map, typeName, handleType, resourceTypeBean, address
+                , new ArrayList<>());
+    }
+
+    private void handleUploadFire(String uuid, ArrayList<String> imgs,
+                                  ArrayList<String> videos, Map<String, String> map,
+                                  String typeName, String handleType,
+                                  ResourceTypeBean resourceTypeBean, String address,
+                                  ArrayList<String> netImgs) {
         RecordBean recordBean = new RecordBean();
         L.e("typeName=" + typeName);
         if (StringUtil.isBlank(uuid)) {
@@ -157,15 +187,20 @@ public class UploadDataService extends IntentService {
 
         try {
             Map<String, String> dataMap = map;
-            String imageUrls = null;
-            String videoUrls = null;
+            String imageUrls = "";
+            String videoUrls = "";
+            if (netImgs != null && netImgs.size() > 0) {
+                for (String net : netImgs) {
+                    imageUrls += net + ";";
+                }
+            }
             if (imgs.size() > 0) {
                 Response<String> response = HttpUtil.uploadFile(getBaseContext(), userId,
                         YS.FileType.FILE_FIRE, imgs);
                 FileUploadBean fileUploadBean = new Gson().fromJson(response.get(),
                         FileUploadBean.class);
                 if (fileUploadBean != null && YS.SUCCESE.equals(fileUploadBean.code) && fileUploadBean.data != null) {
-                    imageUrls = fileUploadBean.data.url;
+                    imageUrls += fileUploadBean.data.url;
                     L.e("图片上传成功！imageUrls=" + imageUrls);
                 } else {
                     L.e("图片上传失败！");

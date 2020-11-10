@@ -127,12 +127,13 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         startActivity(new Intent(mContext, TaskListActivity.class));
                         break;
                     case 3:
-                        if (fireList.size() == 0) {
-                            show("暂无火情,无需上报扑救信息");
-                            return;
-                        }
-                        String json = new Gson().toJson(fireList);
-                        AddHelpActivity.intentToHelp(mContext, json);
+                        getFSHQFire();
+//                        if (fireList.size() == 0) {
+//                            show("暂无火情,无需上报扑救信息");
+//                            return;
+//                        }
+//                        String json = new Gson().toJson(fireList);
+//                        AddHelpActivity.intentToHelp(mContext, json);
 //                        User user = PocEngineFactory.get().getUser("1111031");
 //                        MessageDialogue md = PocEngineFactory.get().createMessageDialogueIfNeed
 //                        (user);
@@ -169,7 +170,6 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
         HttpUtil.getFireListWithNoDialog(mContext, userId, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
-                fireList.clear();
                 try {
                     FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
                     List<FireBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
@@ -177,9 +177,6 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         for (FireBean.DataBean.RowsBean rowsBean1 : fireBean.data.rows) {
                             if (YS.FireStatus.Status_DCL.equals(rowsBean1.status) || YS.FireStatus.Status_HSZ.equals(rowsBean1.status)) {
                                 rowsBeanList.add(rowsBean1);
-                            }
-                            if (YS.FireStatus.Status_FSHZ.equals(rowsBean1.status)) {
-                                fireList.add(rowsBean1);
                             }
                         }
                     }
@@ -194,9 +191,9 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                             list.set(0, msg);
                             L.e(msg.toString());
                             adapter.refresh(list);
-                            MsgSP.saveMsg(mContext,topList);
+                            MsgSP.saveMsg(mContext, topList);
                         }
-                    }else{
+                    } else {
                         Msg msg = new Msg(R.mipmap.notice_fire_check,
                                 rowsBeanList.size()
                                 , "火情核查", "", 0);
@@ -204,7 +201,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         list.set(0, msg);
                         L.e(msg.toString());
                         adapter.refresh(list);
-                        MsgSP.saveMsg(mContext,topList);
+                        MsgSP.saveMsg(mContext, topList);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -238,9 +235,9 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                             list.set(1, msg);
                             L.e(msg.toString());
                             adapter.refresh(list);
-                            MsgSP.saveMsg(mContext,topList);
+                            MsgSP.saveMsg(mContext, topList);
                         }
-                    }else{
+                    } else {
                         Msg msg = new Msg(R.mipmap.notice_warning,
                                 rowsBeanList.size(),
                                 "预警通知", "", 0);
@@ -248,7 +245,7 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         list.set(1, msg);
                         L.e(msg.toString());
                         adapter.refresh(list);
-                        MsgSP.saveMsg(mContext,topList);
+                        MsgSP.saveMsg(mContext, topList);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -285,15 +282,15 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
                         list.set(2, msg);
                         L.e(msg.toString());
                         adapter.refresh(list);
-                        MsgSP.saveMsg(mContext,topList);
-                    }else {
+                        MsgSP.saveMsg(mContext, topList);
+                    } else {
                         Msg msg = new Msg(R.mipmap.notice_task, rowsBeanList.size(), "任务通知",
                                 "", 0);
                         topList.set(2, msg);
                         list.set(2, msg);
                         L.e(msg.toString());
                         adapter.refresh(list);
-                        MsgSP.saveMsg(mContext,topList);
+                        MsgSP.saveMsg(mContext, topList);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -409,5 +406,41 @@ public class ThreeFragment extends BaseFragment implements SwipeRefreshLayout.On
         list.addAll(topList);
         list.addAll(chatList);
         adapter.refresh(list);
+    }
+
+
+    private void getFSHQFire() {
+        HttpUtil.getFireList2WithNoDialog(mContext, userId, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                fireList.clear();
+                try {
+                    FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
+                    if (fireBean != null && fireBean.data != null && fireBean.data.rows != null && fireBean.data.rows.size() > 0) {
+                        List<FireBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
+                        for (FireBean.DataBean.RowsBean rowsBean1 : fireBean.data.rows) {
+                            if (YS.FireStatus.Status_FSHZ.equals(rowsBean1.status)) {
+                                fireList.add(rowsBean1);
+                            }
+                        }
+                        if (fireList.size() > 0) {
+                            String json = new Gson().toJson(fireList);
+                            AddHelpActivity.intentToHelp(mContext, json);
+                        } else {
+                            show("暂无火情");
+                        }
+                    } else {
+                        show("暂无火情");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    show("暂无火情");
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        });
     }
 }

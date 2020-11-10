@@ -13,9 +13,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
+import com.ys.monitor.activity.AddFireActivity;
 import com.ys.monitor.activity.AddXHActivity;
 import com.ys.monitor.activity.ContactActivity;
-import com.ys.monitor.activity.NetResoureDetailActivity;
 import com.ys.monitor.activity.RecordListActivity;
 import com.ys.monitor.activity.ResoureActivity;
 import com.ys.monitor.activity.VideoListActivity;
@@ -59,9 +59,9 @@ public class OneFragment extends BaseFragment implements View.OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_hqsb:
-//                startActivity(new Intent(mContext, AddFireActivity.class));
+                startActivity(new Intent(mContext, AddFireActivity.class));
 //                UpdateResoureActivity.updateResourceActivity(mContext,"");
-                NetResoureDetailActivity.lookNetResourceActivity(mContext,"");
+//                NetResoureDetailActivity.lookNetResourceActivity(mContext,"");
                 break;
             case R.id.ll_rcxh:
                 startActivity(new Intent(mContext, AddXHActivity.class));

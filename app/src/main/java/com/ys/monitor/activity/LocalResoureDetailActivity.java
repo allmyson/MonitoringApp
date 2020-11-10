@@ -133,10 +133,10 @@ public class LocalResoureDetailActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_commit:
-                if (isCanAdd()) {
+//                if (isCanAdd()) {
 //                    addResource();
                     commitByService();
-                }
+//                }
                 break;
         }
     }

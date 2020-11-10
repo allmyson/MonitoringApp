@@ -14,7 +14,9 @@ import com.ys.monitor.base.App;
 import com.ys.monitor.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -31,6 +33,22 @@ public class FeatureBean {
     public String layerName;
     public String url;
     public FeatureLayer featureLayer;
+    private static Map<String, Integer> drawableMap = new HashMap<>();
+
+    static {
+        drawableMap.put("主要保护对象", R.mipmap.point_zybhdx);
+        drawableMap.put("保护站", R.mipmap.point_bhz);
+        drawableMap.put("古树名木", R.mipmap.maker_gsmm);
+        drawableMap.put("备用水池", R.mipmap.point_bysc);
+        drawableMap.put("居民安置点", R.mipmap.point_jmazd);
+        drawableMap.put("应急队伍", R.mipmap.point_yjdw);
+        drawableMap.put("景点", R.mipmap.point_jd);
+        drawableMap.put("消防水池", R.mipmap.point_xfsc);
+        drawableMap.put("珍稀植物", R.mipmap.point_zxzw);
+        drawableMap.put("瞭望塔", R.mipmap.point_lwt);
+        drawableMap.put("重点保护野生动物", R.mipmap.point_zdbhysdw);
+        drawableMap.put("防火检查站点", R.mipmap.point_fwjczd);
+    }
 
     public FeatureBean() {
     }
@@ -76,12 +94,14 @@ public class FeatureBean {
         FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
         return featureLayer;
     }
+
     public static FeatureLayer getPointFeatureLayer(String url) {
         ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(url);
         FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
         featureLayer.setRenderer(getUniqueValueRenderer());
         return featureLayer;
     }
+
     public static UniqueValueRenderer getUniqueValueRenderer() {
         Context context = App.getInstance().getApplicationContext();
         PictureMarkerSymbol pictureMarkerSymbol1 = null;
@@ -194,5 +214,27 @@ public class FeatureBean {
         uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue(StringUtil.valueOf(value13.get(0)),
                 StringUtil.valueOf(value13.get(0)), pictureMarkerSymbol13, value13));
         return uniqueValueRenderer;
+    }
+
+
+    public static PictureMarkerSymbol getPictureMarkerSymbol(Context context, String type) {
+        int drawId = getDrawableId(type);
+        PictureMarkerSymbol pictureMarkerSymbol = null;
+        try {
+            pictureMarkerSymbol =
+                    PictureMarkerSymbol.createAsync((BitmapDrawable) context.getResources().getDrawable(drawId)).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return pictureMarkerSymbol;
+    }
+
+    public static int getDrawableId(String type) {
+        if (drawableMap.containsKey(type)) {
+            return drawableMap.get(type);
+        }
+        return R.mipmap.point_default;
     }
 }

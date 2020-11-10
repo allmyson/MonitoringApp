@@ -69,13 +69,20 @@ public class HttpUtil {
         String url =
                 YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&page=1&limit=100";
-//        String url =
-//                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
-//                userId + "&page=1&limit=100";
+        BaseHttp.getInstance().postSimpleJsonWithNoDialog(context, url, "", httpListener);
+    }
 
-//        url="http://219.153.13.225:8085/send/queryMonitorWarnInfoPage
-//        .mo?timeStamp=1597817109&token=d186b23cdbb8cb0353e5e1e0e8667d47&userID
-//        =402880905e31cb26015e31cb5d290000&page=1&limit=15&source=40289fa573e69082";
+    //获取发生火情列表
+    public static void getFireList2WithNoDialog(Context context, String userId,
+                                                HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.FIRE_LIST + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                        userId + "&type=1&page=1&limit=100";
         BaseHttp.getInstance().postSimpleJsonWithNoDialog(context, url, "", httpListener);
     }
 
@@ -470,7 +477,21 @@ public class HttpUtil {
         String token = Md5Util.getMD5(YS.token + timeStamp);
         String url =
                 YS.SELECT_RESOURCE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
-                        userId + "&recNo=" + "620e65bc427c32702917fd8dfaeb0004";
+                        userId + "&recNo=" + id;
+        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+    }
+
+    //地图搜索点位
+    public static void searchMap(Context context, String userId, String content,
+                                 HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.SELECT_MAP + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                        userId + "&name=" + content;
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 }

@@ -80,8 +80,8 @@ public class YS {
     public static final String FAIL = "FAIL";
 
 
-    public static final String IP = "http://219.153.13.225:8085";
-//    public static final String IP = "http://222.178.189.231:8081";
+//    public static final String IP = "http://219.153.13.225:8085";
+    public static final String IP = "http://222.178.189.231:8081";
     //登录
     public static final String LOGIN = IP + "/receive/phoneLogin.mo";
     //火情列表
@@ -122,6 +122,8 @@ public class YS {
     public static final String UPLOAD_HEAD = IP + "/receive/updateIcon.mo";
     //查询资源详情
     public static final String SELECT_RESOURCE = IP + "/send/querySourceByNo.mo";
+    //地图搜索资源
+    public static final String SELECT_MAP = IP + "/send/qureyResource.mo";
 
 
     //天气

@@ -1,10 +1,8 @@
 package com.ys.monitor.fragment;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,10 +15,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,12 +70,14 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.huamai.poc.IPocEngineEventHandler;
 import com.huamai.poc.PocEngine;
 import com.huamai.poc.PocEngineFactory;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.R;
-import com.ys.monitor.activity.ResoureActivity;
+import com.ys.monitor.activity.NetResoureDetailActivity;
+import com.ys.monitor.activity.UpdateResoureActivity;
 import com.ys.monitor.adapter.CommonAdapter;
 import com.ys.monitor.adapter.DataAdapter;
 import com.ys.monitor.adapter.LayerAdapter;
@@ -87,10 +91,10 @@ import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.CustomBaseDialog;
-import com.ys.monitor.ui.ParticleView;
 import com.ys.monitor.util.AnimationUtil;
 import com.ys.monitor.util.GPSUtil;
 import com.ys.monitor.util.HttpUtil;
+import com.ys.monitor.util.KeyBoardUtils;
 import com.ys.monitor.util.L;
 import com.ys.monitor.util.NavigationUtil;
 import com.ys.monitor.util.StringUtil;
@@ -143,6 +147,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     private boolean isShowFire;
 
     private ImageView locationIV;
+    private EditText searchET;
+
 
     @Override
     protected void init() {
@@ -221,7 +227,17 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                 goThere();
                 break;
             case R.id.ll_update_data:
-                startActivity(new Intent(mContext, ResoureActivity.class));
+//                startActivity(new Intent(mContext, ResoureActivity.class));
+                if (currentMap != null) {
+                    String id = (String) currentMap.get("资源编号");
+                    UpdateResoureActivity.updateResourceActivity(mContext, id);
+                }
+                break;
+            case R.id.ll_data:
+                if (currentMap != null) {
+                    String id = (String) currentMap.get("资源编号");
+                    NetResoureDetailActivity.lookNetResourceActivity(mContext, id);
+                }
                 break;
             case R.id.iv_location:
                 markLocation();
@@ -251,6 +267,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void initBase() {
+        searchET = getView(R.id.et_search);
+        watchSearch();
         mCoder = GeoCoder.newInstance();
         mCoder.setOnGetGeoCodeResultListener(this);
         fireList = new ArrayList<>();
@@ -534,11 +552,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 //                L.e("aaa", "layerName=" + layerName + "--continue");
 //                continue;
 //            }
-            if (!"资源点数据".equals(layerName)) {
-                L.e("aaa", "layerName=" + layerName + "--continue");
-                continue;
+            L.e("layerName=" + layerName);
+            if ("缙云山卫星地图".equals(layerName)) {
+
             }
-            L.e("aaa", "layerName=" + layerName);
+//            if (!"资源点数据".equals(layerName)) {
+//                L.e("aaa", "layerName=" + layerName + "--continue");
+//                continue;
+//            }
             if (count == 0) {
                 continue;
             }
@@ -636,6 +657,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     private String currentAddress;
 
     private void showView(String layerName, Map<String, Object> map) {
+        isShowFirePoint = false;
+        pointLV.setVisibility(View.GONE);
+        showIV.setImageResource(R.mipmap.fire_up);
         dataList.clear();
         dataLL.setVisibility(View.VISIBLE);
         dataLL.setAnimation(AnimationUtil.moveToViewLocation());
@@ -644,6 +668,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         currentMap = map;
         currentPointLat = StringUtil.valueOf(map.get("纬度"));
         currentPointLon = StringUtil.valueOf(map.get("经度"));
+        mMapView.setViewpointCenterAsync(new Point(StringUtil.StringToDefaultDouble(currentPointLon),StringUtil.StringToDefaultDouble(currentPointLat)));
         Map<String, Object> locationMap = LocationSP.getLocationData(mContext);
         if (locationMap != null) {
             double lat = (double) locationMap.get("lat");
@@ -691,6 +716,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         dhLL.setOnClickListener(this);
         updateDataLL = getView(R.id.ll_update_data);
         updateDataLL.setOnClickListener(this);
+        dataLL.setOnClickListener(this);
     }
 
     private LocationDisplay locationDisplay;
@@ -745,6 +771,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 
     private GraphicsOverlay gjOverlay;//轨迹
     private GraphicsOverlay fireOverlay;//火情
+    private GraphicsOverlay searchOverlay;//搜索
     private PictureMarkerSymbol fireSymbol;
 
     private void createGraphicsOverlay() {
@@ -754,6 +781,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         mMapView.getGraphicsOverlays().add(fireOverlay);
         pointOverlay = new GraphicsOverlay();
         mMapView.getGraphicsOverlays().add(pointOverlay);
+        searchOverlay = new GraphicsOverlay();
+        mMapView.getGraphicsOverlays().add(searchOverlay);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_fire);
         BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
         fireSymbol = new PictureMarkerSymbol(bitmapDrawable);
@@ -1001,15 +1030,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 
     private List<FireBean.DataBean.RowsBean> fireList;
 
-    private void getFire() {
-        HttpUtil.getFireListWithNoDialog(mContext, userId, new HttpListener<String>() {
+    public void getFire() {
+        HttpUtil.getFireList2WithNoDialog(mContext, userId, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 fireList.clear();
                 try {
                     FireBean fireBean = new Gson().fromJson(response.get(), FireBean.class);
                     if (fireBean != null && fireBean.data != null && fireBean.data.rows != null && fireBean.data.rows.size() > 0) {
-                        List<FireBean.DataBean.RowsBean> rowsBeanList = new ArrayList<>();
                         for (FireBean.DataBean.RowsBean rowsBean1 : fireBean.data.rows) {
                             if (YS.FireStatus.Status_FSHZ.equals(rowsBean1.status)) {
                                 fireList.add(rowsBean1);
@@ -1056,15 +1084,15 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         double scale = mMapView.getMapScale() / 100;
         L.e("比例尺=" + scale + "米");
         double radius = 0.01;
-        Point point1 = new Point(106.37487306404074, 29.826253132276292);
-        Point point2 = new Point(106.35709505988916, 29.819586659396862);
+//        Point point1 = new Point(106.37487306404074, 29.826253132276292);
+//        Point point2 = new Point(106.35709505988916, 29.819586659396862);
 //        double x = (point1.getX() - point2.getX());
 //        double y = (point1.getY() - point2.getY());
 //        radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         L.e("radius=" + radius);
-        mMapView.setViewpointCenterAsync(point1);
+        mMapView.setViewpointCenterAsync(point);
         PointCollection polylinePoints = new PointCollection(SpatialReferences.getWgs84());
-        Point[] points = getPoints(point1, radius);
+        Point[] points = getPoints(point, radius);
         for (Point p : points) {
             polylinePoints.add(p);
         }
@@ -1072,7 +1100,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 //        SimpleMarkerSymbol simpleMarkerSymbol =
 //                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
 //        Graphic pointGraphic = new Graphic(point1, simpleMarkerSymbol);
-        Graphic pointGraphic = new Graphic(point1, fireSymbol);
+        Graphic pointGraphic = new Graphic(point, fireSymbol);
         fireOverlay.getGraphics().add(pointGraphic);
 
         SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,
@@ -1142,19 +1170,38 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void goneAnimal() {
-        ParticleView particleAnimator = new ParticleView(mContext, 2000);//3000为动画持续时间
-        particleAnimator.setOnAnimationListener(new ParticleView.OnAnimationListener() {
+//        dataLL.setVisibility(View.GONE);
+        Animation animation = AnimationUtil.moveToViewBottom();
+        animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(View v, Animator animation) {
-                v.setVisibility(View.GONE);
+            public void onAnimationStart(Animation animation) {
+
             }
 
             @Override
-            public void onAnimationEnd(View v, Animator animation) {
+            public void onAnimationEnd(Animation animation) {
+                dataLL.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
 
             }
         });
-        particleAnimator.boom(dataLL);
+        dataLL.startAnimation(animation);
+//        ParticleView particleAnimator = new ParticleView(mContext, 2000);//3000为动画持续时间
+//        particleAnimator.setOnAnimationListener(new ParticleView.OnAnimationListener() {
+//            @Override
+//            public void onAnimationStart(View v, Animator animation) {
+//                v.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(View v, Animator animation) {
+//
+//            }
+//        });
+//        particleAnimator.boom(dataLL);
     }
 
     private Point longPressPoint;
@@ -1295,6 +1342,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                         L.e("Field==" + field.getName() + "--" + field.getAlias());
                     }
                     int i = 0;
+                    int j = 0;
                     for (Feature feature : result) {
                         i++;
                         Map<String, Object> attributes = feature.getAttributes();
@@ -1302,17 +1350,27 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                         for (Map.Entry<String, Object> m : attributes.entrySet()) {
                             L.e(m.getKey() + "--------" + m.getValue());
                         }
-                        pointList.add(attributes);
-                        SimpleMarkerSymbol simpleMarkerSymbol =
-                                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,
-                                        Color.BLUE, 4);
-                        graphics.add(new Graphic(feature.getGeometry(), simpleMarkerSymbol));
+//                        pointList.add(attributes);
+                        String type = (String) attributes.get("资源类型");
+                        boolean isFH = isFH(type);
+//                        SimpleMarkerSymbol simpleMarkerSymbol =
+//                                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,
+//                                        Color.BLUE, 4);
+                        if (isFH) {
+                            j++;
+                            pointList.add(attributes);
+                            PictureMarkerSymbol pictureMarkerSymbol =
+                                    FeatureBean.getPictureMarkerSymbol(mContext, type);
+                            graphics.add(new Graphic(feature.getGeometry(), pictureMarkerSymbol));
+                        }
                     }
                     L.e("result.size()=" + i);
+                    L.e("防火资源=" + j);
+                    L.e("pointList=" + pointList.size());
                     pointOverlay.getGraphics().addAll(graphics);
-                    if (i > 0) {
+                    if (j > 0) {
                         fireLL.setVisibility(View.VISIBLE);
-                        setPointNum(i);
+                        setPointNum(j);
                         pointAdapter.refresh(pointList);
                     } else {
                         fireLL.setVisibility(View.GONE);
@@ -1355,6 +1413,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                 }
             }
         });
+        pointLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Map<String, Object> map = pointAdapter.getItem(i);
+                String id = (String) map.get("资源编号");
+                NetResoureDetailActivity.lookNetResourceActivity(mContext, id);
+            }
+        });
     }
 
     public class PointAdapter extends CommonAdapter<Map<String, Object>> {
@@ -1376,7 +1442,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
             if (gps != null) {
                 double distance =
                         GPSUtil.gps2km(StringUtil.StringToDouble(StringUtil.valueOf(item.get("纬度"))),
-                        StringUtil.StringToDouble(StringUtil.valueOf(item.get("经度"))), gps[0],
+                                StringUtil.StringToDouble(StringUtil.valueOf(item.get("经度"))),
+                                gps[0],
                                 gps[1]);
                 helper.setText(R.id.tv_distance, distance + "KM");
             }
@@ -1387,7 +1454,22 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
             helper.getView(R.id.ll_navigation).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    currentPointLat = StringUtil.valueOf(item.get("纬度"));
+                    currentPointLon = StringUtil.valueOf(item.get("经度"));
+                    String address =
+                            StringUtil.valueOf(item.get("区县名")) + StringUtil.valueOf(item.get(
+                                    "乡镇名")) + StringUtil.valueOf(item.get("村名"));
+                    currentAddress = address;
+                    goThere();
+                }
+            });
+            helper.getView(R.id.ll_update_data).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (item != null) {
+                        String id = (String) item.get("资源编号");
+                        UpdateResoureActivity.updateResourceActivity(mContext, id);
+                    }
                 }
             });
         }
@@ -1396,5 +1478,83 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     private void setPointNum(int num) {
         String numText = String.format("附近共找到资源<font color=\"#000000\">%d</font>处", num);
         numTV.setText(Html.fromHtml(numText));
+    }
+
+    private void watchSearch() {
+        searchET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
+                    String content = searchET.getText().toString().trim();
+                    if (StringUtil.isBlank(content)) {
+                        show("搜索内容不能为空");
+                    } else {
+                        KeyBoardUtils.closeKeybord(searchET, mContext);
+                        searchMap();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void searchMap() {
+        searchOverlay.getGraphics().clear();
+        String content = searchET.getText().toString().trim();
+        HttpUtil.searchMap(mContext, userId, content, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                try {
+                    Map<String, Object> map = new Gson().fromJson(response.get(),
+                            new TypeToken<Map<String, Object>>() {
+                            }.getType());
+                    if (map != null && YS.SUCCESE.equals(map.get("code")) && map.get("data") != null) {
+                        List<Map<String, Object>> list = (List<Map<String, Object>>) map.get(
+                                "data");
+                        if (list != null && list.size() > 0) {
+                            addSearchPoint(list);
+                        } else {
+                            show("暂无资源");
+                        }
+                    } else {
+                        show("暂无资源");
+                    }
+                } catch (Exception e) {
+                    show("暂无资源");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
+    private void addSearchPoint(List<Map<String, Object>> list) {
+        searchOverlay.getGraphics().clear();
+        for (int i = 0; i < list.size(); i++) {
+            Map<String, Object> map = list.get(i);
+            String type = (String) map.get("资源类型");
+            Point point = new Point(StringUtil.StringToDouble((String) map.get("经度")),
+                    StringUtil.StringToDouble((String) map.get("纬度")));
+            // 图层的创建
+            Graphic graphic = new Graphic(point, map, FeatureBean.getPictureMarkerSymbol(mContext
+                    , type));
+            searchOverlay.getGraphics().add(graphic);
+            mMapView.setViewpointCenterAsync(point);
+        }
+
+
+    }
+
+    //是否防火类型
+    private boolean isFH(String type) {
+        if ("应急避难所".equals(type) || "消防水池".equals(type) || "提灌站".equals(type) || "瞭望塔".equals(type) || "防火检查站点".equals(type) || "保护站".equals(type) || "备用水池".equals(type)) {
+            return true;
+        }
+        return false;
     }
 }
