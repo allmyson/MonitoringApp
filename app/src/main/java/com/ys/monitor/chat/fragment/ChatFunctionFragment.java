@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yongchun.library.view.ImageSelectorActivity;
+import com.lcw.library.imagepicker.ImagePicker;
 import com.ys.monitor.R;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseFragment;
@@ -29,6 +29,7 @@ import com.ys.monitor.chat.util.PhotoUtils;
 import com.ys.monitor.util.Constant;
 import com.ys.monitor.util.L;
 import com.ys.monitor.util.StringUtil;
+import com.ys.monitor.util.YS;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -320,18 +321,18 @@ public class ChatFunctionFragment extends BaseFragment {
                     Log.d(Constants.TAG, "失败");
                 }
                 break;
-            case ImageSelectorActivity.REQUEST_IMAGE://相册图片选取返回
-                if (res == Activity.RESULT_OK) {
-                    ArrayList<String> images =
-                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
-                                    .REQUEST_OUTPUT);
+            case YS.REQUEST_SELECT_IMAGES_CODE://相册图片选取返回
+//                    ArrayList<String> images =
+//                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
+//                                    .REQUEST_OUTPUT);
+                ArrayList<String> images =
+                        data.getStringArrayListExtra(ImagePicker.EXTRA_SELECT_IMAGES);
                     if (images != null && images.size() > 0) {
                         MessageInfo messageInfo = new MessageInfo();
                         messageInfo.setFilepath(images.get(0));
                         messageInfo.setFileType(Constants.CHAT_FILE_TYPE_IMAGE);
                         EventBus.getDefault().post(messageInfo);
                     }
-                }
                 break;
             case CAMERA:
                 if (res == Activity.RESULT_OK) {
