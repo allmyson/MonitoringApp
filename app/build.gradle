@@ -93,10 +93,11 @@ dependencies {
 //    implementation files('src/main/jniLibs/photoview_library-1.2.2.jar')
 //    implementation 'com.esri.arcgisruntime:arcgis-android:100.9.0'
     implementation project(path: ':arcgistool')
+    implementation project(path: ':imagepicker')
 
     implementation 'com.tencent.bugly:crashreport:latest.release'
     implementation 'com.blankj:utilcode:1.20.3'
-
+//    implementation 'com.lcw.library:imagepicker:2.2.8'
     configurations.all {
         resolutionStrategy.eachDependency {
             DependencyResolveDetails details ->

@@ -13,16 +13,15 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -86,11 +85,13 @@ import com.ys.monitor.base.BaseFragment;
 import com.ys.monitor.bean.FeatureBean;
 import com.ys.monitor.bean.FireBean;
 import com.ys.monitor.bean.GjBean;
+import com.ys.monitor.bean.UpdateResource;
 import com.ys.monitor.dialog.DialogUtil;
 import com.ys.monitor.http.HttpListener;
 import com.ys.monitor.sp.LocationSP;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.ui.CustomBaseDialog;
+import com.ys.monitor.ui.LastInputEditText;
 import com.ys.monitor.util.AnimationUtil;
 import com.ys.monitor.util.GPSUtil;
 import com.ys.monitor.util.HttpUtil;
@@ -147,8 +148,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     private boolean isShowFire;
 
     private ImageView locationIV;
-    private EditText searchET;
-
+    private LastInputEditText searchET;
+    private ListView searchLV;
+    private ItemAdapter itemAdapter;
+    private List<Map<String, Object>> searchList;
 
     @Override
     protected void init() {
@@ -268,6 +271,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 
     private void initBase() {
         searchET = getView(R.id.et_search);
+        searchLV = getView(R.id.lv_search);
+        searchLV.setVisibility(View.INVISIBLE);
+        searchList = new ArrayList<>();
+        itemAdapter = new ItemAdapter(mContext, searchList, R.layout.item_search);
+        searchLV.setAdapter(itemAdapter);
         watchSearch();
         mCoder = GeoCoder.newInstance();
         mCoder.setOnGetGeoCodeResultListener(this);
@@ -668,7 +676,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         currentMap = map;
         currentPointLat = StringUtil.valueOf(map.get("纬度"));
         currentPointLon = StringUtil.valueOf(map.get("经度"));
-        mMapView.setViewpointCenterAsync(new Point(StringUtil.StringToDefaultDouble(currentPointLon),StringUtil.StringToDefaultDouble(currentPointLat)));
+        mMapView.setViewpointCenterAsync(new Point(StringUtil.StringToDefaultDouble(currentPointLon), StringUtil.StringToDefaultDouble(currentPointLat)));
         Map<String, Object> locationMap = LocationSP.getLocationData(mContext);
         if (locationMap != null) {
             double lat = (double) locationMap.get("lat");
@@ -681,13 +689,15 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 //        if ("古树名木1984".equals(layerName)) {
         nameTV.setText(StringUtil.valueOf(map.get("名称")));
         String address =
-                StringUtil.valueOf(map.get("区县名")) + StringUtil.valueOf(map.get("乡镇名")) + StringUtil.valueOf(map.get("村名"));
+                StringUtil.valueOf(map.get("区县名")) + StringUtil.valueOf(map.get("乡镇名")) + StringUtil.valueOf(map.get("村名")) + StringUtil.valueOf(map.get("社名")) + "社";
         currentAddress = address;
         addressTV.setText("\t\t|\t\t" + address);
 //            dataList.add("树种名:" + StringUtil.valueOf(map.get("树种名")));
 //            dataList.add("年龄:" + StringUtil.StringToInt(StringUtil.valueOf(map.get("年龄"))) + "岁");
 //            dataAdapter.refresh(dataList);
 //        }
+        String recNo = (String) map.get("资源编号");
+        getDetailResource(recNo);
     }
 
     private LinearLayout dataLL;
@@ -1335,6 +1345,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
             /* ** ADD ** */
             tableQueryResult.addDoneListener(() -> {
                 try {
+                    pointList.clear();
                     List<Graphic> graphics = new ArrayList<>();
                     FeatureQueryResult result = tableQueryResult.get();
                     List<Field> fields = result.getFields();
@@ -1449,7 +1460,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
             }
             helper.setText(R.id.tv_name, StringUtil.valueOf(item.get("名称")));
             String address =
-                    StringUtil.valueOf(item.get("区县名")) + StringUtil.valueOf(item.get("乡镇名")) + StringUtil.valueOf(item.get("村名"));
+                    StringUtil.valueOf(item.get("区县名")) + StringUtil.valueOf(item.get("乡镇名")) + StringUtil.valueOf(item.get("村名")) + StringUtil.valueOf(item.get("社名")) + "社";
             helper.setText(R.id.tv_address, "\t\t|\t\t" + address);
             helper.getView(R.id.ll_navigation).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1458,7 +1469,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                     currentPointLon = StringUtil.valueOf(item.get("经度"));
                     String address =
                             StringUtil.valueOf(item.get("区县名")) + StringUtil.valueOf(item.get(
-                                    "乡镇名")) + StringUtil.valueOf(item.get("村名"));
+                                    "乡镇名")) + StringUtil.valueOf(item.get("村名")) + StringUtil.valueOf(item.get("社名")) + "社";
                     currentAddress = address;
                     goThere();
                 }
@@ -1472,6 +1483,44 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                     }
                 }
             });
+            TextView nameTV = helper.getView(R.id.tv_name);
+            TextView addressTV = helper.getView(R.id.tv_address);
+            String recNo = (String) item.get("资源编号");
+            getDetail(recNo, nameTV, addressTV);
+        }
+
+        private void getDetail(String recNo, TextView nameTV, TextView addressTV) {
+            HttpUtil.getResourceValueWithNoDialog(mContext, userId, recNo,
+                    new HttpListener<String>() {
+                        @Override
+                        public void onSucceed(int what, Response<String> response) {
+                            UpdateResource updateResource = new Gson().fromJson(response.get(),
+                                    UpdateResource.class);
+                            if (updateResource != null && YS.SUCCESE.equals(updateResource.code) && updateResource.data != null) {
+                                if (updateResource.data.elementBasic != null) {
+                                    if (StringUtil.isBlank(nameTV.getText().toString())) {
+                                        nameTV.setText(StringUtil.valueOf(updateResource.data.elementBasic.name));
+                                    }
+                                }
+                                if (updateResource.data.elementBasicEx != null && updateResource.data.elementBasicEx.size() > 0) {
+//                                    for (UpdateResource.DataBean.ElementBasicExBean bean :
+//                                            updateResource.data.elementBasicEx) {
+//                                        if ("investigationAddr".equals(bean.dataName)) {
+//                                            addressTV.setText("\t\t|\t\t" + StringUtil.valueOf
+//                                            (bean.dataValue));
+//                                            break;
+//                                        }
+//                                    }
+                                    addressTV.setText("\t\t|\t\t" + getAddress(updateResource.data.elementBasicEx));
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(int what, Response<String> response) {
+
+                        }
+                    });
         }
     }
 
@@ -1481,20 +1530,94 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void watchSearch() {
-        searchET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//        searchET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+//                if (i == EditorInfo.IME_ACTION_SEARCH) {
+//                    String content = searchET.getText().toString().trim();
+//                    if (StringUtil.isBlank(content)) {
+//                        show("搜索内容不能为空");
+//                    } else {
+//                        KeyBoardUtils.closeKeybord(searchET, mContext);
+//                        searchMap();
+//                    }
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+        searchET.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    String content = searchET.getText().toString().trim();
-                    if (StringUtil.isBlank(content)) {
-                        show("搜索内容不能为空");
-                    } else {
-                        KeyBoardUtils.closeKeybord(searchET, mContext);
-                        searchMap();
-                    }
-                    return true;
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+//                showToast("setText()回调了afterTextChanged");
+//                L.e("aaa","setText()回调了afterTextChanged");
+                if (editable.length() > 0) {
+                    search();
+                } else {
+                    searchLV.setVisibility(View.INVISIBLE);
                 }
-                return false;
+            }
+        });
+        searchLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Map<String, Object> map = itemAdapter.getItem(i);
+                searchET.setText(StringUtil.valueOf(map.get("名称")));
+                //刷新点位
+                KeyBoardUtils.closeKeybord(searchET, mContext);
+                searchLV.setVisibility(View.INVISIBLE);
+                List<Map<String, Object>> list = new ArrayList<>();
+                list.add(map);
+                addSearchPoint(list);
+            }
+        });
+    }
+
+    private void search() {
+        String content = searchET.getText().toString().trim();
+        searchList.clear();
+        HttpUtil.searchMap(mContext, userId, content, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                try {
+                    Map<String, Object> map = new Gson().fromJson(response.get(),
+                            new TypeToken<Map<String, Object>>() {
+                            }.getType());
+                    if (map != null && YS.SUCCESE.equals(map.get("code")) && map.get("data") != null) {
+                        List<Map<String, Object>> list = (List<Map<String, Object>>) map.get(
+                                "data");
+                        if (list != null && list.size() > 0) {
+                            searchList.addAll(list);
+                            itemAdapter.refresh(searchList);
+//                            addSearchPoint(list);
+                        } else {
+                            show("暂无资源");
+                        }
+                    } else {
+                        show("暂无资源");
+                    }
+                } catch (Exception e) {
+                    show("暂无资源");
+                    e.printStackTrace();
+                }
+                if (searchList.size() > 0) {
+                    searchLV.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
             }
         });
     }
@@ -1542,7 +1665,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                     StringUtil.StringToDouble((String) map.get("纬度")));
             // 图层的创建
             Graphic graphic = new Graphic(point, map, FeatureBean.getPictureMarkerSymbol(mContext
-                    , type));
+                    , R.mipmap.search_point));
             searchOverlay.getGraphics().add(graphic);
             mMapView.setViewpointCenterAsync(point);
         }
@@ -1556,5 +1679,94 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
             return true;
         }
         return false;
+    }
+
+    private void getDetailResource(String recNo) {
+        HttpUtil.getResourceValueWithNoDialog(mContext, userId, recNo, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                UpdateResource updateResource = new Gson().fromJson(response.get(),
+                        UpdateResource.class);
+                if (updateResource != null && YS.SUCCESE.equals(updateResource.code) && updateResource.data != null) {
+                    if (updateResource.data.elementBasic != null) {
+                        if (StringUtil.isBlank(nameTV.getText().toString())) {
+                            nameTV.setText(StringUtil.valueOf(updateResource.data.elementBasic.name));
+                        }
+                    }
+                    if (updateResource.data.elementBasicEx != null && updateResource.data.elementBasicEx.size() > 0) {
+//                        for (UpdateResource.DataBean.ElementBasicExBean bean :
+//                                updateResource.data.elementBasicEx) {
+//                            if ("investigationAddr".equals(bean.dataName)) {
+//                                currentAddress = bean.dataValue;
+//                                addressTV.setText("\t\t|\t\t" + currentAddress);
+//                                break;
+//                            }
+                        currentAddress = getAddress(updateResource.data.elementBasicEx);
+                        addressTV.setText("\t\t|\t\t" + currentAddress);
+//                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        });
+    }
+
+    public String getAddress(List<UpdateResource.DataBean.ElementBasicExBean> beanList) {
+        String address = "";
+        String county = "", township = "", village = "", agency = "", smallClassNo = "",
+                smallPlaceName = "";
+        if (beanList != null && beanList.size() > 0) {
+            for (UpdateResource.DataBean.ElementBasicExBean bean : beanList) {
+                if ("county".equals(bean.dataName) && !StringUtil.isBlank(bean.dataValue)) {
+                    county = bean.dataValue;
+                } else if ("township".equals(bean.dataName) && !StringUtil.isBlank(bean.dataValue)) {
+                    township = bean.dataValue;
+                } else if ("village".equals(bean.dataName) && !StringUtil.isBlank(bean.dataValue)) {
+                    village = bean.dataValue;
+                } else if ("agency".equals(bean.dataName) && !StringUtil.isBlank(bean.dataValue)) {
+                    agency = bean.dataValue + "社";
+                } else if ("smallClassNo".equals(bean.dataName) && !StringUtil.isBlank(bean.dataValue)) {
+                    smallClassNo = bean.dataValue + "小班";
+                } else if ("smallPlaceName".equals(bean.dataName) && !StringUtil.isBlank(bean.dataValue)) {
+                    smallPlaceName = bean.dataValue;
+                }
+            }
+        }
+        address =
+                county.concat(township).concat(village).concat(agency).concat(smallClassNo).concat(smallPlaceName);
+        L.e(address);
+        return address;
+    }
+
+    public class ItemAdapter extends CommonAdapter<Map<String, Object>> {
+
+
+        public ItemAdapter(Context context, List<Map<String, Object>> mDatas, int itemLayoutId) {
+            super(context, mDatas, itemLayoutId);
+        }
+
+        @Override
+        public void convert(ViewHolder helper, Map<String, Object> item, int position) {
+//            helper.setText(R.id.tv_, StringUtil.valueOf(item.name));
+            String name = StringUtil.valueOf(item.get("名称")) + "(" + StringUtil.valueOf(item.get(
+                    "资源类型")) + ")";
+            helper.setText(R.id.tv_, name);
+            String address = StringUtil.valueOf(item.get("区县名")) + StringUtil.valueOf(item.get(
+                    "乡镇名")) + StringUtil.valueOf(item.get("村名"));
+            String she = StringUtil.valueOf(item.get("社名"));
+            if (!StringUtil.isBlank(she)) {
+                she += "社";
+            }
+            String xbh = StringUtil.valueOf(item.get("小班号"));
+            if (!StringUtil.isBlank(xbh)) {
+                xbh += "小班";
+            }
+            address += (she + xbh + StringUtil.valueOf(item.get("小地名")));
+            helper.setText(R.id.tv_address, address);
+        }
     }
 }

@@ -1,8 +1,12 @@
 package com.ys.monitor.bean;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -11,6 +15,7 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer;
 import com.ys.monitor.R;
 import com.ys.monitor.base.App;
+import com.ys.monitor.util.DensityUtil;
 import com.ys.monitor.util.StringUtil;
 
 import java.util.ArrayList;
@@ -230,11 +235,53 @@ public class FeatureBean {
         }
         return pictureMarkerSymbol;
     }
+    public static PictureMarkerSymbol getPictureMarkerSymbol2(Context context, String type) {
+        int drawId = getDrawableId(type);
+        BitmapDrawable bitmapDrawable = getBitmapDrawable(context,drawId);
+        PictureMarkerSymbol pictureMarkerSymbol = null;
+        try {
+            pictureMarkerSymbol =
+                    PictureMarkerSymbol.createAsync(bitmapDrawable).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return pictureMarkerSymbol;
+    }
+
+    public static PictureMarkerSymbol getPictureMarkerSymbol(Context context, int drawId) {
+        PictureMarkerSymbol pictureMarkerSymbol = null;
+        try {
+            pictureMarkerSymbol =
+                    PictureMarkerSymbol.createAsync((BitmapDrawable) context.getResources().getDrawable(drawId)).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return pictureMarkerSymbol;
+    }
 
     public static int getDrawableId(String type) {
         if (drawableMap.containsKey(type)) {
             return drawableMap.get(type);
         }
         return R.mipmap.point_default;
+    }
+
+    public static BitmapDrawable getBitmapDrawable(Context context, int drawableId) {
+        View view1 = ViewGroup.inflate(context, R.layout.map_search, null);
+        Bitmap bitmap = createViewBitmap(view1);
+        BitmapDrawable drawable = new BitmapDrawable(context.getResources(), bitmap);
+        return drawable;
+    }
+
+    public static Bitmap createViewBitmap(View v) {
+        Bitmap bitmap = Bitmap.createBitmap(DensityUtil.dp2px(v.getContext(),80),DensityUtil.dp2px(v.getContext(),80),
+                Bitmap.Config.ARGB_8888); //创建一个和View大小一样的Bitmap
+        Canvas canvas = new Canvas(bitmap);  //使用上面的Bitmap创建canvas
+        v.draw(canvas);  //把View画到Bitmap上
+        return bitmap;
     }
 }

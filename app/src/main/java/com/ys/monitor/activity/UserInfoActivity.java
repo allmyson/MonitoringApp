@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.lcw.library.imagepicker.ImagePicker;
 import com.yanzhenjie.nohttp.rest.Response;
-import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
 import com.ys.monitor.api.FunctionApi;
 import com.ys.monitor.base.BaseActivity;
@@ -115,10 +115,12 @@ public class UserInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case ImageSelectorActivity.REQUEST_IMAGE://相册图片选取返回
+                case YS.REQUEST_SELECT_IMAGES_CODE://相册图片选取返回
+//                    ArrayList<String> images =
+//                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
+//                                    .REQUEST_OUTPUT);
                     ArrayList<String> images =
-                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
-                                    .REQUEST_OUTPUT);
+                            data.getStringArrayListExtra(ImagePicker.EXTRA_SELECT_IMAGES);
                     photoUrl = images.get(0);
                     L.e("photoUrl=" + photoUrl);
                     YS.showRoundImage(mContext, photoUrl, headIV);

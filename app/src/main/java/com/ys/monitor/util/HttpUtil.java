@@ -2,6 +2,8 @@ package com.ys.monitor.util;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.ys.monitor.bean.RecordBean;
 import com.ys.monitor.http.BaseHttp;
@@ -9,7 +11,9 @@ import com.ys.monitor.http.HttpListener;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lh
@@ -452,6 +456,12 @@ public class HttpUtil {
         }
         String url =
                 baseUrl + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" + userId;
+        Map<String, String> map = new Gson().fromJson(data, new TypeToken<Map<String, String>>() {
+        }.getType());
+        String recNo = map.get("recNo");
+        Map<String, String> newMap = new HashMap<>();
+        newMap.put("recNo", recNo);
+        String newJson = new Gson().toJson(newMap);
         if (RecordBean.TYPE_ZIYUAN.equals(type)) {
             if (RecordBean.DO_ADD.equals(handleType)) {
                 url += "&operationType=0";
@@ -461,7 +471,11 @@ public class HttpUtil {
                 url += "&operationType=2";
             }
         }
-        url += "&data=" + URLEncoder.encode(data);
+        if (RecordBean.TYPE_ZIYUAN.equals(type) && RecordBean.DO_DELETE.equals(handleType)) {
+            url += "&data=" + URLEncoder.encode(newJson);
+        } else {
+            url += "&data=" + URLEncoder.encode(data);
+        }
         Response<String> response = BaseHttp.getInstance().postJsonSync(context, url, "");
         return response;
     }
@@ -481,6 +495,20 @@ public class HttpUtil {
         BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
     }
 
+    //获取资源详情
+    public static void getResourceValueWithNoDialog(Context context, String userId, String id,
+                                        HttpListener<String> httpListener) {
+        long timeStamp = System.currentTimeMillis();
+        if (String.valueOf(timeStamp).length() == 13) {
+            timeStamp /= 1000;
+        }
+        String token = Md5Util.getMD5(YS.token + timeStamp);
+        String url =
+                YS.SELECT_RESOURCE + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
+                        userId + "&recNo=" + id;
+        BaseHttp.getInstance().postSimpleJsonWithNoDialog(context, url, "", httpListener);
+    }
+
     //地图搜索点位
     public static void searchMap(Context context, String userId, String content,
                                  HttpListener<String> httpListener) {
@@ -492,6 +520,6 @@ public class HttpUtil {
         String url =
                 YS.SELECT_MAP + "?timeStamp=" + timeStamp + "&token=" + token + "&userID=" +
                         userId + "&name=" + content;
-        BaseHttp.getInstance().postSimpleJson(context, url, "", httpListener);
+        BaseHttp.getInstance().postSimpleJsonWithNoDialog(context, url, "", httpListener);
     }
 }

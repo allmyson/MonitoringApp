@@ -15,9 +15,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.telephony.PhoneNumberUtils;
 
+import com.lcw.library.imagepicker.ImagePicker;
 import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.activity.ShowPicDetailActivity;
 import com.ys.monitor.activity.VideoActivity;
+import com.ys.monitor.base.GlideLoader;
 import com.ys.monitor.sp.UserSP;
 import com.ys.monitor.util.AppUtil;
 import com.ys.monitor.util.Constant;
@@ -27,6 +29,7 @@ import com.ys.monitor.util.YS;
 import com.ys.monitor.web.CommonWebviewActivity;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,8 +73,22 @@ public class FunctionApi {
             return;
         }
         ImageSelectorActivity.AUTHORITY = SystemUtil.PackgeName(mContext) + FunctionApi.AUTHORITY;
-        ImageSelectorActivity.start((Activity) mContext, max, mode, showCamera, enablePreview,
-                enableCrop);
+//        ImageSelectorActivity.start((Activity) mContext, max, mode, showCamera, enablePreview,
+//                enableCrop);
+
+
+
+        ImagePicker.getInstance()
+                .setTitle("照片")//设置标题
+                .showCamera(true)//设置是否显示拍照按钮
+                .showImage(true)//设置是否展示图片
+                .showVideo(true)//设置是否展示视频
+                .filterGif(true)//设置是否过滤gif图片
+                .setMaxCount(max)//设置最大选择图片数目(默认为1，单选)
+                .setSingleType(true)//设置图片视频不能同时选择
+                .setImagePaths(new ArrayList<>())//设置历史选择记录
+                .setImageLoader(new GlideLoader())//设置自定义图片加载器
+                .start((Activity) mContext, YS.REQUEST_SELECT_IMAGES_CODE);//REQEST_
     }
 
     /**

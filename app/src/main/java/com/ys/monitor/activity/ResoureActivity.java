@@ -25,8 +25,8 @@ import com.huamai.poc.IPocEngineEventHandler;
 import com.huamai.poc.PocEngine;
 import com.huamai.poc.PocEngineFactory;
 import com.huamai.poc.greendao.User;
+import com.lcw.library.imagepicker.ImagePicker;
 import com.yanzhenjie.nohttp.rest.Response;
-import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
 import com.ys.monitor.adapter.GridAdapter;
 import com.ys.monitor.api.FunctionApi;
@@ -464,10 +464,12 @@ public class ResoureActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case ImageSelectorActivity.REQUEST_IMAGE://相册图片选取返回
+                case YS.REQUEST_SELECT_IMAGES_CODE://相册图片选取返回
+//                    ArrayList<String> images =
+//                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
+//                                    .REQUEST_OUTPUT);
                     ArrayList<String> images =
-                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
-                                    .REQUEST_OUTPUT);
+                            data.getStringArrayListExtra(ImagePicker.EXTRA_SELECT_IMAGES);
                     if (images != null && images.size() > 0) {
                         int count = imgLL.getChildCount();
                         if (count == 0) {
@@ -793,7 +795,7 @@ public class ResoureActivity extends BaseActivity {
 
     private void commitByService() {
         resultMap.clear();
-        resultMap.put(" isDelete", "0");
+        resultMap.put("isDelete", "0");
         resultMap.put("elementType", currentKVBean.id);
 //        double[] gps = GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(gis_wd),
 //                StringUtil.StringToDouble(gis_jd));

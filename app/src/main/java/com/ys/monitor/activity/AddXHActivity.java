@@ -17,8 +17,8 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.lcw.library.imagepicker.ImagePicker;
 import com.yanzhenjie.nohttp.rest.Response;
-import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
 import com.ys.monitor.adapter.GridAdapter;
 import com.ys.monitor.adapter.VideoGridAdapter;
@@ -177,10 +177,12 @@ public class AddXHActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case ImageSelectorActivity.REQUEST_IMAGE://相册图片选取返回
+                case YS.REQUEST_SELECT_IMAGES_CODE://相册图片选取返回
+//                    ArrayList<String> images =
+//                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
+//                                    .REQUEST_OUTPUT);
                     ArrayList<String> images =
-                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
-                                    .REQUEST_OUTPUT);
+                            data.getStringArrayListExtra(ImagePicker.EXTRA_SELECT_IMAGES);
                     if (images != null && images.size() > 0) {
                         list.addAll(images);
                     }

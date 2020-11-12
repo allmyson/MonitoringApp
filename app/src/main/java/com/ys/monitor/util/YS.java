@@ -21,6 +21,8 @@ import java.util.Date;
  * @date 2018/11/26 17:53
  */
 public class YS {
+    public static final int REQUEST_SELECT_IMAGES_CODE = 0x01;
+
     public static final String WEATHER_KEY = "aaf89d788a514c2b80408d9a3574003d";//和风天气
     public static final String DEFAULT_CHAT_PSD = "123456";//默认聊天账号密码
     public static final String source = "40289fa573e690820173e6a6ceaa0006";//报警类型编码

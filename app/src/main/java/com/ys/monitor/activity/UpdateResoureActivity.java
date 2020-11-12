@@ -18,8 +18,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.gson.Gson;
+import com.lcw.library.imagepicker.ImagePicker;
 import com.yanzhenjie.nohttp.rest.Response;
-import com.yongchun.library.view.ImageSelectorActivity;
 import com.ys.monitor.R;
 import com.ys.monitor.adapter.GridAdapter;
 import com.ys.monitor.api.FunctionApi;
@@ -378,10 +378,12 @@ public class UpdateResoureActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case ImageSelectorActivity.REQUEST_IMAGE://相册图片选取返回
+                case YS.REQUEST_SELECT_IMAGES_CODE://相册图片选取返回
+//                    ArrayList<String> images =
+//                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
+//                                    .REQUEST_OUTPUT);
                     ArrayList<String> images =
-                            (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity
-                                    .REQUEST_OUTPUT);
+                            data.getStringArrayListExtra(ImagePicker.EXTRA_SELECT_IMAGES);
                     if (images != null && images.size() > 0) {
                         int count = imgLL.getChildCount();
                         if (count == 0) {
@@ -595,8 +597,8 @@ public class UpdateResoureActivity extends BaseActivity {
 
     private void commitByService() {
         resultMap.clear();
-        resultMap.put(" isDelete", "0");
-        resultMap.put(" recNo", updateResource.data.elementBasic.recNo);
+        resultMap.put("isDelete", "0");
+        resultMap.put("recNo", updateResource.data.elementBasic.recNo);
         resultMap.put("elementType", updateResource.data.elementBasic.elementType);
         L.e("参数齐全,可以提交");
         int baseCount = baseLL.getChildCount();
@@ -663,8 +665,8 @@ public class UpdateResoureActivity extends BaseActivity {
 
     private void deleteByService() {
         resultMap.clear();
-        resultMap.put(" isDelete", "0");
-        resultMap.put(" recNo", updateResource.data.elementBasic.recNo);
+        resultMap.put("isDelete", "0");
+        resultMap.put("recNo", updateResource.data.elementBasic.recNo);
         resultMap.put("elementType", updateResource.data.elementBasic.elementType);
         L.e("参数齐全,可以提交");
         int baseCount = baseLL.getChildCount();
