@@ -60,6 +60,7 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -397,6 +398,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                             return super.onSingleTapUp(e);
                         }
                         onSingleTapFeatureLayer(screenPoint);
+                        onSingleTapGraGraphics(screenPoint);
                         return super.onSingleTapUp(e);
                     }
 
@@ -520,6 +522,31 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                 });
     }
 
+    private void onSingleTapGraGraphics(
+            android.graphics.Point clickPoint) {
+        final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic =
+                mMapView.identifyGraphicsOverlayAsync(searchOverlay, clickPoint, 0, false, 1);
+        identifyGraphic.addDoneListener(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    IdentifyGraphicsOverlayResult grOverlayResult = identifyGraphic.get();
+                    // get the list of graphics returned by identify graphic overlay
+                    List<Graphic> graphic = grOverlayResult.getGraphics();
+                    if (graphic != null && graphic.size() > 0) {
+                        Graphic gra = graphic.get(0);
+                        Map<String, Object> attributes = gra.getAttributes();
+                        showView("", attributes);
+                    }
+                } catch (InterruptedException | ExecutionException ie) {
+                    ie.printStackTrace();
+                }
+
+            }
+        });
+
+    }
+
     private void onSingleTapFeatureLayer(
             android.graphics.Point clickPoint) {
         final ListenableFuture<List<IdentifyLayerResult>> listListenableFuture =
@@ -538,7 +565,6 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         });
 
     }
-
 
     // 将识别结果处理为一个字符串，将它通过ShowAlerDialog的方式弹出
     private void handleIdentifyResults(List<IdentifyLayerResult> identifyLayerResults) {
@@ -691,7 +717,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         String address =
                 StringUtil.valueOf(map.get("区县名")) + StringUtil.valueOf(map.get("乡镇名")) + StringUtil.valueOf(map.get("村名")) + StringUtil.valueOf(map.get("社名")) + "社";
         currentAddress = address;
-        addressTV.setText("\t\t|\t\t" + address);
+        addressTV.setText(address);
+        addressTV.setSelected(true);
 //            dataList.add("树种名:" + StringUtil.valueOf(map.get("树种名")));
 //            dataList.add("年龄:" + StringUtil.StringToInt(StringUtil.valueOf(map.get("年龄"))) + "岁");
 //            dataAdapter.refresh(dataList);
@@ -873,8 +900,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                                             List<Point> list = new ArrayList<>();
                                             for (GjBean.TrackBean trackBean : gjBean.track) {
                                                 double[] gps =
-                                                        GPSUtil.bd09_To_gps84(StringUtil.StringToDouble(trackBean.gis_wd),
-                                                                StringUtil.StringToDouble(trackBean.gis_jd));
+                                                        GPSUtil.bd09_To_gps84(StringUtil.StringToDefaultDouble(trackBean.gis_wd),
+                                                                StringUtil.StringToDefaultDouble(trackBean.gis_jd));
                                                 Point point = new Point(gps[1], gps[0],
                                                         SpatialReferences.getWgs84());
                                                 list.add(point);
@@ -915,8 +942,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                                             for (GjBean.TrackBean trackBean : gjBean.track) {
                                                 double[] gps =
                                                         GPSUtil.bd09_To_gps84(StringUtil
-                                                                        .StringToDouble(trackBean.gis_wd),
-                                                                StringUtil.StringToDouble
+                                                                        .StringToDefaultDouble(trackBean.gis_wd),
+                                                                StringUtil.StringToDefaultDouble
                                                                         (trackBean.gis_jd));
                                                 Point point = new Point(gps[1], gps[0],
                                                         SpatialReferences.getWgs84());
@@ -1076,8 +1103,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
     private void showFire(List<FireBean.DataBean.RowsBean> list) {
         for (FireBean.DataBean.RowsBean rowsBean : list) {
             if (rowsBean != null) {
-                Point point = new Point(StringUtil.StringToDouble(rowsBean.longitude),
-                        StringUtil.StringToDouble(rowsBean.latitude));
+                Point point = new Point(StringUtil.StringToDefaultDouble(rowsBean.longitude),
+                        StringUtil.StringToDefaultDouble(rowsBean.latitude));
                 drawCircle(point);
             }
         }
@@ -1572,7 +1599,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Map<String, Object> map = itemAdapter.getItem(i);
-                searchET.setText(StringUtil.valueOf(map.get("名称")));
+//                searchET.setText(StringUtil.valueOf(map.get("名称")));
                 //刷新点位
                 KeyBoardUtils.closeKeybord(searchET, mContext);
                 searchLV.setVisibility(View.INVISIBLE);
@@ -1661,13 +1688,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         for (int i = 0; i < list.size(); i++) {
             Map<String, Object> map = list.get(i);
             String type = (String) map.get("资源类型");
-            Point point = new Point(StringUtil.StringToDouble((String) map.get("经度")),
-                    StringUtil.StringToDouble((String) map.get("纬度")));
+            Point point = new Point(StringUtil.StringToDefaultDouble((String) map.get("经度")),
+                    StringUtil.StringToDefaultDouble((String) map.get("纬度")));
             // 图层的创建
             Graphic graphic = new Graphic(point, map, FeatureBean.getPictureMarkerSymbol(mContext
                     , R.mipmap.search_point));
             searchOverlay.getGraphics().add(graphic);
-            mMapView.setViewpointCenterAsync(point);
+            double scale = mMapView.getMapScale() * 1.1;
+            mMapView.setViewpointCenterAsync(point, scale);
         }
 
 
@@ -1702,7 +1730,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
 //                                break;
 //                            }
                         currentAddress = getAddress(updateResource.data.elementBasicEx);
-                        addressTV.setText("\t\t|\t\t" + currentAddress);
+                        addressTV.setText(currentAddress);
 //                        }
                     }
                 }

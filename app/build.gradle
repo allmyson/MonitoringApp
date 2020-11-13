@@ -170,4 +170,5 @@ configurations {
     all*.exclude group: 'androidx.viewpager'
     all*.exclude group: 'androidx.wear'
     all*.exclude group: 'androidx.webkit'
+
 }
