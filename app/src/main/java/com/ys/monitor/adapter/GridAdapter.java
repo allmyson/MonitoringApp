@@ -39,7 +39,11 @@ public class GridAdapter extends CommonAdapter<String> {
         ImageView iv = helper.getView(R.id.iv_);
         Log.e("lh", "执行次数");
         if (position < mDatas.size()) {
-            Glide.with(mContext).load(new File(item)).into(iv);
+            if (item.startsWith("http://") || item.startsWith("https//")) {
+                Glide.with(mContext).load(item).into(iv);
+            } else {
+                Glide.with(mContext).load(new File(item)).into(iv);
+            }
             deleteRL.setVisibility(View.VISIBLE);
         } else {
             deleteRL.setVisibility(View.GONE);

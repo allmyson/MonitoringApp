@@ -1713,26 +1713,30 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         HttpUtil.getResourceValueWithNoDialog(mContext, userId, recNo, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
-                UpdateResource updateResource = new Gson().fromJson(response.get(),
-                        UpdateResource.class);
-                if (updateResource != null && YS.SUCCESE.equals(updateResource.code) && updateResource.data != null) {
-                    if (updateResource.data.elementBasic != null) {
-                        if (StringUtil.isBlank(nameTV.getText().toString())) {
-                            nameTV.setText(StringUtil.valueOf(updateResource.data.elementBasic.name));
+                try {
+                    UpdateResource updateResource = new Gson().fromJson(response.get(),
+                            UpdateResource.class);
+                    if (updateResource != null && YS.SUCCESE.equals(updateResource.code) && updateResource.data != null) {
+                        if (updateResource.data.elementBasic != null) {
+                            if (StringUtil.isBlank(nameTV.getText().toString())) {
+                                nameTV.setText(StringUtil.valueOf(updateResource.data.elementBasic.name));
+                            }
+                        }
+                        if (updateResource.data.elementBasicEx != null && updateResource.data.elementBasicEx.size() > 0) {
+    //                        for (UpdateResource.DataBean.ElementBasicExBean bean :
+    //                                updateResource.data.elementBasicEx) {
+    //                            if ("investigationAddr".equals(bean.dataName)) {
+    //                                currentAddress = bean.dataValue;
+    //                                addressTV.setText("\t\t|\t\t" + currentAddress);
+    //                                break;
+    //                            }
+                            currentAddress = getAddress(updateResource.data.elementBasicEx);
+                            addressTV.setText(currentAddress);
+    //                        }
                         }
                     }
-                    if (updateResource.data.elementBasicEx != null && updateResource.data.elementBasicEx.size() > 0) {
-//                        for (UpdateResource.DataBean.ElementBasicExBean bean :
-//                                updateResource.data.elementBasicEx) {
-//                            if ("investigationAddr".equals(bean.dataName)) {
-//                                currentAddress = bean.dataValue;
-//                                addressTV.setText("\t\t|\t\t" + currentAddress);
-//                                break;
-//                            }
-                        currentAddress = getAddress(updateResource.data.elementBasicEx);
-                        addressTV.setText(currentAddress);
-//                        }
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

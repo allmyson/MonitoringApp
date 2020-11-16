@@ -100,13 +100,17 @@ public class UpdateResoureActivity extends BaseActivity {
         HttpUtil.getResourceValue(mContext, userId, recNo, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
-                updateResource = new Gson().fromJson(response.get(),
-                        UpdateResource.class);
-                if (updateResource != null && YS.SUCCESE.equals(updateResource.code) && updateResource.data != null) {
-                    if (updateResource.data.elementBasic != null) {
-                        typeTV.setText(StringUtil.valueOf(updateResource.data.elementBasic.resourceTypeName) + "_" + StringUtil.valueOf(updateResource.data.elementBasic.elementTypeName));
-                        getZiduan(updateResource.data.elementBasic.elementType);
+                try {
+                    updateResource = new Gson().fromJson(response.get(),
+                            UpdateResource.class);
+                    if (updateResource != null && YS.SUCCESE.equals(updateResource.code) && updateResource.data != null) {
+                        if (updateResource.data.elementBasic != null) {
+                            typeTV.setText(StringUtil.valueOf(updateResource.data.elementBasic.resourceTypeName) + "_" + StringUtil.valueOf(updateResource.data.elementBasic.elementTypeName));
+                            getZiduan(updateResource.data.elementBasic.elementType);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -664,6 +668,10 @@ public class UpdateResoureActivity extends BaseActivity {
 
 
     private void deleteByService() {
+        if (updateResource == null) {
+            show("获取数据失败,请稍后再试");
+            return;
+        }
         resultMap.clear();
         resultMap.put("isDelete", "0");
         resultMap.put("recNo", updateResource.data.elementBasic.recNo);

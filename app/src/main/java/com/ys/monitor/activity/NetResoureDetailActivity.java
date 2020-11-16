@@ -67,27 +67,31 @@ public class NetResoureDetailActivity extends BaseActivity {
         HttpUtil.getResourceValue(mContext, userId, recNo, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
-                updateResource = new Gson().fromJson(response.get(),
-                        UpdateResource.class);
-                if (updateResource != null && YS.SUCCESE.equals(updateResource.code) && updateResource.data != null) {
-                    if (updateResource.data.elementBasic != null) {
-                        typeTV.setText(StringUtil.valueOf(updateResource.data.elementBasic.resourceTypeName) + "_" + StringUtil.valueOf(updateResource.data.elementBasic.elementTypeName));
-//                        getZiduan(updateResource.data.elementBasic.elementType);
-                        addBaseView("name", "名称",
-                                StringUtil.valueOf(updateResource.data.elementBasic.name));
-                        addBaseView("description", "描述",
-                                StringUtil.valueOf(updateResource.data.elementBasic.description));
-                        String imgUrl = updateResource.data.elementBasic.imgUrl;
-                        if (!StringUtil.isBlank(imgUrl)) {
-                            addImgView("imgUrl", "图片", imgUrl);
+                try {
+                    updateResource = new Gson().fromJson(response.get(),
+                            UpdateResource.class);
+                    if (updateResource != null && YS.SUCCESE.equals(updateResource.code) && updateResource.data != null) {
+                        if (updateResource.data.elementBasic != null) {
+                            typeTV.setText(StringUtil.valueOf(updateResource.data.elementBasic.resourceTypeName) + "_" + StringUtil.valueOf(updateResource.data.elementBasic.elementTypeName));
+    //                        getZiduan(updateResource.data.elementBasic.elementType);
+                            addBaseView("name", "名称",
+                                    StringUtil.valueOf(updateResource.data.elementBasic.name));
+                            addBaseView("description", "描述",
+                                    StringUtil.valueOf(updateResource.data.elementBasic.description));
+                            String imgUrl = updateResource.data.elementBasic.imgUrl;
+                            if (!StringUtil.isBlank(imgUrl)) {
+                                addImgView("imgUrl", "图片", imgUrl);
+                            }
+                        }
+                        if (updateResource.data.elementBasicEx != null && updateResource.data.elementBasicEx.size() > 0) {
+                            for (UpdateResource.DataBean.ElementBasicExBean bean :
+                                    updateResource.data.elementBasicEx) {
+                                addExtView(bean.dataName, bean.name, bean.dataValue);
+                            }
                         }
                     }
-                    if (updateResource.data.elementBasicEx != null && updateResource.data.elementBasicEx.size() > 0) {
-                        for (UpdateResource.DataBean.ElementBasicExBean bean :
-                                updateResource.data.elementBasicEx) {
-                            addExtView(bean.dataName, bean.name, bean.dataValue);
-                        }
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

@@ -33,8 +33,12 @@ public class LocalGridAdapter extends CommonAdapter<String> {
         Log.e("lh", "执行次数");
         if (position < mDatas.size()) {
             iv.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load(new File(item)).into(iv);
-        }else {
+            if (item.startsWith("http://") || item.startsWith("https//")) {
+                Glide.with(mContext).load(item).into(iv);
+            } else {
+                Glide.with(mContext).load(new File(item)).into(iv);
+            }
+        } else {
             iv.setVisibility(View.GONE);
         }
         deleteRL.setVisibility(View.GONE);
