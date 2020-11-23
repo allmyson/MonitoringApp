@@ -58,6 +58,8 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.GeoElement;
+import com.esri.arcgisruntime.mapping.view.DrawStatusChangedEvent;
+import com.esri.arcgisruntime.mapping.view.DrawStatusChangedListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
@@ -68,7 +70,6 @@ import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
-import com.esri.arcgisruntime.symbology.SimpleRenderer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.huamai.poc.IPocEngineEventHandler;
@@ -162,7 +163,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         initPointDetailLayout();
         //定位后就不在北碚了
         markLocation();
-        initLayer();
+//        initLayer();
         createGraphicsOverlay();
     }
 
@@ -347,20 +348,20 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         List<Feature> features = new ArrayList<>();
     }
 
-    private void initLayer() {
-//        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("http://gis.cqzhly" +
-//                ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8
-//                /FeatureServer" +
-//                "/0");
-        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("https://222.178.189" +
-                ".231:9443/arcgis/rest/services/JysBaseData/FeatureServer/0");
-        featureLayer_gsmm = new FeatureLayer(serviceFeatureTable);
-        SimpleMarkerSymbol simpleMarkerSymbol =
-                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 10);
-        PictureMarkerSymbol pictureMarkerSymbol =
-                new PictureMarkerSymbol((BitmapDrawable) getResources().getDrawable(R.mipmap.maker_gsmm));
-        featureLayer_gsmm.setRenderer(new SimpleRenderer(pictureMarkerSymbol));
-    }
+//    private void initLayer() {
+////        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("http://gis.cqzhly" +
+////                ".cn:9080/arcgis/rest/services/%E5%8F%A4%E6%A0%91%E5%90%8D%E6%9C%A8
+////                /FeatureServer" +
+////                "/0");
+//        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("https://222.178.189" +
+//                ".231:9443/arcgis/rest/services/JysBaseData/FeatureServer/0");
+//        featureLayer_gsmm = new FeatureLayer(serviceFeatureTable);
+//        SimpleMarkerSymbol simpleMarkerSymbol =
+//                new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 10);
+//        PictureMarkerSymbol pictureMarkerSymbol =
+//                new PictureMarkerSymbol((BitmapDrawable) getResources().getDrawable(R.mipmap.maker_gsmm));
+//        featureLayer_gsmm.setRenderer(new SimpleRenderer(pictureMarkerSymbol));
+//    }
 
     private void initTool() {
         mMapView = getView(R.id.mapView);
@@ -372,6 +373,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
         ArcGISMap map = new ArcGISMap(basemap);
         // set the map to be displayed in this view
         mMapView.setMap(map);
+        mMapView.addDrawStatusChangedListener(new DrawStatusChangedListener() {
+            @Override
+            public void drawStatusChanged(DrawStatusChangedEvent drawStatusChangedEvent) {
+                L.e("地图加载完成");
+            }
+        });
         //隐藏网格线
 //        BackgroundGrid mainBackgroundGrid = new BackgroundGrid();
 //        mainBackgroundGrid.setColor(0xffffffff);
@@ -436,16 +443,16 @@ public class MapFragment extends BaseFragment implements View.OnClickListener,
                     }
                 })
                 .builderMeasure(measureToolView)
-                .setButtonWidth(32)
-                .setButtonHeight(32)
+                .setButtonWidth(30)
+                .setButtonHeight(30)
                 .setMeasureBackground(R.color.measure_tool)
-                .setSohwText(false)
-                .setFontSize(12)
-                .setFontColor(R.color.color444)
+                .setSohwText(true)
+                .setFontSize(10)
+                .setFontColor(android.R.color.white)
                 .setMeasurePrevStr("撤销")
                 .setMeasureNextStr("恢复")
                 .setMeasureLengthStr("测距")
-                .setMeasureAreaStr("测面积")
+                .setMeasureAreaStr("面积")
                 .setMeasureClearStr("清除")
                 .setMeasureEndStr("完成")
                 .setMeasurePrevImage(R.drawable.sddman_measure_prev)

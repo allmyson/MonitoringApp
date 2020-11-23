@@ -3,11 +3,7 @@ package cn.sddman.arcgistool.util;
 import android.content.Context;
 
 import com.esri.arcgisruntime.geometry.GeodeticCurveType;
-import com.esri.arcgisruntime.geometry.GeographicTransformation;
-import com.esri.arcgisruntime.geometry.GeographicTransformationStep;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
-import com.esri.arcgisruntime.geometry.LinearUnit;
-import com.esri.arcgisruntime.geometry.LinearUnitId;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PolygonBuilder;
 import com.esri.arcgisruntime.geometry.PolylineBuilder;
@@ -115,6 +111,9 @@ public class ArcGisMeasure extends Draw {
     }
     private void drawScreenXY(float x, float y){
         Point point=super.screenXYtoPpoint(x,y);
+        if(mapView.getSpatialReference()==null){
+            return;
+        }
         if(mapView.getSpatialReference().getWkid()==4490 || mapView.getSpatialReference().getWkid()==4326){
             point = (Point) GeometryEngine.project(point ,SpatialReference.create(102100));
             super.setSpatialReference(SpatialReference.create(102100));
