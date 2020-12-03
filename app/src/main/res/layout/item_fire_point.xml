@@ -82,15 +82,18 @@
 
         <TextView
             android:id="@+id/tv_address"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginRight="4dp"
             android:layout_height="wrap_content"
             android:textColor="#ffbbbbbb"
-            android:textSize="14sp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:textSize="14sp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"/>
 
         <LinearLayout
             android:id="@+id/ll_navigation"

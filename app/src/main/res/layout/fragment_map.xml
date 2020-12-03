@@ -58,7 +58,7 @@
                 android:imeOptions="actionSearch"
                 android:gravity="center"
                 android:textCursorDrawable="@drawable/et_cursor"
-                android:hint="搜索小班/防火资源/古树名木"
+                android:hint="搜索防火资源/古树名木"
                 android:singleLine="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
